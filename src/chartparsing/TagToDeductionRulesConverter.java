@@ -25,6 +25,10 @@ public class TagToDeductionRulesConverter {
   }
 
   public static ParsingScheme TagToCykRules(Tag tag, String w) {
+    if (!tag.isBinarized()) {
+      System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
+      return null;
+    }
     String[] wsplit = w.split(" ");
     ParsingScheme scheme = new ParsingScheme();
     Set<String> initreesnameset = tag.getInitialTreeNames();

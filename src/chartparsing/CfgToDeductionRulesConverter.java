@@ -1,10 +1,8 @@
-/*
- * Based on the slides from Laura Kallmeyer about Parsing as Deduction.
- * Top Down: https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
- * Shift Reduce: https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf
- * Earley: https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf
- * Left corner: https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf
- */
+/* Based on the slides from Laura Kallmeyer about Parsing as Deduction. Top
+ * Down: https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf Shift Reduce:
+ * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf Earley:
+ * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf Left corner:
+ * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf */
 
 package chartparsing;
 
@@ -34,6 +32,11 @@ public class CfgToDeductionRulesConverter {
   }
 
   public static ParsingScheme CfgToTopDownRules(Cfg cfg, String w) {
+    if (cfg.hasEpsilonProductions()) {
+      System.out
+        .println("CFG must not contain empty productions for TopDown parsing.");
+      return null;
+    }
     String[] wsplit = w.split(" ");
     ParsingScheme scheme = new ParsingScheme();
     for (int i = 0; i < wsplit.length; i++) {
@@ -78,6 +81,11 @@ public class CfgToDeductionRulesConverter {
   }
 
   public static ParsingScheme CfgToShiftReduceRules(Cfg cfg, String w) {
+    if (cfg.hasEpsilonProductions()) {
+      System.out
+        .println("CFG must not contain empty productions for ShiftReduce parsing.");
+      return null;
+    }
     String[] wsplit = w.split(" ");
     ParsingScheme scheme = new ParsingScheme();
     for (int i = 0; i <= wsplit.length; i++) {
@@ -136,11 +144,11 @@ public class CfgToDeductionRulesConverter {
       if (rule.getLhs() == cfg.getStart_var()) {
         DeductionRule axiom = new DeductionRule();
         axiom.addConsequence(
-          new CfgDottedItem("S -> �" + String.join(" ", rule.getRhs()), 0, 0));
+          new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));
         axiom.setName("axiom");
         scheme.addRule(axiom);
         scheme.addGoal(new CfgDottedItem(
-          "S -> " + String.join(" ", rule.getRhs()) + " �", 0, wsplit.length));
+          "S -> " + String.join(" ", rule.getRhs()) + " •", 0, wsplit.length));
       }
       if (w.length() > 0) {
         for (int i = 0; i <= wsplit.length; i++) {
@@ -150,18 +158,18 @@ public class CfgToDeductionRulesConverter {
                 DeductionRule scan = new DeductionRule();
                 if (k == 0) {
                   scan.addAntecedence(new CfgDottedItem(
-                    rule.getLhs() + " -> �"
+                    rule.getLhs() + " -> •"
                       + getSubSequence(rule.getRhs(), k, rule.getRhs().length),
                     i, j));
                 } else {
                   scan.addAntecedence(new CfgDottedItem(
                     rule.getLhs() + " -> " + getSubSequence(rule.getRhs(), 0, k)
-                      + " �"
+                      + " •"
                       + getSubSequence(rule.getRhs(), k, rule.getRhs().length),
                     i, j));
                 }
                 scan.addConsequence(new CfgDottedItem(rule.getLhs() + " -> "
-                  + getSubSequence(rule.getRhs(), 0, k + 1) + " �"
+                  + getSubSequence(rule.getRhs(), 0, k + 1) + " •"
                   + getSubSequence(rule.getRhs(), k + 1, rule.getRhs().length),
                   i, j + 1));
                 scan.setName("scan " + wsplit[j]);
@@ -176,38 +184,45 @@ public class CfgToDeductionRulesConverter {
                   DeductionRule predict = new DeductionRule();
                   predict.addAntecedence(new CfgDottedItem(
                     rule.getLhs() + " -> " + getSubSequence(rule.getRhs(), 0, k)
-                      + " �"
+                      + " •"
                       + getSubSequence(rule.getRhs(), k, rule.getRhs().length),
                     i, j));
                   for (int l = j; l <= wsplit.length; l++) {
                     DeductionRule complete = new DeductionRule();
-                    complete.addAntecedence(new CfgDottedItem(rule.getLhs()
-                      + " -> " + getSubSequence(rule.getRhs(), 0, k) + " �"
-                      + getSubSequence(rule.getRhs(), k, rule.getRhs().length),
-                      i, j));
-                    if (rule2.getRhs().length > 0) {
-                      complete.addAntecedence(
-                        new CfgDottedItem(rule2.getLhs() + " -> "
-                          + String.join(" ", rule2.getRhs()) + " �", j, l));
+                    if (rule.getRhs()[0].length() == 0 ) {
+                      complete.addAntecedence(new CfgDottedItem(rule.getLhs()
+                        + " -> •"
+                        + getSubSequence(rule.getRhs(), k, rule.getRhs().length),
+                        i, j));
+                    } else {
+                      complete.addAntecedence(new CfgDottedItem(rule.getLhs()
+                        + " -> " + getSubSequence(rule.getRhs(), 0, k) + " •"
+                        + getSubSequence(rule.getRhs(), k, rule.getRhs().length),
+                        i, j));
+                    }
+                    if (rule2.getRhs()[0].length() == 0) {
+                        complete.addAntecedence(
+                          new CfgDottedItem(rule2.getLhs() + " -> •", j, l));
                     } else {
                       complete.addAntecedence(
-                        new CfgDottedItem(rule2.getLhs() + " -> �", j, l));
+                        new CfgDottedItem(rule2.getLhs() + " -> "
+                          + String.join(" ", rule2.getRhs()) + " •", j, l));
                     }
                     complete.addConsequence(new CfgDottedItem(rule.getLhs()
-                      + " -> " + getSubSequence(rule.getRhs(), 0, k + 1) + " �"
+                      + " -> " + getSubSequence(rule.getRhs(), 0, k + 1) + " •"
                       + getSubSequence(rule.getRhs(), k + 1,
                         rule.getRhs().length),
-                      i, l)); // */
+                      i, l));
                     complete.setName("complete " + rule2.getLhs());
                     scheme.addRule(complete);
                     // System.out.println(complete.toString()); // DEBUG
                   }
                   if (rule2.getRhs().length > 0) {
                     predict.addConsequence(new CfgDottedItem(rule2.getLhs()
-                      + " -> �" + String.join(" ", rule2.getRhs()), j, j));
+                      + " -> •" + String.join(" ", rule2.getRhs()), j, j));
                   } else {
                     predict.addConsequence(
-                      new CfgDottedItem(rule2.getLhs() + " -> �", j, j));
+                      new CfgDottedItem(rule2.getLhs() + " -> •", j, j));
                   }
                   predict.setName("predict " + rule2.getLhs() + " -> "
                     + String.join(" ", rule2.getRhs()));
@@ -222,7 +237,8 @@ public class CfgToDeductionRulesConverter {
     }
     return scheme;
   }
-// TODO too slow
+
+  // TODO too slow
   public static ParsingScheme CfgToLeftCornerRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingScheme scheme = new ParsingScheme();
@@ -236,14 +252,15 @@ public class CfgToDeductionRulesConverter {
       String[] stackcompletedsplit = stackcompleted.split(" ");
       for (String stackpredicted : SetUtils.star(
         SetUtils.union(cfg.getTerminals(), cfg.getVars(), new String[] {"$"}),
-        wsplit.length+1)) { // TODO not enough, estimate automatically=?
+        wsplit.length + 1)) { // TODO not enough, estimate automatically=?
         String[] stackpredictedsplit = stackpredicted.split(" ");
         for (String stacklhs : SetUtils.star(cfg.getVars(), wsplit.length)) {
-          if (!stackpredictedsplit[0].equals("$")){
+          if (!stackpredictedsplit[0].equals("$")) {
             for (CfgProductionRule rule : cfg.getR()) {
               if (stackcompletedsplit[0].equals(rule.getRhs()[0])) {
                 DeductionRule reduce = new DeductionRule();
-                reduce.addAntecedence(new CfgDollarItem(stackcompleted,stackpredicted,stacklhs));
+                reduce.addAntecedence(
+                  new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
                 String newstackpredicted = "";
                 if (stackpredicted.length() == 0) {
                   newstackpredicted =
@@ -255,7 +272,7 @@ public class CfgToDeductionRulesConverter {
                       + " $ " + stackpredicted;
                 }
                 String newstacklhs = "";
-                if (stacklhs.length() == 0){
+                if (stacklhs.length() == 0) {
                   newstacklhs = rule.getLhs();
                 } else {
                   newstacklhs = rule.getLhs() + " " + stacklhs;
@@ -267,11 +284,11 @@ public class CfgToDeductionRulesConverter {
                 reduce.setName("reduce " + rule.getLhs() + " -> "
                   + String.join(" ", rule.getRhs()));
                 scheme.addRule(reduce);
-                //System.out.println(reduce.toString()); // DEBUG
+                // System.out.println(reduce.toString()); // DEBUG
               }
             }
           }
-          
+
           if (stackpredictedsplit[0].equals("$") && stacklhs.length() > 0) {
             String[] stacklhssplit = stacklhs.split(" ");
             DeductionRule move = new DeductionRule();
@@ -291,7 +308,7 @@ public class CfgToDeductionRulesConverter {
             }
             move.setName("move " + stacklhssplit[0]);
             scheme.addRule(move);
-            //System.out.println(move.toString()); // DEBUG
+            // System.out.println(move.toString()); // DEBUG
           }
           if (stackcompleted.length() > 0 && stackpredicted.length() > 0
             && stackcompletedsplit[0].equals(stackpredictedsplit[0])) {
@@ -306,7 +323,7 @@ public class CfgToDeductionRulesConverter {
               stacklhs));
             remove.setName("remove " + stackcompletedsplit[0]);
             scheme.addRule(remove);
-            //System.out.println(remove.toString()); // DEBUG
+            // System.out.println(remove.toString()); // DEBUG
           }
         }
       }

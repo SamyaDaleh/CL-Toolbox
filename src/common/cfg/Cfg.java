@@ -50,4 +50,13 @@ public class Cfg
 		}
 		return false;
 	}
+	
+	public boolean hasEpsilonProductions() {
+	  for (CfgProductionRule rule : this.getR()) {
+	    if (rule.getLhs().length() == 0) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
 }

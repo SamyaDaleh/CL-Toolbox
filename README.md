@@ -1,5 +1,5 @@
 # CL-Toolbox
-A Parsing-as-Deduction system that parses everything and some related tools for educational purposes.
+A Parsing-as-Deduction system implemented in Java that parses everything and some related tools for educational purposes.
 
 The implementation is based on the slides from Laura Kallmeyer. At the moment it contains:
 

@@ -16,7 +16,8 @@ public class Deduction {
 	static List<Item> agenda;
 	static List<Integer> deductedfrom;
 	
-	public static boolean doParse(ParsingScheme scheme){	
+	public static boolean doParse(ParsingScheme scheme){
+	  if (scheme == null) return false;
 		chart = new LinkedList<Item>();
 		agenda = new LinkedList<Item>();
 		deductedfrom = new LinkedList<Integer>();
