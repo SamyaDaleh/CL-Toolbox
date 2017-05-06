@@ -125,7 +125,9 @@ public class Tag {
     }
     for (Tree tree : auxiliarytrees.values()) {
       for (Vertex p : tree.getVertexes()) {
-        if (p.getGornaddress().charAt(p.getGornaddress().length() - 1) == '3') {
+        String gornaddress = p.getGornaddress();
+        if (gornaddress.length() > 0
+            && gornaddress.charAt(gornaddress.length() - 1) == '3') {
           return false;
         }
       }
