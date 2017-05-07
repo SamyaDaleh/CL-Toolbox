@@ -27,6 +27,8 @@ Run it in Eclipse. Or download the jar from folder releases and run it from the 
 
 Example:
 
+(Output is pretty-printed similar to this, but without the fancy borders and coloring.)
+
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
 <table border="0">
 <tr><td>1</td><td>[S,0]</td><td>axiom</td><td></td></tr>
