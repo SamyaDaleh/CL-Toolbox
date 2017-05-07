@@ -218,7 +218,7 @@ public class TagToDeductionRulesConverter {
                   adjoin.addConsequence(new TagItem(treename,
                     p.getGornaddress() + "⊤", i, null, null, j));
                   adjoin.setName("adjoin " + auxtree + " in " + treename
-                    + " at " + p.getLabel());
+                    + " at " + p.getGornaddress());
                   schema.addRule(adjoin);
                 }
               }
