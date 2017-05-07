@@ -14,9 +14,9 @@ import common.tag.Vertex;
 
 public class TagToDeductionRulesConverter {
 
-  public static ParsingScheme TagToParsingScheme(Tag tag, String w,
-    String scheme) {
-    switch (scheme) {
+  public static ParsingSchema TagToParsingSchema(Tag tag, String w,
+    String schema) {
+    switch (schema) {
     case "cyk":
       return TagToCykRules(tag, w);
     default:
@@ -24,13 +24,13 @@ public class TagToDeductionRulesConverter {
     }
   }
 
-  public static ParsingScheme TagToCykRules(Tag tag, String w) {
+  public static ParsingSchema TagToCykRules(Tag tag, String w) {
     if (!tag.isBinarized()) {
       System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
       return null;
     }
     String[] wsplit = w.split(" ");
-    ParsingScheme scheme = new ParsingScheme();
+    ParsingSchema schema = new ParsingSchema();
     Set<String> initreesnameset = tag.getInitialTreeNames();
     String[] initreenames =
       initreesnameset.toArray(new String[initreesnameset.size()]);
@@ -47,7 +47,7 @@ public class TagToDeductionRulesConverter {
             lexscan.addConsequence(new TagItem(tree, p.getGornaddress() + "⊤",
               i, null, null, i + 1));
             lexscan.setName("lex-scan " + wsplit[i]);
-            scheme.addRule(lexscan);
+            schema.addRule(lexscan);
             // System.out.println(lexscan.toString()); // DEBUG
           }
           if (p.getLabel().equals("")) {
@@ -55,7 +55,7 @@ public class TagToDeductionRulesConverter {
             epsscan.addConsequence(
               new TagItem(tree, p.getGornaddress() + "⊤", i, null, null, i));
             epsscan.setName("eps-scan");
-            scheme.addRule(epsscan);
+            schema.addRule(epsscan);
             // System.out.println(epsscan.toString()); // DEBUG
           }
         }
@@ -64,7 +64,7 @@ public class TagToDeductionRulesConverter {
       for (String initreename : initreenames) {
         Tree initree = tag.getInitialTree(initreename);
         if (initree.getRoot().getLabel().equals(tag.getStartSymbol())) {
-          scheme.addGoal(
+          schema.addGoal(
             new TagItem(initreename, "⊤", 0, null, null, wsplit.length));
         }
       }
@@ -77,7 +77,7 @@ public class TagToDeductionRulesConverter {
           footpredict
             .addConsequence(new TagItem(auxtree, footgorn + "⊤", i, i, j, j));
           footpredict.setName("foot-predict");
-          scheme.addRule(footpredict);
+          schema.addRule(footpredict);
           // System.out.println(footpredict.toString()); // DEBUG
         }
         for (String initree : initreenames) {
@@ -91,7 +91,7 @@ public class TagToDeductionRulesConverter {
                 substitute.addConsequence(new TagItem(tree2,
                   p.getGornaddress() + "⊤", i, null, null, j));
                 substitute.setName("substitute in " + p.getGornaddress());
-                scheme.addRule(substitute);
+                schema.addRule(substitute);
                 // System.out.println(substitute.toString()); // DEBUG
               }
             }
@@ -109,7 +109,7 @@ public class TagToDeductionRulesConverter {
               moveunary.addConsequence(new TagItem(treename,
                 p.getGornaddress() + "⊥", i, null, null, j));
               moveunary.setName("move-unary");
-              scheme.addRule(moveunary);
+              schema.addRule(moveunary);
               // System.out.println(moveunary.toString()); // DEBUG
             }
             for (int k = i; k <=j; k++) {
@@ -123,7 +123,7 @@ public class TagToDeductionRulesConverter {
                 movebinary.addConsequence(new TagItem(treename,
                   p.getGornaddress() + "⊥", i, null, null, j));
                 movebinary.setName("move-binary");
-                scheme.addRule(movebinary);
+                schema.addRule(movebinary);
                 // System.out.println(movebinary.toString()); // DEBUG
               }
             }
@@ -135,7 +135,7 @@ public class TagToDeductionRulesConverter {
             nulladjoin.addConsequence(new TagItem(treename,
               p.getGornaddress() + "⊤", i, null, null, j));
             nulladjoin.setName("null-adjoin");
-            scheme.addRule(nulladjoin);
+            schema.addRule(nulladjoin);
             // System.out.println(nulladjoin.toString()); // DEBUG
           }
         }
@@ -154,7 +154,7 @@ public class TagToDeductionRulesConverter {
                   moveunary.addConsequence(new TagItem(treename,
                     p.getGornaddress() + "⊥", i, f1, f2, j));
                   moveunary.setName("move-unary");
-                  scheme.addRule(moveunary);
+                  schema.addRule(moveunary);
                   // System.out.println(moveunary.toString()); // DEBUG
                 }
                 // TODO if f_OA(tree,node) = 0
@@ -164,7 +164,7 @@ public class TagToDeductionRulesConverter {
                 nulladjoin.addConsequence(new TagItem(treename,
                   p.getGornaddress() + "⊤", i, f1, f2, j));
                 nulladjoin.setName("null-adjoin");
-                scheme.addRule(nulladjoin);
+                schema.addRule(nulladjoin);
                 // System.out.println(nulladjoin.toString()); // DEBUG
 
                 for (int k = i; k <= j; k++) {
@@ -178,7 +178,7 @@ public class TagToDeductionRulesConverter {
                     movebinary.addConsequence(new TagItem(treename,
                       p.getGornaddress() + "⊥", i, f1, f2, j));
                     movebinary.setName("move-binary");
-                    scheme.addRule(movebinary);
+                    schema.addRule(movebinary);
                   }
                   // foot right
                   if (k <= f1) {
@@ -190,7 +190,7 @@ public class TagToDeductionRulesConverter {
                     movebinary.addConsequence(new TagItem(treename,
                       p.getGornaddress() + "⊥", i, f1, f2, j));
                     movebinary.setName("move-binary");
-                    scheme.addRule(movebinary);
+                    schema.addRule(movebinary);
                   }
 
                 }
@@ -206,7 +206,7 @@ public class TagToDeductionRulesConverter {
                         p.getGornaddress() + "⊤", i, f1b, f2b, j));
                       adjoin.setName("adjoin " + auxtree + " in " + treename
                         + " at " + p.getGornaddress());
-                      scheme.addRule(adjoin);
+                      schema.addRule(adjoin);
                     }
                   }
 
@@ -219,7 +219,7 @@ public class TagToDeductionRulesConverter {
                     p.getGornaddress() + "⊤", i, null, null, j));
                   adjoin.setName("adjoin " + auxtree + " in " + treename
                     + " at " + p.getLabel());
-                  scheme.addRule(adjoin);
+                  schema.addRule(adjoin);
                 }
               }
             }
@@ -228,6 +228,6 @@ public class TagToDeductionRulesConverter {
       }
     }
 
-    return scheme;
+    return schema;
   }
 }

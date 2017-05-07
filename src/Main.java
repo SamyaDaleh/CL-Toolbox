@@ -2,7 +2,7 @@ import java.text.ParseException;
 
 import chartparsing.CfgToDeductionRulesConverter;
 import chartparsing.Deduction;
-import chartparsing.ParsingScheme;
+import chartparsing.ParsingSchema;
 import chartparsing.TagToDeductionRulesConverter;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
@@ -83,21 +83,21 @@ public class Main {
     // String w = "a a a b b b";
     // String w = "a a b b";
     // earley or shiftreduce or topdown
-    /* ParsingScheme scheme = CfgToDeductionRulesConverter
-     * .CfgToParsingScheme(gen_cfgdedtest(), w, "earley"); // */
-    /* String w = "a c b"; ParsingScheme scheme = TagToDeductionRulesConverter
-     * .TagToParsingScheme(gentag(), w, "cyk");
-     * System.out.println(Deduction.doParse(scheme)); // */
+    /* ParsingSchema schema = CfgToDeductionRulesConverter
+     * .CfgToParsingSchema(gen_cfgdedtest(), w, "earley"); // */
+    /* String w = "a c b"; ParsingSchema schema = TagToDeductionRulesConverter
+     * .TagToParsingSchema(gentag(), w, "cyk");
+     * System.out.println(Deduction.doParse(schema)); // */
 
     /* String w = "a a b b"; Tag tagFromCfg = new Tag(gen_cfgbin());
-     * ParsingScheme scheme = TagToDeductionRulesConverter
-     * .TagToParsingScheme(tagFromCfg, w, "cyk");
-     * System.out.println(Deduction.doParse(scheme)); // */
+     * ParsingSchema schema = TagToDeductionRulesConverter
+     * .TagToParsingSchema(tagFromCfg, w, "cyk");
+     * System.out.println(Deduction.doParse(schema)); // */
 
     String w = "a";
-    ParsingScheme scheme = CfgToDeductionRulesConverter
-      .CfgToParsingScheme(gen_cfgleftrec(), w, "leftcorner");
-    System.out.println(Deduction.doParse(scheme));
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .CfgToParsingSchema(gen_cfgleftrec(), w, "leftcorner");
+    System.out.println(Deduction.doParse(schema));
   }
 
 }

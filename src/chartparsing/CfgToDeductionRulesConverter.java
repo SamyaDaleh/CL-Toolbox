@@ -15,9 +15,9 @@ import common.cfg.CfgProductionRule;
 
 public class CfgToDeductionRulesConverter {
 
-  public static ParsingScheme CfgToParsingScheme(Cfg cfg, String w,
-    String scheme) {
-    switch (scheme) {
+  public static ParsingSchema CfgToParsingSchema(Cfg cfg, String w,
+    String schema) {
+    switch (schema) {
     case "topdown":
       return CfgToTopDownRules(cfg, w);
     case "shiftreduce":
@@ -31,14 +31,14 @@ public class CfgToDeductionRulesConverter {
     }
   }
 
-  public static ParsingScheme CfgToTopDownRules(Cfg cfg, String w) {
+  public static ParsingSchema CfgToTopDownRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out
         .println("CFG must not contain empty productions for TopDown parsing.");
       return null;
     }
     String[] wsplit = w.split(" ");
-    ParsingScheme scheme = new ParsingScheme();
+    ParsingSchema schema = new ParsingSchema();
     for (int i = 0; i < wsplit.length; i++) {
       for (String sequence : SetUtils.star(
         SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length - i)) {
@@ -49,7 +49,7 @@ public class CfgToDeductionRulesConverter {
           scan.addConsequence(
             new CfgItem(getSubSequence(seqsplit, 1, seqsplit.length), i + 1));
           scan.setName("scan " + wsplit[i]);
-          scheme.addRule(scan);
+          schema.addRule(scan);
           // System.out.println(scan.toString()); //DEBUG
         } else if (cfg.varsContain(seqsplit[0])) {
           for (CfgProductionRule rule : cfg.getR()) {
@@ -63,7 +63,7 @@ public class CfgToDeductionRulesConverter {
                   .addConsequence(new CfgItem(String.join(" ", gammaalpha), i));
                 predict.setName("predict " + rule.getLhs() + " -> "
                   + String.join(" ", rule.getRhs()));
-                scheme.addRule(predict);
+                schema.addRule(predict);
                 // System.out.println(predict.toString()); //DEBUG
               }
             }
@@ -75,19 +75,19 @@ public class CfgToDeductionRulesConverter {
     DeductionRule axiom = new DeductionRule();
     axiom.addConsequence(new CfgItem(cfg.getStart_var(), 0));
     axiom.setName("axiom");
-    scheme.addRule(axiom);
-    scheme.addGoal(new CfgItem("", wsplit.length));
-    return scheme;
+    schema.addRule(axiom);
+    schema.addGoal(new CfgItem("", wsplit.length));
+    return schema;
   }
 
-  public static ParsingScheme CfgToShiftReduceRules(Cfg cfg, String w) {
+  public static ParsingSchema CfgToShiftReduceRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out
         .println("CFG must not contain empty productions for ShiftReduce parsing.");
       return null;
     }
     String[] wsplit = w.split(" ");
-    ParsingScheme scheme = new ParsingScheme();
+    ParsingSchema schema = new ParsingSchema();
     for (int i = 0; i <= wsplit.length; i++) {
       for (String sequence : SetUtils.star(
         SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length)) {
@@ -104,7 +104,7 @@ public class CfgToDeductionRulesConverter {
             shift.addConsequence(new CfgItem(wsplit[i], i + 1));
           }
           shift.setName("shift " + wsplit[i]);
-          scheme.addRule(shift);
+          schema.addRule(shift);
           // System.out.println(shift.toString()); //DEBUG
         }
         if (seqsplit.length <= i) {
@@ -121,7 +121,7 @@ public class CfgToDeductionRulesConverter {
               }
               reduce.setName("reduce " + rule.getLhs() + " -> "
                 + String.join(" ", rule.getRhs()));
-              scheme.addRule(reduce);
+              schema.addRule(reduce);
               // System.out.println(reduce.toString()); //DEBUG
             }
           }
@@ -132,22 +132,22 @@ public class CfgToDeductionRulesConverter {
     DeductionRule axiom = new DeductionRule();
     axiom.addConsequence(new CfgItem("", 0));
     axiom.setName("axiom");
-    scheme.addRule(axiom);
-    scheme.addGoal(new CfgItem(cfg.getStart_var(), wsplit.length));
-    return scheme;
+    schema.addRule(axiom);
+    schema.addGoal(new CfgItem(cfg.getStart_var(), wsplit.length));
+    return schema;
   }
 
-  public static ParsingScheme CfgToEarleyRules(Cfg cfg, String w) {
+  public static ParsingSchema CfgToEarleyRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
-    ParsingScheme scheme = new ParsingScheme();
+    ParsingSchema schema = new ParsingSchema();
     for (CfgProductionRule rule : cfg.getR()) {
       if (rule.getLhs() == cfg.getStart_var()) {
         DeductionRule axiom = new DeductionRule();
         axiom.addConsequence(
           new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));
         axiom.setName("axiom");
-        scheme.addRule(axiom);
-        scheme.addGoal(new CfgDottedItem(
+        schema.addRule(axiom);
+        schema.addGoal(new CfgDottedItem(
           "S -> " + String.join(" ", rule.getRhs()) + " •", 0, wsplit.length));
       }
       if (w.length() > 0) {
@@ -173,7 +173,7 @@ public class CfgToDeductionRulesConverter {
                   + getSubSequence(rule.getRhs(), k + 1, rule.getRhs().length),
                   i, j + 1));
                 scan.setName("scan " + wsplit[j]);
-                scheme.addRule(scan);
+                schema.addRule(scan);
                 // System.out.println(scan.toString()); // DEBUG
               }
             }
@@ -214,7 +214,7 @@ public class CfgToDeductionRulesConverter {
                         rule.getRhs().length),
                       i, l));
                     complete.setName("complete " + rule2.getLhs());
-                    scheme.addRule(complete);
+                    schema.addRule(complete);
                     // System.out.println(complete.toString()); // DEBUG
                   }
                   if (rule2.getRhs().length > 0) {
@@ -226,7 +226,7 @@ public class CfgToDeductionRulesConverter {
                   }
                   predict.setName("predict " + rule2.getLhs() + " -> "
                     + String.join(" ", rule2.getRhs()));
-                  scheme.addRule(predict);
+                  schema.addRule(predict);
                   // System.out.println(predict.toString()); // DEBUG
                 }
               }
@@ -235,17 +235,17 @@ public class CfgToDeductionRulesConverter {
         }
       }
     }
-    return scheme;
+    return schema;
   }
 
   // TODO too slow
-  public static ParsingScheme CfgToLeftCornerRules(Cfg cfg, String w) {
+  public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
-    ParsingScheme scheme = new ParsingScheme();
+    ParsingSchema schema = new ParsingSchema();
     DeductionRule axiom = new DeductionRule();
     axiom.addConsequence(new CfgDollarItem(w, cfg.getStart_var(), ""));
     axiom.setName("axiom");
-    scheme.addRule(axiom);
+    schema.addRule(axiom);
 
     for (String stackcompleted : SetUtils
       .star(SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length)) {
@@ -283,7 +283,7 @@ public class CfgToDeductionRulesConverter {
                   newstackpredicted, newstacklhs));
                 reduce.setName("reduce " + rule.getLhs() + " -> "
                   + String.join(" ", rule.getRhs()));
-                scheme.addRule(reduce);
+                schema.addRule(reduce);
                 // System.out.println(reduce.toString()); // DEBUG
               }
             }
@@ -307,7 +307,7 @@ public class CfgToDeductionRulesConverter {
                 getSubSequence(stacklhssplit, 1, stacklhssplit.length)));
             }
             move.setName("move " + stacklhssplit[0]);
-            scheme.addRule(move);
+            schema.addRule(move);
             // System.out.println(move.toString()); // DEBUG
           }
           if (stackcompleted.length() > 0 && stackpredicted.length() > 0
@@ -322,14 +322,14 @@ public class CfgToDeductionRulesConverter {
                 stackpredictedsplit.length),
               stacklhs));
             remove.setName("remove " + stackcompletedsplit[0]);
-            scheme.addRule(remove);
+            schema.addRule(remove);
             // System.out.println(remove.toString()); // DEBUG
           }
         }
       }
     }
-    scheme.addGoal(new CfgDollarItem("", "", ""));
-    return scheme;
+    schema.addGoal(new CfgDollarItem("", "", ""));
+    return schema;
   }
 
   private static String getStringHeadIfEndsWith(String[] seqsplit,

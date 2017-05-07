@@ -15,13 +15,13 @@ public class Deduction {
   static List<Item> agenda;
   static List<Integer> deductedfrom;
 
-  public static boolean doParse(ParsingScheme scheme) {
-    if (scheme == null)
+  public static boolean doParse(ParsingSchema schema) {
+    if (schema == null)
       return false;
     chart = new LinkedList<Item>();
     agenda = new LinkedList<Item>();
     deductedfrom = new LinkedList<Integer>();
-    for (DeductionRule rule : scheme.getRules()) {
+    for (DeductionRule rule : schema.getRules()) {
       if (rule.getAntecedences().isEmpty()) {
         applyAxiomRule(rule);
       }
@@ -29,13 +29,13 @@ public class Deduction {
     while (!agenda.isEmpty()) {
       Item item = agenda.get(0);
       agenda.remove(0);
-      for (DeductionRule rule : scheme.getRules()) {
+      for (DeductionRule rule : schema.getRules()) {
         if (!rule.getAntecedences().isEmpty()) {
           applyRule(item, rule);
         }
       }
     }
-    for (Item goal : scheme.getGoals()) {
+    for (Item goal : schema.getGoals()) {
       if (checkForGoal(goal))
         return true;
     }
