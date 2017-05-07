@@ -141,7 +141,7 @@ public class CfgToDeductionRulesConverter {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     for (CfgProductionRule rule : cfg.getR()) {
-      if (rule.getLhs() == cfg.getStart_var()) {
+      if (rule.getLhs().equals(cfg.getStart_var())) {
         DeductionRule axiom = new DeductionRule();
         axiom.addConsequence(
           new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));

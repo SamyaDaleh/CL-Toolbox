@@ -48,9 +48,8 @@ public class Main {
         System.out.println(
           "I did not understand. Please check spelling of parsing algorithm.");
         return;
-
       }
-      Deduction.doParse(schema);
+      System.out.println(Deduction.doParse(schema));
     }
     if (grammarfile.endsWith(".tag")) {
       Tag tag = GrammarParser.parseTagFile(grammarfile);
