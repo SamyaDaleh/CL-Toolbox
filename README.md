@@ -24,3 +24,17 @@ For me it worked like this:
 Usage:
 
 Run it in Eclipse. Or download the jar from folder releases and run it from the command line. Run it without parameters to get a help about how to use it.
+
+Example:
+
+java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
+1    [S,0]               axiom               
+2    [a S b,0]           predict S -> a S b  1
+3    [a b,0]             predict S -> a b    1
+4    [S b,1]             scan a              2
+5    [b,1]               scan a              3
+6    [a b b,1]           predict S -> a b    4
+7    [b b,2]             scan a              6
+8    [b,3]               scan b              7
+9    [,4]                scan b              8
+true
