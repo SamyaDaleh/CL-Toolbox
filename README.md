@@ -14,7 +14,9 @@ Use it to generate examples, play around with grammars etc.
 
 Installation:
 
-For me it worked like this:
+Download the jar from /releases and that's it.
+
+Or if you want to tinker with the code, for me it worked like this:
 - clone
 - create new Java Project in Eclipse
 - copy files into Java Project
