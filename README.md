@@ -28,13 +28,15 @@ Run it in Eclipse. Or download the jar from folder releases and run it from the 
 Example:
 
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
-1    [S,0]               axiom               <br>
-2    [a S b,0]           predict S -> a S b  1<br>
-3    [a b,0]             predict S -> a b    1<br>
-4    [S b,1]             scan a              2<br>
-5    [b,1]               scan a              3<br>
-6    [a b b,1]           predict S -> a b    4<br>
-7    [b b,2]             scan a              6<br>
-8    [b,3]               scan b              7<br>
-9    [,4]                scan b              8<br>
+<table border="0">
+<tr><td>1</td><td>[S,0]</td><td>axiom</td><td></td></tr>
+<tr><td>2</td><td>[a S b,0]</td><td>predict S -> a S b</td><td>1</td></tr>
+<tr><td>3</td><td>[a b,0]</td><td>predict S -> a b</td><td>1</td></tr>
+<tr><td>4</td><td>[S b,1]</td><td>scan a</td><td>2</td></tr>
+<tr><td>5</td><td>[b,1]</td><td>scan a</td></td><td>3</tr>
+<tr><td>6</td><td>[a b b,1]</td><td>predict S -> a b</td><td>4</td></tr>
+<tr><td>7</td><td>[b b,2]</td><td>scan a</td><td>6</td></tr>
+<tr><td>8</td><td>[b,3]</td><td>scan b</td><td>7</td></tr>
+<tr><td>9</td><td>[,4]</td><td>scan b</td><td>8</td></tr>
+</table>
 true
