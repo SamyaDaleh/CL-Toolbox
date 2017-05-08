@@ -92,7 +92,7 @@ public class Deduction {
   }
 
   static int column1 = 5;
-  static int column2 = 20;
+  static int column2 = 25;
   static int column3 = 20;
   
   private static void prettyprint(int i, String string, String name, String string2) {

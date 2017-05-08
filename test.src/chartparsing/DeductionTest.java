@@ -59,13 +59,20 @@ public class DeductionTest {
       System.out.println("CFG Earley Parsing fail");
     }
     
-    String w2 = "a c b";
+    String w2 = "c b";
     schema = TagToDeductionRulesConverter
         .TagToParsingSchema(gentag(), w2, "cyk");
     if(Deduction.doParse(schema)) {
       System.out.println("TAG CYK Parsing successful");
     } else {
       System.out.println("TAG CYK Parsing fail");
+    }
+    schema = TagToDeductionRulesConverter
+        .TagToParsingSchema(gentag(), w2, "earley");
+    if(Deduction.doParse(schema)) {
+      System.out.println("TAG Earley Parsing successful");
+    } else {
+      System.out.println("TAG Earley Parsing fail");
     }
 	}
 

@@ -51,6 +51,12 @@ public class Tag {
 
   public void addInitialTree(String name, String tree) throws ParseException {
     this.initialtrees.put(name, new Tree(tree));
+    for (Vertex p : getInitialTree(name).getVertexes()) {
+      if (isInTerminals(p.getLabel()) && getInitialTree(name).hasChildren(p)) {
+        throw new ParseException(
+          "Terminal nodes are not allowed to have children", 0);
+      }
+    }
   }
 
   public Set<String> getInitialTreeNames() {
@@ -71,6 +77,22 @@ public class Tag {
 
   public void addAuxiliaryTree(String name, String tree) throws ParseException {
     this.auxiliarytrees.put(name, new Tree(tree));
+    if (!isFootAndRootSameLabel(getAuxiliaryTree(name))) {
+      throw new ParseException(
+        "Root and Foot of auxiliary tree must have the same label", 0);
+    }
+    for (Vertex p : getAuxiliaryTree(name).getVertexes()) {
+      if (isInTerminals(p.getLabel())
+        && getAuxiliaryTree(name).hasChildren(p)) {
+        throw new ParseException(
+          "Terminal nodes are not allowed to have children", 0);
+      }
+    }
+  }
+
+  private boolean isFootAndRootSameLabel(Tree auxiliaryTree) {
+    return (auxiliaryTree.getFoot().getLabel()
+      .equals(auxiliaryTree.getRoot().getLabel()));
   }
 
   public Set<String> getTreeNames() {
@@ -110,7 +132,8 @@ public class Tag {
     } else {
       tree = auxiliarytrees.get(treename);
     }
-    return (nonterminallabel && !tree.hasChildren(p));
+    boolean isfootnode = p.equals(tree.getFoot());
+    return (nonterminallabel && !tree.hasChildren(p) && !isfootnode);
   }
 
   public boolean isBinarized() {
@@ -127,11 +150,27 @@ public class Tag {
       for (Vertex p : tree.getVertexes()) {
         String gornaddress = p.getGornaddress();
         if (gornaddress.length() > 0
-            && gornaddress.charAt(gornaddress.length() - 1) == '3') {
+          && gornaddress.charAt(gornaddress.length() - 1) == '3') {
           return false;
         }
       }
     }
     return true;
+  }
+
+  public boolean isInNonterminals(String label) {
+    for (String nt : nonterminals) {
+      if (label.equals(nt))
+        return true;
+    }
+    return false;
+  }
+
+  public boolean isInTerminals(String label) {
+    for (String t : terminals) {
+      if (label.equals(t))
+        return true;
+    }
+    return false;
   }
 }

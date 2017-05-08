@@ -5,14 +5,14 @@ import java.util.List;
 
 import common.Item;
 
-public class TagItem implements Item {
+public class TagCykItem implements Item {
   List<String> itemform;
 
-  public TagItem(String auxtree, String node, int i, Integer i2, Integer j, int j2) {
-    String footfrom = (i2 == null)? "-" : String.valueOf(i2);
-    String footto = (j == null)? "-" : String.valueOf(j);
-    itemform = Arrays.asList(auxtree, node, String.valueOf(i),
-      footfrom, footto, String.valueOf(j2));
+  public TagCykItem(String tree, String p, int i, Integer f1, Integer f2, int j) {
+    String footfrom = (f1 == null)? "-" : String.valueOf(f1);
+    String footto = (f2 == null)? "-" : String.valueOf(f2);
+    itemform = Arrays.asList(tree, p, String.valueOf(i),
+      footfrom, footto, String.valueOf(j));
   }
 
   @Override public void setItemform(List<String> itemform) {
