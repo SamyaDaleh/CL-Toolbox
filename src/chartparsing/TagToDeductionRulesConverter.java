@@ -381,7 +381,7 @@ public class TagToDeductionRulesConverter {
                 footnode.getGornaddress(), "rb", i, i, l, l, false));
               completefoot.setName("CompleteFoot");
               schema.addRule(completefoot);
-              System.out.println(completefoot.toString()); // DEBUG
+             // System.out.println(completefoot.toString()); // DEBUG
             }
             if (tag.isSubstitutionNode(p, treename)) {
               for (String initreename : initreenames) {
@@ -511,10 +511,10 @@ public class TagToDeductionRulesConverter {
                     adjoin.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "rb", j, null, null, k, false));
                     adjoin.addConsequence(new TagEarleyItem(treename,
-                      p.getGornaddress(), "rb", i, null, null, j, true));
+                      p.getGornaddress(), "rb", i, null, null, l, true));
                     adjoin.setName("Adjoin");
                     schema.addRule(adjoin);
-                    System.out.println(adjoin.toString()); // DEBUG
+                   // System.out.println(adjoin.toString()); // DEBUG
                     for (int g = j; g < wsplit.length; g++) {
                       for (int h = g; h < wsplit.length; h++) {
                         adjoin = new DeductionRule();
@@ -523,10 +523,10 @@ public class TagToDeductionRulesConverter {
                         adjoin.addAntecedence(new TagEarleyItem(treename,
                           p.getGornaddress(), "rb", j, g, h, k, false));
                         adjoin.addConsequence(new TagEarleyItem(treename,
-                          p.getGornaddress(), "rb", i, g, h, j, true));
+                          p.getGornaddress(), "rb", i, g, h, l, true));
                         adjoin.setName("Adjoin");
                         schema.addRule(adjoin);
-                        System.out.println(adjoin.toString()); // DEBUG
+                       // System.out.println(adjoin.toString()); // DEBUG
                       }
                     }
                   }
@@ -540,7 +540,7 @@ public class TagToDeductionRulesConverter {
                     footnode.getGornaddress(), "rb", i, i, l, l, false));
                   completefoot.setName("CompleteFoot");
                   schema.addRule(completefoot);
-                  System.out.println(completefoot.toString()); // DEBUG
+                 // System.out.println(completefoot.toString()); // DEBUG
                 }
 
                 if (tag.isInNonterminals(p.getLabel())) {

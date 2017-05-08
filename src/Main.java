@@ -58,6 +58,9 @@ public class Main {
       case "tag-cyk":
         schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "cyk");
         break;
+      case "tag-earley":
+        schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "earley");
+        break;
       default:
         System.out.println(
           "I did not understand. Please check spelling of parsing algorithm "

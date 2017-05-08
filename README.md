@@ -8,6 +8,7 @@ Parsing as Deduction:
 - Shift Reduce for CFG
 - Earley for CFG
 - CYK for TAG
+- Earley for TAG
 
 It prints out full parsing traces along with applied rules and antecedence items.
 Use it to generate examples, play around with grammars etc.

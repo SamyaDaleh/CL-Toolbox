@@ -59,7 +59,7 @@ public class DeductionTest {
       System.out.println("CFG Earley Parsing fail");
     }
     
-    String w2 = "c b";
+    String w2 = "a c b";
     schema = TagToDeductionRulesConverter
         .TagToParsingSchema(gentag(), w2, "cyk");
     if(Deduction.doParse(schema)) {
