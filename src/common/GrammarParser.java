@@ -11,9 +11,11 @@ import java.util.regex.Pattern;
 import common.cfg.Cfg;
 import common.tag.Tag;
 
+/** Parses different grammars from text files. */
 public class GrammarParser {
   static Pattern p = Pattern.compile("\"(.*?)\"");
 
+  /** Parses a CFG from a file and returns it as Cfg. */
   public static Cfg parseCfgFile(String grammarfile) throws IOException {
     Cfg cfg = new Cfg();
     BufferedReader in = new BufferedReader(new FileReader(grammarfile));
@@ -47,7 +49,7 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        cfg.setR(parseRule(linetrim, "->"));
+        cfg.setR(parseRules(linetrim, "->"));
       }
       line = in.readLine();
     }
@@ -55,7 +57,10 @@ public class GrammarParser {
     return cfg;
   }
 
-  private static String[][] parseRule(String linetrim, String delimiter) {
+  /** For a line like "S -> a b", "S -> A B" it gets the content of each quote,
+   * separates it by delimiter, in this case '->' and returns 2d array where
+   * each entry represents a rule and each sub array consists of lhs and rhs */
+  private static String[][] parseRules(String linetrim, String delimiter) {
     Matcher m = p.matcher(linetrim);
     m.find();
     String rawrule = m.group();
@@ -63,9 +68,10 @@ public class GrammarParser {
     try {
       while (true) {
         String lhs = rawrule.substring(0, rawrule.indexOf(delimiter)).trim();
-        String rhs = rawrule.substring(rawrule.indexOf(delimiter) + delimiter.length()).trim();
-        rulelist.add(new String[] {lhs.substring(1),
-          rhs.substring(0, rhs.length() - 1)});
+        String rhs = rawrule
+          .substring(rawrule.indexOf(delimiter) + delimiter.length()).trim();
+        rulelist.add(
+          new String[] {lhs.substring(1), rhs.substring(0, rhs.length() - 1)});
         m.find();
         rawrule = m.group();
       }
@@ -75,7 +81,9 @@ public class GrammarParser {
     return rulelist.toArray(new String[rulelist.size()][]);
   }
 
-  public static Tag parseTagFile(String grammarfile) throws IOException, ParseException {
+  /** Parses a TAG from a text file and returnsit as a Tag object. */
+  public static Tag parseTagFile(String grammarfile)
+    throws IOException, ParseException {
     Tag tag = new Tag();
     BufferedReader in = new BufferedReader(new FileReader(grammarfile));
     String line = in.readLine().trim();
@@ -108,7 +116,7 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        for (String[] treedec : parseRule(linetrim, ":")) {
+        for (String[] treedec : parseRules(linetrim, ":")) {
           tag.addInitialTree(treedec[0], treedec[1]);
         }
       } else if (linetrim.charAt(0) == 'A') {
@@ -117,7 +125,7 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        for (String[] treedec : parseRule(linetrim, ":")) {
+        for (String[] treedec : parseRules(linetrim, ":")) {
           tag.addAuxiliaryTree(treedec[0], treedec[1]);
         }
       }
@@ -126,7 +134,9 @@ public class GrammarParser {
     in.close();
     return tag;
   }
-  
+
+  /** For a line like "A", "S" it gets the content of each quote and makes each
+   * an element of the returned array. */
   private static String[] parseNT(String linetrim) {
     Matcher m = p.matcher(linetrim);
     m.find();
@@ -143,7 +153,8 @@ public class GrammarParser {
     }
     return nlist.toArray(new String[nlist.size()]);
   }
-  
+
+  /** Takes a line like "S" and returns the string inside the quotes. */
   private static String parseS(String linetrim) {
     Matcher m = p.matcher(linetrim);
     m.find();

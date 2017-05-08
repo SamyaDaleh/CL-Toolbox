@@ -3,7 +3,11 @@ package common;
 import java.util.HashSet;
 import java.util.Set;
 
+/** Collection of functions to work with Sets. */
 public class SetUtils {
+
+  /** Returns a new set that contains all items that one or both input sets
+   * contain. */
   public static Set<String> union(Set<String> a, Set<String> b) {
     Set<String> c = new HashSet<String>();
     c.addAll(a);
@@ -11,6 +15,8 @@ public class SetUtils {
     return c;
   }
 
+  /** Returns a new set that only contains items that are elements of both
+   * sets. */
   public static Set<String> intersection(Set<String> a, Set<String> b) {
     Set<String> c = new HashSet<String>();
     for (String element : a.toArray(new String[a.size()])) {
@@ -20,6 +26,8 @@ public class SetUtils {
     return c;
   }
 
+  /** Returns all arbitrary concatenations of the set elements up to a length of
+   * maxlength, including the empty string. */
   public static Set<String> star(Set<String> a, int maxlength) {
     Set<String> c = new HashSet<String>();
     c.add("");
@@ -30,15 +38,19 @@ public class SetUtils {
         star(a, maxlength - 1));
     }
   }
-  
-  public static Set<String> star(String[] a, int maxlength){
+
+  /** Returns all arbitrary concatenations of the array elements up to a length
+   * of maxlength, including the empty string. */
+  public static Set<String> star(String[] a, int maxlength) {
     Set<String> c = new HashSet<String>();
-    for (String b : a){
+    for (String b : a) {
       c.add(b);
     }
     return star(c, maxlength);
   }
 
+  /** Returns a new set that contains all elements of a concatenated with all
+   * elements of b. */
   public static Set<String> concatenation(Set<String> a, Set<String> b) {
     Set<String> c = new HashSet<String>();
     for (String element : a.toArray(new String[a.size()])) {
@@ -54,7 +66,8 @@ public class SetUtils {
     return c;
   }
 
-  // TODO change data structures in CFG to Sets
+  /** Treats the passed arrays as sets and returns a set containing all elements
+   * that occur in one of the arrays. */
   public static Set<String> union(String[]... sets) {
     Set<String> c = new HashSet<String>();
     for (String[] set : sets) {

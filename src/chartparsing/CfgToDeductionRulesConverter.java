@@ -1,9 +1,3 @@
-/* Based on the slides from Laura Kallmeyer about Parsing as Deduction. Top
- * Down: https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf Shift Reduce:
- * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf Earley:
- * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf Left corner:
- * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf */
-
 package chartparsing;
 
 import common.ArrayUtils;
@@ -14,8 +8,14 @@ import common.cfg.CfgDottedItem;
 import common.cfg.CfgItem;
 import common.cfg.CfgProductionRule;
 
+/** Generates different parsing schemes. Based on the slides from Laura
+ * Kallmeyer about Parsing as Deduction. */
 public class CfgToDeductionRulesConverter {
 
+  /** Instead of calling the respective function this method works as entry
+   * point for all of them. Takes a cfg, an input string w and a string
+   * specifying which parsing algorithm shall be applied. Returns the respective
+   * parsing scheme. */
   public static ParsingSchema CfgToParsingSchema(Cfg cfg, String w,
     String schema) {
     switch (schema) {
@@ -32,6 +32,8 @@ public class CfgToDeductionRulesConverter {
     }
   }
 
+  /** Converts a cfg to a parsing scheme for Topdown parsing. Based on
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
   public static ParsingSchema CfgToTopDownRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out
@@ -48,15 +50,18 @@ public class CfgToDeductionRulesConverter {
           DeductionRule scan = new DeductionRule();
           scan.addAntecedence(new CfgItem(sequence, i));
           scan.addConsequence(new CfgItem(
-            ArrayUtils.getSubSequenceAsString(seqsplit, 1, seqsplit.length), i + 1));
+            ArrayUtils.getSubSequenceAsString(seqsplit, 1, seqsplit.length),
+            i + 1));
           scan.setName("scan " + wsplit[i]);
           schema.addRule(scan);
           // System.out.println(scan.toString()); //DEBUG
         } else if (cfg.varsContain(seqsplit[0])) {
           for (CfgProductionRule rule : cfg.getR()) {
             if (rule.getLhs().equals(seqsplit[0])) {
-              String[] gammaalpha = append(rule.getRhs(), ArrayUtils
-                .getSubSequenceAsString(seqsplit, 1, wsplit.length - i).split(" "));
+              String[] gammaalpha = append(rule.getRhs(),
+                ArrayUtils
+                  .getSubSequenceAsString(seqsplit, 1, wsplit.length - i)
+                  .split(" "));
               if (gammaalpha.length <= wsplit.length - i) {
                 DeductionRule predict = new DeductionRule();
                 predict.addAntecedence(new CfgItem(sequence, i));
@@ -71,7 +76,6 @@ public class CfgToDeductionRulesConverter {
           }
         }
       }
-
     }
     DeductionRule axiom = new DeductionRule();
     axiom.addConsequence(new CfgItem(cfg.getStart_var(), 0));
@@ -81,6 +85,8 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
+  /** Converts a cfg to a parsing scheme for ShiftReduce parsing. Based on
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf */
   public static ParsingSchema CfgToShiftReduceRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out.println(
@@ -129,7 +135,6 @@ public class CfgToDeductionRulesConverter {
         }
       }
     }
-
     DeductionRule axiom = new DeductionRule();
     axiom.addConsequence(new CfgItem("", 0));
     axiom.setName("axiom");
@@ -138,6 +143,8 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
+  /** Converts a cfg to a parsing scheme for Earley parsing. Based n
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf */
   public static ParsingSchema CfgToEarleyRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -159,20 +166,20 @@ public class CfgToDeductionRulesConverter {
                 DeductionRule scan = new DeductionRule();
                 if (k == 0) {
                   scan.addAntecedence(new CfgDottedItem(
-                    rule.getLhs() + " -> •" + ArrayUtils
-                      .getSubSequenceAsString(rule.getRhs(), k, rule.getRhs().length),
+                    rule.getLhs() + " -> •" + ArrayUtils.getSubSequenceAsString(
+                      rule.getRhs(), k, rule.getRhs().length),
                     i, j));
                 } else {
                   scan.addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
-                    + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k) + " •"
-                    + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
+                    + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
+                    + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
                       rule.getRhs().length),
                     i, j));
                 }
                 scan.addConsequence(new CfgDottedItem(rule.getLhs() + " -> "
-                  + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k + 1) + " •"
-                  + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k + 1,
-                    rule.getRhs().length),
+                  + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k + 1)
+                  + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(),
+                    k + 1, rule.getRhs().length),
                   i, j + 1));
                 scan.setName("scan " + wsplit[j]);
                 schema.addRule(scan);
@@ -184,24 +191,27 @@ public class CfgToDeductionRulesConverter {
               for (int k = 0; k < rule.getRhs().length; k++) {
                 if (rule.getRhs()[k].equals(rule2.getLhs())) {
                   DeductionRule predict = new DeductionRule();
-                  predict.addAntecedence(new CfgDottedItem(rule.getLhs()
-                    + " -> " + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
-                    + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
-                      rule.getRhs().length),
-                    i, j));
+                  predict
+                    .addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
+                      + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
+                      + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(),
+                        k, rule.getRhs().length),
+                      i, j));
                   for (int l = j; l <= wsplit.length; l++) {
                     DeductionRule complete = new DeductionRule();
                     if (rule.getRhs()[0].length() == 0) {
-                      complete.addAntecedence(new CfgDottedItem(
-                        rule.getLhs() + " -> •" + ArrayUtils.getSubSequenceAsString(
-                          rule.getRhs(), k, rule.getRhs().length),
-                        i, j));
+                      complete.addAntecedence(
+                        new CfgDottedItem(rule.getLhs() + " -> •"
+                          + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
+                            rule.getRhs().length),
+                          i, j));
                     } else {
                       complete
                         .addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
-                          + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
-                          + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
-                            rule.getRhs().length),
+                          + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0,
+                            k)
+                          + " •" + ArrayUtils.getSubSequenceAsString(
+                            rule.getRhs(), k, rule.getRhs().length),
                           i, j));
                     }
                     if (rule2.getRhs()[0].length() == 0) {
@@ -214,9 +224,10 @@ public class CfgToDeductionRulesConverter {
                     }
                     complete
                       .addConsequence(new CfgDottedItem(rule.getLhs() + " -> "
-                        + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k + 1)
-                        + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k + 1,
-                          rule.getRhs().length),
+                        + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0,
+                          k + 1)
+                        + " •" + ArrayUtils.getSubSequenceAsString(
+                          rule.getRhs(), k + 1, rule.getRhs().length),
                         i, l));
                     complete.setName("complete " + rule2.getLhs());
                     schema.addRule(complete);
@@ -243,7 +254,9 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  // TODO too slow
+  /** Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf TODO too slow
+   * at the moment to be used. */
   public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -268,11 +281,13 @@ public class CfgToDeductionRulesConverter {
                   new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
                 String newstackpredicted = "";
                 if (stackpredicted.length() == 0) {
-                  newstackpredicted = ArrayUtils.getSubSequenceAsString(rule.getRhs(),
-                    1, rule.getRhs().length) + " $";
+                  newstackpredicted =
+                    ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
+                      rule.getRhs().length) + " $";
                 } else {
-                  newstackpredicted = ArrayUtils.getSubSequenceAsString(rule.getRhs(),
-                    1, rule.getRhs().length) + " $ " + stackpredicted;
+                  newstackpredicted =
+                    ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
+                      rule.getRhs().length) + " $ " + stackpredicted;
                 }
                 String newstacklhs = "";
                 if (stacklhs.length() == 0) {
@@ -337,6 +352,8 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
+  /** If seqsplit ends with rhs, the first part of sesplit without rhs is
+   * returned, else null. */
   private static String getStringHeadIfEndsWith(String[] seqsplit,
     String[] rhs) {
     if (seqsplit.length < rhs.length)
@@ -346,9 +363,11 @@ public class CfgToDeductionRulesConverter {
         return null;
       }
     }
-    return ArrayUtils.getSubSequenceAsString(seqsplit, 0, seqsplit.length - rhs.length);
+    return ArrayUtils.getSubSequenceAsString(seqsplit, 0,
+      seqsplit.length - rhs.length);
   }
 
+  /** Returns a new array that is a concatenation of the two input arrays. */
   private static String[] append(String[] split, String[] rhs) {
     StringBuilder subseq = new StringBuilder();
     for (int i = 0; i < split.length; i++) {

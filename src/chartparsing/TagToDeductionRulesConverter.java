@@ -1,6 +1,3 @@
-/* Based on the slides from Laura Kallmeyer about TAG Parsing
- * https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf */
-
 package chartparsing;
 
 import java.util.Set;
@@ -11,8 +8,13 @@ import common.tag.TagEarleyItem;
 import common.tag.Tree;
 import common.tag.Vertex;
 
+/** Convertes Tree adjoining grammars to parsing schemes for the respective
+ * parsing algorithms. Based on the slides from Laura Kallmeyer about TAG
+ * Parsing
+ * https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf */
 public class TagToDeductionRulesConverter {
 
+  /** Common entry point to comfortably call the different functions. */
   public static ParsingSchema TagToParsingSchema(Tag tag, String w,
     String schema) {
     switch (schema) {
@@ -25,6 +27,7 @@ public class TagToDeductionRulesConverter {
     }
   }
 
+  /** Returns a parsing schema for CYK parsing of the given input w with tag. */
   public static ParsingSchema TagToCykRules(Tag tag, String w) {
     if (!tag.isBinarized()) {
       System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
@@ -233,6 +236,8 @@ public class TagToDeductionRulesConverter {
     return schema;
   }
 
+  /** Returns a parsing schema for Earley parsing of the given input w with
+   * tag. */
   public static ParsingSchema TagToEarleyRules(Tag tag, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -253,7 +258,7 @@ public class TagToDeductionRulesConverter {
           new TagEarleyItem(initreename, "", "la", 0, null, null, 0, false));
         initialize.setName("initialize");
         schema.addRule(initialize);
-       // System.out.println(initialize.toString()); // DEBUG
+        // System.out.println(initialize.toString()); // DEBUG
         schema.addGoal(new TagEarleyItem(initreename, "", "ra", 0, null, null,
           wsplit.length, false));
       }
@@ -271,7 +276,7 @@ public class TagToDeductionRulesConverter {
                 p.getGornaddress(), "lb", i, null, null, i, false));
               predictadjoined.setName("PredictAdjoined");
               schema.addRule(predictadjoined);
-             // System.out.println(predictadjoined.toString()); // DEBUG
+              // System.out.println(predictadjoined.toString()); // DEBUG
             }
           }
           if (tag.isSubstitutionNode(p, treename)) {
@@ -285,7 +290,7 @@ public class TagToDeductionRulesConverter {
                   "la", i, null, null, i, false));
                 predictsubst.setName("PredictSubst");
                 schema.addRule(predictsubst);
-               // System.out.println(predictsubst.toString()); // DEBUG
+                // System.out.println(predictsubst.toString()); // DEBUG
               }
             }
           }
@@ -303,7 +308,7 @@ public class TagToDeductionRulesConverter {
                 p.getGornaddress(), "ra", i, null, null, l + 1, false));
               scanterm.setName("ScanTerm " + wsplit[l]);
               schema.addRule(scanterm);
-             // System.out.println(scanterm.toString()); // DEBUG
+              // System.out.println(scanterm.toString()); // DEBUG
             } else if (p.getLabel().equals("")) {
               DeductionRule scaneps = new DeductionRule();
               scaneps.addAntecedence(new TagEarleyItem(treename,
@@ -312,9 +317,9 @@ public class TagToDeductionRulesConverter {
                 p.getGornaddress(), "ra", i, null, null, l, false));
               scaneps.setName("Scan-ε");
               schema.addRule(scaneps);
-             // System.out.println(scaneps.toString()); // DEBUG
+              // System.out.println(scaneps.toString()); // DEBUG
             }
-            
+
             // TODO f_OA(gamma,p) = 0
             if (!tag.isInTerminals(p.getLabel())) {
               DeductionRule predictnoadj = new DeductionRule();
@@ -324,7 +329,7 @@ public class TagToDeductionRulesConverter {
                 p.getGornaddress(), "lb", l, null, null, l, false));
               predictnoadj.setName("PredictNoAdj");
               schema.addRule(predictnoadj);
-             // System.out.println(predictnoadj.toString()); // DEBUG
+              // System.out.println(predictnoadj.toString()); // DEBUG
             }
             if (tag.getTree(treename)
               .getNodeByGornAdress(p.getGornaddress() + ".1") != null) {
@@ -335,7 +340,7 @@ public class TagToDeductionRulesConverter {
                 p.getGornaddress() + ".1", "la", i, null, null, l, false));
               movedown.setName("MoveDown");
               schema.addRule(movedown);
-             // System.out.println(movedown.toString()); // DEBUG
+              // System.out.println(movedown.toString()); // DEBUG
             }
             if (tag.getTree(treename).getNodeByGornAdress(
               p.getGornAddressOfPotentialRightSibling()) != null) {
@@ -347,7 +352,7 @@ public class TagToDeductionRulesConverter {
                 l, false));
               moveright.setName("MoveRight");
               schema.addRule(moveright);
-             // System.out.println(moveright.toString()); // DEBUG
+              // System.out.println(moveright.toString()); // DEBUG
             } else {
               if (!p.getGornaddress().equals("")) {
                 DeductionRule moveup = new DeductionRule();
@@ -357,7 +362,7 @@ public class TagToDeductionRulesConverter {
                   p.getGornAddressOfParent(), "rb", i, null, null, l, false));
                 moveup.setName("MoveUp");
                 schema.addRule(moveup);
-               // System.out.println(moveup.toString()); // DEBUG
+                // System.out.println(moveup.toString()); // DEBUG
               }
             }
             for (String auxtree : auxtreenames) {
@@ -370,7 +375,7 @@ public class TagToDeductionRulesConverter {
                   "la", l, null, null, l, false));
                 predictadjoinable.setName("PredictAdjoinable");
                 schema.addRule(predictadjoinable);
-               // System.out.println(predictadjoinable.toString()); // DEBUG
+                // System.out.println(predictadjoinable.toString()); // DEBUG
               }
               DeductionRule completefoot = new DeductionRule();
               completefoot.addAntecedence(new TagEarleyItem(treename,
@@ -381,7 +386,7 @@ public class TagToDeductionRulesConverter {
                 footnode.getGornaddress(), "rb", i, i, l, l, false));
               completefoot.setName("CompleteFoot");
               schema.addRule(completefoot);
-             // System.out.println(completefoot.toString()); // DEBUG
+              // System.out.println(completefoot.toString()); // DEBUG
             }
             if (tag.isSubstitutionNode(p, treename)) {
               for (String initreename : initreenames) {
@@ -394,7 +399,7 @@ public class TagToDeductionRulesConverter {
                     p.getGornaddress(), "rb", i, null, null, l, false));
                   substitute.setName("Substitute");
                   schema.addRule(substitute);
-                 // System.out.println(substitute.toString()); // DEBUG
+                  // System.out.println(substitute.toString()); // DEBUG
                 }
               }
             }
@@ -409,7 +414,7 @@ public class TagToDeductionRulesConverter {
                   p.getGornaddress(), "ra", f, null, null, l, false));
                 completenode.setName("CompleteNode");
                 schema.addRule(completenode);
-               // System.out.println(completenode.toString()); // DEBUG
+                // System.out.println(completenode.toString()); // DEBUG
                 completenode = new DeductionRule();
                 completenode.addAntecedence(new TagEarleyItem(treename,
                   p.getGornaddress(), "la", f, null, null, i, false));
@@ -419,7 +424,7 @@ public class TagToDeductionRulesConverter {
                   p.getGornaddress(), "ra", f, null, null, l, false));
                 completenode.setName("CompleteNode");
                 schema.addRule(completenode);
-               // System.out.println(completenode.toString()); // DEBUG
+                // System.out.println(completenode.toString()); // DEBUG
               }
             }
           }
@@ -437,7 +442,7 @@ public class TagToDeductionRulesConverter {
                     p.getGornaddress(), "ra", i, j, k, l + 1, false));
                   scanterm.setName("ScanTerm " + wsplit[l]);
                   schema.addRule(scanterm);
-                 // System.out.println(scanterm.toString()); // DEBUG
+                  // System.out.println(scanterm.toString()); // DEBUG
                 } else if (p.getLabel().equals("")) {
                   DeductionRule scaneps = new DeductionRule();
                   scaneps.addAntecedence(new TagEarleyItem(treename,
@@ -446,7 +451,7 @@ public class TagToDeductionRulesConverter {
                     p.getGornaddress(), "ra", i, j, k, l, false));
                   scaneps.setName("Scan-ε");
                   schema.addRule(scaneps);
-                 // System.out.println(scaneps.toString()); // DEBUG
+                  // System.out.println(scaneps.toString()); // DEBUG
                 }
                 // TODO f_OA(gamma,p) = 0
                 if (!tag.isInTerminals(p.getLabel())) {
@@ -457,7 +462,7 @@ public class TagToDeductionRulesConverter {
                     p.getGornaddress(), "lb", l, null, null, l, false));
                   predictnoadj.setName("PredictNoAdj");
                   schema.addRule(predictnoadj);
-                 // System.out.println(predictnoadj.toString()); // DEBUG
+                  // System.out.println(predictnoadj.toString()); // DEBUG
                 }
                 if (tag.getTree(treename)
                   .getNodeByGornAdress(p.getGornaddress() + ".1") != null) {
@@ -468,7 +473,7 @@ public class TagToDeductionRulesConverter {
                     p.getGornaddress() + ".1", "la", i, j, k, l, false));
                   movedown.setName("MoveDown");
                   schema.addRule(movedown);
-                 // System.out.println(movedown.toString()); // DEBUG
+                  // System.out.println(movedown.toString()); // DEBUG
                 }
                 if (tag.getTree(treename).getNodeByGornAdress(
                   p.getGornAddressOfPotentialRightSibling()) != null) {
@@ -480,7 +485,7 @@ public class TagToDeductionRulesConverter {
                     false));
                   moveright.setName("MoveRight");
                   schema.addRule(moveright);
-                 // System.out.println(moveright.toString()); // DEBUG
+                  // System.out.println(moveright.toString()); // DEBUG
                 } else {
                   if (!p.getGornaddress().equals("")) {
                     DeductionRule moveup = new DeductionRule();
@@ -490,7 +495,7 @@ public class TagToDeductionRulesConverter {
                       p.getGornAddressOfParent(), "rb", i, j, k, l, false));
                     moveup.setName("MoveUp");
                     schema.addRule(moveup);
-                   // System.out.println(moveup.toString()); // DEBUG
+                    // System.out.println(moveup.toString()); // DEBUG
                   }
                 }
                 for (String auxtree : auxtreenames) {
@@ -503,7 +508,8 @@ public class TagToDeductionRulesConverter {
                       "", "la", l, null, null, l, false));
                     predictadjoinable.setName("PredictAdjoinable");
                     schema.addRule(predictadjoinable);
-                   // System.out.println(predictadjoinable.toString()); // DEBUG
+                    // System.out.println(predictadjoinable.toString()); //
+                    // DEBUG
 
                     DeductionRule adjoin = new DeductionRule();
                     adjoin.addAntecedence(
@@ -514,7 +520,7 @@ public class TagToDeductionRulesConverter {
                       p.getGornaddress(), "rb", i, null, null, l, true));
                     adjoin.setName("Adjoin");
                     schema.addRule(adjoin);
-                   // System.out.println(adjoin.toString()); // DEBUG
+                    // System.out.println(adjoin.toString()); // DEBUG
                     for (int g = j; g < wsplit.length; g++) {
                       for (int h = g; h < wsplit.length; h++) {
                         adjoin = new DeductionRule();
@@ -526,7 +532,7 @@ public class TagToDeductionRulesConverter {
                           p.getGornaddress(), "rb", i, g, h, l, true));
                         adjoin.setName("Adjoin");
                         schema.addRule(adjoin);
-                       // System.out.println(adjoin.toString()); // DEBUG
+                        // System.out.println(adjoin.toString()); // DEBUG
                       }
                     }
                   }
@@ -540,7 +546,7 @@ public class TagToDeductionRulesConverter {
                     footnode.getGornaddress(), "rb", i, i, l, l, false));
                   completefoot.setName("CompleteFoot");
                   schema.addRule(completefoot);
-                 // System.out.println(completefoot.toString()); // DEBUG
+                  // System.out.println(completefoot.toString()); // DEBUG
                 }
 
                 if (tag.isInNonterminals(p.getLabel())) {
@@ -555,7 +561,7 @@ public class TagToDeductionRulesConverter {
                       p.getGornaddress(), "ra", f, j, k, l, false));
                     completenode.setName("CompleteNode");
                     schema.addRule(completenode);
-                   // System.out.println(completenode.toString()); // DEBUG
+                    // System.out.println(completenode.toString()); // DEBUG
                     completenode = new DeductionRule();
                     completenode.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "la", f, null, null, i, false));
@@ -565,7 +571,7 @@ public class TagToDeductionRulesConverter {
                       p.getGornaddress(), "ra", f, j, k, l, false));
                     completenode.setName("CompleteNode");
                     schema.addRule(completenode);
-                   // System.out.println(completenode.toString()); // DEBUG
+                    // System.out.println(completenode.toString()); // DEBUG
 
                     // right null
                     completenode = new DeductionRule();
@@ -577,7 +583,7 @@ public class TagToDeductionRulesConverter {
                       p.getGornaddress(), "ra", f, i, j, l, false));
                     completenode.setName("CompleteNode");
                     schema.addRule(completenode);
-                   // System.out.println(completenode.toString()); // DEBUG
+                    // System.out.println(completenode.toString()); // DEBUG
                     completenode = new DeductionRule();
                     completenode.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "la", f, i, j, k, false));
@@ -587,7 +593,7 @@ public class TagToDeductionRulesConverter {
                       p.getGornaddress(), "ra", f, i, j, l, false));
                     completenode.setName("CompleteNode");
                     schema.addRule(completenode);
-                   // System.out.println(completenode.toString()); // DEBUG
+                    // System.out.println(completenode.toString()); // DEBUG
                   }
                 }
               }

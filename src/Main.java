@@ -9,8 +9,11 @@ import common.GrammarParser;
 import common.cfg.Cfg;
 import common.tag.Tag;
 
+/** Entry point into toolbox for the calls by command line */
 public class Main {
 
+  /** Command line arguments are passed here. Call without arguments displays
+   * help about the what arguments to use. */
   public static void main(String[] args) throws ParseException, IOException {
     if (args.length != 3) {
       System.out.println(
@@ -59,7 +62,8 @@ public class Main {
         schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "cyk");
         break;
       case "tag-earley":
-        schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "earley");
+        schema =
+          TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "earley");
         break;
       default:
         System.out.println(

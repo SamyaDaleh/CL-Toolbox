@@ -6,10 +6,13 @@ import java.util.Map;
 import common.cfg.Pcfg;
 import common.cfg.PcfgProductionRule;
 
+/** Calculates the SX estimates to be used for astar parsing. */
 public class SxCalc {
 
   Map<String, Map<Integer, Double>> insides = null;
 
+  /** Calculates all inside probabilities (as absolute logs) for all
+   * nonterminals in Pcfg up until nmax length. */
   public static Map<String, Double> getInsides(Pcfg cfg, int nmax) {
     Map<String, Double> insides = new HashMap<String, Double>();
     for (int n = 1; n <= nmax; n++) {
@@ -48,10 +51,14 @@ public class SxCalc {
     return insides;
   }
 
+  /** Generates a string that is used as key for inside probabilities in a human
+   * readable form. */
   static String getInsideKey(String nt, int length) {
     return "in(" + nt + "," + String.valueOf(length) + ")";
   }
 
+  /** Calculates all outside probabilities as absolute logs for all nonterminals
+   * in Pcfg for length n. Needs Insides to be calculated first. */
   public static Map<String, Double> getOutsides(Map<String, Double> insides,
     int n, Pcfg pcfg) {
     Map<String, Double> outsides = new HashMap<String, Double>();
@@ -99,6 +106,8 @@ public class SxCalc {
     return outsides;
   }
 
+  /** Generates a string that is used as key for outside probabilities in a
+   * human readable form. */
   private static String getOutsideKey(String nt, int nl, int l, int nr) {
     return "out(" + nt + "," + String.valueOf(nl) + "," + String.valueOf(l)
       + "," + String.valueOf(nr) + ")";

@@ -9,6 +9,8 @@ import java.util.Set;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
 
+/** Tree adjoining grammar that consists of terminals, nonterminals, a start
+ * symbol, some initial trees and auxiliary trees. */
 public class Tag {
   String[] nonterminals;
   String[] terminals;
@@ -20,6 +22,8 @@ public class Tag {
     super();
   }
 
+  /** Creates a TAG from a context free grammar by converting all rules to
+   * trees. */
   public Tag(Cfg cfg) throws ParseException {
     this.nonterminals = cfg.getVars();
     this.terminals = cfg.getTerminals();
@@ -49,6 +53,8 @@ public class Tag {
     return this.terminals;
   }
 
+  /** Parses a tree string, performs some basic validation and adds it to its
+   * initial trees. */
   public void addInitialTree(String name, String tree) throws ParseException {
     this.initialtrees.put(name, new Tree(tree));
     for (Vertex p : getInitialTree(name).getVertexes()) {
@@ -59,10 +65,12 @@ public class Tag {
     }
   }
 
+  /** Returns a set of all names of inital trees. */
   public Set<String> getInitialTreeNames() {
     return this.initialtrees.keySet();
   }
 
+  /** Returns a set of all names of auxiliary trees. */
   public Set<String> getAuxiliaryTreeNames() {
     return this.auxiliarytrees.keySet();
   }
@@ -75,6 +83,8 @@ public class Tag {
     return this.auxiliarytrees.get(name);
   }
 
+  /** Parses a tree string, performs some basic validation and adds it to its
+   * auxiliary trees. */
   public void addAuxiliaryTree(String name, String tree) throws ParseException {
     this.auxiliarytrees.put(name, new Tree(tree));
     if (!isFootAndRootSameLabel(getAuxiliaryTree(name))) {
@@ -90,11 +100,14 @@ public class Tag {
     }
   }
 
+  /** Returns true if root node and foot node of an auxiliary tree have the same
+   * label. */
   private boolean isFootAndRootSameLabel(Tree auxiliaryTree) {
     return (auxiliaryTree.getFoot().getLabel()
       .equals(auxiliaryTree.getRoot().getLabel()));
   }
 
+  /** Returns a set of all names of inital and auxiliary trees. */
   public Set<String> getTreeNames() {
     Set<String> c = new HashSet<String>();
     c.addAll(this.initialtrees.keySet());
@@ -118,6 +131,9 @@ public class Tag {
     return this.startsymbol;
   }
 
+  /** Returns true if the passed vertex in the named tree is a substitution
+   * node, that means: it has a nonterminal label, it has no child nodes and it
+   * is no foot node. */
   public boolean isSubstitutionNode(Vertex p, String treename) {
     boolean nonterminallabel = false;
     for (String nt : nonterminals) {
@@ -136,6 +152,8 @@ public class Tag {
     return (nonterminallabel && !tree.hasChildren(p) && !isfootnode);
   }
 
+  /** Returns true if the TAG is binaried, that means all nodes have at most 2
+   * child nodes. */
   public boolean isBinarized() {
     for (Tree tree : initialtrees.values()) {
       for (Vertex p : tree.getVertexes()) {
@@ -158,6 +176,7 @@ public class Tag {
     return true;
   }
 
+  /** Returns true if the passed label is one of the nonterminals. */
   public boolean isInNonterminals(String label) {
     for (String nt : nonterminals) {
       if (label.equals(nt))
@@ -166,6 +185,7 @@ public class Tag {
     return false;
   }
 
+  /** Returns true if the passed label is one of the terminals. */
   public boolean isInTerminals(String label) {
     for (String t : terminals) {
       if (label.equals(t))
