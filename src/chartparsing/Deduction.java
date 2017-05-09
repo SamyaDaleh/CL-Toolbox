@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import common.Item;
+import gui.ParsingTraceTable;
 
 /** A deduction system that derives consequences from antecendence items and
  * tries to generate a goal item. Based on the slides from Laura Kallmeyer about
@@ -83,19 +84,25 @@ public class Deduction {
         }
       }
     }
+    ArrayList<String[]> chartdata = new ArrayList<String[]>();
     if (successfultrace) {
       for (int i = 0; i < chart.size(); i++) {
         if (usefulitem[i]) {
-          prettyprint(i, chart.get(i).toString(), appliedRule.get(i),
-            deductedfrom.get(i));
+          String[] line = prettyprint(i, chart.get(i).toString(),
+            appliedRule.get(i), deductedfrom.get(i));
+          chartdata.add(line);
         }
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
-        prettyprint(i, chart.get(i).toString(), appliedRule.get(i),
-          deductedfrom.get(i));
+        String[] line = prettyprint(i, chart.get(i).toString(),
+          appliedRule.get(i), deductedfrom.get(i));
+        chartdata.add(line);
       }
     }
+    ParsingTraceTable.displayTrace(
+      chartdata.toArray(new String[chartdata.size()][]),
+      new String[] {"Id", "Item", "Rules", "Backpointers"});
   }
 
   /** Returns the backpointers in this list of lists as plain list. */
@@ -188,9 +195,10 @@ public class Deduction {
   static int column3 = 20;
 
   /** Pretty-prints rows of the parsing process by filling up all columns up to
-   * a specific length with spaces. */
-  private static void prettyprint(int i, String item, ArrayList<String> rules,
-    ArrayList<ArrayList<Integer>> backpointers) {
+   * a specific length with spaces. Returns the data it prints as string
+   * array. */
+  private static String[] prettyprint(int i, String item,
+    ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers) {
     StringBuilder line = new StringBuilder();
     line.append(String.valueOf(i + 1));
     for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
@@ -208,6 +216,8 @@ public class Deduction {
     String backpointersrep = backpointersToString(backpointers);
     line.append(backpointersrep);
     System.out.println(line.toString());
+    return new String[] {String.valueOf(i + 1), item.toString(), rulesrep,
+      backpointersrep};
   }
 
   /** Returns a string representation of a list of rules in a human friendly
