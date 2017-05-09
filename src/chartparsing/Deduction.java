@@ -12,9 +12,17 @@ import common.Item;
  * Parsing as Deduction
  * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
 public class Deduction {
+  /** All items derived in the process. */
   static List<Item> chart;
+  /** Items waiting to be used for further derivation. */
   static List<Item> agenda;
-  static List<Integer> deductedfrom;
+  /** List of the same length of chart, elements at same indexes belong to each
+   * other. Contains lists of lists of backpointers. One item can be derived in
+   * different ways from different antecedence items. */
+  static ArrayList<ArrayList<ArrayList<Integer>>> deductedfrom;
+  /** Indexes correspond to entries of chart and deductedfrom. Collects the
+   * names of the rules that were applied to retrieve new items. */
+  static ArrayList<ArrayList<String>> appliedRule;
 
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
@@ -24,7 +32,8 @@ public class Deduction {
       return false;
     chart = new LinkedList<Item>();
     agenda = new LinkedList<Item>();
-    deductedfrom = new LinkedList<Integer>();
+    deductedfrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    appliedRule = new ArrayList<ArrayList<String>>();
     for (DeductionRule rule : schema.getRules()) {
       if (rule.getAntecedences().isEmpty()) {
         applyAxiomRule(rule);
@@ -39,11 +48,19 @@ public class Deduction {
         }
       }
     }
+    printTrace();
     for (Item goal : schema.getGoals()) {
       if (checkForGoal(goal))
         return true;
     }
     return false;
+  }
+
+  private static void printTrace() {
+    for (int i = 0; i < chart.size(); i++) {
+      prettyprint(i, chart.get(i).toString(), appliedRule.get(i),
+        deductedfrom.get(i));
+    }
   }
 
   /** Takes a goal item and compares it with all items in the chart. Returns
@@ -63,8 +80,14 @@ public class Deduction {
       if (!chart.contains(item)) {
         chart.add(item);
         agenda.add(item);
-        prettyprint((chart.indexOf(item) + 1), item.toString(), rule.getName(),
-          "");
+        deductedfrom.add(new ArrayList<ArrayList<Integer>>());
+        deductedfrom.get(deductedfrom.size() - 1).add(new ArrayList<Integer>());
+        appliedRule.add(new ArrayList<String>());
+        appliedRule.get(appliedRule.size() - 1).add(rule.getName());
+      } else {
+        int oldid = chart.indexOf(item);
+        appliedRule.get(oldid).add(rule.getName());
+        deductedfrom.get(oldid).add(new ArrayList<Integer>());
       }
     }
   }
@@ -75,24 +98,28 @@ public class Deduction {
    * found. */
   private static void applyRule(Item item, DeductionRule rule) {
     Set<Item> itemstofind = rule.getAntecedences();
-    StringBuilder derivedfrom = new StringBuilder();
     if (contains(itemstofind, item)) {
       itemstofind.remove(item);
     } else
       return;
+    ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
     for (Object itemtocheck : itemstofind.toArray()) {
       if (!chart.contains((Item) itemtocheck))
         return;
-      if (derivedfrom.length() > 0)
-        derivedfrom.append(", ");
-      derivedfrom.append(chart.indexOf(itemtocheck) + 1);
+      newitemsdeductedfrom.add(chart.indexOf(itemtocheck));
     }
     for (Item newitem : rule.consequences) {
       if (!chart.contains(newitem)) {
         chart.add(newitem);
         agenda.add(newitem);
-        prettyprint((chart.indexOf(newitem) + 1), newitem.toString(),
-          rule.getName(), derivedfrom.toString());
+        appliedRule.add(new ArrayList<String>());
+        appliedRule.get(appliedRule.size() - 1).add(rule.getName());
+        deductedfrom.add(new ArrayList<ArrayList<Integer>>());
+        deductedfrom.get(deductedfrom.size() - 1).add(newitemsdeductedfrom);
+      } else {
+        int oldid = chart.indexOf(newitem);
+        appliedRule.get(oldid).add(rule.getName());
+        deductedfrom.get(oldid).add(newitemsdeductedfrom);
       }
     }
   }
@@ -113,22 +140,59 @@ public class Deduction {
 
   /** Pretty-prints rows of the parsing process by filling up all columns up to
    * a specific length with spaces. */
-  private static void prettyprint(int i, String string, String name,
-    String string2) {
+  private static void prettyprint(int i, String item, ArrayList<String> rules,
+    ArrayList<ArrayList<Integer>> backpointers) {
     StringBuilder line = new StringBuilder();
-    line.append(String.valueOf(i));
-    for (int i1 = 0; i1 < column1 - String.valueOf(i).length(); i1++) {
+    line.append(String.valueOf(i+1));
+    for (int i1 = 0; i1 < column1 - String.valueOf(i+1).length(); i1++) {
       line.append(" ");
     }
-    line.append(string);
-    for (int i1 = 0; i1 < column2 - String.valueOf(string).length(); i1++) {
+    line.append(item);
+    for (int i1 = 0; i1 < column2 - String.valueOf(item).length(); i1++) {
       line.append(" ");
     }
-    line.append(name);
-    for (int i1 = 0; i1 < column3 - String.valueOf(name).length(); i1++) {
+    String rulesrep = rulesToString(rules);
+    line.append(rulesrep);
+    for (int i1 = 0; i1 < column3 - String.valueOf(rulesrep).length(); i1++) {
       line.append(" ");
     }
-    line.append(string2);
+    String backpointersrep = backpointersToString(backpointers);
+    line.append(backpointersrep);
     System.out.println(line.toString());
+  }
+
+  /** Returns a string representation of a list of rules in a human friendly
+   * form. */
+  private static String rulesToString(ArrayList<String> rules) {
+    if (rules.size() == 0)
+      return "";
+    StringBuilder builder = new StringBuilder();
+    for (String rule : rules) {
+      if (builder.length() > 0)
+        builder.append(", ");
+      builder.append(rule);
+    }
+    return builder.toString();
+  }
+
+  /** Returns a string representation of a list of lists of backpointers in a
+   * human friendly form. */
+  private static String
+    backpointersToString(ArrayList<ArrayList<Integer>> backpointers) {
+    if (backpointers.size() == 0)
+      return "";
+    StringBuilder builder = new StringBuilder();
+    for (ArrayList<Integer> pointertuple : backpointers) {
+      if (builder.length() > 0)
+        builder.append(", ");
+      builder.append("{");
+      for (int i = 0; i < pointertuple.size(); i++) {
+        if (i > 0)
+          builder.append(", ");
+        builder.append(String.valueOf(pointertuple.get(i)+1));
+      }
+      builder.append("}");
+    }
+    return builder.toString();
   }
 }
