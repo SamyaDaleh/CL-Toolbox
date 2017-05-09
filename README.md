@@ -32,7 +32,7 @@ Example:
 
 (Output is pretty-printed similar to this, but without the fancy borders and coloring.)
 
-Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characterts.
+Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters.
 
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
 <table border="0">
