@@ -18,6 +18,13 @@ public class CfgProductionRule {
     this.rhs = rhs.split(" ");
   }
 
+  /** Lhs and Rhs passed separately, used when converting one rule format to
+   * another. */
+  public CfgProductionRule(String lhs, String[] rhs) {
+    this.lhs = lhs;
+    this.rhs = rhs;
+  }
+
   public String getLhs() {
     return this.lhs;
   }

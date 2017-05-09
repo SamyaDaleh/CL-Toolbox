@@ -11,6 +11,22 @@ public class Cfg {
   String start_var;
   String terminals[];
 
+  public Cfg() {
+    super();
+  }
+
+  /** Creates a CFG from a PCFG by throwing away all probabilities. */
+  Cfg(Pcfg pcfg) {
+    this.vars = pcfg.vars;
+    this.terminals = pcfg.terminals;
+    this.start_var = pcfg.getStart_var();
+    for (PcfgProductionRule rule : pcfg.getR()) {
+      CfgProductionRule newrule =
+        new CfgProductionRule(rule.getLhs(), rule.getRhs());
+      this.R.add(newrule);
+    }
+  }
+
   public String[] getVars() {
     return vars;
   }
