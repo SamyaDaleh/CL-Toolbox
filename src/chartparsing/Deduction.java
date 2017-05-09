@@ -23,6 +23,10 @@ public class Deduction {
   /** Indexes correspond to entries of chart and deductedfrom. Collects the
    * names of the rules that were applied to retrieve new items. */
   static ArrayList<ArrayList<String>> appliedRule;
+  /** When true print only items that lead to a goal. */
+  static boolean successfultrace = false;
+  /** Markers if items lead to goal */
+  static boolean[] usefulitem;
 
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
@@ -48,29 +52,74 @@ public class Deduction {
         }
       }
     }
-    printTrace();
+    boolean goalfound = false;
+    usefulitem = new boolean[chart.size()];
     for (Item goal : schema.getGoals()) {
-      if (checkForGoal(goal))
-        return true;
+      if (checkForGoal(goal) >= 0)
+        goalfound = true;
     }
-    return false;
+    printTrace();
+    return goalfound;
   }
 
+  /** Prints the trace to the command line. If only the useful items shall be
+   * retrieved, it checks all items if they lead to a goal. */
   private static void printTrace() {
-    for (int i = 0; i < chart.size(); i++) {
-      prettyprint(i, chart.get(i).toString(), appliedRule.get(i),
-        deductedfrom.get(i));
+    if (successfultrace) {
+      boolean changed = true;
+      while (changed) {
+        changed = false;
+        for (int i = chart.size() - 1; i >= 0; i--) {
+          if (usefulitem[i]) {
+            ArrayList<Integer> pointers =
+              getPointersAsArray(deductedfrom.get(i));
+            for (int pointer : pointers) {
+              if (!usefulitem[pointer]) {
+                usefulitem[pointer] = true;
+                changed = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    if (successfultrace) {
+      for (int i = 0; i < chart.size(); i++) {
+        if (usefulitem[i]) {
+          prettyprint(i, chart.get(i).toString(), appliedRule.get(i),
+            deductedfrom.get(i));
+        }
+      }
+    } else {
+      for (int i = 0; i < chart.size(); i++) {
+        prettyprint(i, chart.get(i).toString(), appliedRule.get(i),
+          deductedfrom.get(i));
+      }
     }
   }
 
-  /** Takes a goal item and compares it with all items in the chart. Returns
-   * true if one was found. */
-  private static boolean checkForGoal(Item goal) {
-    for (Item item : chart) {
-      if (item.equals(goal))
-        return true;
+  /** Returns the backpointers in this list of lists as plain list. */
+  private static ArrayList<Integer>
+    getPointersAsArray(ArrayList<ArrayList<Integer>> backpointers) {
+    ArrayList<Integer> pointerlist = new ArrayList<Integer>();
+    for (ArrayList<Integer> pointertuple : backpointers) {
+      for (int i = 0; i < pointertuple.size(); i++) {
+        pointerlist.add(pointertuple.get(i));
+      }
     }
-    return false;
+    return pointerlist;
+  }
+
+  /** Takes a goal item and compares it with all items in the chart. Returns its
+   * index if one was found. */
+  private static int checkForGoal(Item goal) {
+    for (int i = 0; i < chart.size(); i++) {
+      if (chart.get(i).equals(goal)) {
+        usefulitem[i] = true;
+        return i;
+      }
+    }
+    return -1;
   }
 
   /** Applies an axiom rule, that is a rule without antecedence items and adds
@@ -143,8 +192,8 @@ public class Deduction {
   private static void prettyprint(int i, String item, ArrayList<String> rules,
     ArrayList<ArrayList<Integer>> backpointers) {
     StringBuilder line = new StringBuilder();
-    line.append(String.valueOf(i+1));
-    for (int i1 = 0; i1 < column1 - String.valueOf(i+1).length(); i1++) {
+    line.append(String.valueOf(i + 1));
+    for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
       line.append(" ");
     }
     line.append(item);
@@ -189,7 +238,7 @@ public class Deduction {
       for (int i = 0; i < pointertuple.size(); i++) {
         if (i > 0)
           builder.append(", ");
-        builder.append(String.valueOf(pointertuple.get(i)+1));
+        builder.append(String.valueOf(pointertuple.get(i) + 1));
       }
       builder.append("}");
     }
