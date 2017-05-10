@@ -10,7 +10,7 @@ import common.Item;
 import common.cfg.CfgItem;
 
 public class CfgItemTest {
-	public static void main(String[] args) {
+  public static void main(String[] args) {
 		Item item1 = new CfgItem("S", 0);
 		Item item2 = new CfgItem("S", 0);
 

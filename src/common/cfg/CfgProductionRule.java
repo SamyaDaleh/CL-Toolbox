@@ -32,4 +32,12 @@ public class CfgProductionRule {
   public String[] getRhs() {
     return this.rhs;
   }
+  
+  @Override public String toString() {
+    if (rhs[0].equals("")) {
+      return lhs + " -> ε";
+    } else {
+      return lhs + " -> " + String.join(" ", rhs);
+    }
+  }
 }

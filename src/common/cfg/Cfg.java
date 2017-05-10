@@ -1,7 +1,10 @@
 package common.cfg;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import common.ArrayUtils;
 
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
@@ -127,12 +130,10 @@ public class Cfg {
     }
     return true;
   }
-  
-  /**
-   * Returns true if grammar is in Greibach Normal Form. All right hand sides
+
+  /** Returns true if grammar is in Greibach Normal Form. All right hand sides
    * must start with a terminal, followed by arbitrary many nonterminals
-   * including none.
-   */
+   * including none. */
   public boolean isInGreibachNormalForm() {
     for (CfgProductionRule rule : this.R) {
       if (rule.rhs[0].equals("")) {
@@ -141,12 +142,81 @@ public class Cfg {
       if (!terminalsContain(rule.rhs[0])) {
         return false;
       }
-      for(int i = 1; i < rule.rhs.length; i++) {
+      for (int i = 1; i < rule.rhs.length; i++) {
         if (!varsContain(rule.rhs[i])) {
           return false;
         }
       }
     }
     return true;
+  }
+
+  /** Returns an equivalent CFG where all rhs' have at most length 2. */
+  public Cfg binarize() {
+    Cfg newCfg = new Cfg();
+    newCfg.setTerminals(this.terminals);
+    newCfg.setStart_var(this.start_var);
+    ArrayList<String> newnt = new ArrayList<String>();
+    for (String nt : this.vars) {
+      newnt.add(nt);
+    }
+    ArrayList<String[]> newp = new ArrayList<String[]>();
+    int i = 1;
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs.length > 2) {
+        CfgProductionRule rulerest = rule;
+        while (rulerest.rhs.length > 2) {
+          String newn = "X" + String.valueOf(i);
+          while (varsContain(newn)) {
+            i++;
+            newn = "X" + String.valueOf(i);
+          }
+          newnt.add(newn);
+          String newrhs = rulerest.rhs[0] + " " + newn;
+          String[] newrule = new String[] {rulerest.lhs, newrhs};
+          newp.add(newrule);
+          i++;
+          rulerest = new CfgProductionRule(newn, ArrayUtils
+            .getSubSequenceAsArray(rulerest.rhs, 1, rulerest.rhs.length));
+        }
+        newp.add(
+          new String[] {rulerest.lhs, rulerest.rhs[0] + " " + rulerest.rhs[1]});
+      } else if (rule.rhs.length == 2) {
+        newp.add(new String[] {rule.lhs, rule.rhs[0] + " " + rule.rhs[1]});
+      }
+      if (rule.rhs.length == 1) {
+        newp.add(new String[] {rule.lhs, rule.rhs[0]});
+      }
+    }
+    newCfg.setVars(newnt.toArray(new String[newnt.size()]));
+    newCfg.setR(newp.toArray(new String[newp.size()][]));
+    return newCfg;
+  }
+
+  /** Returns true if all rhs' have at most length 2. */
+  public boolean isBinarized() {
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs.length > 2) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("G = <N, T, S, P>\n");
+    builder.append("N = {" + String.join(", ", vars) + "}\n");
+    builder.append("T = {" + String.join(", ", terminals) + "}\n");
+    builder.append("S = " + start_var + "\n");
+    builder.append("P = {");
+    for (int i = 0; i < R.size(); i++) {
+      if (i > 0) {
+        builder.append(", ");
+      }
+      builder.append(R.get(i).toString());
+    }
+    builder.append("}");
+    return builder.toString();
   }
 }
