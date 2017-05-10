@@ -28,4 +28,35 @@ public class ArrayUtils {
     }
     return newsequence.toArray(new String[newsequence.size()]);
   }
+
+  /** Returns true if the arrays are equal, that means all strings at the same
+   * index has to be equal. Also the special character '?' is equal to
+   * everything. */
+  public static boolean match(String[] itemform1, String[] itemform2) {
+    if (itemform1.length != itemform2.length) {
+      return false;
+    }
+    for (int i = 0; i < itemform1.length; i++) {
+      if (!(itemform1[i].equals("?") || itemform2[i].equals("?")
+        || itemform1[i].equals(itemform2[i]))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  /**
+   * Returns a string representation of an array, here used for items.
+   */
+  public static String toString(String[] item) {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[");
+    for (String entry : item) {
+      if (representation.length() > 1) {
+        representation.append(",");
+      }
+      representation.append(entry);
+    }
+    return representation.toString();
+  }
 }

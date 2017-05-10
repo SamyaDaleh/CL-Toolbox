@@ -88,4 +88,65 @@ public class Cfg {
     }
     return false;
   }
+
+  /** Returns true if grammar is in Canonical Two Form. C2F is like Chomsky
+   * Normal form, but chain rules are also allowed. */
+  public boolean isInCanonicalTwoForm() {
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs.length == 1) {
+        if (rule.lhs.equals(start_var) && rule.rhs[0].equals("")) {
+          for (CfgProductionRule rule2 : this.R) {
+            if (rule2.rhs[0].equals(start_var)
+              || rule2.rhs[1].equals(start_var)) {
+              return false;
+            }
+          }
+        }
+      } else if (!varsContain(rule.rhs[0]) || !varsContain(rule.rhs[1])) {
+        return false;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /** Returns true if the grammar is in Chomsky Normal Form. A grammar is in CNF
+   * if all rules are either of the form A -> t or A -> BC. S -> ε is allowed,
+   * in which case S must not appear on any right hand side. */
+  public boolean isInChomskyNormalForm() {
+    if (!isInCanonicalTwoForm()) {
+      return false;
+    }
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs.length == 1) {
+        if (!terminalsContain(rule.rhs[0])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  
+  /**
+   * Returns true if grammar is in Greibach Normal Form. All right hand sides
+   * must start with a terminal, followed by arbitrary many nonterminals
+   * including none.
+   */
+  public boolean isInGreibachNormalForm() {
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs[0].equals("")) {
+        return false;
+      }
+      if (!terminalsContain(rule.rhs[0])) {
+        return false;
+      }
+      for(int i = 1; i < rule.rhs.length; i++) {
+        if (!varsContain(rule.rhs[i])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }
