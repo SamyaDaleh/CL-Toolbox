@@ -57,6 +57,7 @@ public class ArrayUtils {
       }
       representation.append(entry);
     }
+    representation.append("]");
     return representation.toString();
   }
 }

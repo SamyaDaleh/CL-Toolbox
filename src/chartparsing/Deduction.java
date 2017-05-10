@@ -3,7 +3,6 @@ package chartparsing;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import common.Item;
 import gui.ParsingTraceTable;
@@ -40,16 +39,16 @@ public class Deduction {
     agenda = new LinkedList<Item>();
     deductedfrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
     appliedRule = new ArrayList<ArrayList<String>>();
-    for (DeductionRule rule : schema.getRules()) {
-      if (rule.getAntecedences().isEmpty()) {
+    for (StaticDeductionRule rule : schema.getRules()) {
+      if (rule.getAntecedences().size() == 0) {
         applyAxiomRule(rule);
       }
     }
     while (!agenda.isEmpty()) {
       Item item = agenda.get(0);
       agenda.remove(0);
-      for (DeductionRule rule : schema.getRules()) {
-        if (!rule.getAntecedences().isEmpty()) {
+      for (StaticDeductionRule rule : schema.getRules()) {
+        if (rule.getAntecedences().size() > 0) {
           applyRule(item, rule);
         }
       }
@@ -132,7 +131,7 @@ public class Deduction {
 
   /** Applies an axiom rule, that is a rule without antecedence items and adds
    * the consequence items to chart and agenda. */
-  private static void applyAxiomRule(DeductionRule rule) {
+  private static void applyAxiomRule(StaticDeductionRule rule) {
     for (Item item : rule.consequences) {
       if (!chart.contains(item)) {
         chart.add(item);
@@ -141,10 +140,6 @@ public class Deduction {
         deductedfrom.get(deductedfrom.size() - 1).add(new ArrayList<Integer>());
         appliedRule.add(new ArrayList<String>());
         appliedRule.get(appliedRule.size() - 1).add(rule.getName());
-      } else {
-        int oldid = chart.indexOf(item);
-        appliedRule.get(oldid).add(rule.getName());
-        deductedfrom.get(oldid).add(new ArrayList<Integer>());
       }
     }
   }
@@ -153,16 +148,16 @@ public class Deduction {
    * antecendence items. Looks through the chart to find the other needed items
    * and adds new consequence items to chart and agenda if all antecedences were
    * found. */
-  private static void applyRule(Item item, DeductionRule rule) {
-    Set<Item> itemstofind = rule.getAntecedences();
-    if (contains(itemstofind, item)) {
-      itemstofind.remove(item);
-    } else
-      return;
+  private static void applyRule(Item item, StaticDeductionRule rule) {
+    List<Item> itemstofind = rule.getAntecedences();
     ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
-    for (Object itemtocheck : itemstofind.toArray()) {
-      if (!chart.contains((Item) itemtocheck))
+    if (!itemstofind.contains(item)) {
+      return;
+    }
+    for (Item itemtocheck : itemstofind) {
+      if (!chart.contains(itemtocheck))  {
         return;
+        }
       newitemsdeductedfrom.add(chart.indexOf(itemtocheck));
     }
     for (Item newitem : rule.consequences) {
@@ -174,21 +169,15 @@ public class Deduction {
         deductedfrom.add(new ArrayList<ArrayList<Integer>>());
         deductedfrom.get(deductedfrom.size() - 1).add(newitemsdeductedfrom);
       } else {
+        // same set of backpointers must not exist yet.
+        // backpointers are always in the same order
         int oldid = chart.indexOf(newitem);
-        appliedRule.get(oldid).add(rule.getName());
-        deductedfrom.get(oldid).add(newitemsdeductedfrom);
+        if (!deductedfrom.get(oldid).contains(newitemsdeductedfrom)) {
+          appliedRule.get(oldid).add(rule.getName());
+          deductedfrom.get(oldid).add(newitemsdeductedfrom);
+        }
       }
     }
-  }
-
-  /** Returns true if item is an element of the set. Default contains() from Set
-   * doesn't work in this case. */
-  private static boolean contains(Set<Item> itemstofind, Item item) {
-    List<Item> itemslist = new ArrayList<Item>(itemstofind);
-    if (itemslist.contains(item))
-      return true;
-    else
-      return false;
   }
 
   static int column1 = 5;

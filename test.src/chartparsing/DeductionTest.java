@@ -45,7 +45,7 @@ public class DeductionTest {
 			System.out.println("CFG Topdown Parsing successful");
 		} else {
 			System.out.println("CFG Topdown Parsing fail");
-		}
+		} 
 		schema = CfgToDeductionRulesConverter.CfgToShiftReduceRules(gen_cfgdedtest(), w);
     if(Deduction.doParse(schema, false)) {
       System.out.println("CFG Shiftreduce Parsing successful");
@@ -57,7 +57,7 @@ public class DeductionTest {
       System.out.println("CFG Earley Parsing successful");
     } else {
       System.out.println("CFG Earley Parsing fail");
-    }
+    } //*/
     
     String w2 = "a c b";
     schema = TagToDeductionRulesConverter
@@ -73,7 +73,7 @@ public class DeductionTest {
       System.out.println("TAG Earley Parsing successful");
     } else {
       System.out.println("TAG Earley Parsing fail");
-    }
+    } //*/
 	}
 
 }

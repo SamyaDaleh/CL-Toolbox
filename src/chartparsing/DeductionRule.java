@@ -1,59 +1,28 @@
 package chartparsing;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import common.Item;
 
-/** Representation of a deduction rule consisting of antecedence items that have
- * to be found for the consequences to be derived. */
-public class DeductionRule {
-  Set<Item> antecedences = new HashSet<Item>();
-  Set<Item> consequences = new HashSet<Item>();
-  String name = null;
-  boolean generate = false;
+/** Interface that defines any kind of rule used for deduction. */
+public interface DeductionRule {
 
-  public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
+  public void addAntecedence(Item item);
 
-  public void addConsequence(Item item) {
-    consequences.add(item);
-  }
+  public void addConsequence(Item item);
 
-  public Set<Item> getAntecedences() {
-    return antecedences;
-  }
+  public List<Item> getAntecedences();
 
-  public void setAntecedences(Set<Item> antecedences) {
-    this.antecedences = antecedences;
-  }
+  public void setAntecedences(List<Item> antecedences);
 
-  public Set<Item> getConsequences() {
-    return consequences;
-  }
+  public List<Item> getConsequences();
 
-  public void setConsequences(Set<Item> consequences) {
-    this.consequences = consequences;
-  }
+  public void setConsequences(List<Item> consequences);
 
-  public void setName(String name) {
-    this.name = name;
-  }
+  public void setName(String name);
 
-  public String getName() {
-    return this.name;
-  }
+  public String getName();
 
-  @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
-    return representation.toString();
-  }
+  @Override public String toString();
 }

@@ -47,7 +47,7 @@ public class TagToDeductionRulesConverter {
       for (String tree : treenames) {
         for (Vertex p : tag.getTree(tree).getVertexes()) {
           if (p.getLabel().equals(wsplit[i])) {
-            DeductionRule lexscan = new DeductionRule();
+            StaticDeductionRule lexscan = new StaticDeductionRule();
             lexscan.addConsequence(new TagCykItem(tree,
               p.getGornaddress() + "⊤", i, null, null, i + 1));
             lexscan.setName("lex-scan " + wsplit[i]);
@@ -55,7 +55,7 @@ public class TagToDeductionRulesConverter {
             // System.out.println(lexscan.toString()); // DEBUG
           }
           if (p.getLabel().equals("")) {
-            DeductionRule epsscan = new DeductionRule();
+            StaticDeductionRule epsscan = new StaticDeductionRule();
             epsscan.addConsequence(
               new TagCykItem(tree, p.getGornaddress() + "⊤", i, null, null, i));
             epsscan.setName("eps-scan");
@@ -75,7 +75,7 @@ public class TagToDeductionRulesConverter {
 
       for (int j = i; j <= wsplit.length; j++) {
         for (String auxtree : auxtreenames) {
-          DeductionRule footpredict = new DeductionRule();
+          StaticDeductionRule footpredict = new StaticDeductionRule();
           String footgorn =
             tag.getAuxiliaryTree(auxtree).getFoot().getGornaddress();
           footpredict.addConsequence(
@@ -89,7 +89,7 @@ public class TagToDeductionRulesConverter {
             for (Vertex p : tag.getTree(tree2).getVertexes()) {
               if (p.getLabel().equals(tag.getTree(initree).getRoot().getLabel())
                 && tag.isSubstitutionNode(p, tree2)) {
-                DeductionRule substitute = new DeductionRule();
+                StaticDeductionRule substitute = new StaticDeductionRule();
                 substitute.addAntecedence(
                   new TagCykItem(initree, "⊤", i, null, null, j));
                 substitute.addConsequence(new TagCykItem(tree2,
@@ -107,7 +107,7 @@ public class TagToDeductionRulesConverter {
           for (Vertex p : tree.getVertexes()) {
             if (tree.getNodeByGornAdress(p.getGornaddress() + ".1") != null
               && tree.getNodeByGornAdress(p.getGornaddress() + ".2") == null) {
-              DeductionRule moveunary = new DeductionRule();
+              StaticDeductionRule moveunary = new StaticDeductionRule();
               moveunary.addAntecedence(new TagCykItem(treename,
                 p.getGornaddress() + ".1" + "⊤", i, null, null, j));
               moveunary.addConsequence(new TagCykItem(treename,
@@ -120,7 +120,7 @@ public class TagToDeductionRulesConverter {
               if (tree.getNodeByGornAdress(p.getGornaddress() + ".1") != null
                 && tree
                   .getNodeByGornAdress(p.getGornaddress() + ".2") != null) {
-                DeductionRule movebinary = new DeductionRule();
+                StaticDeductionRule movebinary = new StaticDeductionRule();
                 movebinary.addAntecedence(new TagCykItem(treename,
                   p.getGornaddress() + ".1" + "⊤", i, null, null, k));
                 movebinary.addAntecedence(new TagCykItem(treename,
@@ -134,7 +134,7 @@ public class TagToDeductionRulesConverter {
             }
 
             // TODO if f_OA(tree,node) = 0
-            DeductionRule nulladjoin = new DeductionRule();
+            StaticDeductionRule nulladjoin = new StaticDeductionRule();
             nulladjoin.addAntecedence(new TagCykItem(treename,
               p.getGornaddress() + "⊥", i, null, null, j));
             nulladjoin.addConsequence(new TagCykItem(treename,
@@ -153,7 +153,7 @@ public class TagToDeductionRulesConverter {
                 if (tree.getNodeByGornAdress(p.getGornaddress() + ".1") != null
                   && tree
                     .getNodeByGornAdress(p.getGornaddress() + ".2") == null) {
-                  DeductionRule moveunary = new DeductionRule();
+                  StaticDeductionRule moveunary = new StaticDeductionRule();
                   moveunary.addAntecedence(new TagCykItem(treename,
                     p.getGornaddress() + ".1" + "⊤", i, f1, f2, j));
                   moveunary.addConsequence(new TagCykItem(treename,
@@ -163,7 +163,7 @@ public class TagToDeductionRulesConverter {
                   // System.out.println(moveunary.toString()); // DEBUG
                 }
                 // TODO if f_OA(tree,node) = 0
-                DeductionRule nulladjoin = new DeductionRule();
+                StaticDeductionRule nulladjoin = new StaticDeductionRule();
                 nulladjoin.addAntecedence(new TagCykItem(treename,
                   p.getGornaddress() + "⊥", i, f1, f2, j));
                 nulladjoin.addConsequence(new TagCykItem(treename,
@@ -175,7 +175,7 @@ public class TagToDeductionRulesConverter {
                 for (int k = i; k <= j; k++) {
                   // foot left
                   if (k >= f2) {
-                    DeductionRule movebinary = new DeductionRule();
+                    StaticDeductionRule movebinary = new StaticDeductionRule();
                     movebinary.addAntecedence(new TagCykItem(treename,
                       p.getGornaddress() + ".1" + "⊤", i, f1, f2, k));
                     movebinary.addAntecedence(new TagCykItem(treename,
@@ -187,7 +187,7 @@ public class TagToDeductionRulesConverter {
                   }
                   // foot right
                   if (k <= f1) {
-                    DeductionRule movebinary = new DeductionRule();
+                    StaticDeductionRule movebinary = new StaticDeductionRule();
                     movebinary.addAntecedence(new TagCykItem(treename,
                       p.getGornaddress() + ".1" + "⊤", i, null, null, k));
                     movebinary.addAntecedence(new TagCykItem(treename,
@@ -202,7 +202,7 @@ public class TagToDeductionRulesConverter {
                 for (String auxtree : auxtreenames) {
                   for (int f1b = f1; f1b <= f2; f1b++) {
                     for (int f2b = f1b; f2b <= f2; f2b++) {
-                      DeductionRule adjoin = new DeductionRule();
+                      StaticDeductionRule adjoin = new StaticDeductionRule();
                       adjoin.addAntecedence(
                         new TagCykItem(auxtree, "⊤", i, f1, f2, j));
                       adjoin.addAntecedence(new TagCykItem(treename,
@@ -215,7 +215,7 @@ public class TagToDeductionRulesConverter {
                     }
                   }
 
-                  DeductionRule adjoin = new DeductionRule();
+                  StaticDeductionRule adjoin = new StaticDeductionRule();
                   adjoin
                     .addAntecedence(new TagCykItem(auxtree, "⊤", i, f1, f2, j));
                   adjoin.addAntecedence(new TagCykItem(treename,
@@ -253,7 +253,7 @@ public class TagToDeductionRulesConverter {
     for (String initreename : initreenames) {
       if (tag.getInitialTree(initreename).getRoot().getLabel()
         .equals(tag.getStartSymbol())) {
-        DeductionRule initialize = new DeductionRule();
+        StaticDeductionRule initialize = new StaticDeductionRule();
         initialize.addConsequence(
           new TagEarleyItem(initreename, "", "la", 0, (Integer) null, null, 0, false));
         initialize.setName("initialize");
@@ -269,7 +269,7 @@ public class TagToDeductionRulesConverter {
           for (String auxtreename : auxtreenames) {
             Vertex footnode = tag.getAuxiliaryTree(auxtreename).getFoot();
             if (footnode.getLabel().equals(p.getLabel())) {
-              DeductionRule predictadjoined = new DeductionRule();
+              StaticDeductionRule predictadjoined = new StaticDeductionRule();
               predictadjoined.addAntecedence(new TagEarleyItem(auxtreename,
                 footnode.getGornaddress(), "lb", i, (Integer) null, null, i, false));
               predictadjoined.addConsequence(new TagEarleyItem(treename,
@@ -283,7 +283,7 @@ public class TagToDeductionRulesConverter {
             for (String initreename : initreenames) {
               if (p.getLabel()
                 .equals(tag.getInitialTree(initreename).getRoot().getLabel())) {
-                DeductionRule predictsubst = new DeductionRule();
+                StaticDeductionRule predictsubst = new StaticDeductionRule();
                 predictsubst.addAntecedence(new TagEarleyItem(treename,
                   p.getGornaddress(), "lb", i, (Integer) null, null, i, false));
                 predictsubst.addConsequence(new TagEarleyItem(initreename, "",
@@ -301,7 +301,7 @@ public class TagToDeductionRulesConverter {
         for (String treename : treenames) {
           for (Vertex p : tag.getTree(treename).getVertexes()) {
             if (l < wsplit.length && p.getLabel().equals(wsplit[l])) {
-              DeductionRule scanterm = new DeductionRule();
+              StaticDeductionRule scanterm = new StaticDeductionRule();
               scanterm.addAntecedence(new TagEarleyItem(treename,
                 p.getGornaddress(), "la", i, (Integer) null, null, l, false));
               scanterm.addConsequence(new TagEarleyItem(treename,
@@ -310,7 +310,7 @@ public class TagToDeductionRulesConverter {
               schema.addRule(scanterm);
               // System.out.println(scanterm.toString()); // DEBUG
             } else if (p.getLabel().equals("")) {
-              DeductionRule scaneps = new DeductionRule();
+              StaticDeductionRule scaneps = new StaticDeductionRule();
               scaneps.addAntecedence(new TagEarleyItem(treename,
                 p.getGornaddress(), "la", i, (Integer) null, null, l, false));
               scaneps.addConsequence(new TagEarleyItem(treename,
@@ -322,7 +322,7 @@ public class TagToDeductionRulesConverter {
 
             // TODO f_OA(gamma,p) = 0
             if (!tag.isInTerminals(p.getLabel())) {
-              DeductionRule predictnoadj = new DeductionRule();
+              StaticDeductionRule predictnoadj = new StaticDeductionRule();
               predictnoadj.addAntecedence(new TagEarleyItem(treename,
                 p.getGornaddress(), "la", i, "?", "?", l, false));
               predictnoadj.addConsequence(new TagEarleyItem(treename,
@@ -333,7 +333,7 @@ public class TagToDeductionRulesConverter {
             }
             if (tag.getTree(treename)
               .getNodeByGornAdress(p.getGornaddress() + ".1") != null) {
-              DeductionRule movedown = new DeductionRule();
+              StaticDeductionRule movedown = new StaticDeductionRule();
               movedown.addAntecedence(new TagEarleyItem(treename,
                 p.getGornaddress(), "lb", i, (Integer) null, null, l, false));
               movedown.addConsequence(new TagEarleyItem(treename,
@@ -344,7 +344,7 @@ public class TagToDeductionRulesConverter {
             }
             if (tag.getTree(treename).getNodeByGornAdress(
               p.getGornAddressOfPotentialRightSibling()) != null) {
-              DeductionRule moveright = new DeductionRule();
+              StaticDeductionRule moveright = new StaticDeductionRule();
               moveright.addAntecedence(new TagEarleyItem(treename,
                 p.getGornaddress(), "ra", i, (Integer) null, null, l, false));
               moveright.addConsequence(new TagEarleyItem(treename,
@@ -355,7 +355,7 @@ public class TagToDeductionRulesConverter {
               // System.out.println(moveright.toString()); // DEBUG
             } else {
               if (!p.getGornaddress().equals("")) {
-                DeductionRule moveup = new DeductionRule();
+                StaticDeductionRule moveup = new StaticDeductionRule();
                 moveup.addAntecedence(new TagEarleyItem(treename,
                   p.getGornaddress(), "ra", i, (Integer) null, null, l, false));
                 moveup.addConsequence(new TagEarleyItem(treename,
@@ -368,7 +368,7 @@ public class TagToDeductionRulesConverter {
             for (String auxtree : auxtreenames) {
               Vertex footnode = tag.getAuxiliaryTree(auxtree).getFoot();
               if (p.getLabel().equals(footnode.getLabel())) {
-                DeductionRule predictadjoinable = new DeductionRule();
+                StaticDeductionRule predictadjoinable = new StaticDeductionRule();
                 predictadjoinable.addAntecedence(new TagEarleyItem(treename,
                   p.getGornaddress(), "la", i, "?", "?", l, false));
                 predictadjoinable.addConsequence(new TagEarleyItem(auxtree, "",
@@ -377,7 +377,7 @@ public class TagToDeductionRulesConverter {
                 schema.addRule(predictadjoinable);
                 // System.out.println(predictadjoinable.toString()); // DEBUG
               }
-              DeductionRule completefoot = new DeductionRule();
+              StaticDeductionRule completefoot = new StaticDeductionRule();
               completefoot.addAntecedence(new TagEarleyItem(treename,
                 p.getGornaddress(), "rb", i, "?", "?", l, false));
               completefoot.addAntecedence(new TagEarleyItem(auxtree,
@@ -392,7 +392,7 @@ public class TagToDeductionRulesConverter {
               for (String initreename : initreenames) {
                 if (p.getLabel().equals(
                   tag.getInitialTree(initreename).getRoot().getLabel())) {
-                  DeductionRule substitute = new DeductionRule();
+                  StaticDeductionRule substitute = new StaticDeductionRule();
                   substitute.addAntecedence(new TagEarleyItem(initreename, "",
                     "ra", i, (Integer) null, null, l, false));
                   substitute.addConsequence(new TagEarleyItem(treename,
@@ -405,7 +405,7 @@ public class TagToDeductionRulesConverter {
             }
             if (tag.isInNonterminals(p.getLabel())) {
               for (int f = 0; f <= i; f++) {
-                DeductionRule completenode = new DeductionRule();
+                StaticDeductionRule completenode = new StaticDeductionRule();
                 completenode.addAntecedence(new TagEarleyItem(treename,
                   p.getGornaddress(), "la", f, (Integer) null, null, i, false));
                 completenode.addAntecedence(new TagEarleyItem(treename,
@@ -415,7 +415,7 @@ public class TagToDeductionRulesConverter {
                 completenode.setName("CompleteNode");
                 schema.addRule(completenode);
                 // System.out.println(completenode.toString()); // DEBUG
-                completenode = new DeductionRule();
+                completenode = new StaticDeductionRule();
                 completenode.addAntecedence(new TagEarleyItem(treename,
                   p.getGornaddress(), "la", f, (Integer) null, null, i, false));
                 completenode.addAntecedence(new TagEarleyItem(treename,
@@ -435,7 +435,7 @@ public class TagToDeductionRulesConverter {
             for (String treename : treenames) {
               for (Vertex p : tag.getTree(treename).getVertexes()) {
                 if (l < wsplit.length && p.getLabel().equals(wsplit[l])) {
-                  DeductionRule scanterm = new DeductionRule();
+                  StaticDeductionRule scanterm = new StaticDeductionRule();
                   scanterm.addAntecedence(new TagEarleyItem(treename,
                     p.getGornaddress(), "la", i, j, k, l, false));
                   scanterm.addConsequence(new TagEarleyItem(treename,
@@ -444,7 +444,7 @@ public class TagToDeductionRulesConverter {
                   schema.addRule(scanterm);
                   // System.out.println(scanterm.toString()); // DEBUG
                 } else if (p.getLabel().equals("")) {
-                  DeductionRule scaneps = new DeductionRule();
+                  StaticDeductionRule scaneps = new StaticDeductionRule();
                   scaneps.addAntecedence(new TagEarleyItem(treename,
                     p.getGornaddress(), "la", i, j, k, l, false));
                   scaneps.addConsequence(new TagEarleyItem(treename,
@@ -455,7 +455,7 @@ public class TagToDeductionRulesConverter {
                 }
                 if (tag.getTree(treename)
                   .getNodeByGornAdress(p.getGornaddress() + ".1") != null) {
-                  DeductionRule movedown = new DeductionRule();
+                  StaticDeductionRule movedown = new StaticDeductionRule();
                   movedown.addAntecedence(new TagEarleyItem(treename,
                     p.getGornaddress(), "lb", i, j, k, l, false));
                   movedown.addConsequence(new TagEarleyItem(treename,
@@ -466,7 +466,7 @@ public class TagToDeductionRulesConverter {
                 }
                 if (tag.getTree(treename).getNodeByGornAdress(
                   p.getGornAddressOfPotentialRightSibling()) != null) {
-                  DeductionRule moveright = new DeductionRule();
+                  StaticDeductionRule moveright = new StaticDeductionRule();
                   moveright.addAntecedence(new TagEarleyItem(treename,
                     p.getGornaddress(), "ra", i, j, k, l, false));
                   moveright.addConsequence(new TagEarleyItem(treename,
@@ -477,7 +477,7 @@ public class TagToDeductionRulesConverter {
                   // System.out.println(moveright.toString()); // DEBUG
                 } else {
                   if (!p.getGornaddress().equals("")) {
-                    DeductionRule moveup = new DeductionRule();
+                    StaticDeductionRule moveup = new StaticDeductionRule();
                     moveup.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "ra", i, j, k, l, false));
                     moveup.addConsequence(new TagEarleyItem(treename,
@@ -491,7 +491,7 @@ public class TagToDeductionRulesConverter {
                   Vertex footnode = tag.getAuxiliaryTree(auxtree).getFoot();
                   if (p.getLabel().equals(footnode.getLabel())) {
 
-                    DeductionRule adjoin = new DeductionRule();
+                    StaticDeductionRule adjoin = new StaticDeductionRule();
                     adjoin.addAntecedence(
                       new TagEarleyItem(auxtree, "", "ra", i, j, k, l, false));
                     adjoin.addAntecedence(new TagEarleyItem(treename,
@@ -503,7 +503,7 @@ public class TagToDeductionRulesConverter {
                     // System.out.println(adjoin.toString()); // DEBUG
                     for (int g = j; g < wsplit.length; g++) {
                       for (int h = g; h < wsplit.length; h++) {
-                        adjoin = new DeductionRule();
+                        adjoin = new StaticDeductionRule();
                         adjoin.addAntecedence(new TagEarleyItem(auxtree, "",
                           "ra", i, j, k, l, false));
                         adjoin.addAntecedence(new TagEarleyItem(treename,
@@ -521,7 +521,7 @@ public class TagToDeductionRulesConverter {
                 if (tag.isInNonterminals(p.getLabel())) {
                   for (int f = 0; f <= i; f++) {
                     // left null
-                    DeductionRule completenode = new DeductionRule();
+                    StaticDeductionRule completenode = new StaticDeductionRule();
                     completenode.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "la", f, (Integer) null, null, i, false));
                     completenode.addAntecedence(new TagEarleyItem(treename,
@@ -531,7 +531,7 @@ public class TagToDeductionRulesConverter {
                     completenode.setName("CompleteNode");
                     schema.addRule(completenode);
                     // System.out.println(completenode.toString()); // DEBUG
-                    completenode = new DeductionRule();
+                    completenode = new StaticDeductionRule();
                     completenode.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "la", f, (Integer) null, null, i, false));
                     completenode.addAntecedence(new TagEarleyItem(treename,
@@ -543,7 +543,7 @@ public class TagToDeductionRulesConverter {
                     // System.out.println(completenode.toString()); // DEBUG
 
                     // right null
-                    completenode = new DeductionRule();
+                    completenode = new StaticDeductionRule();
                     completenode.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "la", f, i, j, k, false));
                     completenode.addAntecedence(new TagEarleyItem(treename,
@@ -553,7 +553,7 @@ public class TagToDeductionRulesConverter {
                     completenode.setName("CompleteNode");
                     schema.addRule(completenode);
                     // System.out.println(completenode.toString()); // DEBUG
-                    completenode = new DeductionRule();
+                    completenode = new StaticDeductionRule();
                     completenode.addAntecedence(new TagEarleyItem(treename,
                       p.getGornaddress(), "la", f, i, j, k, false));
                     completenode.addAntecedence(new TagEarleyItem(treename,

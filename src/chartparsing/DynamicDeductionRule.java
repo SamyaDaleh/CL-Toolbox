@@ -1,13 +1,10 @@
 package chartparsing;
 
-import java.util.Set;
-
-import common.Item;
-
-public class DynamicDeductionRule extends DeductionRule{
-
-
-  public Set<Item> getConsequences() {
-    return consequences;
-  }
+/**
+ * Specification for dynamic rules where antecedences have to be set and they
+ * generate the consequences on runtime. The deduction system needs to know
+ * how many antecedences to set.
+ */
+public interface DynamicDeductionRule extends DeductionRule{
+  public int getAntecedencesNeeded();
 }

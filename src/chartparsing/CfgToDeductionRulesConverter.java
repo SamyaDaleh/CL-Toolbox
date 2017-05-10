@@ -47,7 +47,7 @@ public class CfgToDeductionRulesConverter {
         SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length - i)) {
         String[] seqsplit = sequence.split(" ");
         if (seqsplit[0].equals(wsplit[i])) {
-          DeductionRule scan = new DeductionRule();
+          StaticDeductionRule scan = new StaticDeductionRule();
           scan.addAntecedence(new CfgItem(sequence, i));
           scan.addConsequence(new CfgItem(
             ArrayUtils.getSubSequenceAsString(seqsplit, 1, seqsplit.length),
@@ -63,7 +63,7 @@ public class CfgToDeductionRulesConverter {
                   .getSubSequenceAsString(seqsplit, 1, wsplit.length - i)
                   .split(" "));
               if (gammaalpha.length <= wsplit.length - i) {
-                DeductionRule predict = new DeductionRule();
+                StaticDeductionRule predict = new StaticDeductionRule();
                 predict.addAntecedence(new CfgItem(sequence, i));
                 predict
                   .addConsequence(new CfgItem(String.join(" ", gammaalpha), i));
@@ -77,7 +77,7 @@ public class CfgToDeductionRulesConverter {
         }
       }
     }
-    DeductionRule axiom = new DeductionRule();
+    StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgItem(cfg.getStart_var(), 0));
     axiom.setName("axiom");
     schema.addRule(axiom);
@@ -102,7 +102,7 @@ public class CfgToDeductionRulesConverter {
         if (((i == 0 && sequence.length() == 0)
           || (sequence.length() > 0 && seqsplit.length <= i))
           && i < wsplit.length) {
-          DeductionRule shift = new DeductionRule();
+          StaticDeductionRule shift = new StaticDeductionRule();
           shift.addAntecedence(new CfgItem(sequence, i));
           if (sequence.length() > 0) {
             shift
@@ -118,7 +118,7 @@ public class CfgToDeductionRulesConverter {
           for (CfgProductionRule rule : cfg.getR()) {
             String gamma = getStringHeadIfEndsWith(seqsplit, rule.getRhs());
             if (gamma != null) {
-              DeductionRule reduce = new DeductionRule();
+              StaticDeductionRule reduce = new StaticDeductionRule();
               reduce.addAntecedence(new CfgItem(sequence, i));
               if (gamma.length() > 0) {
                 reduce
@@ -135,7 +135,7 @@ public class CfgToDeductionRulesConverter {
         }
       }
     }
-    DeductionRule axiom = new DeductionRule();
+    StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgItem("", 0));
     axiom.setName("axiom");
     schema.addRule(axiom);
@@ -150,7 +150,7 @@ public class CfgToDeductionRulesConverter {
     ParsingSchema schema = new ParsingSchema();
     for (CfgProductionRule rule : cfg.getR()) {
       if (rule.getLhs().equals(cfg.getStart_var())) {
-        DeductionRule axiom = new DeductionRule();
+        StaticDeductionRule axiom = new StaticDeductionRule();
         axiom.addConsequence(
           new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));
         axiom.setName("axiom");
@@ -163,7 +163,7 @@ public class CfgToDeductionRulesConverter {
           for (int j = i; j <= wsplit.length; j++) {
             for (int k = 0; k < rule.getRhs().length; k++) {
               if (j < wsplit.length && rule.getRhs()[k].equals(wsplit[j])) {
-                DeductionRule scan = new DeductionRule();
+                StaticDeductionRule scan = new StaticDeductionRule();
                 if (k == 0) {
                   scan.addAntecedence(new CfgDottedItem(
                     rule.getLhs() + " -> •" + ArrayUtils.getSubSequenceAsString(
@@ -190,7 +190,7 @@ public class CfgToDeductionRulesConverter {
             for (CfgProductionRule rule2 : cfg.getR()) {
               for (int k = 0; k < rule.getRhs().length; k++) {
                 if (rule.getRhs()[k].equals(rule2.getLhs())) {
-                  DeductionRule predict = new DeductionRule();
+                  StaticDeductionRule predict = new StaticDeductionRule();
                   predict
                     .addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
                       + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
@@ -198,7 +198,7 @@ public class CfgToDeductionRulesConverter {
                         k, rule.getRhs().length),
                       i, j));
                   for (int l = j; l <= wsplit.length; l++) {
-                    DeductionRule complete = new DeductionRule();
+                    StaticDeductionRule complete = new StaticDeductionRule();
                     if (rule.getRhs()[0].length() == 0) {
                       complete.addAntecedence(
                         new CfgDottedItem(rule.getLhs() + " -> •"
@@ -260,7 +260,7 @@ public class CfgToDeductionRulesConverter {
   public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    DeductionRule axiom = new DeductionRule();
+    StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgDollarItem(w, cfg.getStart_var(), ""));
     axiom.setName("axiom");
     schema.addRule(axiom);
@@ -276,7 +276,7 @@ public class CfgToDeductionRulesConverter {
           if (!stackpredictedsplit[0].equals("$")) {
             for (CfgProductionRule rule : cfg.getR()) {
               if (stackcompletedsplit[0].equals(rule.getRhs()[0])) {
-                DeductionRule reduce = new DeductionRule();
+                StaticDeductionRule reduce = new StaticDeductionRule();
                 reduce.addAntecedence(
                   new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
                 String newstackpredicted = "";
@@ -309,7 +309,7 @@ public class CfgToDeductionRulesConverter {
 
           if (stackpredictedsplit[0].equals("$") && stacklhs.length() > 0) {
             String[] stacklhssplit = stacklhs.split(" ");
-            DeductionRule move = new DeductionRule();
+            StaticDeductionRule move = new StaticDeductionRule();
             move.addAntecedence(
               new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
             if (stackcompleted.length() > 0) {
@@ -332,7 +332,7 @@ public class CfgToDeductionRulesConverter {
           }
           if (stackcompleted.length() > 0 && stackpredicted.length() > 0
             && stackcompletedsplit[0].equals(stackpredictedsplit[0])) {
-            DeductionRule remove = new DeductionRule();
+            StaticDeductionRule remove = new StaticDeductionRule();
             remove.addAntecedence(
               new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
             remove.addConsequence(new CfgDollarItem(

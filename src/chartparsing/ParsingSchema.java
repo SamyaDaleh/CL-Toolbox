@@ -11,10 +11,15 @@ import common.Item;
  * Consists of a set of deduction rules and goal items that have to be derived
  * with help of the rules. */
 public class ParsingSchema {
-  Set<DeductionRule> rules = new HashSet<DeductionRule>();
+  Set<StaticDeductionRule> axioms = new HashSet<StaticDeductionRule>();
+  Set<StaticDeductionRule> rules = new HashSet<StaticDeductionRule>();
   List<Item> goal = new LinkedList<Item>();
+  
+  public void addAxiom(StaticDeductionRule rule) {
+    axioms.add(rule);
+  }
 
-  public void addRule(DeductionRule rule) {
+  public void addRule(StaticDeductionRule rule) {
     rules.add(rule);
   }
 
@@ -22,8 +27,12 @@ public class ParsingSchema {
     this.goal.add(item);
   }
 
-  public Set<DeductionRule> getRules() {
+  public Set<StaticDeductionRule> getRules() {
     return this.rules;
+  }
+
+  public Set<StaticDeductionRule> getAxioms() {
+    return this.axioms;
   }
 
   public List<Item> getGoals() {
