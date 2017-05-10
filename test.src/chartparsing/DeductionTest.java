@@ -41,19 +41,19 @@ public class DeductionTest {
 	public static void main(String[] args) throws ParseException {
 		String w = "a a a b b b";
 		ParsingSchema schema = CfgToDeductionRulesConverter.CfgToTopDownRules(gen_cfgdedtest(), w);
-		if(Deduction.doParse(schema)) {
+		if(Deduction.doParse(schema, false)) {
 			System.out.println("CFG Topdown Parsing successful");
 		} else {
 			System.out.println("CFG Topdown Parsing fail");
 		}
 		schema = CfgToDeductionRulesConverter.CfgToShiftReduceRules(gen_cfgdedtest(), w);
-    if(Deduction.doParse(schema)) {
+    if(Deduction.doParse(schema, false)) {
       System.out.println("CFG Shiftreduce Parsing successful");
     } else {
       System.out.println("CFG Shiftreduce Parsing fail");
     }
     schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
-    if(Deduction.doParse(schema)) {
+    if(Deduction.doParse(schema, false)) {
       System.out.println("CFG Earley Parsing successful");
     } else {
       System.out.println("CFG Earley Parsing fail");
@@ -62,14 +62,14 @@ public class DeductionTest {
     String w2 = "a c b";
     schema = TagToDeductionRulesConverter
         .TagToParsingSchema(gentag(), w2, "cyk");
-    if(Deduction.doParse(schema)) {
+    if(Deduction.doParse(schema, false)) {
       System.out.println("TAG CYK Parsing successful");
     } else {
       System.out.println("TAG CYK Parsing fail");
     }
     schema = TagToDeductionRulesConverter
         .TagToParsingSchema(gentag(), w2, "earley");
-    if(Deduction.doParse(schema)) {
+    if(Deduction.doParse(schema, false)) {
       System.out.println("TAG Earley Parsing successful");
     } else {
       System.out.println("TAG Earley Parsing fail");

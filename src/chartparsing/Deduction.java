@@ -32,9 +32,10 @@ public class Deduction {
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
    * derived. */
-  public static boolean doParse(ParsingSchema schema) {
+  public static boolean doParse(ParsingSchema schema, boolean success) {
     if (schema == null)
       return false;
+    successfultrace = success;
     chart = new LinkedList<Item>();
     agenda = new LinkedList<Item>();
     deductedfrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
