@@ -20,7 +20,8 @@ public class Main {
         "Please pass at least 3 parameters: [grammar file] [input string] " 
       + "[parsing algorithm] [<optional parameters>]");
       System.out.println(
-        "Parsing algorithm can be: cfg-topdown, cfg-shiftreduce, cfg-earley, tag-cyk");
+        "Parsing algorithm can be: cfg-topdown, cfg-shiftreduce, cfg-earley, " 
+      + "cfg-leftcorner, tag-cyk");
       System.out.println(
           "Optional parameters can be: --sucess : prints a trace only of items " 
       + "that lead to a goal item.");
@@ -52,6 +53,10 @@ public class Main {
       case "cfg-earley":
         schema =
           CfgToDeductionRulesConverter.CfgToParsingSchema(cfg, w, "earley");
+        break;
+      case "cfg-leftcorner":
+        schema =
+          CfgToDeductionRulesConverter.CfgToParsingSchema(cfg, w, "leftcorner");
         break;
       case "tag-cyk":
         Tag tag = new Tag(cfg);

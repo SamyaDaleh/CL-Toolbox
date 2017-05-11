@@ -7,6 +7,7 @@ Parsing as Deduction:
 - Top Down for CFG
 - Shift Reduce for CFG
 - Earley for CFG
+- Left Corner for CFG
 - CYK for TAG
 - Earley for TAG
 

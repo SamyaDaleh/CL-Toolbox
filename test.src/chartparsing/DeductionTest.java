@@ -52,12 +52,19 @@ public class DeductionTest {
     } else {
       System.out.println("CFG Shiftreduce Parsing fail");
     } //*/
-    ParsingSchema schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
+   /* ParsingSchema schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
     if(Deduction.doParse(schema, false)) {
       System.out.println("CFG Earley Parsing successful");
     } else {
       System.out.println("CFG Earley Parsing fail");
     } //*/
+
+    ParsingSchema schema = CfgToDeductionRulesConverter.CfgToLeftCornerRules(gen_cfgdedtest(), w);
+    if(Deduction.doParse(schema, false)) {
+      System.out.println("CFG Leftcorner Parsing successful");
+    } else {
+      System.out.println("CFG Leftcorner Parsing fail");
+    } 
     
  /*   String w2 = "a c b";
     schema = TagToDeductionRulesConverter

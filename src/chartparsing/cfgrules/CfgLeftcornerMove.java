@@ -52,7 +52,7 @@ public class CfgLeftcornerMove implements DynamicDeductionRule {
 
       if (stackpredsplit[0].equals("$")) {
         for (String nt : nonterminals) {
-          if (stacklhssplit[0].equals("nt")) {
+          if (stacklhssplit[0].equals(nt)) {
             String newcompl;
             if (stackcompl.length() == 0) {
               newcompl = nt;

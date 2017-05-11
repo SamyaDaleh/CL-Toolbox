@@ -58,10 +58,10 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
           stackcompl.length());
         String newpred;
         if (rule.getRhs().length == 1) {
-          newpred = stackpred;
+          newpred = "$ " + stackpred;
         } else {
           newpred = ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
-            rule.getRhs().length) + " " + stackpred;
+            rule.getRhs().length) + " $ " + stackpred;
         }
           
         String newlhs;
