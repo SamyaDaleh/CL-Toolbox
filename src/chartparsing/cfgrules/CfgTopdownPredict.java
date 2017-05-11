@@ -7,23 +7,23 @@ import chartparsing.DynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgItem;
+import common.cfg.CfgProductionRule;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** If a nonterminal is on top of a stack it can be replaced by any rhs where it
+ * is the lhs. */
+public class CfgTopdownPredict implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String[] wsplit;
+  CfgProductionRule rule;
 
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
-    this.wsplit = wsplit;
-    this.setName("scan");
+  public CfgTopdownPredict(CfgProductionRule rule) {
+    this.rule = rule;
+    this.setName("predict " + rule.toString());
   }
 
   @Override public void addAntecedence(Item item) {
@@ -48,11 +48,20 @@ public class CfgTopdownScan implements DynamicDeductionRule {
       String stack = itemform[0];
       String[] stacksplit = stack.split(" ");
       int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
-        this.setName("scan " + wsplit[i]);
+      if (stacksplit[0].equals(rule.getLhs())) {
+        // TODO check if epsilon is like rhs length 0 or 1 with entry ""
+        if (rule.getRhs().length == 0) {
+          consequences.add(new CfgItem(
+            ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
+            i));
+        } else {
+          consequences
+            .add(
+              new CfgItem(
+                String.join(" ", rule.getRhs()) + " " + ArrayUtils
+                  .getSubSequenceAsString(stacksplit, 1, stacksplit.length),
+                i));
+        }
       }
     }
     return consequences;

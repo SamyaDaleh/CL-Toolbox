@@ -39,8 +39,8 @@ public class DeductionTest {
     }
     
 	public static void main(String[] args) throws ParseException {
-		String w = "a a a b b b";
-		ParsingSchema schema = CfgToDeductionRulesConverter.CfgToTopDownRules(gen_cfgdedtest(), w);
+		String w = "a a b b";
+	/*	ParsingSchema schema = CfgToDeductionRulesConverter.CfgToTopDownRules(gen_cfgdedtest(), w);
 		if(Deduction.doParse(schema, false)) {
 			System.out.println("CFG Topdown Parsing successful");
 		} else {
@@ -51,15 +51,15 @@ public class DeductionTest {
       System.out.println("CFG Shiftreduce Parsing successful");
     } else {
       System.out.println("CFG Shiftreduce Parsing fail");
-    }
-    schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
+    } //*/
+    ParsingSchema schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
     if(Deduction.doParse(schema, false)) {
       System.out.println("CFG Earley Parsing successful");
     } else {
       System.out.println("CFG Earley Parsing fail");
     } //*/
     
-    String w2 = "a c b";
+ /*   String w2 = "a c b";
     schema = TagToDeductionRulesConverter
         .TagToParsingSchema(gentag(), w2, "cyk");
     if(Deduction.doParse(schema, false)) {

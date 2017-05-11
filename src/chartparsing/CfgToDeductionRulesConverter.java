@@ -1,7 +1,15 @@
 package chartparsing;
 
-import common.ArrayUtils;
-import common.SetUtils;
+import chartparsing.cfgrules.CfgBottomupReduce;
+import chartparsing.cfgrules.CfgBottomupShift;
+import chartparsing.cfgrules.CfgEarleyComplete;
+import chartparsing.cfgrules.CfgEarleyPredict;
+import chartparsing.cfgrules.CfgEarleyScan;
+import chartparsing.cfgrules.CfgLeftcornerMove;
+import chartparsing.cfgrules.CfgLeftcornerReduce;
+import chartparsing.cfgrules.CfgLeftcornerRemove;
+import chartparsing.cfgrules.CfgTopdownPredict;
+import chartparsing.cfgrules.CfgTopdownScan;
 import common.cfg.Cfg;
 import common.cfg.CfgDollarItem;
 import common.cfg.CfgDottedItem;
@@ -42,45 +50,18 @@ public class CfgToDeductionRulesConverter {
     }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    for (int i = 0; i < wsplit.length; i++) {
-      for (String sequence : SetUtils.star(
-        SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length - i)) {
-        String[] seqsplit = sequence.split(" ");
-        if (seqsplit[0].equals(wsplit[i])) {
-          StaticDeductionRule scan = new StaticDeductionRule();
-          scan.addAntecedence(new CfgItem(sequence, i));
-          scan.addConsequence(new CfgItem(
-            ArrayUtils.getSubSequenceAsString(seqsplit, 1, seqsplit.length),
-            i + 1));
-          scan.setName("scan " + wsplit[i]);
-          schema.addRule(scan);
-          // System.out.println(scan.toString()); //DEBUG
-        } else if (cfg.varsContain(seqsplit[0])) {
-          for (CfgProductionRule rule : cfg.getR()) {
-            if (rule.getLhs().equals(seqsplit[0])) {
-              String[] gammaalpha = append(rule.getRhs(),
-                ArrayUtils
-                  .getSubSequenceAsString(seqsplit, 1, wsplit.length - i)
-                  .split(" "));
-              if (gammaalpha.length <= wsplit.length - i) {
-                StaticDeductionRule predict = new StaticDeductionRule();
-                predict.addAntecedence(new CfgItem(sequence, i));
-                predict
-                  .addConsequence(new CfgItem(String.join(" ", gammaalpha), i));
-                predict.setName("predict " + rule.getLhs() + " -> "
-                  + String.join(" ", rule.getRhs()));
-                schema.addRule(predict);
-                // System.out.println(predict.toString()); //DEBUG
-              }
-            }
-          }
-        }
-      }
+    DynamicDeductionRule scan = new CfgTopdownScan(wsplit);
+    schema.addRule(scan);
+    
+    for (CfgProductionRule rule : cfg.getR()) {
+      DynamicDeductionRule predict = new CfgTopdownPredict(rule);
+      schema.addRule(predict);
     }
+ 
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgItem(cfg.getStart_var(), 0));
     axiom.setName("axiom");
-    schema.addRule(axiom);
+    schema.addAxiom(axiom);
     schema.addGoal(new CfgItem("", wsplit.length));
     return schema;
   }
@@ -95,50 +76,18 @@ public class CfgToDeductionRulesConverter {
     }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    for (int i = 0; i <= wsplit.length; i++) {
-      for (String sequence : SetUtils.star(
-        SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length)) {
-        String[] seqsplit = sequence.split(" ");
-        if (((i == 0 && sequence.length() == 0)
-          || (sequence.length() > 0 && seqsplit.length <= i))
-          && i < wsplit.length) {
-          StaticDeductionRule shift = new StaticDeductionRule();
-          shift.addAntecedence(new CfgItem(sequence, i));
-          if (sequence.length() > 0) {
-            shift
-              .addConsequence(new CfgItem(sequence + " " + wsplit[i], i + 1));
-          } else {
-            shift.addConsequence(new CfgItem(wsplit[i], i + 1));
-          }
-          shift.setName("shift " + wsplit[i]);
-          schema.addRule(shift);
-          // System.out.println(shift.toString()); //DEBUG
-        }
-        if (seqsplit.length <= i) {
-          for (CfgProductionRule rule : cfg.getR()) {
-            String gamma = getStringHeadIfEndsWith(seqsplit, rule.getRhs());
-            if (gamma != null) {
-              StaticDeductionRule reduce = new StaticDeductionRule();
-              reduce.addAntecedence(new CfgItem(sequence, i));
-              if (gamma.length() > 0) {
-                reduce
-                  .addConsequence(new CfgItem(gamma + " " + rule.getLhs(), i));
-              } else {
-                reduce.addConsequence(new CfgItem(rule.getLhs(), i));
-              }
-              reduce.setName("reduce " + rule.getLhs() + " -> "
-                + String.join(" ", rule.getRhs()));
-              schema.addRule(reduce);
-              // System.out.println(reduce.toString()); //DEBUG
-            }
-          }
-        }
-      }
+    DynamicDeductionRule shift = new CfgBottomupShift(wsplit);
+    schema.addRule(shift);
+    
+    for (CfgProductionRule rule : cfg.getR()) {
+      DynamicDeductionRule reduce = new CfgBottomupReduce(rule);
+      schema.addRule(reduce);
     }
+    
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgItem("", 0));
     axiom.setName("axiom");
-    schema.addRule(axiom);
+    schema.addAxiom(axiom);
     schema.addGoal(new CfgItem(cfg.getStart_var(), wsplit.length));
     return schema;
   }
@@ -148,238 +97,62 @@ public class CfgToDeductionRulesConverter {
   public static ParsingSchema CfgToEarleyRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
+    
+    DynamicDeductionRule scan = new CfgEarleyScan(wsplit);
+    schema.addRule(scan);
+    
+    DynamicDeductionRule complete = new CfgEarleyComplete();
+    schema.addRule(complete);
+    
     for (CfgProductionRule rule : cfg.getR()) {
       if (rule.getLhs().equals(cfg.getStart_var())) {
         StaticDeductionRule axiom = new StaticDeductionRule();
-        axiom.addConsequence(
-          new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));
+        if (rule.getRhs()[0].equals("")) {
+          axiom.addConsequence(
+            new CfgDottedItem("S -> •", 0, 0));
+        } else {
+          axiom.addConsequence(
+            new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));
+        }
         axiom.setName("axiom");
-        schema.addRule(axiom);
-        schema.addGoal(new CfgDottedItem(
-          "S -> " + String.join(" ", rule.getRhs()) + " •", 0, wsplit.length));
-      }
-      if (w.length() > 0) {
-        for (int i = 0; i <= wsplit.length; i++) {
-          for (int j = i; j <= wsplit.length; j++) {
-            for (int k = 0; k < rule.getRhs().length; k++) {
-              if (j < wsplit.length && rule.getRhs()[k].equals(wsplit[j])) {
-                StaticDeductionRule scan = new StaticDeductionRule();
-                if (k == 0) {
-                  scan.addAntecedence(new CfgDottedItem(
-                    rule.getLhs() + " -> •" + ArrayUtils.getSubSequenceAsString(
-                      rule.getRhs(), k, rule.getRhs().length),
-                    i, j));
-                } else {
-                  scan.addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
-                    + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
-                    + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
-                      rule.getRhs().length),
-                    i, j));
-                }
-                scan.addConsequence(new CfgDottedItem(rule.getLhs() + " -> "
-                  + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k + 1)
-                  + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(),
-                    k + 1, rule.getRhs().length),
-                  i, j + 1));
-                scan.setName("scan " + wsplit[j]);
-                schema.addRule(scan);
-                // System.out.println(scan.toString()); // DEBUG
-              }
-            }
-
-            for (CfgProductionRule rule2 : cfg.getR()) {
-              for (int k = 0; k < rule.getRhs().length; k++) {
-                if (rule.getRhs()[k].equals(rule2.getLhs())) {
-                  StaticDeductionRule predict = new StaticDeductionRule();
-                  predict
-                    .addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
-                      + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, k)
-                      + " •" + ArrayUtils.getSubSequenceAsString(rule.getRhs(),
-                        k, rule.getRhs().length),
-                      i, j));
-                  for (int l = j; l <= wsplit.length; l++) {
-                    StaticDeductionRule complete = new StaticDeductionRule();
-                    if (rule.getRhs()[0].length() == 0) {
-                      complete.addAntecedence(
-                        new CfgDottedItem(rule.getLhs() + " -> •"
-                          + ArrayUtils.getSubSequenceAsString(rule.getRhs(), k,
-                            rule.getRhs().length),
-                          i, j));
-                    } else {
-                      complete
-                        .addAntecedence(new CfgDottedItem(rule.getLhs() + " -> "
-                          + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0,
-                            k)
-                          + " •" + ArrayUtils.getSubSequenceAsString(
-                            rule.getRhs(), k, rule.getRhs().length),
-                          i, j));
-                    }
-                    if (rule2.getRhs()[0].length() == 0) {
-                      complete.addAntecedence(
-                        new CfgDottedItem(rule2.getLhs() + " -> •", j, l));
-                    } else {
-                      complete.addAntecedence(
-                        new CfgDottedItem(rule2.getLhs() + " -> "
-                          + String.join(" ", rule2.getRhs()) + " •", j, l));
-                    }
-                    complete
-                      .addConsequence(new CfgDottedItem(rule.getLhs() + " -> "
-                        + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0,
-                          k + 1)
-                        + " •" + ArrayUtils.getSubSequenceAsString(
-                          rule.getRhs(), k + 1, rule.getRhs().length),
-                        i, l));
-                    complete.setName("complete " + rule2.getLhs());
-                    schema.addRule(complete);
-                    // System.out.println(complete.toString()); // DEBUG
-                  }
-                  if (rule2.getRhs().length > 0) {
-                    predict.addConsequence(new CfgDottedItem(rule2.getLhs()
-                      + " -> •" + String.join(" ", rule2.getRhs()), j, j));
-                  } else {
-                    predict.addConsequence(
-                      new CfgDottedItem(rule2.getLhs() + " -> •", j, j));
-                  }
-                  predict.setName("predict " + rule2.getLhs() + " -> "
-                    + String.join(" ", rule2.getRhs()));
-                  schema.addRule(predict);
-                  // System.out.println(predict.toString()); // DEBUG
-                }
-              }
-            }
-          }
+        schema.addAxiom(axiom);
+        if (rule.getRhs()[0].equals(""))  {
+          schema.addGoal(new CfgDottedItem(
+            "S -> •", 0, wsplit.length));
+        } else {
+          schema.addGoal(new CfgDottedItem(
+            "S -> " + String.join(" ", rule.getRhs()) + " •", 0, wsplit.length));
         }
       }
+      
+      DynamicDeductionRule predict = new CfgEarleyPredict(rule);
+      schema.addRule(predict);
     }
     return schema;
   }
 
   /** Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf TODO too slow
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf
    * at the moment to be used. */
   public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
-    String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgDollarItem(w, cfg.getStart_var(), ""));
     axiom.setName("axiom");
-    schema.addRule(axiom);
-
-    for (String stackcompleted : SetUtils
-      .star(SetUtils.union(cfg.getTerminals(), cfg.getVars()), wsplit.length)) {
-      String[] stackcompletedsplit = stackcompleted.split(" ");
-      for (String stackpredicted : SetUtils.star(
-        SetUtils.union(cfg.getTerminals(), cfg.getVars(), new String[] {"$"}),
-        wsplit.length + 1)) { // TODO not enough, estimate automatically=?
-        String[] stackpredictedsplit = stackpredicted.split(" ");
-        for (String stacklhs : SetUtils.star(cfg.getVars(), wsplit.length)) {
-          if (!stackpredictedsplit[0].equals("$")) {
-            for (CfgProductionRule rule : cfg.getR()) {
-              if (stackcompletedsplit[0].equals(rule.getRhs()[0])) {
-                StaticDeductionRule reduce = new StaticDeductionRule();
-                reduce.addAntecedence(
-                  new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
-                String newstackpredicted = "";
-                if (stackpredicted.length() == 0) {
-                  newstackpredicted =
-                    ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
-                      rule.getRhs().length) + " $";
-                } else {
-                  newstackpredicted =
-                    ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
-                      rule.getRhs().length) + " $ " + stackpredicted;
-                }
-                String newstacklhs = "";
-                if (stacklhs.length() == 0) {
-                  newstacklhs = rule.getLhs();
-                } else {
-                  newstacklhs = rule.getLhs() + " " + stacklhs;
-                }
-                reduce.addConsequence(new CfgDollarItem(
-                  ArrayUtils.getSubSequenceAsString(stackcompletedsplit, 1,
-                    stackcompletedsplit.length),
-                  newstackpredicted, newstacklhs));
-                reduce.setName("reduce " + rule.getLhs() + " -> "
-                  + String.join(" ", rule.getRhs()));
-                schema.addRule(reduce);
-                // System.out.println(reduce.toString()); // DEBUG
-              }
-            }
-          }
-
-          if (stackpredictedsplit[0].equals("$") && stacklhs.length() > 0) {
-            String[] stacklhssplit = stacklhs.split(" ");
-            StaticDeductionRule move = new StaticDeductionRule();
-            move.addAntecedence(
-              new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
-            if (stackcompleted.length() > 0) {
-              move.addConsequence(
-                new CfgDollarItem(stacklhssplit[0] + " " + stackcompleted,
-                  ArrayUtils.getSubSequenceAsString(stackpredictedsplit, 1,
-                    stackpredictedsplit.length),
-                  ArrayUtils.getSubSequenceAsString(stacklhssplit, 1,
-                    stacklhssplit.length)));
-            } else {
-              move.addConsequence(new CfgDollarItem(stacklhssplit[0],
-                ArrayUtils.getSubSequenceAsString(stackpredictedsplit, 1,
-                  stackpredictedsplit.length),
-                ArrayUtils.getSubSequenceAsString(stacklhssplit, 1,
-                  stacklhssplit.length)));
-            }
-            move.setName("move " + stacklhssplit[0]);
-            schema.addRule(move);
-            // System.out.println(move.toString()); // DEBUG
-          }
-          if (stackcompleted.length() > 0 && stackpredicted.length() > 0
-            && stackcompletedsplit[0].equals(stackpredictedsplit[0])) {
-            StaticDeductionRule remove = new StaticDeductionRule();
-            remove.addAntecedence(
-              new CfgDollarItem(stackcompleted, stackpredicted, stacklhs));
-            remove.addConsequence(new CfgDollarItem(
-              ArrayUtils.getSubSequenceAsString(stackcompletedsplit, 1,
-                stackcompletedsplit.length),
-              ArrayUtils.getSubSequenceAsString(stackpredictedsplit, 1,
-                stackpredictedsplit.length),
-              stacklhs));
-            remove.setName("remove " + stackcompletedsplit[0]);
-            schema.addRule(remove);
-            // System.out.println(remove.toString()); // DEBUG
-          }
-        }
-      }
+    schema.addAxiom(axiom);
+    
+    for (CfgProductionRule rule : cfg.getR()) {
+      DynamicDeductionRule reduce = new CfgLeftcornerReduce(rule);
+      schema.addRule(reduce);
     }
+
+    DynamicDeductionRule remove = new CfgLeftcornerRemove();
+    schema.addRule(remove);
+
+    DynamicDeductionRule move = new CfgLeftcornerMove(cfg.getVars());
+    schema.addRule(move);
+
     schema.addGoal(new CfgDollarItem("", "", ""));
     return schema;
-  }
-
-  /** If seqsplit ends with rhs, the first part of sesplit without rhs is
-   * returned, else null. */
-  private static String getStringHeadIfEndsWith(String[] seqsplit,
-    String[] rhs) {
-    if (seqsplit.length < rhs.length)
-      return null;
-    for (int i = 0; i < rhs.length; i++) {
-      if (!(seqsplit[seqsplit.length - rhs.length + i].equals(rhs[i]))) {
-        return null;
-      }
-    }
-    return ArrayUtils.getSubSequenceAsString(seqsplit, 0,
-      seqsplit.length - rhs.length);
-  }
-
-  /** Returns a new array that is a concatenation of the two input arrays. */
-  private static String[] append(String[] split, String[] rhs) {
-    StringBuilder subseq = new StringBuilder();
-    for (int i = 0; i < split.length; i++) {
-      if (i > 0)
-        subseq.append(" ");
-      subseq.append(split[i]);
-    }
-    for (int i = 0; i < rhs.length; i++) {
-      if (subseq.length() > 0)
-        subseq.append(" ");
-      subseq.append(rhs[i]);
-    }
-    return subseq.toString().split(" ");
   }
 }

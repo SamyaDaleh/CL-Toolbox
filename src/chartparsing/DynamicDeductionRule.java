@@ -7,4 +7,5 @@ package chartparsing;
  */
 public interface DynamicDeductionRule extends DeductionRule{
   public int getAntecedencesNeeded();
+  public void clearItems();
 }

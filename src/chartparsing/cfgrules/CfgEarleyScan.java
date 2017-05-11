@@ -6,12 +6,11 @@ import java.util.List;
 import chartparsing.DynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
-import common.cfg.CfgItem;
+import common.cfg.CfgDottedItem;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** The scan rule for topdown removes a terminal if it is the next input
+ * symbol. */
+public class CfgEarleyScan implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
@@ -21,7 +20,7 @@ public class CfgTopdownScan implements DynamicDeductionRule {
 
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
+  public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
     this.setName("scan");
   }
@@ -48,11 +47,22 @@ public class CfgTopdownScan implements DynamicDeductionRule {
       String stack = itemform[0];
       String[] stacksplit = stack.split(" ");
       int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
-        this.setName("scan " + wsplit[i]);
+      int j = Integer.parseInt(itemform[2]);
+
+      for (int k = 0; k < stacksplit.length; k++) {
+        if (stacksplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
+          .equals(stacksplit[k].substring(1, stacksplit[k].length()))) {
+          StringBuilder newstack = new StringBuilder();
+          newstack
+            .append(ArrayUtils.getSubSequenceAsString(stacksplit, 0, k));
+          if (k == stacksplit.length - 1) {
+            newstack.append(" " + wsplit[j] + " •");
+          } else {
+            newstack.append(" " + wsplit[j] + " •" + ArrayUtils
+              .getSubSequenceAsString(stacksplit, k + 1, stacksplit.length));
+          }
+          consequences.add(new CfgDottedItem(newstack.toString(), i, j + 1));
+        }
       }
     }
     return consequences;

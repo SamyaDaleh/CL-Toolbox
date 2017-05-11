@@ -4,14 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import chartparsing.DynamicDeductionRule;
-import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgItem;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** Moves the next input symbol onto the stack */
+public class CfgBottomupShift implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
@@ -21,9 +18,9 @@ public class CfgTopdownScan implements DynamicDeductionRule {
 
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
+  public CfgBottomupShift(String[] wsplit) {
     this.wsplit = wsplit;
-    this.setName("scan");
+    this.setName("shift");
   }
 
   @Override public void addAntecedence(Item item) {
@@ -46,13 +43,14 @@ public class CfgTopdownScan implements DynamicDeductionRule {
     if (antecedences.size() == antneeded) {
       String[] itemform = antecedences.get(0).getItemform();
       String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
       int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
-        this.setName("scan " + wsplit[i]);
+      if (i < wsplit.length) {
+        if (stack.length() == 0) {
+          consequences.add(new CfgItem(wsplit[i], i + 1));
+        } else {
+          consequences.add(new CfgItem(stack + " " + wsplit[i], i + 1));
+        }
+        this.setName("shift " + wsplit[i]);
       }
     }
     return consequences;

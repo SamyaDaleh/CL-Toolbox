@@ -4,26 +4,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 import chartparsing.DynamicDeductionRule;
-import common.ArrayUtils;
 import common.Item;
-import common.cfg.CfgItem;
+import common.cfg.CfgDottedItem;
+import common.cfg.CfgProductionRule;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** If the next symbol after the dot is a nonterminal, for a rule with that
+ * symbol as lhs predict a new item. */
+public class CfgEarleyPredict implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String[] wsplit;
+  CfgProductionRule rule;
 
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
-    this.wsplit = wsplit;
-    this.setName("scan");
+  public CfgEarleyPredict(CfgProductionRule rule) {
+    this.rule = rule;
+    this.setName("predict " + rule.toString());
   }
 
   @Override public void addAntecedence(Item item) {
@@ -47,12 +46,21 @@ public class CfgTopdownScan implements DynamicDeductionRule {
       String[] itemform = antecedences.get(0).getItemform();
       String stack = itemform[0];
       String[] stacksplit = stack.split(" ");
-      int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
-        this.setName("scan " + wsplit[i]);
+      int j = Integer.parseInt(itemform[2]);
+
+      for (int k = 0; k < stacksplit.length; k++) {
+        if (stacksplit[k].startsWith("•")
+          && stacksplit[k].substring(1, stacksplit[k].length()).equals(rule.getLhs())) {
+          String newstack;
+          if (rule.getRhs()[0].equals("")) {
+            newstack = rule.getLhs() + " -> •";
+          } else {
+            newstack =
+              rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
+          }
+          consequences.add(new CfgDottedItem(newstack, j, j));
+          break;
+        }
       }
     }
     return consequences;
