@@ -193,4 +193,17 @@ public class Tag {
     }
     return false;
   }
+
+  /** Returns true if auxtree is adjoinable in tree at node with gorn address.
+   * That is the case if the label of the node and the auxiliary tree are the
+   * same and the node is no substitution node.
+   * @return */
+  public boolean isAdjoinable(String auxtreename, String treename,
+    String gornaddress) {
+    boolean labelcheck = getAuxiliaryTree(auxtreename).getRoot().getLabel()
+      .equals(getTree(treename).getNodeByGornAdress(gornaddress).getLabel());
+    boolean issubstnode = isSubstitutionNode(
+      getTree(treename).getNodeByGornAdress(gornaddress), treename);
+    return (labelcheck && !issubstnode);
+  }
 }

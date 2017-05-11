@@ -51,7 +51,7 @@ public class TagToDeductionRulesConverter {
             lexscan.addConsequence(new TagCykItem(tree,
               p.getGornaddress() + "⊤", i, null, null, i + 1));
             lexscan.setName("lex-scan " + wsplit[i]);
-            schema.addRule(lexscan);
+            schema.addAxiom(lexscan);
             // System.out.println(lexscan.toString()); // DEBUG
           }
           if (p.getLabel().equals("")) {
@@ -59,7 +59,7 @@ public class TagToDeductionRulesConverter {
             epsscan.addConsequence(
               new TagCykItem(tree, p.getGornaddress() + "⊤", i, null, null, i));
             epsscan.setName("eps-scan");
-            schema.addRule(epsscan);
+            schema.addAxiom(epsscan);
             // System.out.println(epsscan.toString()); // DEBUG
           }
         }
@@ -81,7 +81,7 @@ public class TagToDeductionRulesConverter {
           footpredict.addConsequence(
             new TagCykItem(auxtree, footgorn + "⊤", i, i, j, j));
           footpredict.setName("foot-predict");
-          schema.addRule(footpredict);
+          schema.addAxiom(footpredict);
           // System.out.println(footpredict.toString()); // DEBUG
         }
         for (String initree : initreenames) {
@@ -257,7 +257,7 @@ public class TagToDeductionRulesConverter {
         initialize.addConsequence(
           new TagEarleyItem(initreename, "", "la", 0, (Integer) null, null, 0, false));
         initialize.setName("initialize");
-        schema.addRule(initialize);
+        schema.addAxiom(initialize);
         // System.out.println(initialize.toString()); // DEBUG
         schema.addGoal(new TagEarleyItem(initreename, "", "ra", 0, (Integer) null, null,
           wsplit.length, false));

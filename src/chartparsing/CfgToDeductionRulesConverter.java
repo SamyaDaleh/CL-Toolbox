@@ -52,12 +52,12 @@ public class CfgToDeductionRulesConverter {
     ParsingSchema schema = new ParsingSchema();
     DynamicDeductionRule scan = new CfgTopdownScan(wsplit);
     schema.addRule(scan);
-    
+
     for (CfgProductionRule rule : cfg.getR()) {
       DynamicDeductionRule predict = new CfgTopdownPredict(rule);
       schema.addRule(predict);
     }
- 
+
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgItem(cfg.getStart_var(), 0));
     axiom.setName("axiom");
@@ -78,12 +78,12 @@ public class CfgToDeductionRulesConverter {
     ParsingSchema schema = new ParsingSchema();
     DynamicDeductionRule shift = new CfgBottomupShift(wsplit);
     schema.addRule(shift);
-    
+
     for (CfgProductionRule rule : cfg.getR()) {
       DynamicDeductionRule reduce = new CfgBottomupReduce(rule);
       schema.addRule(reduce);
     }
-    
+
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgItem("", 0));
     axiom.setName("axiom");
@@ -97,34 +97,33 @@ public class CfgToDeductionRulesConverter {
   public static ParsingSchema CfgToEarleyRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    
+
     DynamicDeductionRule scan = new CfgEarleyScan(wsplit);
     schema.addRule(scan);
-    
+
     DynamicDeductionRule complete = new CfgEarleyComplete();
     schema.addRule(complete);
-    
+
     for (CfgProductionRule rule : cfg.getR()) {
       if (rule.getLhs().equals(cfg.getStart_var())) {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
-          axiom.addConsequence(
-            new CfgDottedItem("S -> •", 0, 0));
+          axiom.addConsequence(new CfgDottedItem("S -> •", 0, 0));
         } else {
-          axiom.addConsequence(
-            new CfgDottedItem("S -> •" + String.join(" ", rule.getRhs()), 0, 0));
+          axiom.addConsequence(new CfgDottedItem(
+            "S -> •" + String.join(" ", rule.getRhs()), 0, 0));
         }
         axiom.setName("axiom");
         schema.addAxiom(axiom);
-        if (rule.getRhs()[0].equals(""))  {
-          schema.addGoal(new CfgDottedItem(
-            "S -> •", 0, wsplit.length));
+        if (rule.getRhs()[0].equals("")) {
+          schema.addGoal(new CfgDottedItem("S -> •", 0, wsplit.length));
         } else {
-          schema.addGoal(new CfgDottedItem(
-            "S -> " + String.join(" ", rule.getRhs()) + " •", 0, wsplit.length));
+          schema.addGoal(
+            new CfgDottedItem("S -> " + String.join(" ", rule.getRhs()) + " •",
+              0, wsplit.length));
         }
       }
-      
+
       DynamicDeductionRule predict = new CfgEarleyPredict(rule);
       schema.addRule(predict);
     }
@@ -132,15 +131,15 @@ public class CfgToDeductionRulesConverter {
   }
 
   /** Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf
-   * at the moment to be used. */
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
+   * to be used. */
   public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgDollarItem(w, cfg.getStart_var(), ""));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
-    
+
     for (CfgProductionRule rule : cfg.getR()) {
       DynamicDeductionRule reduce = new CfgLeftcornerReduce(rule);
       schema.addRule(reduce);

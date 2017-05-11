@@ -52,7 +52,6 @@ public class CfgLeftcornerRemove implements DynamicDeductionRule {
         String newpred = ArrayUtils.getSubSequenceAsString(stackpredsplit, 1,
           stackpredsplit.length);
         consequences.add(new CfgDollarItem(newcompl, newpred, stacklhs));
-        this.setName("remove " + stackcomplsplit[0]);
       }
     }
     return consequences;

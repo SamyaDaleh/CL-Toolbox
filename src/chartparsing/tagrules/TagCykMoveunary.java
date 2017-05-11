@@ -1,38 +1,44 @@
-package chartparsing.cfgrules;
+package chartparsing.tagrules;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import chartparsing.DynamicDeductionRule;
 import common.Item;
-import common.cfg.CfgItem;
+import common.tag.Tag;
+import common.tag.TagEarleyItem;
 
-/** Moves the next input symbol onto the stack */
-public class CfgBottomupShift implements DynamicDeductionRule {
+/** If the dot is at a node where adjunction is possible, predict the auxiliary
+ * tree that can be adjoined into that node. */
+public class TagCykMoveunary implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String[] wsplit;
+  String auxtreename = null;
+  Tag tag = null;
 
   int antneeded = 1;
 
-  public CfgBottomupShift(String[] wsplit) {
-    this.wsplit = wsplit;
-    this.setName("shift");
+  /** Constructor takes an auxiliary tree for the items the rule shall derive,
+   * also needs the grammar to retrieve information about the antecedence. */
+  TagCykMoveunary(String auxtreename, Tag tag) {
+    this.auxtreename = auxtreename;
+    this.tag = tag;
+    this.name = "move-unary";
   }
 
   @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
+    this.antecedences.add(item);
   }
 
   @Override public void addConsequence(Item item) {
-    consequences.add(item);
+    this.consequences.add(item);
   }
 
   @Override public List<Item> getAntecedences() {
-    return antecedences;
+    return this.antecedences;
   }
 
   @Override public void setAntecedences(List<Item> antecedences) {
@@ -42,14 +48,13 @@ public class CfgBottomupShift implements DynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antneeded) {
       String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length) {
-        if (stack.length() == 0) {
-          consequences.add(new CfgItem(wsplit[i], i + 1));
-        } else {
-          consequences.add(new CfgItem(stack + " " + wsplit[i], i + 1));
-        }
+      String treename = itemform[0];
+      String node = itemform[1];
+      int l = Integer.parseInt(itemform[6]);
+      boolean adjoinable = tag.isAdjoinable(auxtreename, treename, node);
+      if (adjoinable && itemform[2].equals("la") && itemform[0].equals("0")) {
+        consequences.add(new TagEarleyItem(auxtreename, "", "la", l,
+          (Integer) null, null, l, false));
       }
     }
     return consequences;
@@ -64,23 +69,11 @@ public class CfgBottomupShift implements DynamicDeductionRule {
   }
 
   @Override public String getName() {
-    return this.name;
+    return name;
   }
 
   @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
-  @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
-    return representation.toString();
+    return antneeded;
   }
 
   @Override public void clearItems() {

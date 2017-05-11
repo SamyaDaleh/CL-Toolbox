@@ -49,8 +49,8 @@ public class CfgEarleyPredict implements DynamicDeductionRule {
       int j = Integer.parseInt(itemform[2]);
 
       for (int k = 0; k < stacksplit.length; k++) {
-        if (stacksplit[k].startsWith("•")
-          && stacksplit[k].substring(1, stacksplit[k].length()).equals(rule.getLhs())) {
+        if (stacksplit[k].startsWith("•") && stacksplit[k]
+          .substring(1, stacksplit[k].length()).equals(rule.getLhs())) {
           String newstack;
           if (rule.getRhs()[0].equals("")) {
             newstack = rule.getLhs() + " -> •";

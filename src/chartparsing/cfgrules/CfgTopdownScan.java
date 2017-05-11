@@ -52,7 +52,6 @@ public class CfgTopdownScan implements DynamicDeductionRule {
         consequences.add(new CfgItem(
           ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
           i + 1));
-        this.setName("scan " + wsplit[i]);
       }
     }
     return consequences;
