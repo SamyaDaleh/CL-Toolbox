@@ -8,23 +8,20 @@ import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
-/** If the dot is at a node where adjunction is possible, predict the auxiliary
- * tree that can be adjoined into that node. */
-public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
+/** If the dot is at a node where adjunction is not obligatory, just skip it. */
+public class TagEarleyPredictnoadj implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String auxtreename = null;
   Tag tag = null;
 
   int antneeded = 1;
 
-  /** Constructor takes an auxiliary tree for the items the rule shall derive,
-   * also needs the grammar to retrieve information about the antecedence. */
-  public TagEarleyPredictadjoinable(String auxtreename, Tag tag) {
-    this.auxtreename = auxtreename;
+  /** Constructor needs the grammar to retrieve information about the
+   * antecedence. */
+  public TagEarleyPredictnoadj(Tag tag) {
     this.tag = tag;
     this.name = "predict adjoinable";
   }
@@ -51,9 +48,9 @@ public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
       String treename = itemform[0];
       String node = itemform[1];
       int l = Integer.parseInt(itemform[6]);
-      boolean adjoinable = tag.isAdjoinable(auxtreename, treename, node);
-      if (adjoinable && itemform[2].equals("la") && itemform[7].equals("0")) {
-        consequences.add(new TagEarleyItem(auxtreename, "", "la", l,
+      // TODO if f_OA = 0
+      if (itemform[2].equals("la") && itemform[7].equals("0")) {
+        consequences.add(new TagEarleyItem(treename, node, "lb", l,
           (Integer) null, null, l, false));
       }
     }

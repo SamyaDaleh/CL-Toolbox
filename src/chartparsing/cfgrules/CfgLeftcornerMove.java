@@ -64,7 +64,6 @@ public class CfgLeftcornerMove implements DynamicDeductionRule {
             String newlhs = ArrayUtils.getSubSequenceAsString(stacklhssplit, 1,
               stacklhssplit.length);;
             consequences.add(new CfgDollarItem(newcompl, newpred, newlhs));
-            this.setName("move " + nt);
             break;
           }
         }

@@ -6,25 +6,22 @@ import java.util.List;
 import chartparsing.DynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
-import common.tag.TagEarleyItem;
+import common.tag.TagCykItem;
 
-/** If the dot is at a node where adjunction is possible, predict the auxiliary
- * tree that can be adjoined into that node. */
+/** From a single-child node move up to the parent node. */
 public class TagCykMoveunary implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String auxtreename = null;
   Tag tag = null;
 
   int antneeded = 1;
 
-  /** Constructor takes an auxiliary tree for the items the rule shall derive,
-   * also needs the grammar to retrieve information about the antecedence. */
-  TagCykMoveunary(String auxtreename, Tag tag) {
-    this.auxtreename = auxtreename;
+  /** Constructor needs the grammar to retrieve information about the
+   * antecedences. */
+  public TagCykMoveunary(Tag tag) {
     this.tag = tag;
     this.name = "move-unary";
   }
@@ -50,11 +47,20 @@ public class TagCykMoveunary implements DynamicDeductionRule {
       String[] itemform = antecedences.get(0).getItemform();
       String treename = itemform[0];
       String node = itemform[1];
-      int l = Integer.parseInt(itemform[6]);
-      boolean adjoinable = tag.isAdjoinable(auxtreename, treename, node);
-      if (adjoinable && itemform[2].equals("la") && itemform[0].equals("0")) {
-        consequences.add(new TagEarleyItem(auxtreename, "", "la", l,
-          (Integer) null, null, l, false));
+      int i = Integer.parseInt(itemform[2]);
+      Integer f1;
+      Integer f2;
+      try {
+        f1 = Integer.parseInt(itemform[3]);
+        f2 = Integer.parseInt(itemform[4]);
+      } catch (NumberFormatException e) {
+        f1 = null;
+        f2 = null;
+      }
+      int j = Integer.parseInt(itemform[5]);
+      if (node.endsWith(".1⊤")) {
+        String parentnode = node.substring(0, node.length() - 3) + "⊥";
+        consequences.add(new TagCykItem(treename, parentnode, i, f1, f2, j));
       }
     }
     return consequences;

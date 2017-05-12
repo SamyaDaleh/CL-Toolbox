@@ -6,27 +6,28 @@ import java.util.List;
 import chartparsing.DynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
-import common.tag.TagEarleyItem;
+import common.tag.TagCykItem;
 
-/** If the dot is at a node where adjunction is possible, predict the auxiliary
- * tree that can be adjoined into that node. */
-public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
+/** Tries to substitute a given initial tree into the node of the tree it
+ * remembers. */
+public class TagCykSubstitute implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String auxtreename = null;
   Tag tag = null;
+  String nodegorn = null;
+  String treename = null;
 
   int antneeded = 1;
 
-  /** Constructor takes an auxiliary tree for the items the rule shall derive,
-   * also needs the grammar to retrieve information about the antecedence. */
-  public TagEarleyPredictadjoinable(String auxtreename, Tag tag) {
-    this.auxtreename = auxtreename;
+  /** Remembers tree and node it can substitute in. */
+  public TagCykSubstitute(String treename, String nodegorn, Tag tag) {
     this.tag = tag;
-    this.name = "predict adjoinable";
+    this.treename = treename;
+    this.nodegorn = nodegorn;
+    this.name = "substitute";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -50,11 +51,11 @@ public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
       String[] itemform = antecedences.get(0).getItemform();
       String treename = itemform[0];
       String node = itemform[1];
-      int l = Integer.parseInt(itemform[6]);
-      boolean adjoinable = tag.isAdjoinable(auxtreename, treename, node);
-      if (adjoinable && itemform[2].equals("la") && itemform[7].equals("0")) {
-        consequences.add(new TagEarleyItem(auxtreename, "", "la", l,
-          (Integer) null, null, l, false));
+      int i = Integer.parseInt(itemform[2]);
+      int j = Integer.parseInt(itemform[5]);
+      if (tag.getInitialTree(treename) != null && node.equals("⊤")) {
+        consequences.add(
+          new TagCykItem(this.treename, this.nodegorn + "⊤", i, null, null, j));
       }
     }
     return consequences;
