@@ -7,6 +7,19 @@ import chartparsing.tagrules.TagCykMovebinary;
 import chartparsing.tagrules.TagCykMoveunary;
 import chartparsing.tagrules.TagCykNulladjoin;
 import chartparsing.tagrules.TagCykSubstitute;
+import chartparsing.tagrules.TagEarleyAdjoin;
+import chartparsing.tagrules.TagEarleyCompletefoot;
+import chartparsing.tagrules.TagEarleyCompletenode;
+import chartparsing.tagrules.TagEarleyMovedown;
+import chartparsing.tagrules.TagEarleyMoveright;
+import chartparsing.tagrules.TagEarleyMoveup;
+import chartparsing.tagrules.TagEarleyPredictadjoinable;
+import chartparsing.tagrules.TagEarleyPredictadjoined;
+import chartparsing.tagrules.TagEarleyPredictnoadj;
+import chartparsing.tagrules.TagEarleyPredictsubst;
+import chartparsing.tagrules.TagEarleyScaneps;
+import chartparsing.tagrules.TagEarleyScanterm;
+import chartparsing.tagrules.TagEarleySubstitute;
 import common.tag.Tag;
 import common.tag.TagCykItem;
 import common.tag.TagEarleyItem;
@@ -124,11 +137,11 @@ public class TagToDeductionRulesConverter {
     Set<String> treesnameset = tag.getTreeNames();
     String[] treenames = treesnameset.toArray(new String[treesnameset.size()]);
 
-    DynamicDeductionRule scanterm = new TagEarleyScanterm(tag);
+    DynamicDeductionRule scanterm = new TagEarleyScanterm(wsplit, tag);
     schema.addRule(scanterm);
     DynamicDeductionRule scaneps = new TagEarleyScaneps(tag);
     schema.addRule(scaneps);
-    DynamicDeductionRule predictnoadj = new TagEarleyPredictnoadjoin(tag);
+    DynamicDeductionRule predictnoadj = new TagEarleyPredictnoadj(tag);
     schema.addRule(predictnoadj);
     DynamicDeductionRule completefoot = new TagEarleyCompletefoot(tag);
     schema.addRule(completefoot);
@@ -150,11 +163,14 @@ public class TagToDeductionRulesConverter {
     }
 
     for (String treename : treenames) {
-      DynamicDeductionRule predictadjoined =
-        new TagEarleyPredictadjoined(treename, tag);
-      schema.addRule(predictadjoined);
-      DynamicDeductionRule substitute = new TagEarleySubstitute(treename, tag);
-      schema.addRule(substitute);
+      for (Vertex p : tag.getTree(treename).getVertexes()) {
+        DynamicDeductionRule predictadjoined =
+          new TagEarleyPredictadjoined(treename, p.getGornaddress(), tag);
+        schema.addRule(predictadjoined);
+        DynamicDeductionRule substitute =
+          new TagEarleySubstitute(treename, p.getGornaddress(), tag);
+        schema.addRule(substitute);
+      }
     }
 
     for (String initreename : initreenames) {
