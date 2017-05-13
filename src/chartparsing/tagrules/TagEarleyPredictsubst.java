@@ -59,8 +59,8 @@ public class TagEarleyPredictsubst implements DynamicDeductionRule {
       String adj = itemform[7];
       Vertex p = tag.getTree(treename).getNodeByGornAdress(node);
       boolean substnode = tag.isSubstitutionNode(p, treename);
-      if (substnode && pos.equals("lb") && i1 == i2 && f1.equals("null")
-        && f2.equals("null") && adj.equals("0")) {
+      if (substnode && pos.equals("lb") && i1 == i2 && f1.equals("-")
+        && f2.equals("-") && adj.equals("0")) {
         consequences.add(new TagEarleyItem(initreename, "", "la", i1,
           (Integer) null, null, i1, false));
       }

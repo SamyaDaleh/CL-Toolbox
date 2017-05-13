@@ -7,7 +7,6 @@ import chartparsing.DynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
-import common.tag.Vertex;
 
 /** If a potential initial tree is complete, substitute it if possible. */
 public class TagEarleySubstitute implements DynamicDeductionRule {
@@ -28,7 +27,7 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
     this.outtreename = outtreename;
     this.outnode = outnode;
     this.tag = tag;
-    this.name = "predict adjoined";
+    this.name = "substitute";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -50,15 +49,17 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antneeded) {
       String[] itemform = antecedences.get(0).getItemform();
+      String treename = itemform[0];
+      String node = itemform[1];
       String pos = itemform[2];
       int i = Integer.parseInt(itemform[3]);
       String f1 = itemform[4];
       String f2 = itemform[5];
       int j = Integer.parseInt(itemform[6]);
       String adj = itemform[7];
-      Vertex p = tag.getTree(outtreename).getNodeByGornAdress(outnode);
-      boolean substnode = tag.isSubstitutionNode(p, outtreename);
-      if (substnode && f1.equals("null") && f2.equals("null") && adj.equals("0") && pos.equals("ra")) {
+      if (tag.getInitialTree(treename) != null && node.equals("")
+        && f1.equals("-") && f2.equals("-") && adj.equals("0")
+        && pos.equals("ra")) {
         consequences.add(new TagEarleyItem(outtreename, outnode, "rb", i,
           (Integer) null, null, j, false));
       }

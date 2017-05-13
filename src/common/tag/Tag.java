@@ -200,8 +200,9 @@ public class Tag {
    * @return */
   public boolean isAdjoinable(String auxtreename, String treename,
     String gornaddress) {
-    boolean labelcheck = getAuxiliaryTree(auxtreename).getRoot().getLabel()
-      .equals(getTree(treename).getNodeByGornAdress(gornaddress).getLabel());
+    boolean labelcheck = getAuxiliaryTree(auxtreename) != null
+      && getAuxiliaryTree(auxtreename).getRoot().getLabel()
+        .equals(getTree(treename).getNodeByGornAdress(gornaddress).getLabel());
     boolean issubstnode = isSubstitutionNode(
       getTree(treename).getNodeByGornAdress(gornaddress), treename);
     return (labelcheck && !issubstnode);

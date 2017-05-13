@@ -81,7 +81,7 @@ public class TagEarleyAdjoin implements DynamicDeductionRule {
       boolean adjoinable2 = tag.isAdjoinable(treename2, treename1, node1);
       if (adj1.equals("0") && adj2.equals("0")) {
         if (adjoinable1 && node1.equals("") && pos1.equals("ra")
-          && pos1.equals("rb") && j1.intValue() == j2) {
+          && pos2.equals("rb") && j1.intValue() == j2) {
           consequences.add(new TagEarleyItem(treename2, node2, "rb", i,
             (Integer) g, h, l, true));
         } else if (adjoinable2 && node2.equals("") && pos2.equals("ra")

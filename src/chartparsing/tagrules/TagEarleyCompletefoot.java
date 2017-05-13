@@ -67,11 +67,11 @@ public class TagEarleyCompletefoot implements DynamicDeductionRule {
       boolean adjoinable2 = tag.isAdjoinable(treename1, treename2, node2);
       if (i1 == i21 && adj1.equals("0") && adj2.equals("0")) {
         if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb") && i21 == i22
-          && f12.equals("null") && f22.equals("null")) {
+          && f12.equals("-") && f22.equals("-")) {
           consequences.add(
             new TagEarleyItem(treename2, node2, "rb", i1, i1, l, l, false));
         } else if (adjoinable2 && pos2.equals("rb") && pos1.equals("lb")
-          && i1 == l && j.equals("null") && k.equals("null")) {
+          && i1 == l && j.equals("-") && k.equals("-")) {
           // the other way around
           consequences.add(new TagEarleyItem(treename1, node1, "rb", i21, i21,
             i22, i22, false));

@@ -23,7 +23,7 @@ public class TagEarleyPredictnoadj implements DynamicDeductionRule {
    * antecedence. */
   public TagEarleyPredictnoadj(Tag tag) {
     this.tag = tag;
-    this.name = "predict adjoinable";
+    this.name = "predict no adjoin";
   }
 
   @Override public void addAntecedence(Item item) {

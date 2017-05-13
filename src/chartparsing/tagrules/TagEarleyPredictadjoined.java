@@ -54,11 +54,11 @@ public class TagEarleyPredictadjoined implements DynamicDeductionRule {
       String node = itemform[1];
       int l = Integer.parseInt(itemform[6]);
       boolean adjoinable = tag.isAdjoinable(treename, outtreename, outnode);
-      boolean isFootNode =
-        tag.getAuxiliaryTree(treename).getFoot().getGornaddress().equals(node);
+      boolean isFootNode = tag.getAuxiliaryTree(treename) != null && tag
+        .getAuxiliaryTree(treename).getFoot().getGornaddress().equals(node);
       if (adjoinable && isFootNode && itemform[2].equals("lb")
         && itemform[7].equals("0") && itemform[3].equals(itemform[6])
-        && itemform[4].equals("null") && itemform[5].equals("null")) {
+        && itemform[4].equals("-") && itemform[5].equals("-")) {
         consequences.add(new TagEarleyItem(outtreename, outnode, "lb", l,
           (Integer) null, null, l, false));
       }

@@ -156,7 +156,7 @@ public class Deduction {
         processNewItems(newitems, rule);
       }
     } else if (itemsneeded == 2) {
-      for (int i = 0; i < chart.size(); i++){
+      for (int i = 0; i < chart.size(); i++) {
         rule.clearItems();
         rule.addAntecedence(item);
         rule.addAntecedence(chart.get(i));
@@ -165,9 +165,10 @@ public class Deduction {
           processNewItems(newitems, rule);
         }
       }
-    }  else if (itemsneeded == 3) {
-      for (int i = 0; i < chart.size(); i++){
-        for (int j = 0; j < chart.size(); j++){
+    } else if (itemsneeded == 3) {
+      for (int i = 0; i < chart.size(); i++) {
+        for (int j = 0; j < chart.size(); j++) {
+          rule.clearItems();
           rule.addAntecedence(item);
           rule.addAntecedence(chart.get(i));
           rule.addAntecedence(chart.get(j));
@@ -179,31 +180,32 @@ public class Deduction {
       }
     }
   }
-  
-  private static void processNewItems(List<Item> newitems, DynamicDeductionRule rule) {
-    
-   ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
-   for (Item itemtocheck : rule.getAntecedences()) {
-     newitemsdeductedfrom.add(chart.indexOf(itemtocheck));
-   }
-   for (Item newitem : newitems) {
-     if (!chart.contains(newitem)) {
-       chart.add(newitem);
-       agenda.add(newitem);
-       appliedRule.add(new ArrayList<String>());
-       appliedRule.get(appliedRule.size() - 1).add(rule.getName());
-       deductedfrom.add(new ArrayList<ArrayList<Integer>>());
-       deductedfrom.get(deductedfrom.size() - 1).add(newitemsdeductedfrom);
-     } else {
-       // same set of backpointers must not exist yet.
-       // backpointers are always in the same order, that's why this works.
-       int oldid = chart.indexOf(newitem);
-       if (!deductedfrom.get(oldid).contains(newitemsdeductedfrom)) {
-         appliedRule.get(oldid).add(rule.getName());
-         deductedfrom.get(oldid).add(newitemsdeductedfrom);
-       }
-     }
-   }
+
+  private static void processNewItems(List<Item> newitems,
+    DynamicDeductionRule rule) {
+
+    ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
+    for (Item itemtocheck : rule.getAntecedences()) {
+      newitemsdeductedfrom.add(chart.indexOf(itemtocheck));
+    }
+    for (Item newitem : newitems) {
+      if (!chart.contains(newitem)) {
+        chart.add(newitem);
+        agenda.add(newitem);
+        appliedRule.add(new ArrayList<String>());
+        appliedRule.get(appliedRule.size() - 1).add(rule.getName());
+        deductedfrom.add(new ArrayList<ArrayList<Integer>>());
+        deductedfrom.get(deductedfrom.size() - 1).add(newitemsdeductedfrom);
+      } else {
+        // same set of backpointers must not exist yet.
+        // backpointers are always in the same order, that's why this works.
+        int oldid = chart.indexOf(newitem);
+        if (!deductedfrom.get(oldid).contains(newitemsdeductedfrom)) {
+          appliedRule.get(oldid).add(rule.getName());
+          deductedfrom.get(oldid).add(newitemsdeductedfrom);
+        }
+      }
+    }
   }
 
   static int column1 = 5;

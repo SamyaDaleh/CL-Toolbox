@@ -167,9 +167,11 @@ public class TagToDeductionRulesConverter {
         DynamicDeductionRule predictadjoined =
           new TagEarleyPredictadjoined(treename, p.getGornaddress(), tag);
         schema.addRule(predictadjoined);
-        DynamicDeductionRule substitute =
-          new TagEarleySubstitute(treename, p.getGornaddress(), tag);
-        schema.addRule(substitute);
+        if (tag.isSubstitutionNode(p, treename)) {
+          DynamicDeductionRule substitute =
+            new TagEarleySubstitute(treename, p.getGornaddress(), tag);
+          schema.addRule(substitute);
+        }
       }
     }
 

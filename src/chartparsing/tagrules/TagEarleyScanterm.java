@@ -20,8 +20,8 @@ public class TagEarleyScanterm implements DynamicDeductionRule {
 
   int antneeded = 1;
 
-  /** Constructor takes the input string to compare with the tree labels,
-   * also needs the grammar to retrieve information about the antecedence. */
+  /** Constructor takes the input string to compare with the tree labels, also
+   * needs the grammar to retrieve information about the antecedence. */
   public TagEarleyScanterm(String[] wsplit, Tag tag) {
     this.wsplit = wsplit;
     this.tag = tag;
@@ -62,10 +62,11 @@ public class TagEarleyScanterm implements DynamicDeductionRule {
       }
       int l = Integer.parseInt(itemform[6]);
       String adj = itemform[7];
-      if (pos.equals("la") && adj.equals("0") && tag.getTree(treename)
-        .getNodeByGornAdress(node).getLabel().equals(wsplit[l])) {
-        consequences.add(
-          new TagEarleyItem(treename, node, "ra", i, (Integer) j, k, l + 1, false));
+      if (l < wsplit.length && pos.equals("la") && adj.equals("0")
+        && tag.getTree(treename).getNodeByGornAdress(node).getLabel()
+          .equals(wsplit[l])) {
+        consequences.add(new TagEarleyItem(treename, node, "ra", i, (Integer) j,
+          k, l + 1, false));
       }
     }
     return consequences;

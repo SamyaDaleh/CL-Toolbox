@@ -61,7 +61,7 @@ public class TagEarleyMoveup implements DynamicDeductionRule {
       String adj = itemform[7];
       String siblinggorn = tag.getTree(treename).getNodeByGornAdress(node)
         .getGornAddressOfPotentialRightSibling();
-      if (pos.equals("ra") && adj.equals("0")
+      if (!node.equals("") && pos.equals("ra") && adj.equals("0")
         && tag.getTree(treename).getNodeByGornAdress(siblinggorn) == null) {
         String parentgorn = tag.getTree(treename).getNodeByGornAdress(node)
           .getGornAddressOfParent();
