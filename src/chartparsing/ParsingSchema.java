@@ -12,14 +12,14 @@ import common.Item;
  * with help of the rules. */
 public class ParsingSchema {
   Set<StaticDeductionRule> axioms = new HashSet<StaticDeductionRule>();
-  Set<StaticDeductionRule> rules = new HashSet<StaticDeductionRule>();
+  Set<DynamicDeductionRule> rules = new HashSet<DynamicDeductionRule>();
   List<Item> goal = new LinkedList<Item>();
   
   public void addAxiom(StaticDeductionRule rule) {
     axioms.add(rule);
   }
 
-  public void addRule(StaticDeductionRule rule) {
+  public void addRule(DynamicDeductionRule rule) {
     rules.add(rule);
   }
 
@@ -27,7 +27,7 @@ public class ParsingSchema {
     this.goal.add(item);
   }
 
-  public Set<StaticDeductionRule> getRules() {
+  public Set<DynamicDeductionRule> getRules() {
     return this.rules;
   }
 

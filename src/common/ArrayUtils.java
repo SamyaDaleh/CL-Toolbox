@@ -60,4 +60,36 @@ public class ArrayUtils {
     representation.append("]");
     return representation.toString();
   }
+
+  /** If seqsplit ends with rhs, the first part of seqsplit without rhs is
+   * returned, else null. */
+  public static String getStringHeadIfEndsWith(String[] seqsplit,
+    String[] rhs) {
+    if (seqsplit.length < rhs.length)
+      return null;
+    for (int i = 0; i < rhs.length; i++) {
+      if (!(seqsplit[seqsplit.length - rhs.length + i].equals(rhs[i]))) {
+        return null;
+      }
+    }
+    return ArrayUtils.getSubSequenceAsString(seqsplit, 0,
+      seqsplit.length - rhs.length);
+  }
+
+  /** Returns a new array that is a concatenation of the two input arrays. */
+  public static String[] append(String[] split, String[] rhs) {
+    StringBuilder subseq = new StringBuilder();
+    for (int i = 0; i < split.length; i++) {
+      if (i > 0)
+        subseq.append(" ");
+      subseq.append(split[i]);
+    }
+    for (int i = 0; i < rhs.length; i++) {
+      if (subseq.length() > 0)
+        subseq.append(" ");
+      subseq.append(rhs[i]);
+    }
+    return subseq.toString().split(" ");
+  }
+
 }

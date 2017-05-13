@@ -7,6 +7,7 @@ Parsing as Deduction:
 - Top Down for CFG
 - Shift Reduce for CFG
 - Earley for CFG
+- Left Corner for CFG
 - CYK for TAG
 - Earley for TAG
 
@@ -15,7 +16,7 @@ Use it to generate examples, play around with grammars etc.
 
 Installation:
 
-Download the jar from /releases and that's it.
+Download the jar from /releases and that's it. You need Java 8 installed.
 
 Or if you want to tinker with the code, for me it worked like this:
 - clone

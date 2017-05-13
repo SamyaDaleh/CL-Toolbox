@@ -6,24 +6,25 @@ import java.util.List;
 import chartparsing.DynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
-import common.cfg.CfgItem;
+import common.cfg.CfgDollarItem;
+import common.cfg.CfgProductionRule;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** If the top of the completed stack is the left corner of a production rule,
+ * pop that symbol, push the rest of the rhs to the stack to be predicted and
+ * add the lhs to the stack of lhs */
+public class CfgLeftcornerReduce implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String[] wsplit;
+  CfgProductionRule rule;
 
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
-    this.wsplit = wsplit;
-    this.setName("scan");
+  public CfgLeftcornerReduce(CfgProductionRule rule) {
+    this.setName("reduce " + rule.toString());
+    this.rule = rule;
   }
 
   @Override public void addAntecedence(Item item) {
@@ -45,13 +46,31 @@ public class CfgTopdownScan implements DynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antneeded) {
       String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
-      int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
+      String stackcompl = itemform[0];
+      String[] stackcomplsplit = stackcompl.split(" ");
+      String stackpred = itemform[1];
+      String[] stackpredsplit = stackpred.split(" ");
+      String stacklhs = itemform[2];
+
+      if (!stackpredsplit[0].equals("$")
+        && stackcomplsplit[0].equals(rule.getRhs()[0])) {
+        String newcompl = ArrayUtils.getSubSequenceAsString(stackcomplsplit, 1,
+          stackcompl.length());
+        String newpred;
+        if (rule.getRhs().length == 1) {
+          newpred = "$ " + stackpred;
+        } else {
+          newpred = ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
+            rule.getRhs().length) + " $ " + stackpred;
+        }
+          
+        String newlhs;
+        if (stacklhs.length() == 0) {
+          newlhs = rule.getLhs();
+        } else {
+          newlhs = rule.getLhs() + " " + stacklhs;
+        }
+        consequences.add(new CfgDollarItem(newcompl, newpred, newlhs));
       }
     }
     return consequences;

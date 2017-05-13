@@ -7,23 +7,23 @@ import chartparsing.DynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgItem;
+import common.cfg.CfgProductionRule;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** If the top o the stack matches the rhs of a rule, replace it with the
+ * lhs. */
+public class CfgBottomupReduce implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String[] wsplit;
+  CfgProductionRule rule;
 
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
-    this.wsplit = wsplit;
-    this.setName("scan");
+  public CfgBottomupReduce(CfgProductionRule rule) {
+    this.rule = rule;
+    this.setName("reduce " + rule.toString());
   }
 
   @Override public void addAntecedence(Item item) {
@@ -48,10 +48,14 @@ public class CfgTopdownScan implements DynamicDeductionRule {
       String stack = itemform[0];
       String[] stacksplit = stack.split(" ");
       int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
+      String gamma =
+        ArrayUtils.getStringHeadIfEndsWith(stacksplit, rule.getRhs());
+      if (gamma != null) {
+        if (gamma.length() == 0) {
+          consequences.add(new CfgItem(rule.getLhs(), i));
+        } else {
+          consequences.add(new CfgItem(gamma + " " + rule.getLhs(), i));
+        }
       }
     }
     return consequences;

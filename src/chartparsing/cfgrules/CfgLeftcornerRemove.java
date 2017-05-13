@@ -6,25 +6,21 @@ import java.util.List;
 import chartparsing.DynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
-import common.cfg.CfgItem;
+import common.cfg.CfgDollarItem;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
-public class CfgTopdownScan implements DynamicDeductionRule {
+/** If topmost symbol on stacks completed and predicted are the same, remove
+ * both. */
+public class CfgLeftcornerRemove implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
   String name = null;
 
-  String[] wsplit;
-
   int antneeded = 1;
 
-  public CfgTopdownScan(String[] wsplit) {
-    this.wsplit = wsplit;
-    this.setName("scan");
-  }
+  public CfgLeftcornerRemove() {
+    this.setName("remove");
+    }
 
   @Override public void addAntecedence(Item item) {
     antecedences.add(item);
@@ -45,13 +41,17 @@ public class CfgTopdownScan implements DynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antneeded) {
       String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
-      int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
-        consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
-          i + 1));
+      String stackcompl = itemform[0];
+      String[] stackcomplsplit = stackcompl.split(" ");
+      String stackpred = itemform[1];
+      String[] stackpredsplit = stackpred.split(" ");
+      String stacklhs = itemform[2];
+      if (stackcomplsplit[0].equals(stackpredsplit[0])) {
+        String newcompl = ArrayUtils.getSubSequenceAsString(stackcomplsplit, 1,
+          stackcomplsplit.length);
+        String newpred = ArrayUtils.getSubSequenceAsString(stackpredsplit, 1,
+          stackpredsplit.length);
+        consequences.add(new CfgDollarItem(newcompl, newpred, stacklhs));
       }
     }
     return consequences;
