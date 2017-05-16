@@ -59,8 +59,13 @@ public class TagCykMoveunary implements DynamicDeductionRule {
       }
       int j = Integer.parseInt(itemform[5]);
       if (node.endsWith(".1⊤")) {
-        String parentnode = node.substring(0, node.length() - 3) + "⊥";
-        consequences.add(new TagCykItem(treename, parentnode, i, f1, f2, j));
+        String nodesib = tag.getTree(treename)
+          .getNodeByGornAdress(node.substring(0, node.length() - 1))
+          .getGornAddressOfPotentialRightSibling();
+        if (tag.getTree(treename).getNodeByGornAdress(nodesib) == null) {
+          String parentnode = node.substring(0, node.length() - 3) + "⊥";
+          consequences.add(new TagCykItem(treename, parentnode, i, f1, f2, j));
+        }
       }
     }
     return consequences;

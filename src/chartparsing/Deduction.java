@@ -1,6 +1,7 @@
 package chartparsing;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -188,6 +189,7 @@ public class Deduction {
     for (Item itemtocheck : rule.getAntecedences()) {
       newitemsdeductedfrom.add(chart.indexOf(itemtocheck));
     }
+    Collections.sort(newitemsdeductedfrom);
     for (Item newitem : newitems) {
       if (!chart.contains(newitem)) {
         chart.add(newitem);
