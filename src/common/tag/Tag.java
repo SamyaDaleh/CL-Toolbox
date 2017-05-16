@@ -200,11 +200,14 @@ public class Tag {
    * @return */
   public boolean isAdjoinable(String auxtreename, String treename,
     String gornaddress) {
-    boolean labelcheck = getAuxiliaryTree(auxtreename) != null
-      && getAuxiliaryTree(auxtreename).getRoot().getLabel()
-        .equals(getTree(treename).getNodeByGornAdress(gornaddress).getLabel());
+    Tree tree = getTree(treename);
+    Tree auxtree = getAuxiliaryTree(auxtreename);
+    boolean labelcheck = auxtree != null
+      && auxtree.getRoot().getLabel()
+        .equals(tree.getNodeByGornAdress(gornaddress).getLabel());
     boolean issubstnode = isSubstitutionNode(
-      getTree(treename).getNodeByGornAdress(gornaddress), treename);
-    return (labelcheck && !issubstnode);
+      tree.getNodeByGornAdress(gornaddress), treename);
+    boolean nulladjoin = tree.isInNA(gornaddress);
+    return (labelcheck && !issubstnode && !nulladjoin);
   }
 }

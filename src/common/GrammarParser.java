@@ -81,7 +81,7 @@ public class GrammarParser {
     return rulelist.toArray(new String[rulelist.size()][]);
   }
 
-  /** Parses a TAG from a text file and returnsit as a Tag object. */
+  /** Parses a TAG from a text file and returns it as a Tag object. */
   public static Tag parseTagFile(String grammarfile)
     throws IOException, ParseException {
     Tag tag = new Tag();

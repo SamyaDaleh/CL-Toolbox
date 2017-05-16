@@ -14,6 +14,8 @@ public class Tree {
   private List<Edge> edges = new LinkedList<Edge>();
   private Vertex root = null;
   private Vertex foot = null;
+  private List<Vertex> NA = new LinkedList<Vertex>();
+  private List<Vertex> OA = new LinkedList<Vertex>();
 
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
@@ -58,9 +60,24 @@ public class Tree {
             "Tried to set foot node twice. Only one foot node is allowed.", 0);
         }
         this.foot = this.vertexes.get(this.vertexes.size() - 1);
+      } else if (tokens[i].equals("_")) { 
+        i++;
+        if (tokens[i].equals("NA")) {
+          this.NA.add(this.vertexes.get(this.vertexes.size() - 1));
+        } else if (tokens[i].equals("OA")) {
+          this.OA.add(this.vertexes.get(this.vertexes.size() - 1));
+        } else {
+          throw new ParseException(
+            "Unknown subscript " + tokens[i], 0);
+        }
       } else {
         // now this can only be children of the last vertex in path
-        Vertex vertex = new Vertex(tokens[i]);
+        Vertex vertex;
+        if (tokens[i].equals("ε")) {
+          vertex = new Vertex("");
+        } else  {
+          vertex = new Vertex(tokens[i]);
+        }
         children.set(children.size() - 1,
           children.get(children.size() - 1) + 1);
         vertex
@@ -75,7 +92,7 @@ public class Tree {
   }
 
   /** Actually does the tokenization by throwing away spaces, returning '(', ')'
-   * and '*' as single char tokens and all other continuous string
+   * '*' and '_' as single char tokens and all other continuous string
    * concatenations each as a token. */
   private String[] tokenize(String tree) {
     ArrayList<String> tokens = new ArrayList<String>();
@@ -87,7 +104,7 @@ public class Tree {
           builder = new StringBuilder();
         }
       } else if ((tree.charAt(i) == '(' || tree.charAt(i) == ')'
-        || tree.charAt(i) == '*')) {
+        || tree.charAt(i) == '*') || tree.charAt(i) == '_') {
         if (builder.length() > 0) {
           tokens.add(builder.toString());
           builder = new StringBuilder();
@@ -164,5 +181,29 @@ public class Tree {
       }
     }
     return null;
+  }
+  
+  /**
+   * Returns true if node is marked with null adjoin.
+   */
+  public boolean isInNA(String gornaddress) {
+    for (Vertex p : this.NA) {
+      if (p.getGornaddress().equals(gornaddress)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * Returns true if node is marked with obligatory adjoin.
+   */
+  public boolean isInOA(String gornaddress) {
+    for (Vertex p : this.OA) {
+      if (p.getGornaddress().equals(gornaddress)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

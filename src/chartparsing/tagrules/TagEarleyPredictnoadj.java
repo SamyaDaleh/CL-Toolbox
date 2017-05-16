@@ -48,8 +48,9 @@ public class TagEarleyPredictnoadj implements DynamicDeductionRule {
       String treename = itemform[0];
       String node = itemform[1];
       int l = Integer.parseInt(itemform[6]);
-      // TODO if f_OA = 0
-      if (itemform[2].equals("la") && itemform[7].equals("0")) {
+      boolean obligatoryadjoin = tag.getTree(treename).isInOA(node);
+      if (!obligatoryadjoin && itemform[2].equals("la")
+        && itemform[7].equals("0")) {
         consequences.add(new TagEarleyItem(treename, node, "lb", l,
           (Integer) null, null, l, false));
       }

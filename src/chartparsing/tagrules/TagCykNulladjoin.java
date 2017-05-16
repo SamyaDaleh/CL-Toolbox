@@ -46,6 +46,12 @@ public class TagCykNulladjoin implements DynamicDeductionRule {
       String[] itemform = antecedences.get(0).getItemform();
       String treename = itemform[0];
       String node = itemform[1];
+      String nodegorn;
+      if (node.length() == 1) {
+        nodegorn = "";
+      } else {
+        nodegorn = node.substring(0, node.length() - 1);
+      }
       int i = Integer.parseInt(itemform[2]);
       Integer f1;
       Integer f2;
@@ -56,8 +62,9 @@ public class TagCykNulladjoin implements DynamicDeductionRule {
         f1 = null;
         f2 = null;
       }
+      boolean obligatoryadjoin = tag.getTree(treename).isInOA(nodegorn);
       int j = Integer.parseInt(itemform[5]);
-      if (node.endsWith("⊥")) { //TODO check if f_OA = 0
+      if (node.endsWith("⊥") && !obligatoryadjoin) {
         String newnode = node.substring(0, node.length() - 1) + "⊤";
         consequences.add(new TagCykItem(treename, newnode, i, f1, f2, j));
       }

@@ -30,7 +30,7 @@ public class Vertex {
   public String getGornAddressOfPotentialRightSibling() {
     if (gornaddress == null || gornaddress.length() == 0)
       return null;
-    String[] gornsplit = gornaddress.split(".");
+    String[] gornsplit = gornaddress.split("[.]");
     // node is child of root
     if (gornsplit.length == 0) {
       int nthchild =

@@ -6,6 +6,7 @@ import common.ArrayUtilsTest;
 import common.SetUtilsTest;
 import common.cfg.CfgItemTest;
 import common.tag.TreeTest;
+import common.tag.VertexTest;
 
 public class CallAllTests {
   public static void main(String[] args) throws ParseException {
@@ -14,6 +15,7 @@ public class CallAllTests {
     ArrayUtilsTest.main(new String[] {});
     SetUtilsTest.main(new String[] {});
     CfgItemTest.main(new String[] {});
-    TreeTest.main(new String[] {});;
+    TreeTest.main(new String[] {});
+    VertexTest.main(new String[] {});
   }
 }
