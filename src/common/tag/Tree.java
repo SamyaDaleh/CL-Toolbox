@@ -60,22 +60,21 @@ public class Tree {
             "Tried to set foot node twice. Only one foot node is allowed.", 0);
         }
         this.foot = this.vertexes.get(this.vertexes.size() - 1);
-      } else if (tokens[i].equals("_")) { 
+      } else if (tokens[i].equals("_")) {
         i++;
         if (tokens[i].equals("NA")) {
           this.NA.add(this.vertexes.get(this.vertexes.size() - 1));
         } else if (tokens[i].equals("OA")) {
           this.OA.add(this.vertexes.get(this.vertexes.size() - 1));
         } else {
-          throw new ParseException(
-            "Unknown subscript " + tokens[i], 0);
+          throw new ParseException("Unknown subscript " + tokens[i], 0);
         }
       } else {
         // now this can only be children of the last vertex in path
         Vertex vertex;
         if (tokens[i].equals("ε")) {
           vertex = new Vertex("");
-        } else  {
+        } else {
           vertex = new Vertex(tokens[i]);
         }
         children.set(children.size() - 1,
@@ -132,7 +131,11 @@ public class Tree {
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append(
-      "(" + this.root.getLabel() + " " + toStringAllChildren(this.root) + ")");
+      "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
+        + (this.root.equals(foot) ? "*" : "")
+        + (isInOA(this.root.getGornaddress()) ? "_OA" : "")
+        + (isInNA(this.root.getGornaddress()) ? "_NA" : "") + " "
+        + toStringAllChildren(this.root) + ")");
     return representation.toString();
   }
 
@@ -144,7 +147,10 @@ public class Tree {
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
       representation
-        .append("(" + child.getLabel() + (child.equals(foot) ? "*" : "") + " "
+        .append("(" + (child.getLabel().equals("") ? "ε" : child.getLabel())
+          + (child.equals(foot) ? "*" : "")
+          + (isInOA(child.getGornaddress()) ? "_OA" : "")
+          + (isInNA(child.getGornaddress()) ? "_NA" : "") + " "
           + toStringAllChildren(child) + ")");
     }
     return representation.toString();
@@ -182,10 +188,8 @@ public class Tree {
     }
     return null;
   }
-  
-  /**
-   * Returns true if node is marked with null adjoin.
-   */
+
+  /** Returns true if node is marked with null adjoin. */
   public boolean isInNA(String gornaddress) {
     for (Vertex p : this.NA) {
       if (p.getGornaddress().equals(gornaddress)) {
@@ -194,10 +198,8 @@ public class Tree {
     }
     return false;
   }
-  
-  /**
-   * Returns true if node is marked with obligatory adjoin.
-   */
+
+  /** Returns true if node is marked with obligatory adjoin. */
   public boolean isInOA(String gornaddress) {
     for (Vertex p : this.OA) {
       if (p.getGornaddress().equals(gornaddress)) {
