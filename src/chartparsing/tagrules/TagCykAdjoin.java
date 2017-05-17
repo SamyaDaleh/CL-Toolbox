@@ -72,16 +72,18 @@ public class TagCykAdjoin implements DynamicDeductionRule {
       int j = Integer.parseInt(itemform1[5]);
       int f22 = Integer.parseInt(itemform2[5]);
       if (f11 != null && f11 == f12 && f21 != null && f21 == f22
-        && tag.isAdjoinable(treename1, treename2, node2.substring(0, node2.length()-1))
+        && tag.isAdjoinable(treename1, treename2,
+          node2.substring(0, node2.length() - 1))
         && node1.equals("⊤") && node2.endsWith("⊥")) {
-        consequences.add(new TagCykItem(treename2, node2.substring(0, node2.length()-1) + "⊤",
-          i, f1b, f2b, j));
+        consequences.add(new TagCykItem(treename2,
+          node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j));
       } else if (f1b != null && f1b == i && f2b != null && f2b == j
-        && tag.isAdjoinable(treename2, treename1, node1.substring(0, node1.length() -1))
+        && tag.isAdjoinable(treename2, treename1,
+          node1.substring(0, node1.length() - 1))
         && node2.equals("⊤") && node1.endsWith("⊥")) {
         // the other way around
-        consequences.add(new TagCykItem(treename1, node1.substring(0, node1.length() -1) + "⊤",
-          f12, f11, f21, f22));
+        consequences.add(new TagCykItem(treename1,
+          node1.substring(0, node1.length() - 1) + "⊤", f12, f11, f21, f22));
       }
 
     }
@@ -107,6 +109,14 @@ public class TagCykAdjoin implements DynamicDeductionRule {
   @Override public void clearItems() {
     antecedences = new LinkedList<Item>();
     consequences = new LinkedList<Item>();
+  }
+
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[β,ε⊤,i,f1,f2,j] [ɣ,p⊥,f1,f1',f2',f2]");
+    representation.append("\n______ β ∈ f_SA(ɣ,p)\n");
+    representation.append("[ɣ,p⊤,i,f1',f2',j]");
+    return representation.toString();
   }
 
 }

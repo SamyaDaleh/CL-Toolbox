@@ -82,4 +82,13 @@ public class TagCykSubstitute implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[α,ε⊤,i,-,-,j]");
+    representation.append("\n______ l(α,ε) = l(" + treename + "," + nodegorn
+      + "), " + treename + "(" + nodegorn + ") a substitution node\n");
+    representation.append("[" + treename + "," + nodegorn + "⊤,i,-,-,j]");
+    return representation.toString();
+  }
+
 }

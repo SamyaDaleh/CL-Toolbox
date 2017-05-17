@@ -116,4 +116,12 @@ public class TagEarleyAdjoin implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[β,ε,ra,i,j,k,l,0], [ɣ,p,rb,j,g,h,k,0]");
+    representation.append("\n______ β ∈ f_SA(ɣ,p)\n");
+    representation.append("[ɣ,p,rb,i,g,h,l,1]");
+    return representation.toString();
+  }
+
 }

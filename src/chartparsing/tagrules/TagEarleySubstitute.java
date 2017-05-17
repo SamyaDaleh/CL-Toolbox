@@ -88,4 +88,14 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[α,ε,ra,i,-,-,j,0]");
+    representation.append("\n______ " + outtreename + "(" + outnode
+      + ") a substitution node, α ∈ I, l(" + outtreename + "," + outnode
+      + ") = l(α,ε)\n");
+    representation.append("[" + outtreename + "," + outnode + ",rb,i,-,-,j,0]");
+    return representation.toString();
+  }
+
 }

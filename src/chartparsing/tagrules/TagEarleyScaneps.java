@@ -88,4 +88,12 @@ public class TagEarleyScaneps implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p,la,i,j,k,l,0]");
+    representation.append("\n______ l(ɣ,p) = ε\n");
+    representation.append("[ɣ,p,ra,i,j,k,l,0]");
+    return representation.toString();
+  }
+
 }

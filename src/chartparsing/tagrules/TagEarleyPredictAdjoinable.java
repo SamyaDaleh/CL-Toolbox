@@ -81,4 +81,12 @@ public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p,la,i,j,k,l,0]");
+    representation.append("\n______ " + auxtreename + " ∈ f_SA(ɣ,p)\n");
+    representation.append("[" + auxtreename + ",ε,la,l,-,-,l,0]");
+    return representation.toString();
+  }
+
 }

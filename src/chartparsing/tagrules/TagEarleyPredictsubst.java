@@ -89,4 +89,13 @@ public class TagEarleyPredictsubst implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p,lb,i,-,-,i,0]");
+    representation.append("\n______ ɣ(p) a substitution node, " + initreename
+      + " ∈ I, l(ɣ,p) = l(" + initreename + ",ε)\n");
+    representation.append("[" + initreename + ",ε,la,i,-,-,i,0]");
+    return representation.toString();
+  }
+
 }

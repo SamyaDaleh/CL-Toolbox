@@ -107,4 +107,12 @@ public class TagEarleyCompletenode implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p,la,f,g,h,i,0], [ɣ,p,rb,i,j,k,l,adj]");
+    representation.append("\n______ l(ɣ,p) ∈ N\n");
+    representation.append("[ɣ,p,ra,f,g⊕j,h⊕k,l,0]");
+    return representation.toString();
+  }
+
 }

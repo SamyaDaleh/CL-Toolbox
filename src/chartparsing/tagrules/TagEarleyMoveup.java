@@ -93,4 +93,12 @@ public class TagEarleyMoveup implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p.m,ra,i,j,k,l,0]");
+    representation.append("\n______ ɣ(p.m+1) is not defined\n");
+    representation.append("[ɣ,p,rb,i,j,k,l,0]");
+    return representation.toString();
+  }
+
 }

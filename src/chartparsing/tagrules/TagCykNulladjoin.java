@@ -93,4 +93,12 @@ public class TagCykNulladjoin implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p⊥,i,f1,f2,j]");
+    representation.append("\n______ f_OA(ɣ,p) = 0\n");
+    representation.append("[ɣ,p⊤,i,f1,f2,j]");
+    return representation.toString();
+  }
+
 }

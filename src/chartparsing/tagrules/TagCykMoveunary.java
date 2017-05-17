@@ -92,4 +92,12 @@ public class TagCykMoveunary implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,(p.1)⊤,i,f1,f2,j]");
+    representation.append("\n______ node adress p.2 does not exist in ɣ\n");
+    representation.append("[ɣ,p⊥,i,f1,f2,j]");
+    return representation.toString();
+  }
+
 }

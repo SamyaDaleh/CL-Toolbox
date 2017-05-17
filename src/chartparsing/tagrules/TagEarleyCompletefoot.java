@@ -102,4 +102,12 @@ public class TagEarleyCompletefoot implements DynamicDeductionRule {
     consequences = new LinkedList<Item>();
   }
 
+  @Override public String toString() {
+    StringBuilder representation = new StringBuilder();
+    representation.append("[ɣ,p,rb,i,j,k,l,0], [β,pf,lb,i,-,-,i,0]");
+    representation.append("\n______ pf foot node address in β, β ∈ f_SA(ɣ,p)\n");
+    representation.append("[β,pf,rb,i,i,l,l,0]");
+    return representation.toString();
+  }
+
 }
