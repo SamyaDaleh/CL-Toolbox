@@ -85,13 +85,10 @@ public class CfgTopdownPredict implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[" + rule.getLhs() + "α,i]");
+    representation.append("\n______ " + rule.toString() + ", |"
+      + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n");
+    representation.append("[" + ArrayUtils.toString(rule.getRhs()) + " α,i]");
     return representation.toString();
   }
 

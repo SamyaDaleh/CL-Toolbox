@@ -90,13 +90,9 @@ public class CfgLeftcornerMove implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[α,$β,Aɣ]");
+    representation.append("\n______ A ∈ N\n");
+    representation.append("[Aα,β,ɣ]");
     return representation.toString();
   }
 

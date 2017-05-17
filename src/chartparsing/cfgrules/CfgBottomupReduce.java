@@ -79,13 +79,9 @@ public class CfgBottomupReduce implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]");
+    representation.append("\n______" + rule.toString() + "\n");
+    representation.append("[Γ " + rule.getLhs() + ",i]");
     return representation.toString();
   }
 

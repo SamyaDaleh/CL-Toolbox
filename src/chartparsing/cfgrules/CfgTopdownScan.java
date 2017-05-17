@@ -8,9 +8,8 @@ import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgItem;
 
-/**
- * The scan rule for topdown removes a terminal if it is the next input symbol.
- */
+/** The scan rule for topdown removes a terminal if it is the next input
+ * symbol. */
 public class CfgTopdownScan implements DynamicDeductionRule {
 
   List<Item> antecedences = new LinkedList<Item>();
@@ -75,13 +74,9 @@ public class CfgTopdownScan implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[aα,i]");
+    representation.append("\n______ w_i = a\n");
+    representation.append("[α,i+1]");
     return representation.toString();
   }
 

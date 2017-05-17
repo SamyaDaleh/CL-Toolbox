@@ -20,7 +20,7 @@ public class CfgLeftcornerRemove implements DynamicDeductionRule {
 
   public CfgLeftcornerRemove() {
     this.setName("remove");
-    }
+  }
 
   @Override public void addAntecedence(Item item) {
     antecedences.add(item);
@@ -75,13 +75,9 @@ public class CfgLeftcornerRemove implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[Xα,Xβ,ɣ]");
     representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[α,β,ɣ]");
     return representation.toString();
   }
 

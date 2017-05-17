@@ -53,8 +53,7 @@ public class CfgEarleyScan implements DynamicDeductionRule {
         if (stacksplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
           .equals(stacksplit[k].substring(1, stacksplit[k].length()))) {
           StringBuilder newstack = new StringBuilder();
-          newstack
-            .append(ArrayUtils.getSubSequenceAsString(stacksplit, 0, k));
+          newstack.append(ArrayUtils.getSubSequenceAsString(stacksplit, 0, k));
           if (k == stacksplit.length - 1) {
             newstack.append(" " + wsplit[j] + " •");
           } else {
@@ -86,13 +85,9 @@ public class CfgEarleyScan implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[A -> α •a β,i,j]");
+    representation.append("\n______ w_j = a\n");
+    representation.append("[A -> α a • β,i,j+1]");
     return representation.toString();
   }
 

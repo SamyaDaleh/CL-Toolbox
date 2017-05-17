@@ -54,8 +54,8 @@ public class CfgEarleyComplete implements DynamicDeductionRule {
 
       if (j1 == j2 && stack2.endsWith("•")) {
         for (int l = 0; l < stacksplit1.length; l++) {
-          if (stacksplit1[l].startsWith("•")
-            && stacksplit1[l].substring(1, stacksplit1[l].length()).equals(stacksplit2[0])) {
+          if (stacksplit1[l].startsWith("•") && stacksplit1[l]
+            .substring(1, stacksplit1[l].length()).equals(stacksplit2[0])) {
             String newstack;
 
             if (l == stacksplit1.length - 1) {
@@ -75,8 +75,8 @@ public class CfgEarleyComplete implements DynamicDeductionRule {
       } else if (k2 == i1 && stack1.endsWith("•")) {
         // the other way around
         for (int l = 0; l < stacksplit2.length; l++) {
-          if (stacksplit2[l].startsWith("•")
-            && stacksplit2[l].substring(1, stacksplit2[l].length()).equals(stacksplit1[0])) {
+          if (stacksplit2[l].startsWith("•") && stacksplit2[l]
+            .substring(1, stacksplit2[l].length()).equals(stacksplit1[0])) {
             String newstack;
 
             if (l == stacksplit2.length - 1) {
@@ -116,13 +116,9 @@ public class CfgEarleyComplete implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[A -> α •B β,i,j] [B -> ɣ •,j,k]");
     representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[A -> α B •β,i,k]");
     return representation.toString();
   }
 

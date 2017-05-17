@@ -73,13 +73,9 @@ public class CfgBottomupShift implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[Γ,i]");
+    representation.append("\n______ w_i = a\n");
+    representation.append("[Γa,i+1]");
     return representation.toString();
   }
 

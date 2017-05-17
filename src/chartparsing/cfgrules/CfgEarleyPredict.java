@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import chartparsing.DynamicDeductionRule;
+import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDottedItem;
 import common.cfg.CfgProductionRule;
@@ -84,13 +85,10 @@ public class CfgEarleyPredict implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[A -> α •" + rule.getLhs() + "β,i,j]");
+    representation.append("\n______ " + rule.toString() + "\n");
+    representation.append("[" + rule.getLhs() + " -> •"
+      + ArrayUtils.toString(rule.getRhs()) + ",j,j]");
     return representation.toString();
   }
 

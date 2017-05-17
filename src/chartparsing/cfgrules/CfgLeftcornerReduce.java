@@ -63,7 +63,7 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
           newpred = ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
             rule.getRhs().length) + " $ " + stackpred;
         }
-          
+
         String newlhs;
         if (stacklhs.length() == 0) {
           newlhs = rule.getLhs();
@@ -94,13 +94,12 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
-      representation.append(rule.toString());
-    }
-    representation.append("\n______\n");
-    for (Item rule : consequences) {
-      representation.append(rule.toString());
-    }
+    representation.append("[" + rule.getRhs()[0] + "α,Bβ,ɣ]");
+    representation
+      .append("\n______ " + ArrayUtils.toString(rule.getRhs()) + ", B ≠ $\n");
+    representation
+      .append("[α," + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
+        rule.getRhs().length) + "$Bβ," + rule.getLhs() + "ɣ]");
     return representation.toString();
   }
 
