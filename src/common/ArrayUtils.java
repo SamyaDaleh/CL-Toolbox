@@ -44,18 +44,20 @@ public class ArrayUtils {
     }
     return true;
   }
-  
-  /**
-   * Returns a string representation of an array, here used for items.
-   */
+
+  /** Returns a string representation of an array, here used for items. */
   public static String toString(String[] item) {
     StringBuilder representation = new StringBuilder();
     representation.append("[");
-    for (String entry : item) {
+    for (int i = 0; i < item.length; i++) {
       if (representation.length() > 1) {
         representation.append(",");
       }
-      representation.append(entry);
+      if (item[i].equals("")){
+        representation.append("ε");
+      } else {
+        representation.append(item[i]);
+      }
     }
     representation.append("]");
     return representation.toString();
