@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import common.Item;
-import gui.ParsingTraceTable;
 
 /** A deduction system that derives consequences from antecendence items and
  * tries to generate a goal item. Based on the slides from Laura Kallmeyer about
@@ -14,25 +13,25 @@ import gui.ParsingTraceTable;
  * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
 public class Deduction {
   /** All items derived in the process. */
-  static List<Item> chart;
+  List<Item> chart;
   /** Items waiting to be used for further derivation. */
-  static List<Item> agenda;
+  List<Item> agenda;
   /** List of the same length of chart, elements at same indexes belong to each
    * other. Contains lists of lists of backpointers. One item can be derived in
    * different ways from different antecedence items. */
-  static ArrayList<ArrayList<ArrayList<Integer>>> deductedfrom;
+  ArrayList<ArrayList<ArrayList<Integer>>> deductedfrom;
   /** Indexes correspond to entries of chart and deductedfrom. Collects the
    * names of the rules that were applied to retrieve new items. */
-  static ArrayList<ArrayList<String>> appliedRule;
+  ArrayList<ArrayList<String>> appliedRule;
   /** When true print only items that lead to a goal. */
-  static boolean successfultrace = false;
+  boolean successfultrace = false;
   /** Markers if items lead to goal */
-  static boolean[] usefulitem;
+  boolean[] usefulitem;
 
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
    * derived. */
-  public static boolean doParse(ParsingSchema schema, boolean success) {
+  public boolean doParse(ParsingSchema schema, boolean success) {
     if (schema == null)
       return false;
     successfultrace = success;
@@ -56,13 +55,13 @@ public class Deduction {
       if (checkForGoal(goal) >= 0)
         goalfound = true;
     }
-    printTrace();
     return goalfound;
   }
 
   /** Prints the trace to the command line. If only the useful items shall be
-   * retrieved, it checks all items if they lead to a goal. */
-  private static void printTrace() {
+   * retrieved, it checks all items if they lead to a goal. 
+   * Returns the printed chart data as string array with columns: Id, Item, Rules, Backpointers. */
+  public String[][] printTrace() {
     if (successfultrace) {
       boolean changed = true;
       while (changed) {
@@ -97,10 +96,10 @@ public class Deduction {
         chartdata.add(line);
       }
     }
-    ParsingTraceTable.displayTrace(
-      chartdata.toArray(new String[chartdata.size()][]),
-      new String[] {"Id", "Item", "Rules", "Backpointers"});
+   
+     return chartdata.toArray(new String[chartdata.size()][]);
   }
+  
 
   /** Returns the backpointers in this list of lists as plain list. */
   private static ArrayList<Integer>
@@ -116,7 +115,7 @@ public class Deduction {
 
   /** Takes a goal item and compares it with all items in the chart. Returns its
    * index if one was found. */
-  private static int checkForGoal(Item goal) {
+  private int checkForGoal(Item goal) {
     for (int i = 0; i < chart.size(); i++) {
       if (chart.get(i).equals(goal)) {
         usefulitem[i] = true;
@@ -128,7 +127,7 @@ public class Deduction {
 
   /** Applies an axiom rule, that is a rule without antecedence items and adds
    * the consequence items to chart and agenda. */
-  private static void applyAxiomRule(StaticDeductionRule rule) {
+  private void applyAxiomRule(StaticDeductionRule rule) {
     for (Item item : rule.consequences) {
       if (!chart.contains(item)) {
         chart.add(item);
@@ -145,7 +144,7 @@ public class Deduction {
    * antecendence items. Looks through the chart to find the other needed items
    * and adds new consequence items to chart and agenda if all antecedences were
    * found. */
-  private static void applyRule(Item item, DynamicDeductionRule rule) {
+  private void applyRule(Item item, DynamicDeductionRule rule) {
     int itemsneeded = rule.getAntecedencesNeeded();
     rule.clearItems();
     // TODO how can I make the depth dynamic?
@@ -182,7 +181,7 @@ public class Deduction {
     }
   }
 
-  private static void processNewItems(List<Item> newitems,
+  private void processNewItems(List<Item> newitems,
     DynamicDeductionRule rule) {
 
     ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
@@ -273,5 +272,9 @@ public class Deduction {
       builder.append("}");
     }
     return builder.toString();
+  }
+  
+  public  List<Item> getChart() {
+    return this.chart;
   }
 }

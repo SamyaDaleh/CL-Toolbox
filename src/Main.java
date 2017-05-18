@@ -8,6 +8,7 @@ import chartparsing.TagToDeductionRulesConverter;
 import common.GrammarParser;
 import common.cfg.Cfg;
 import common.tag.Tag;
+import gui.ParsingTraceTable;
 
 /** Entry point into toolbox for the calls by command line */
 public class Main {
@@ -17,14 +18,14 @@ public class Main {
   public static void main(String[] args) throws ParseException, IOException {
     if (args.length < 3) {
       System.out.println(
-        "Please pass at least 3 parameters: [grammar file] [input string] " 
-      + "[parsing algorithm] [<optional parameters>]");
+        "Please pass at least 3 parameters: [grammar file] [input string] "
+          + "[parsing algorithm] [<optional parameters>]");
       System.out.println(
-        "Parsing algorithm can be: cfg-topdown, cfg-shiftreduce, cfg-earley, " 
-      + "cfg-leftcorner, tag-cyk");
+        "Parsing algorithm can be: cfg-topdown, cfg-shiftreduce, cfg-earley, "
+          + "cfg-leftcorner, tag-cyk");
       System.out.println(
-          "Optional parameters can be: --sucess : prints a trace only of items " 
-      + "that lead to a goal item.");
+        "Optional parameters can be: --sucess : prints a trace only of items "
+          + "that lead to a goal item.");
       System.out.println(
         "example: ..\\resources\\grammars\\anbncfg \"a a b b\" cfg-topdown");
       return;
@@ -33,7 +34,7 @@ public class Main {
     String w = args[1];
     String algorithm = args[2];
     boolean success = false;
-    for (int i = 3; i < args.length; i ++) {
+    for (int i = 3; i < args.length; i++) {
       if (args[i].equals("--success")) {
         success = true;
       }
@@ -67,7 +68,11 @@ public class Main {
           "I did not understand. Please check spelling of parsing algorithm.");
         return;
       }
-      System.out.println(Deduction.doParse(schema, success));
+      Deduction deduction = new Deduction();
+      System.out.println(deduction.doParse(schema, success));
+      String[][] data = deduction.printTrace();
+      ParsingTraceTable.displayTrace(data,
+        new String[] {"Id", "Item", "Rules", "Backpointers"});
     }
     if (grammarfile.endsWith(".tag")) {
       Tag tag = GrammarParser.parseTagFile(grammarfile);
@@ -86,7 +91,11 @@ public class Main {
             + "and if algorithm is appropriate for grammar.");
         return;
       }
-      System.out.println(Deduction.doParse(schema, success));
+      Deduction deduction = new Deduction();
+      System.out.println(deduction.doParse(schema, success));
+      String[][] data = deduction.printTrace();
+      ParsingTraceTable.displayTrace(data,
+        new String[] {"Id", "Item", "Rules", "Backpointers"});
     }
     // calculate sx estimates
     /* Map<String,Double> insides = SxCalc.getInsides(gen_pcfg0(), 4);
