@@ -202,6 +202,102 @@ public class Cfg {
     }
     return true;
   }
+  
+  /**
+   * Returns an equivalent grammar without non-generating symbols. Call this before removing
+   * non-reachable symbols.
+   */
+  public Cfg removeNonGeneratingSymbols(){
+    Cfg cfg = new Cfg();
+    ArrayList<String> generating = new ArrayList<String>();
+    boolean changed = true;
+    for (CfgProductionRule rule : this.getR()) {
+      boolean ntseen = false;
+      for (String symbol : rule.getRhs()) {
+        if (this.varsContain(symbol)) {
+          ntseen = true;
+          break;
+        }
+      }
+      if(!ntseen && !generating.contains(rule.lhs)) {
+        generating.add(rule.lhs);
+      }
+    }
+    while(changed) {
+      changed = false;
+      for (CfgProductionRule rule : this.getR()) {
+        boolean notgeneratingseen = false;
+        for (String symbol : rule.getRhs()) {
+          if (!this.terminalsContain(symbol) && !generating.contains(symbol)) {
+            notgeneratingseen = true;
+            break;
+          }
+        }
+        if (!notgeneratingseen && !generating.contains(rule.lhs)) {
+          changed = true;
+          generating.add(rule.lhs);
+        }
+      }
+    }
+    cfg.terminals = this.getTerminals();
+    cfg.start_var = this.start_var;
+    cfg.vars = generating.toArray(new String[generating.size()]);
+    for (CfgProductionRule rule : this.getR()) {
+      boolean notgeneratingseen = false;
+      for (String symbol : rule.getRhs()) {
+        if (!this.terminalsContain(symbol) && !generating.contains(symbol)) {
+          notgeneratingseen = true;
+          break;
+        }
+      }
+      if (!notgeneratingseen && !generating.contains(rule.lhs)) {
+        cfg.R.add(rule);
+      }
+    }
+    return cfg;
+  }
+  
+  /**
+   * Returns an equivalent grammar without non-reachable symbols. Before calling this, remove all non-generating symbols.
+   */
+  public Cfg removeNonReachableSymbols() {
+    Cfg cfg = new Cfg();
+    ArrayList<String> reachable = new ArrayList<String>();
+    reachable.add(this.start_var);
+    boolean changed = true;
+    while(changed) {
+     changed = false;
+     for (CfgProductionRule rule : this.R) {
+       if (reachable.contains(rule.lhs)) {
+         for (String symbol : rule.rhs) {
+           reachable.add(symbol);
+           changed = true;
+         }
+       }
+     }
+    }
+    cfg.start_var = this.start_var;
+    ArrayList<String> newvars = new ArrayList<String>();
+    for (String nt : this.vars) {
+      if (reachable.contains(nt)) {
+        newvars.add(nt);
+      }
+    }
+    ArrayList<String> newterms = new ArrayList<String>();
+    for (String t : this.terminals) {
+      if (reachable.contains(t)) {
+        newterms.add(t);
+      }
+    }
+    cfg.vars = newvars.toArray(new String[newvars.size()]);
+    cfg.terminals = newterms.toArray(new String[newterms.size()]);
+    for (CfgProductionRule rule : this.getR()) {
+      if (reachable.contains(rule.lhs)) {
+        cfg.R.add(rule);
+      }
+    }
+    return cfg;
+  }
 
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
