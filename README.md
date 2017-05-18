@@ -1,4 +1,6 @@
 # CL-Toolbox
+
+## Overview
 A Parsing-as-Deduction system implemented in Java that parses everything and some related tools for educational purposes.
 
 The implementation is based on the slides from Laura Kallmeyer. At the moment it contains:
@@ -14,7 +16,7 @@ Parsing as Deduction:
 It prints out full parsing traces along with applied rules and antecedence items.
 Use it to generate examples, play around with grammars etc.
 
-Installation:
+## Installation
 
 Download the jar from /releases and that's it. You need Java 8 installed for the jar to run, or else compile it for yourself.
 
@@ -25,7 +27,7 @@ Or if you want to tinker with the code, for me it worked like this:
 - run test.src.common.CallAllTests.java as Java Application to verify that everything is working. You should see some success messages and parsing outputs.
 
 
-Usage:
+## Usage
 
 Run it in Eclipse. Or download the jar from folder releases and run it from the command line. Run it without parameters to get a help about how to use it.
 
@@ -33,7 +35,7 @@ Example:
 
 (Output is pretty-printed similar to this, but without the fancy borders and coloring.)
 
-Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters.
+Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters. Or call CL-Toolbox.bat (Windows) or CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have to type in the encoding.
 
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
 <table border="0">
