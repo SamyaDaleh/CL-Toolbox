@@ -312,7 +312,7 @@ public class Cfg {
       }
       builder.append(R.get(i).toString());
     }
-    builder.append("}");
+    builder.append("}\n");
     return builder.toString();
   }
 }

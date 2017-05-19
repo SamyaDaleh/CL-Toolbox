@@ -5,6 +5,7 @@ import chartparsing.CfgToDeductionRulesConverter;
 import chartparsing.Deduction;
 import chartparsing.ParsingSchema;
 import common.cfg.Cfg;
+import common.lcfrs.Srcg;
 import common.tag.Tag;
 
 public class DeductionTest {
@@ -36,6 +37,18 @@ public class DeductionTest {
       g.addInitialTree("α2","(T c)");
       g.addAuxiliaryTree("β","(T a T*)");
       return g;
+    }
+    
+    static Srcg gensrcg() {
+      Srcg srcg = new Srcg(); 
+        srcg.setNonterminals(new String[]{"S", "A"});
+        srcg.setTerminals(new String[]{"a", "b"});
+        srcg.setVariables(new String[]{"X1", "X2"});
+        srcg.setStartSymbol("S");
+        srcg.addClause("S (X1 X2)", "(X1, X2)");
+        srcg.addClause("A (a X1, b X2)", "(X1, X2)");
+        srcg.addClause("A (a,b)", "A ε");
+      return srcg;
     }
     
 	public static void main(String[] args) throws ParseException {
@@ -86,6 +99,15 @@ public class DeductionTest {
       System.out.println("TAG Earley Parsing successful");
     } else {
       System.out.println("TAG Earley Parsing fail");
+    }
+    deduction.printTrace();
+    
+    String w3 = "a a b b";
+    schema = LcfrsToDeductionRulesConverter.SrcgToParsingSchema(gensrcg(), w3, "earley");
+    if(deduction.doParse(schema, false)) {
+      System.out.println("Earley sRCG Parsing successful");
+    } else {
+      System.out.println("Earley sRCG Parsing fail");
     }
     deduction.printTrace();
 	}
