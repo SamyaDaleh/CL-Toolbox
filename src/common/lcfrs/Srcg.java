@@ -48,4 +48,12 @@ public class Srcg {
     repr.append("S = " + startsymbol + "\n");
     return repr.toString();
   }
+
+  public List<Clause> getClauses() {
+    return this.clauses;
+  }
+
+  public String getStartSymbol() {
+    return this.startsymbol;
+  }
 }

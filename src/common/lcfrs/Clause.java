@@ -38,4 +38,31 @@ public class Clause {
     }
     return repr.toString();
   }
+
+  /** Return the nonterminal of the left predicate. */
+  public String getLhsNonterminal() {
+    return lhs.getNonterminal();
+  }
+
+  public int getLhsDim() {
+    return lhs.getSymbols().length;
+  }
+
+  /** Returns its string representation with a dot at the ith position of the
+   * variables in the lhs. */
+  public String setDotAt(int i) {
+    StringBuilder repr = new StringBuilder();
+    repr.append(lhs.setDotAt(i));
+    repr.append(" -> ");
+    if (rhs.isEmpty()) {
+      repr.append("ε");
+    } else {
+      for (int j = 0; j < rhs.size(); j++) {
+        if (j > 0)
+          repr.append(" ");
+        repr.append(rhs.get(j).toString());
+      }
+    }
+    return repr.toString();
+  }
 }
