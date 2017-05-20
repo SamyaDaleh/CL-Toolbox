@@ -18,6 +18,13 @@ public class SrcgEarleyResume implements DynamicDeductionRule {
   private List<Item> consequences = new LinkedList<Item>();
   private String name = "Resume";
 
+  private String[] variables;
+
+  /** Remember variables to check if symbols are one of them. */
+  public SrcgEarleyResume(String[] variables) {
+    this.variables = variables;
+  }
+
   private int antneeded = 2;
 
   @Override public void addAntecedence(Item item) {
@@ -60,43 +67,60 @@ public class SrcgEarleyResume implements DynamicDeductionRule {
         int iint2 = Integer.parseInt(i2);
         String j2 = itemform2[3];
         int jint2 = Integer.parseInt(j2);
+
         boolean mayv1firstarg = false;
         boolean mayv2firstarg = false;
+        boolean isvar1 = false;
+        boolean isvar2 = false;
         if (clause1parsed.getLhs().ifSymExists(iint1, jint1)) {
           String mayv1 = clause1parsed.getLhsSymAt(iint1, jint1);
+          for (String var : variables) {
+            if (var.equals(mayv1)) {
+              isvar1 = true;
+              break;
+            }
+          }
           for (Predicate rhs : clause1parsed.getRhs()) {
             if (rhs.getSymAt(1, 0).equals(mayv1)) {
               mayv1firstarg = true;
             }
           }
+          for (Predicate rhs : clause1parsed.getRhs()) {
+            int[] indices = rhs.find(mayv1);
+            boolean dotisatargend = clause2parsed.getLhs().ifSymExists(iint2, 0)
+                && jint2 == clause2parsed.getLhs().getSymbols()[iint2-1].length;
+            if (indices[0] == iint2 + 1 && isvar1 && !mayv1firstarg
+              && dotisatargend ) {
+              consequences.add(new SrcgEarleyActiveItem(itemform2[0], posint1,
+                iint2 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemform2, 4,
+                  itemform2.length)));
+            }
+          }
         }
         if (clause2parsed.getLhs().ifSymExists(iint2, jint2)) {
           String mayv2 = clause2parsed.getLhsSymAt(iint2, jint2);
+          for (String var : variables) {
+            if (var.equals(mayv2)) {
+              isvar2 = true;
+              break;
+            }
+          }
           for (Predicate rhs : clause2parsed.getRhs()) {
             if (rhs.getSymAt(1, 0).equals(mayv2)) {
               mayv2firstarg = true;
             }
           }
-        }
-
-        if (!mayv1firstarg
-          && clause1parsed.getLhs().ifSymExists(iint1, jint1 + 1)
-          && clause2parsed.getLhs().ifSymExists(iint2, jint2)
-          && clause1parsed.getLhsSymAt(iint1, jint1 + 1)
-            .equals(clause2parsed.getLhsSymAt(iint2, jint2))
-          && clause2parsed.getLhs().ifSymExists(iint2 + 1, 0)) {
-          consequences.add(new SrcgEarleyActiveItem(itemform2[0], posint1,
-            iint2 + 1, 0,
-            ArrayUtils.getSubSequenceAsArray(itemform2, 4, itemform2.length)));
-        } else if (!mayv2firstarg
-          && clause2parsed.getLhs().ifSymExists(iint2, jint2 + 1)
-          && clause1parsed.getLhs().ifSymExists(iint1, jint1)
-          && clause2parsed.getLhsSymAt(iint2, jint2 + 1)
-            .equals(clause1parsed.getLhsSymAt(iint1, jint1))
-          && clause1parsed.getLhs().ifSymExists(iint1 + 1, 0)) {
-          consequences.add(new SrcgEarleyActiveItem(itemform1[0], posint2,
-            iint1 + 1, 0,
-            ArrayUtils.getSubSequenceAsArray(itemform1, 4, itemform1.length)));
+          for (Predicate rhs : clause2parsed.getRhs()) {
+            int[] indices = rhs.find(mayv2);
+            boolean dotisatargend = clause1parsed.getLhs().ifSymExists(iint1, 0)
+                && jint1 == clause1parsed.getLhs().getSymbols()[iint1-1].length;
+            if (indices[0] == iint1 + 1 && isvar2 && !mayv2firstarg
+              && dotisatargend) {
+              consequences.add(new SrcgEarleyActiveItem(itemform1[0], posint2,
+                iint1 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemform1, 4,
+                  itemform1.length)));
+            }
+          }
         }
       }
     }

@@ -20,8 +20,15 @@ public class SrcgEarleySuspend implements DynamicDeductionRule {
   private List<Item> antecedences = new LinkedList<Item>();
   private List<Item> consequences = new LinkedList<Item>();
   private String name = "Suspend";
+  
+  private String[] variables;
 
   private int antneeded = 2;
+
+  /** Remember variables to check if symbols are one of them. */
+  public SrcgEarleySuspend(String[] variables) {
+    this.variables = variables;
+  }
 
   @Override public void addAntecedence(Item item) {
     this.antecedences.add(item);
@@ -62,10 +69,30 @@ public class SrcgEarleySuspend implements DynamicDeductionRule {
         int iint2 = Integer.parseInt(i2);
         String j2 = itemform2[3];
         int jint2 = Integer.parseInt(j2);
+        boolean isvar1 = false;
+        boolean isvar2 = false;
+        if (clause1parsed.getLhs().ifSymExists(iint1, jint1)) {
+          String mayv1 = clause1parsed.getLhsSymAt(iint1, jint1);
+          for (String var : variables) {
+            if (var.equals(mayv1)) {
+              isvar1 = true;
+              break;
+            }
+          }
+        }
+        if (clause2parsed.getLhs().ifSymExists(iint2, jint2)) {
+          String mayv2 = clause2parsed.getLhsSymAt(iint2, jint2);
+          for (String var : variables) {
+            if (var.equals(mayv2)) {
+              isvar2 = true;
+              break;
+            }
+          }
+        }
 
         for (int n = 0; n < clause2parsed.getRhs().size(); n++) {
           Predicate rhspred = clause2parsed.getRhs().get(n);
-          if (rhspred.getNonterminal().equals(clause1parsed.getLhsNonterminal())
+          if (isvar2 && rhspred.getNonterminal().equals(clause1parsed.getLhsNonterminal())
             && itemform1.length > (iint1 - 1) * 2 + 5
             && itemform2.length > (iint1 - 1 + n) * 2 + 5) {
             boolean vectorsmatch = true;
@@ -95,7 +122,7 @@ public class SrcgEarleySuspend implements DynamicDeductionRule {
 
         for (int n = 0; n < clause1parsed.getRhs().size(); n++) {
           Predicate rhspred = clause1parsed.getRhs().get(n);
-          if (rhspred.getNonterminal().equals(clause2parsed.getLhsNonterminal())
+          if (isvar1 && rhspred.getNonterminal().equals(clause2parsed.getLhsNonterminal())
             && itemform2.length > (iint2 - 1) * 2 + 5
             && itemform1.length > (iint2 - 1 + n) * 2 + 5) {
             boolean vectorsmatch = true;

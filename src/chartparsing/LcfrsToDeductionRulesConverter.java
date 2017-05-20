@@ -50,11 +50,11 @@ public class LcfrsToDeductionRulesConverter {
     }
     DynamicDeductionRule scan = new SrcgEarleyScan(wsplit);
     schema.addRule(scan);
-    DynamicDeductionRule suspend = new SrcgEarleySuspend();
+    DynamicDeductionRule suspend = new SrcgEarleySuspend(srcg.getVariables());
     schema.addRule(suspend);
     DynamicDeductionRule convert = new SrcgEarleyConvert();
     schema.addRule(convert);
-    DynamicDeductionRule resume = new SrcgEarleyResume();
+    DynamicDeductionRule resume = new SrcgEarleyResume(srcg.getVariables());
     schema.addRule(resume);
 
     return schema;

@@ -56,4 +56,8 @@ public class Srcg {
   public String getStartSymbol() {
     return this.startsymbol;
   }
+
+  public String[] getVariables() {
+    return this.variables;
+  }
 }

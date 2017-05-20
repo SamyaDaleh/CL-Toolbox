@@ -112,4 +112,18 @@ public class Predicate {
   public boolean ifSymExists(int i, int j) {
     return symbols.length >= i && symbols[i-1].length > j;
   }
+
+  /**
+   * Looks for a symbol and returns its indices.
+   */
+  public int[] find(String symbol) {
+    for (int i = 0; i < symbols.length; i++) {
+      for (int j = 0; j < symbols[i].length; j++){
+        if (symbols[i][j].equals(symbol)) {
+          return new int[]{i+1,j};
+        }
+      }
+    }
+    return new int[]{-1,-1};
+  }
 }

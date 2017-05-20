@@ -42,7 +42,7 @@ public class SrcgEarleyPassiveItem implements Item {
       builder.append("[" + itemform[0]);
       for (int i = 0; i*2+2 <itemform.length; i++){
           builder.append(", ");
-        builder.append("<" + itemform[i*2+2] + "," + itemform[i*2+1] + ">");
+        builder.append("<" + itemform[i*2+1] + "," + itemform[i*2+2] + ">");
       }
       builder.append("]");
       return builder.toString();
