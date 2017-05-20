@@ -2,9 +2,9 @@ package common;
 
 /** Representation of an arbitrary production rule of a grammar. */
 public class GrammarProductionRule {
-  String[] lhs;
-  String[] rhs;
-  Double p = 0.0;
+  private String[] lhs;
+  private String[] rhs;
+  private Double p = 0.0;
 
   /**
    * Creates rule from an array that is either 2 or 3 elements long. The 

@@ -19,7 +19,7 @@ public class Tree {
 
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
-  public Tree(String tree) throws ParseException {
+  Tree(String tree) throws ParseException {
     String[] tokens = tokenize(tree);
     List<Vertex> vertexpath = new LinkedList<Vertex>();
     List<Integer> children = new LinkedList<Integer>();
@@ -116,10 +116,6 @@ public class Tree {
     return tokens.toArray(new String[tokens.size()]);
   }
 
-  public String l(Vertex v) {
-    return v.getLabel();
-  }
-
   public Vertex getRoot() {
     return this.root;
   }
@@ -172,7 +168,7 @@ public class Tree {
   }
 
   /** Returns true if a given node has at least one child. */
-  public boolean hasChildren(Vertex p) {
+  boolean hasChildren(Vertex p) {
     if (getChildren(p).isEmpty())
       return false;
     else
@@ -190,7 +186,7 @@ public class Tree {
   }
 
   /** Returns true if node is marked with null adjoin. */
-  public boolean isInNA(String gornaddress) {
+  boolean isInNA(String gornaddress) {
     for (Vertex p : this.NA) {
       if (p.getGornaddress().equals(gornaddress)) {
         return true;

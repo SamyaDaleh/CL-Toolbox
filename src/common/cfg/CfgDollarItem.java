@@ -5,7 +5,7 @@ import common.Item;
 
 /** Item used for LeftCorner parsing that has length 3. */
 public class CfgDollarItem implements Item {
-  String[] itemform;
+  private String[] itemform;
 
   /**
    * Item is constructed by three stack strings.

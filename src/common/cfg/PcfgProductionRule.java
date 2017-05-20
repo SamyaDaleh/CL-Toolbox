@@ -3,7 +3,7 @@ package common.cfg;
 /** Representation of a context-free rule where the lhs is only allowed to
  * contain one symbol and the rule has a probability. */
 public class PcfgProductionRule {
-  Double p = 0.0;
+  private Double p = 0.0;
   private String lhs;
   private String[] rhs;
 

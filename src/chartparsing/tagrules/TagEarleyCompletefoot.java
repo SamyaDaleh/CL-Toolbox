@@ -12,19 +12,18 @@ import common.tag.TagEarleyItem;
  * into, fill the foot of the aux tree with the span of the other tree. */
 public class TagEarleyCompletefoot implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "complete foot";
 
-  Tag tag = null;
+  private Tag tag = null;
 
-  int antneeded = 2;
+  private int antneeded = 2;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
   public TagEarleyCompletefoot(Tag tag) {
     this.tag = tag;
-    this.name = "complete foot";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -83,10 +82,6 @@ public class TagEarleyCompletefoot implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

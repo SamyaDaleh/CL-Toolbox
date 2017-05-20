@@ -17,20 +17,11 @@ public class CfgProductionRule {
     }
   }
 
-  /** Constructor where left and right rule side are passed separately. */
-  CfgProductionRule(String lhs, String rhs) {
-    this.lhs = lhs;
-    String[] rulesplit = rhs.split(" ");
-    if (rulesplit.length == 1 && rulesplit[0].equals("ε")) {
-      this.rhs = new String[] {""};
-    } else {
-      this.rhs = rulesplit;
-    }
-  }
+  
 
   /** Lhs and Rhs passed separately, used when converting one rule format to
    * another. */
-  public CfgProductionRule(String lhs, String[] rhs) {
+  CfgProductionRule(String lhs, String[] rhs) {
     this.lhs = lhs;
     String[] rulesplit = rhs;
     if (rulesplit.length == 1 && rulesplit[0].equals("ε")) {

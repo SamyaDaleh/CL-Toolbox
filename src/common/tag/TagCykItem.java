@@ -5,7 +5,7 @@ import common.Item;
 
 /** Item of length 6 used by TAG CYK parsing. */
 public class TagCykItem implements Item {
-  String[] itemform;
+  private String[] itemform;
 
   /** Constructor that replaces the foot node indices by '-' if they are
    * null. */

@@ -11,17 +11,16 @@ import common.tag.TagEarleyItem;
 /** If the node's label is epsilon, just move on. */
 public class TagEarleyScaneps implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
-  Tag tag = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "scan epsilon";
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor needs the grammar to retrieve information about the antecedence. */
   public TagEarleyScaneps(Tag tag) {
     this.tag = tag;
-    this.name = "scan epsilon";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -69,10 +68,6 @@ public class TagEarleyScaneps implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

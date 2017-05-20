@@ -11,19 +11,18 @@ import common.tag.TagEarleyItem;
 /** If the dot is at a node where adjunction is not obligatory, just skip it. */
 public class TagEarleyPredictnoadj implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "predict no adjoin";
 
-  Tag tag = null;
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
   public TagEarleyPredictnoadj(Tag tag) {
     this.tag = tag;
-    this.name = "predict no adjoin";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -60,10 +59,6 @@ public class TagEarleyPredictnoadj implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

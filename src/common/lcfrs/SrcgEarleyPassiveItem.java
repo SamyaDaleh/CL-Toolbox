@@ -7,8 +7,8 @@ import common.Item;
  * dot further in active items. */
 public class SrcgEarleyPassiveItem implements Item {
 
-  String[] itemform;
-  RangeVector p;
+  private String[] itemform;
+  private RangeVector p;
 
   /** Initialize the passive item with a nonterminal and a range vector. */
   public SrcgEarleyPassiveItem(String nt, RangeVector p) {
@@ -17,6 +17,13 @@ public class SrcgEarleyPassiveItem implements Item {
     this.itemform[0] = nt;
     System.arraycopy(pranges, 0, this.itemform, 1, pranges.length);
     this.p = p;
+  }
+
+  public SrcgEarleyPassiveItem(String nt,
+    String[] newvector) {
+    this.itemform = new String[newvector.length + 1];
+    this.itemform[0] = nt;
+    System.arraycopy(newvector, 0, this.itemform, 1, newvector.length);
   }
 
   @Override public void setItemform(String[] itemform) {
@@ -28,7 +35,18 @@ public class SrcgEarleyPassiveItem implements Item {
   }
 
   @Override public String toString() {
-    return "[" + itemform[0] + ", " + p.toString() + "]";
+    if (p != null) {
+      return "[" + itemform[0] + ", " + p.toString() + "]";
+    } else {
+      StringBuilder builder = new StringBuilder();
+      builder.append("[" + itemform[0]);
+      for (int i = 0; i*2+2 <itemform.length; i++){
+          builder.append(", ");
+        builder.append("<" + itemform[i*2+2] + "," + itemform[i*2+1] + ">");
+      }
+      builder.append("]");
+      return builder.toString();
+    }
   }
 
   @Override public boolean equals(Object o) {

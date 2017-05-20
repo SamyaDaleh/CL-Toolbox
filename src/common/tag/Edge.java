@@ -2,8 +2,8 @@ package common.tag;
 
 /** A directed edge between two nodes. */
 public class Edge {
-  Vertex from;
-  Vertex to;
+  private Vertex from;
+  private Vertex to;
 
   Edge(Vertex from, Vertex to) {
     this.from = from;

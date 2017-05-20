@@ -5,11 +5,11 @@ import java.util.List;
 
 /** Representation of a sRCG - simple Range Concatenation Grammar. */
 public class Srcg {
-  String[] nonterminals;
-  String[] terminals;
-  String[] variables;
-  String startsymbol;
-  List<Clause> clauses = new LinkedList<Clause>();
+  private String[] nonterminals;
+  private String[] terminals;
+  private String[] variables;
+  private String startsymbol;
+  private List<Clause> clauses = new LinkedList<Clause>();
 
   public void setNonterminals(String[] nonterminals) {
     this.nonterminals = nonterminals;

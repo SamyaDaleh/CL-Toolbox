@@ -12,21 +12,21 @@ import common.tag.TagEarleyItem;
  * tree that can be adjoined into that node. */
 public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  String auxtreename = null;
-  Tag tag = null;
+  private String auxtreename = null;
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor takes an auxiliary tree for the items the rule shall derive,
    * also needs the grammar to retrieve information about the antecedence. */
   public TagEarleyPredictadjoinable(String auxtreename, Tag tag) {
     this.auxtreename = auxtreename;
     this.tag = tag;
-    this.name = "predict adjoinable";
+    this.name = "predict adjoinable with " + auxtreename;
   }
 
   @Override public void addAntecedence(Item item) {
@@ -62,10 +62,6 @@ public class TagEarleyPredictadjoinable implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

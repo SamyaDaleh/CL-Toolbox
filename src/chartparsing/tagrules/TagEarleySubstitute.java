@@ -11,15 +11,15 @@ import common.tag.TagEarleyItem;
 /** If a potential initial tree is complete, substitute it if possible. */
 public class TagEarleySubstitute implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  String outtreename = null;
-  String outnode = null;
-  Tag tag = null;
+  private String outtreename = null;
+  private String outnode = null;
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor takes a tree and a node where maybe is, was, will be adjoined,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -27,7 +27,7 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
     this.outtreename = outtreename;
     this.outnode = outnode;
     this.tag = tag;
-    this.name = "substitute";
+    this.name = "substitute in " + outtreename + "(" + outnode + ")";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -69,10 +69,6 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

@@ -9,10 +9,10 @@ import common.ArrayUtils;
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
 public class Cfg {
-  String vars[];
-  List<CfgProductionRule> R = new LinkedList<CfgProductionRule>();
-  String start_var;
-  String terminals[];
+  private String vars[];
+  private List<CfgProductionRule> R = new LinkedList<CfgProductionRule>();
+  private String start_var;
+  private String terminals[];
 
   public Cfg() {
     super();
@@ -65,7 +65,7 @@ public class Cfg {
   }
 
   /** Returns true if mayt is on of the terminal symbols. */
-  public boolean terminalsContain(String mayt) {
+  private boolean terminalsContain(String mayt) {
     for (String term : terminals) {
       if (term.equals(mayt))
         return true;
@@ -74,7 +74,7 @@ public class Cfg {
   }
 
   /** Returns true if mayvar is one of the nonterminal symbols. */
-  public boolean varsContain(String mayvar) {
+  private boolean varsContain(String mayvar) {
     for (String var : vars) {
       if (var.equals(mayvar))
         return true;
@@ -152,7 +152,7 @@ public class Cfg {
   }
 
   /** Returns an equivalent CFG where all rhs' have at most length 2. */
-  public Cfg binarize() {
+  Cfg binarize() {
     Cfg newCfg = new Cfg();
     newCfg.setTerminals(this.terminals);
     newCfg.setStart_var(this.start_var);

@@ -7,13 +7,29 @@ import java.util.List;
  * A1(X1,...,X_dim(A1)) ... */
 public class Clause {
 
-  Predicate lhs;
-  List<Predicate> rhs = new LinkedList<Predicate>();
+  private Predicate lhs;
+  private List<Predicate> rhs = new LinkedList<Predicate>();
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
    * every part a Predicate */
-  public Clause(String lhs, String rhs) {
+  Clause(String lhs, String rhs) {
     this.lhs = new Predicate(lhs);
+    int start = 0;
+    for (int i = 1; i < rhs.length(); i++) {
+      if (rhs.charAt(i) == ')') {
+        this.rhs.add(new Predicate(rhs.substring(start, i + 1)));
+        start = i + 1;
+      }
+    }
+  }
+
+  /**
+   * Does the split at "->" for you.
+   */
+  public Clause(String clause) {
+    String[] clausesplit = clause.split("->");
+    this.lhs = new Predicate(clausesplit[0]);
+    String rhs = clausesplit[1];
     int start = 0;
     for (int i = 1; i < rhs.length(); i++) {
       if (rhs.charAt(i) == ')') {
@@ -44,25 +60,36 @@ public class Clause {
     return lhs.getNonterminal();
   }
 
-  public int getLhsDim() {
-    return lhs.getSymbols().length;
-  }
-
-  /** Returns its string representation with a dot at the ith position of the
-   * variables in the lhs. */
-  public String setDotAt(int i) {
+  /** Returns a string representation where the dot is at the ith argument at
+   * the jth element of the lhs. */
+  public String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
-    repr.append(lhs.setDotAt(i));
+    repr.append(lhs.setDotAt(i,j));
     repr.append(" -> ");
     if (rhs.isEmpty()) {
       repr.append("ε");
     } else {
-      for (int j = 0; j < rhs.size(); j++) {
-        if (j > 0)
+      for (int k = 0; k < rhs.size(); k++) {
+        if (k > 0)
           repr.append(" ");
-        repr.append(rhs.get(j).toString());
+        repr.append(rhs.get(k).toString());
       }
     }
     return repr.toString();
+  }
+
+  /**
+   * Returns a symbol of the lhs, from the ith argument the jth element.
+   */
+  public String getLhsSymAt(int i, int j) {
+    return lhs.getSymAt(i,j);
+  }
+
+  public List<Predicate> getRhs() {
+    return this.rhs;
+  }
+
+  public Predicate getLhs() {
+    return this.lhs;
   }
 }

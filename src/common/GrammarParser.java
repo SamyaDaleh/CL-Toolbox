@@ -13,7 +13,7 @@ import common.tag.Tag;
 
 /** Parses different grammars from text files. */
 public class GrammarParser {
-  static Pattern p = Pattern.compile("\"(.*?)\"");
+  private static Pattern p = Pattern.compile("\"(.*?)\"");
 
   /** Parses a CFG from a file and returns it as Cfg. */
   public static Cfg parseCfgFile(String grammarfile) throws IOException {

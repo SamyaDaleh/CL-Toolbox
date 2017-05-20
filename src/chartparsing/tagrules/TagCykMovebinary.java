@@ -10,16 +10,11 @@ import common.tag.TagCykItem;
 /** From a two sibling nodes move up to the parent node. */
 public class TagCykMovebinary implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "move-binary";
 
-  int antneeded = 2;
-
-  /** Rule doesn't need anything to do its job. */
-  public TagCykMovebinary() {
-    this.name = "move-binary";
-  }
+  private int antneeded = 2;
 
   @Override public void addAntecedence(Item item) {
     this.antecedences.add(item);
@@ -94,10 +89,6 @@ public class TagCykMovebinary implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

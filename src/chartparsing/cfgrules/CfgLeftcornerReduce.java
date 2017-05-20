@@ -14,16 +14,16 @@ import common.cfg.CfgProductionRule;
  * add the lhs to the stack of lhs */
 public class CfgLeftcornerReduce implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  CfgProductionRule rule;
+  private CfgProductionRule rule;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgLeftcornerReduce(CfgProductionRule rule) {
-    this.setName("reduce " + rule.toString());
+    this.name = "reduce " + rule.toString();
     this.rule = rule;
   }
 
@@ -78,10 +78,6 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

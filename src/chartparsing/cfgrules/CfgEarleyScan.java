@@ -12,17 +12,16 @@ import common.cfg.CfgDottedItem;
  * symbol. */
 public class CfgEarleyScan implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "scan";
 
-  String[] wsplit;
+  private String[] wsplit;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
-    this.setName("scan");
   }
 
   @Override public void addAntecedence(Item item) {
@@ -69,10 +68,6 @@ public class CfgEarleyScan implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

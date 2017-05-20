@@ -13,17 +13,17 @@ import common.cfg.CfgProductionRule;
  * lhs. */
 public class CfgBottomupReduce implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  CfgProductionRule rule;
+  private CfgProductionRule rule;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgBottomupReduce(CfgProductionRule rule) {
     this.rule = rule;
-    this.setName("reduce " + rule.toString());
+    this.name = "reduce " + rule.toString();
   }
 
   @Override public void addAntecedence(Item item) {
@@ -63,10 +63,6 @@ public class CfgBottomupReduce implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

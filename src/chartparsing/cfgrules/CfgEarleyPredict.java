@@ -13,17 +13,17 @@ import common.cfg.CfgProductionRule;
  * symbol as lhs predict a new item. */
 public class CfgEarleyPredict implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  CfgProductionRule rule;
+  private CfgProductionRule rule;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgEarleyPredict(CfgProductionRule rule) {
     this.rule = rule;
-    this.setName("predict " + rule.toString());
+    this.name ="predict " + rule.toString();
   }
 
   @Override public void addAntecedence(Item item) {
@@ -69,10 +69,6 @@ public class CfgEarleyPredict implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

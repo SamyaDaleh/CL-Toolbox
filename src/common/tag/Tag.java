@@ -12,11 +12,11 @@ import common.cfg.CfgProductionRule;
 /** Tree adjoining grammar that consists of terminals, nonterminals, a start
  * symbol, some initial trees and auxiliary trees. */
 public class Tag {
-  String[] nonterminals;
-  String[] terminals;
-  String startsymbol;
-  Map<String, Tree> initialtrees = new HashMap<String, Tree>();
-  Map<String, Tree> auxiliarytrees = new HashMap<String, Tree>();
+  private String[] nonterminals;
+  private String[] terminals;
+  private String startsymbol;
+  private Map<String, Tree> initialtrees = new HashMap<String, Tree>();
+  private Map<String, Tree> auxiliarytrees = new HashMap<String, Tree>();
 
   public Tag() {
     super();
@@ -186,7 +186,7 @@ public class Tag {
   }
 
   /** Returns true if the passed label is one of the terminals. */
-  public boolean isInTerminals(String label) {
+  private boolean isInTerminals(String label) {
     for (String t : terminals) {
       if (label.equals(t))
         return true;

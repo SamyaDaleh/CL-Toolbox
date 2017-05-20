@@ -12,15 +12,11 @@ import common.cfg.CfgDollarItem;
  * both. */
 public class CfgLeftcornerRemove implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "remove";
 
-  int antneeded = 1;
-
-  public CfgLeftcornerRemove() {
-    this.setName("remove");
-  }
+  private int antneeded = 1;
 
   @Override public void addAntecedence(Item item) {
     antecedences.add(item);
@@ -59,10 +55,6 @@ public class CfgLeftcornerRemove implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

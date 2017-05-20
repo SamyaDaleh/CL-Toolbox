@@ -12,19 +12,18 @@ import common.tag.TagEarleyItem;
  * rb, you can put both together. */
 public class TagEarleyCompletenode implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "complete node";
 
-  Tag tag = null;
+  private Tag tag = null;
 
-  int antneeded = 2;
+  private int antneeded = 2;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
   public TagEarleyCompletenode(Tag tag) {
     this.tag = tag;
-    this.name = "complete node";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -88,10 +87,6 @@ public class TagEarleyCompletenode implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

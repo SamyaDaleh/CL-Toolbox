@@ -11,21 +11,20 @@ import common.tag.TagEarleyItem;
 /** If the node's label is the next input symbol, consume it. */
 public class TagEarleyScanterm implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "scan term";
 
-  String[] wsplit = null;
-  Tag tag = null;
+  private String[] wsplit = null;
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor takes the input string to compare with the tree labels, also
    * needs the grammar to retrieve information about the antecedence. */
   public TagEarleyScanterm(String[] wsplit, Tag tag) {
     this.wsplit = wsplit;
     this.tag = tag;
-    this.name = "scan term";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -74,10 +73,6 @@ public class TagEarleyScanterm implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

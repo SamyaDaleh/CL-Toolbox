@@ -19,8 +19,6 @@ public interface DeductionRule {
 
   public void setConsequences(List<Item> consequences);
 
-  public void setName(String name);
-
   public String getName();
 
   @Override public String toString();

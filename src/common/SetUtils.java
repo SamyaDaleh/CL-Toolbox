@@ -8,7 +8,7 @@ public class SetUtils {
 
   /** Returns a new set that contains all items that one or both input sets
    * contain. */
-  public static Set<String> union(Set<String> a, Set<String> b) {
+  private static Set<String> union(Set<String> a, Set<String> b) {
     Set<String> c = new HashSet<String>();
     c.addAll(a);
     c.addAll(b);
@@ -51,7 +51,7 @@ public class SetUtils {
 
   /** Returns a new set that contains all elements of a concatenated with all
    * elements of b. */
-  public static Set<String> concatenation(Set<String> a, Set<String> b) {
+  private static Set<String> concatenation(Set<String> a, Set<String> b) {
     Set<String> c = new HashSet<String>();
     for (String element : a.toArray(new String[a.size()])) {
       for (String element2 : b.toArray(new String[b.size()])) {

@@ -7,8 +7,8 @@ import java.util.List;
  * probabilities. */
 public class Pcfg {
   String vars[];
-  List<PcfgProductionRule> R = new LinkedList<PcfgProductionRule>();
-  String start_var;
+  private List<PcfgProductionRule> R = new LinkedList<PcfgProductionRule>();
+  private String start_var;
   String terminals[];
 
   public String[] getVars() {

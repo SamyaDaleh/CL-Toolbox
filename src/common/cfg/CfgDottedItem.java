@@ -5,7 +5,7 @@ import common.Item;
 
 /** Item of length 3 used for Earley parsing. */
 public class CfgDottedItem implements Item {
-  String[] itemform;
+  private String[] itemform;
 
   /** Item is constructed by a dotted item (not checked) and indices
    * representing its range. */

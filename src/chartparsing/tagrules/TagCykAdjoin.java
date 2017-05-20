@@ -11,18 +11,17 @@ import common.tag.TagCykItem;
 /** Adjoin an auxiliary tree into an appropriate node in any other tree. */
 public class TagCykAdjoin implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "adjoin";
 
-  Tag tag = null;
+  private Tag tag = null;
 
-  int antneeded = 2;
+  private int antneeded = 2;
 
   /** Rule needs grammar to check if adjoin is possible. */
   public TagCykAdjoin(Tag tag) {
     this.tag = tag;
-    this.name = "adjoin";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -92,10 +91,6 @@ public class TagCykAdjoin implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

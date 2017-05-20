@@ -11,18 +11,17 @@ import common.tag.TagEarleyItem;
 /** If a node has no right sibling, move to the parent. */
 public class TagEarleyMoveup implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
-  Tag tag = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "move up";
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
   public TagEarleyMoveup(Tag tag) {
     this.tag = tag;
-    this.name = "move up";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -74,10 +73,6 @@ public class TagEarleyMoveup implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

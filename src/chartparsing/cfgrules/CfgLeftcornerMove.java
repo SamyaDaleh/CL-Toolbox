@@ -12,16 +12,15 @@ import common.cfg.CfgDollarItem;
  * stack of lhs to the stack of completed items. */
 public class CfgLeftcornerMove implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "move";
 
-  String[] nonterminals;
+  private String[] nonterminals;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgLeftcornerMove(String[] nonterminals) {
-    this.setName("move");
     this.nonterminals = nonterminals;
   }
 
@@ -74,10 +73,6 @@ public class CfgLeftcornerMove implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

@@ -5,7 +5,7 @@ import common.Item;
 
 /** Item of length 8 used by TAG Earley parsing. */
 public class TagEarleyItem implements Item {
-  String[] itemform;
+  private String[] itemform;
 
   /** Constructor that replaces the foot node indices by '-' if they are
    * null. */

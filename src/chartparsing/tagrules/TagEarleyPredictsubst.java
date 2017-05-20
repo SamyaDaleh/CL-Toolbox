@@ -13,21 +13,21 @@ import common.tag.Vertex;
  * substituted there. */
 public class TagEarleyPredictsubst implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  String initreename = null;
-  Tag tag = null;
+  private String initreename = null;
+  private Tag tag = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Constructor takes an auxiliary tree for the items the rule shall derive,
    * also needs the grammar to retrieve information about the antecedence. */
   public TagEarleyPredictsubst(String auxtreename, Tag tag) {
     this.initreename = auxtreename;
     this.tag = tag;
-    this.name = "predict subst";
+    this.name = "predict substitution of " + auxtreename;
   }
 
   @Override public void addAntecedence(Item item) {
@@ -70,10 +70,6 @@ public class TagEarleyPredictsubst implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

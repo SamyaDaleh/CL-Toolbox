@@ -12,22 +12,22 @@ import common.tag.TagCykItem;
  * remembers. */
 public class TagCykSubstitute implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = null;
 
-  Tag tag = null;
-  String nodegorn = null;
-  String treename = null;
+  private Tag tag = null;
+  private String nodegorn = null;
+  private String treename = null;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   /** Remembers tree and node it can substitute in. */
   public TagCykSubstitute(String treename, String nodegorn, Tag tag) {
     this.tag = tag;
     this.treename = treename;
     this.nodegorn = nodegorn;
-    this.name = "substitute";
+    this.name = "substitute in " + treename + "(" + nodegorn + ")";
   }
 
   @Override public void addAntecedence(Item item) {
@@ -63,10 +63,6 @@ public class TagCykSubstitute implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

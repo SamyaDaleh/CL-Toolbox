@@ -6,8 +6,8 @@ import common.ArrayUtils;
 
 /** Representation of a predicate of the form A(ɑ1,...,ɑ_dim(A)). */
 public class Predicate {
-  String nonterminal;
-  String[][] symbols;
+  private String nonterminal;
+  private String[][] symbols;
 
   /** Constructor that creates the predicate from a string representation. */
   Predicate(String predicate) {
@@ -21,7 +21,7 @@ public class Predicate {
       String[] subgroups = rightover.split(",");
       ArrayList<String[]> subgroupcol = new ArrayList<String[]>();
       for (String subgroup : subgroups) {
-        subgroupcol.add(subgroup.split(" "));
+        subgroupcol.add(subgroup.trim().split(" "));
       }
       symbols = subgroupcol.toArray(new String[subgroupcol.size()][]);
     }
@@ -59,33 +59,57 @@ public class Predicate {
     return symbolsarray.toArray(new String[symbolsarray.size()]);
   }
 
-  /** Returns a string representation where the dot is at position i of the
-   * variables. */
-  public String setDotAt(int i) {
+  /** Returns a string representation where the dot is at the ith argument at
+   * the jth element. */
+  public String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
     repr.append(nonterminal);
     repr.append('(');
-    int l = 0;
-    for (int j = 0; j < symbols.length; j++) {
-      if (j > 0 ) {
+    for (int l = 0; l < symbols.length; l++) {
+      if (l > 0 ) {
         repr.append(",");
       }
-      for (int k = 0; k < symbols[j].length; k++){
+      for (int k = 0; k < symbols[l].length; k++){
         if (k > 0) {
           repr.append(" ");
         }
-        if (i == l) {
+        if (i-1 == l && j == k) {
           repr.append("•");
         }
-        repr.append(symbols[j][k]);
-        l++;
+        repr.append(symbols[l][k]);
       }
-    }
-
-    if (i == l) {
-      repr.append(" •");
+      if (i-1 == l && j == symbols[l].length) {
+        repr.append(" •");
+      }
     }
     repr.append(')');
     return repr.toString();
+  }
+
+  public String getSymAt(int i, int j) {
+    return this.symbols[i-1][j];
+  }
+
+  public String[] getArgumentByIndex(int i) {
+    return symbols[i-1];
+  }
+
+  public int getDim() {
+    return symbols.length;
+  }
+
+  /**
+   * If all elements were a plain list, return the index the specified item would have.
+   */
+  public int getAbsolutePos(int iint, int jint) {
+    int index = 0;
+    for (int i = 1; i < iint;i++) {
+      index += symbols[i-1].length;
+    }
+    return index + jint;
+  }
+
+  public boolean ifSymExists(int i, int j) {
+    return symbols.length >= i && symbols[i-1].length > j;
   }
 }

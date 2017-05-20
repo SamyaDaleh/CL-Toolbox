@@ -12,17 +12,16 @@ import common.cfg.CfgItem;
  * symbol. */
 public class CfgTopdownScan implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "scan";
 
-  String[] wsplit;
+  private String[] wsplit;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgTopdownScan(String[] wsplit) {
     this.wsplit = wsplit;
-    this.setName("scan");
   }
 
   @Override public void addAntecedence(Item item) {
@@ -58,10 +57,6 @@ public class CfgTopdownScan implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

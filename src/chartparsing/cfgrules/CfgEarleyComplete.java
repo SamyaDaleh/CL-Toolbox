@@ -13,15 +13,11 @@ import common.cfg.CfgDottedItem;
  * nonterminal. */
 public class CfgEarleyComplete implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "complete";
 
-  int antneeded = 2;
-
-  public CfgEarleyComplete() {
-    this.setName("complete");
-  }
+  private int antneeded = 2;
 
   @Override public void addAntecedence(Item item) {
     antecedences.add(item);
@@ -100,10 +96,6 @@ public class CfgEarleyComplete implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

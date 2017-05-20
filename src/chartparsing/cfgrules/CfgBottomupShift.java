@@ -10,17 +10,16 @@ import common.cfg.CfgItem;
 /** Moves the next input symbol onto the stack */
 public class CfgBottomupShift implements DynamicDeductionRule {
 
-  List<Item> antecedences = new LinkedList<Item>();
-  List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> consequences = new LinkedList<Item>();
+  private String name = "shift";
 
-  String[] wsplit;
+  private String[] wsplit;
 
-  int antneeded = 1;
+  private int antneeded = 1;
 
   public CfgBottomupShift(String[] wsplit) {
     this.wsplit = wsplit;
-    this.setName("shift");
   }
 
   @Override public void addAntecedence(Item item) {
@@ -57,10 +56,6 @@ public class CfgBottomupShift implements DynamicDeductionRule {
 
   @Override public void setConsequences(List<Item> consequences) {
     // ignore
-  }
-
-  @Override public void setName(String name) {
-    this.name = name;
   }
 
   @Override public String getName() {

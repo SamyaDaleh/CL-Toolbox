@@ -5,7 +5,7 @@ import common.Item;
 
 /** Item of length 2 used for TopDown and ShiftReduce parsing. */
 public class CfgItem implements Item {
-  String[] itemform;
+  private String[] itemform;
 
   /** Item is constructed from a string and a span. */
   public CfgItem(String ntdot, int span) {
