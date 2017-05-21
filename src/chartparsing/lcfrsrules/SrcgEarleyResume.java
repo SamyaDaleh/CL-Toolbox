@@ -88,15 +88,23 @@ public class SrcgEarleyResume implements DynamicDeductionRule {
           for (Predicate rhs : clause1parsed.getRhs()) {
             int[] indices = rhs.find(mayv1);
             boolean dotisatargend = clause2parsed.getLhs().ifSymExists(iint2, 0)
-                && jint2 == clause2parsed.getLhs().getSymbols()[iint2-1].length;
+              && jint2 == clause2parsed.getLhs().getSymbols()[iint2 - 1].length;
+
             if (indices[0] == iint2 + 1 && isvar1 && !mayv1firstarg
-              && dotisatargend ) {
-              consequences.add(new SrcgEarleyActiveItem(itemform2[0], posint1,
-                iint2 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemform2, 4,
-                  itemform2.length)));
+              && dotisatargend
+              && clause2parsed.getLhs().ifSymExists(iint2 + 1, 0)) {
+              boolean vectorsmatch =
+                SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause1parsed,
+                  itemform1, rhs, iint1, clause2parsed, itemform2);
+              if (vectorsmatch) {
+                consequences.add(new SrcgEarleyActiveItem(itemform2[0], posint1,
+                  iint2 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemform2, 4,
+                    itemform2.length)));
+              }
             }
           }
         }
+        // the other way round
         if (clause2parsed.getLhs().ifSymExists(iint2, jint2)) {
           String mayv2 = clause2parsed.getLhsSymAt(iint2, jint2);
           for (String var : variables) {
@@ -113,12 +121,19 @@ public class SrcgEarleyResume implements DynamicDeductionRule {
           for (Predicate rhs : clause2parsed.getRhs()) {
             int[] indices = rhs.find(mayv2);
             boolean dotisatargend = clause1parsed.getLhs().ifSymExists(iint1, 0)
-                && jint1 == clause1parsed.getLhs().getSymbols()[iint1-1].length;
+              && jint1 == clause1parsed.getLhs().getSymbols()[iint1 - 1].length;
+
             if (indices[0] == iint1 + 1 && isvar2 && !mayv2firstarg
-              && dotisatargend) {
-              consequences.add(new SrcgEarleyActiveItem(itemform1[0], posint2,
-                iint1 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemform1, 4,
-                  itemform1.length)));
+              && dotisatargend
+              && clause1parsed.getLhs().ifSymExists(iint1 + 1, 0)) {
+              boolean vectorsmatch =
+                SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause2parsed,
+                  itemform2, rhs, iint2, clause1parsed, itemform1);
+              if (vectorsmatch) {
+                consequences.add(new SrcgEarleyActiveItem(itemform1[0], posint2,
+                  iint1 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemform1, 4,
+                    itemform1.length)));
+              }
             }
           }
         }

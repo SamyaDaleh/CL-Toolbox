@@ -1,5 +1,6 @@
 package chartparsing;
 
+import chartparsing.lcfrsrules.SrcgEarleyComplete;
 import chartparsing.lcfrsrules.SrcgEarleyConvert;
 import chartparsing.lcfrsrules.SrcgEarleyPredict;
 import chartparsing.lcfrsrules.SrcgEarleyResume;
@@ -38,14 +39,14 @@ public class LcfrsToDeductionRulesConverter {
       schema.addRule(predict);
       if (clause.getLhsNonterminal().equals(srcg.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        int lhsdim = clause.getLhs().getDim();
-        initialize.addConsequence(new SrcgEarleyActiveItem(clause.toString(), 0,
-          1, 0, new RangeVector(lhsdim)));
+        initialize
+          .addConsequence(new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
+            new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
         initialize.setName("Initialize");
         schema.addAxiom(initialize);
-        schema.addGoal(
-          new SrcgEarleyActiveItem(clause.toString(), wsplit.length, 1, lhsdim,
-            new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
+        schema.addGoal(new SrcgEarleyActiveItem(clause.toString(),
+          wsplit.length, 1, clause.getLhs().getSymbolsAsPlainArray().length,
+          new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
       }
     }
     DynamicDeductionRule scan = new SrcgEarleyScan(wsplit);
@@ -54,6 +55,8 @@ public class LcfrsToDeductionRulesConverter {
     schema.addRule(suspend);
     DynamicDeductionRule convert = new SrcgEarleyConvert();
     schema.addRule(convert);
+    DynamicDeductionRule complete = new SrcgEarleyComplete();
+    schema.addRule(complete);
     DynamicDeductionRule resume = new SrcgEarleyResume(srcg.getVariables());
     schema.addRule(resume);
 

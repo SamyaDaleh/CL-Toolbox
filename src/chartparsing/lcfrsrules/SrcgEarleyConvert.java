@@ -52,9 +52,9 @@ public class SrcgEarleyConvert implements DynamicDeductionRule {
           ArrayList<String> newvector = new ArrayList<String>();
           Predicate lhs = clauseparsed.getLhs();
           for (int k = 0; k < lhs.getDim(); k++) {
-            newvector.add(itemform[4 + lhs.getAbsolutePos(k + 1, 0)]);
+            newvector.add(itemform[4 + lhs.getAbsolutePos(k + 1, 0)*2]);
             if (lhs.ifSymExists(k + 2, 0)) {
-              newvector.add(itemform[4 + lhs.getAbsolutePos(k + 2, 0) - 1]);
+              newvector.add(itemform[4 + lhs.getAbsolutePos(k + 2, 0)*2 - 1]);
             } else {
               newvector.add(itemform[itemform.length - 1]);
             }

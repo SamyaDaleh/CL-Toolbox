@@ -20,7 +20,7 @@ public class SrcgEarleySuspend implements DynamicDeductionRule {
   private List<Item> antecedences = new LinkedList<Item>();
   private List<Item> consequences = new LinkedList<Item>();
   private String name = "Suspend";
-  
+
   private String[] variables;
 
   private int antneeded = 2;
@@ -71,15 +71,6 @@ public class SrcgEarleySuspend implements DynamicDeductionRule {
         int jint2 = Integer.parseInt(j2);
         boolean isvar1 = false;
         boolean isvar2 = false;
-        if (clause1parsed.getLhs().ifSymExists(iint1, jint1)) {
-          String mayv1 = clause1parsed.getLhsSymAt(iint1, jint1);
-          for (String var : variables) {
-            if (var.equals(mayv1)) {
-              isvar1 = true;
-              break;
-            }
-          }
-        }
         if (clause2parsed.getLhs().ifSymExists(iint2, jint2)) {
           String mayv2 = clause2parsed.getLhsSymAt(iint2, jint2);
           for (String var : variables) {
@@ -88,63 +79,82 @@ public class SrcgEarleySuspend implements DynamicDeductionRule {
               break;
             }
           }
-        }
 
-        for (int n = 0; n < clause2parsed.getRhs().size(); n++) {
-          Predicate rhspred = clause2parsed.getRhs().get(n);
-          if (isvar2 && rhspred.getNonterminal().equals(clause1parsed.getLhsNonterminal())
-            && itemform1.length > (iint1 - 1) * 2 + 5
-            && itemform2.length > (iint1 - 1 + n) * 2 + 5) {
-            boolean vectorsmatch = true;
-            for (int m = 0; m < iint1 - 1; m++) {
-              if (itemform1[m * 2 + 4].equals(itemform2[(n + m) * 2 + 4])
-                && itemform1[m * 2 + 5].equals(itemform2[(n + m) * 2 + 5])) {
-                vectorsmatch = false;
-                break;
+          for (int n = 0; n < clause2parsed.getRhs().size(); n++) {
+            Predicate rhspred = clause2parsed.getRhs().get(n);
+            if (rhspred.getSymAt(iint1, 0).equals(mayv2) &&  isvar2
+              && rhspred.getNonterminal()
+                .equals(clause1parsed.getLhsNonterminal())
+              && itemform1.length > (iint1 - 1) * 2 + 5
+              && itemform2.length > (iint1 - 1 + n) * 2 + 5) {
+              if (itemform1[2 * (iint1 - 1) + 4].equals(pos2)
+                && iint1 < clause1parsed.getLhs().getDim() && clause1parsed
+                  .getLhs().getArgumentByIndex(iint1).length == jint1) {
+
+                boolean vectorsmatch =
+                  SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1parsed,
+                    itemform1, rhspred, iint1, clause2parsed, itemform2);
+                if (vectorsmatch) {
+                  ArrayList<String> newvector = new ArrayList<String>();
+                  newvector = new ArrayList<String>(Arrays.asList(ArrayUtils
+                    .getSubSequenceAsArray(itemform2, 4, itemform2.length)));
+                  int indabspos =
+                    clause2parsed.getLhs().getAbsolutePos(iint2, jint2);
+                  try { // DEBUG
+                  newvector.set(indabspos * 2, pos2);
+                  newvector.set(indabspos * 2 + 1, pos1);
+                  consequences.add(
+                    new SrcgEarleyActiveItem(clause2, posint1, iint2, jint2 + 1,
+                      newvector.toArray(new String[newvector.size()])));
+                  } catch (IndexOutOfBoundsException e) {
+                    System.out.println(e.getLocalizedMessage());
+                  }
+                }
               }
-            }
-            if (vectorsmatch && itemform1.length > 2 * iint1 + 5
-              && itemform1[2 * (iint1 - 1) + 4].equals(pos2)
-              && itemform1[2 * (iint1 - 1) + 5].equals(pos1)
-              && iint1 < clause1parsed.getLhs().getDim() && clause1parsed
-                .getLhs().getArgumentByIndex(iint1).length == jint1) {
-              ArrayList<String> newvector = new ArrayList<String>();
-              newvector = new ArrayList<String>(Arrays.asList(ArrayUtils
-                .getSubSequenceAsArray(itemform2, 4, itemform2.length)));
-              newvector.set((iint2 - 1) * 2, pos2);
-              newvector.set((iint2 - 1) * 2 + 1, pos1);
-              consequences.add(new SrcgEarleyActiveItem(clause2, posint1, iint2,
-                jint2 + 1, newvector.toArray(new String[newvector.size()])));
             }
           }
         }
-        // the other way round
 
-        for (int n = 0; n < clause1parsed.getRhs().size(); n++) {
-          Predicate rhspred = clause1parsed.getRhs().get(n);
-          if (isvar1 && rhspred.getNonterminal().equals(clause2parsed.getLhsNonterminal())
-            && itemform2.length > (iint2 - 1) * 2 + 5
-            && itemform1.length > (iint2 - 1 + n) * 2 + 5) {
-            boolean vectorsmatch = true;
-            for (int m = 0; m < iint2 - 1; m++) {
-              if (itemform2[m * 2 + 4].equals(itemform1[(n + m) * 2 + 4])
-                && itemform2[m * 2 + 5].equals(itemform1[(n + m) * 2 + 5])) {
-                vectorsmatch = false;
-                break;
-              }
+        if (clause1parsed.getLhs().ifSymExists(iint1, jint1)) {
+          String mayv1 = clause1parsed.getLhsSymAt(iint1, jint1);
+          for (String var : variables) {
+            if (var.equals(mayv1)) {
+              isvar1 = true;
+              break;
             }
-            if (vectorsmatch && itemform2.length > 2 * iint2 + 5
-              && itemform2[2 * iint2 + 4].equals(pos1)
-              && itemform2[2 * iint2 + 5].equals(pos2)
-              && iint2 < clause2parsed.getLhs().getDim() && clause2parsed
-                .getLhs().getArgumentByIndex(iint2).length == jint2) {
-              ArrayList<String> newvector = new ArrayList<String>();
-              newvector = new ArrayList<String>(Arrays.asList(ArrayUtils
-                .getSubSequenceAsArray(itemform1, 4, itemform1.length)));
-              newvector.set(iint1 * 2, pos1);
-              newvector.set(iint1 * 2 + 1, pos2);
-              consequences.add(new SrcgEarleyActiveItem(clause1, posint2, iint1,
-                jint1 + 1, newvector.toArray(new String[newvector.size()])));
+          }
+          // the other way round
+          for (int n = 0; n < clause1parsed.getRhs().size(); n++) {
+            Predicate rhspred = clause1parsed.getRhs().get(n);
+            if (rhspred.getSymAt(iint2, 0).equals(mayv1) &&  isvar1
+              && rhspred.getNonterminal()
+                .equals(clause2parsed.getLhsNonterminal())
+              && itemform2.length > (iint2 - 1) * 2 + 5
+              && itemform1.length > (iint2 - 1 + n) * 2 + 5) {
+              if (itemform2[2 * (iint2-1) + 4].equals(pos1)
+                && iint2 < clause2parsed.getLhs().getDim() && clause2parsed
+                  .getLhs().getArgumentByIndex(iint2).length == jint2) {
+
+                boolean vectorsmatch =
+                  SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause2parsed,
+                    itemform2, rhspred, iint2, clause1parsed, itemform1);
+                if (vectorsmatch) {
+                  ArrayList<String> newvector = new ArrayList<String>();
+                  newvector = new ArrayList<String>(Arrays.asList(ArrayUtils
+                    .getSubSequenceAsArray(itemform1, 4, itemform1.length)));
+                  int indabspos =
+                    clause1parsed.getLhs().getAbsolutePos(iint1, jint1);
+                  try {
+                  newvector.set(indabspos * 2, pos1);
+                  newvector.set(indabspos * 2 + 1, pos2);
+                  consequences.add(
+                    new SrcgEarleyActiveItem(clause1, posint2, iint1, jint1 + 1,
+                      newvector.toArray(new String[newvector.size()])));
+                  } catch (IndexOutOfBoundsException e) {
+                    System.out.println(e.getLocalizedMessage());
+                  }
+                }
+              }
             }
           }
         }

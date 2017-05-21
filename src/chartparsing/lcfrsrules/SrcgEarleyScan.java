@@ -63,8 +63,8 @@ public class SrcgEarleyScan implements DynamicDeductionRule {
             newvector.add(itemform[2 * k + 4]);
             newvector.add(itemform[2 * k + 5]);
           }
-          newvector.set(place, pos);
-          newvector.set(place + 1, String.valueOf(posint + 1));
+          newvector.set(place*2, pos);
+          newvector.set(place*2 + 1, String.valueOf(posint + 1));
           consequences.add(new SrcgEarleyActiveItem(clause, posint + 1, iint,
             jint + 1, newvector.toArray(new String[newvector.size()])));
         }

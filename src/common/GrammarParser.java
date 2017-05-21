@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import common.cfg.Cfg;
+import common.lcfrs.Srcg;
 import common.tag.Tag;
 
 /** Parses different grammars from text files. */
@@ -160,5 +161,57 @@ public class GrammarParser {
     m.find();
     String s = m.group();
     return s.substring(1, s.length() - 1);
+  }
+
+  /** Parses a sRCG from a file and returns it as Srcg. 
+   * @throws IOException */
+  public static Srcg parseSrcgFile(String grammarfile) throws IOException {
+    Srcg srcg = new Srcg();
+    BufferedReader in = new BufferedReader(new FileReader(grammarfile));
+    String line = in.readLine().trim();
+    while (line != null) {
+      String linetrim = line.trim();
+      if (linetrim.charAt(0) == 'N') {
+        if (srcg.getNonterminals() != null) {
+          System.out.println("Declaring N twice is not allowed");
+          in.close();
+          return null;
+        }
+        srcg.setNonterminals(parseNT(linetrim));
+      } else if (linetrim.charAt(0) == 'V') {
+        if (srcg.getVariables() != null) {
+          System.out.println("Declaring V twice is not allowed");
+          in.close();
+          return null;
+        }
+        srcg.setVariables(parseNT(linetrim));
+      } else if (linetrim.charAt(0) == 'T') {
+        if (srcg.getTerminals() != null) {
+          System.out.println("Declaring T twice is not allowed");
+          in.close();
+          return null;
+        }
+        srcg.setTerminals(parseNT(linetrim));
+      } else if (linetrim.charAt(0) == 'S') {
+        if (srcg.getStartSymbol() != null) {
+          System.out.println("Declaring S twice is not allowed");
+          in.close();
+          return null;
+        }
+        srcg.setStartSymbol(parseS(linetrim));
+      } else if (linetrim.charAt(0) == 'P') {
+        if (srcg.getClauses().size() > 0) {
+          System.out.println("Declaring P twice is not allowed");
+          in.close();
+          return null;
+        }
+        for (String[] clausedec : parseRules(linetrim, "->")) {
+          srcg.addClause(clausedec[0], clausedec[1]);
+        }
+      }
+      line = in.readLine();
+    }
+    in.close();
+    return srcg;
   }
 }

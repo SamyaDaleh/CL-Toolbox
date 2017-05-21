@@ -12,6 +12,7 @@ Parsing as Deduction:
 - Left Corner for CFG
 - CYK for TAG
 - Earley for TAG
+- Earley for sRCG
 
 It prints out full parsing traces along with applied rules and antecedence items.
 Use it to generate examples, play around with grammars etc.

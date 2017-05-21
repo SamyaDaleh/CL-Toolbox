@@ -53,35 +53,43 @@ public class SrcgEarleyComplete implements DynamicDeductionRule {
         String j2 = itemform2[3];
         int jint2 = Integer.parseInt(j2);
 
-        Predicate rhspred = clause2parsed.getRhs().get(iint2 - 1);
+        for (int n = 0; n < clause2parsed.getRhs().size(); n++) {
+          Predicate rhspred = clause2parsed.getRhs().get(n);
 
-        boolean vectorsmatch = true;
-        for (int m = 0; m < (itemform1.length - 1) / 2 - 1; m++) {
-          if (itemform1[m * 2 + 1].equals(itemform2[(iint2 - 1 + m) * 2 + 4])
-            && itemform1[m * 2 + 2]
-              .equals(itemform2[(iint2 - 1 + m) * 2 + 5])) {
-            vectorsmatch = false;
-            break;
+          // [A, <1,2>, <3,4>]
+          // [A(a X1,b •X2) -> A(X1,X2), 3, <2,1>, (<0,1>, <1,2>, <2,3>, <?,?>)]
+          // Let's assume item 1 is the one on the rhs of item 2. I want all
+          // variables from A left of the dot to match the vectors in item 1.
+          // I want to fill the next gap after the dot with the next vector
+          // from item 1.
+          boolean vectorsmatch = true;
+          for (int m = 0; m < (itemform1.length - 1) / 2 - 1; m++) {
+            String varinrhs = rhspred.getSymAt(m + 1, 0); // there is only 1
+            int[] indices = clause2parsed.getLhs().find(varinrhs);
+            int absposofvarin2 =
+              clause2parsed.getLhs().getAbsolutePos(indices[0], indices[1]);
+            if (!itemform1[m * 2 + 1].equals(itemform2[absposofvarin2 * 2 + 4])
+              || !itemform1[m * 2 + 2]
+                .equals(itemform2[absposofvarin2 * 2 + 5])) {
+              vectorsmatch = false;
+            }
           }
-        }
 
-        String nt2 = rhspred.getNonterminal();
-        if (vectorsmatch && itemform1[itemform1.length - 2].equals(pos2)
-          && nt.equals(nt2) && jint2 == (itemform1.length - 1) / 2) {
-          String posb = itemform1[itemform1.length - 1];
-          int posbint = Integer.parseInt(posb);
-          ArrayList<String> newvector = new ArrayList<String>();
-          for (int k = 0; k * 2 + 5 < itemform2.length; k++) {
-            if (k == (itemform1.length - 1) / 2) {
-              newvector.add(pos2);
-              newvector.add(posb);
-            } else {
+          String nt2 = rhspred.getNonterminal();
+          if (vectorsmatch && itemform1[itemform1.length - 2].equals(pos2)
+            && nt.equals(nt2) ) {
+            String posb = itemform1[itemform1.length - 1];
+            int posbint = Integer.parseInt(posb);
+            ArrayList<String> newvector = new ArrayList<String>();
+            for (int k = 0; k < (itemform2.length-5 ) / 2; k++) {
               newvector.add(itemform2[k * 2 + 4]);
               newvector.add(itemform2[k * 2 + 5]);
             }
+            newvector.add(pos2);
+            newvector.add(posb);
+            consequences.add(new SrcgEarleyActiveItem(clause2, posbint, iint2,
+              jint2 + 1, newvector.toArray(new String[newvector.size()])));
           }
-          consequences.add(new SrcgEarleyActiveItem(clause2, posbint, iint2,
-            jint2 + 1, newvector.toArray(new String[newvector.size()])));
         }
 
       } else if (!itemform2[0].contains("->") && itemform1[0].contains("->")) {
@@ -95,35 +103,34 @@ public class SrcgEarleyComplete implements DynamicDeductionRule {
         String j1 = itemform1[3];
         int jint1 = Integer.parseInt(j1);
 
-        Predicate rhspred = clause1parsed.getRhs().get(iint1 - 1);
+        for (int n = 0; n < clause1parsed.getRhs().size(); n++) {
+          Predicate rhspred = clause1parsed.getRhs().get(n);
 
-        boolean vectorsmatch = true;
-        for (int m = 0; m < (itemform2.length - 1) / 2 - 1; m++) {
-          if (itemform2[m * 2 + 1].equals(itemform1[(iint1 - 1 + m) * 2 + 4])
-            && itemform2[m * 2 + 2]
-              .equals(itemform1[(iint1 - 1 + m) * 2 + 5])) {
-            vectorsmatch = false;
-            break;
+          boolean vectorsmatch = true;
+          for (int m = 0; m < (itemform2.length - 1) / 2 - 1; m++) {
+            if (itemform2[m * 2 + 1].equals(itemform1[(iint1 - 1 + m) * 2 + 4])
+              && itemform2[m * 2 + 2]
+                .equals(itemform1[(iint1 - 1 + m) * 2 + 5])) {
+              vectorsmatch = false;
+              break;
+            }
           }
-        }
 
-        String nt1 = rhspred.getNonterminal();
-        if (vectorsmatch && itemform1[itemform2.length - 2].equals(pos1)
-          && nt.equals(nt1) && jint1 == (itemform2.length - 1) / 2) {
-          String posb = itemform2[itemform2.length - 1];
-          int posbint = Integer.parseInt(posb);
-          ArrayList<String> newvector = new ArrayList<String>();
-          for (int k = 0; k * 2 + 5 < itemform1.length; k++) {
-            if (k == (itemform2.length - 1) / 2) {
-              newvector.add(pos1);
-              newvector.add(posb);
-            } else {
+          String nt1 = rhspred.getNonterminal();
+          if (vectorsmatch && itemform1[itemform2.length - 2].equals(pos1)
+            && nt.equals(nt1)) {
+            String posb = itemform2[itemform2.length - 1];
+            int posbint = Integer.parseInt(posb);
+            ArrayList<String> newvector = new ArrayList<String>();
+            for (int k = 0; k < (itemform1.length-5 ) / 2; k++) {
               newvector.add(itemform1[k * 2 + 4]);
               newvector.add(itemform1[k * 2 + 5]);
             }
+            newvector.add(pos1);
+            newvector.add(posb);
+            consequences.add(new SrcgEarleyActiveItem(clause1, posbint, iint1,
+              jint1 + 1, newvector.toArray(new String[newvector.size()])));
           }
-          consequences.add(new SrcgEarleyActiveItem(clause1, posbint, iint1,
-            jint1 + 1, newvector.toArray(new String[newvector.size()])));
         }
       }
     }

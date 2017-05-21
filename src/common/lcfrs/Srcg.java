@@ -60,4 +60,12 @@ public class Srcg {
   public String[] getVariables() {
     return this.variables;
   }
+
+  public String[] getTerminals() {
+    return this.terminals;
+  }
+
+  public String[] getNonterminals() {
+    return this.nonterminals;
+  }
 }

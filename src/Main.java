@@ -3,10 +3,12 @@ import java.text.ParseException;
 
 import chartparsing.CfgToDeductionRulesConverter;
 import chartparsing.Deduction;
+import chartparsing.LcfrsToDeductionRulesConverter;
 import chartparsing.ParsingSchema;
 import chartparsing.TagToDeductionRulesConverter;
 import common.GrammarParser;
 import common.cfg.Cfg;
+import common.lcfrs.Srcg;
 import common.tag.Tag;
 import gui.ParsingTraceTable;
 
@@ -22,7 +24,7 @@ public class Main {
           + "[parsing algorithm] [<optional parameters>]");
       System.out.println(
         "Parsing algorithm can be: cfg-topdown, cfg-shiftreduce, cfg-earley, "
-          + "cfg-leftcorner, tag-cyk");
+          + "cfg-leftcorner, tag-cyk, tag-earley, srcg-earley");
       System.out.println(
         "Optional parameters can be: --sucess : prints a trace only of items "
           + "that lead to a goal item.");
@@ -39,9 +41,9 @@ public class Main {
         success = true;
       }
     }
+    ParsingSchema schema = null;
     if (grammarfile.endsWith(".cfg")) {
       Cfg cfg = GrammarParser.parseCfgFile(grammarfile);
-      ParsingSchema schema = null;
       switch (algorithm) {
       case "cfg-topdown":
         schema =
@@ -68,15 +70,9 @@ public class Main {
           "I did not understand. Please check spelling of parsing algorithm.");
         return;
       }
-      Deduction deduction = new Deduction();
-      System.out.println(deduction.doParse(schema, success));
-      String[][] data = deduction.printTrace();
-      ParsingTraceTable.displayTrace(data,
-        new String[] {"Id", "Item", "Rules", "Backpointers"});
     }
     if (grammarfile.endsWith(".tag")) {
       Tag tag = GrammarParser.parseTagFile(grammarfile);
-      ParsingSchema schema = null;
       switch (algorithm) {
       case "tag-cyk":
         schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "cyk");
@@ -91,12 +87,26 @@ public class Main {
             + "and if algorithm is appropriate for grammar.");
         return;
       }
-      Deduction deduction = new Deduction();
-      System.out.println(deduction.doParse(schema, success));
-      String[][] data = deduction.printTrace();
-      ParsingTraceTable.displayTrace(data,
-        new String[] {"Id", "Item", "Rules", "Backpointers"});
     }
+    if (grammarfile.endsWith(".srcg")) {
+      Srcg srcg = GrammarParser.parseSrcgFile(grammarfile);
+      switch (algorithm) {
+      case "srcg-earley":
+        schema =
+          LcfrsToDeductionRulesConverter.SrcgToParsingSchema(srcg, w, "earley");
+        break;
+      default:
+        System.out.println(
+          "I did not understand. Please check spelling of parsing algorithm "
+            + "and if algorithm is appropriate for grammar.");
+        return;
+      }
+    }
+    Deduction deduction = new Deduction();
+    System.out.println(deduction.doParse(schema, success));
+    String[][] data = deduction.printTrace();
+    ParsingTraceTable.displayTrace(data,
+      new String[] {"Id", "Item", "Rules", "Backpointers"});
     // calculate sx estimates
     /* Map<String,Double> insides = SxCalc.getInsides(gen_pcfg0(), 4);
      * 
