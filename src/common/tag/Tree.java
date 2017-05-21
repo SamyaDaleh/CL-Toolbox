@@ -19,7 +19,7 @@ public class Tree {
 
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
-  Tree(String tree) throws ParseException {
+  public Tree(String tree) throws ParseException {
     String[] tokens = tokenize(tree);
     List<Vertex> vertexpath = new LinkedList<Vertex>();
     List<Integer> children = new LinkedList<Integer>();
@@ -203,5 +203,47 @@ public class Tree {
       }
     }
     return false;
+  }
+
+  /** Returns the height of the tree, that is the path from the root to the
+   * deepest child, that is the longest gorn address. */
+  public int getHeight() {
+    int maxheight = 0;
+    for (Vertex p : this.vertexes) {
+      String[] psplit = p.getGornaddress().split("[.]");
+      if (psplit.length > maxheight) {
+        maxheight = psplit.length;
+      }
+    }
+    return maxheight;
+  }
+
+  /** return the max width, that is the number of nodes in a layer. The layer is
+   * the number of parts when splitting the gorn address at '.', hence root is
+   * in layer 1, its children are layer 2 etc. */
+  public int getWidthInLayer(int layer) {
+    int width = 0;
+    for (Vertex p : this.vertexes) {
+      String[] psplit = p.getGornaddress().split("[.]");
+      if (psplit.length == layer) {
+        width++;
+      }
+    }
+    return width;
+  }
+  
+  /**
+   * Returns the max width of the tree, that is the most nodes in a layer.
+   */
+  public int getWidth() {
+    int width = 0;
+    int nodes = 1;
+    for(int i = 1; nodes != 0;i++){
+      nodes = getWidthInLayer(i);
+      if (nodes > width) {
+        width = nodes;
+      }
+    }
+    return width;
   }
 }

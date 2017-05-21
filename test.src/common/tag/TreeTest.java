@@ -3,6 +3,7 @@ package common.tag;
 import java.text.ParseException;
 
 import common.tag.Tree;
+import gui.DisplayTree;
 
 public class TreeTest {
   public static void main(String[] args) throws ParseException {
@@ -15,6 +16,17 @@ public class TreeTest {
      System.out.println("Something went wrong when parsing the tree");
      System.out.println(tree);
    }
+   if(tree.getHeight() == 4 ){
+     System.out.println("Correct height");
+   } else {
+     System.out.println("Wrong height: " + String.valueOf(tree.getHeight()));
+   }
+   if(tree.getWidth() == 2 ){
+     System.out.println("Correct width");
+   } else {
+     System.out.println("Wrong width: " + String.valueOf(tree.getHeight()));
+   }
+   DisplayTree.main(new String[]{tree.toString()});
   }
 
 }
