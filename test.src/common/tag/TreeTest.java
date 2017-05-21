@@ -7,7 +7,7 @@ import gui.DisplayTree;
 
 public class TreeTest {
   public static void main(String[] args) throws ParseException {
-   Tree tree = new Tree("(T (B (T a ε) ) (B T*))");
+   Tree tree = new Tree("(T_NA (B (T a ε) ) (B_OA T*))");
    if (tree.getRoot().label.equals("T") && tree.getFoot().label.equals("T")
        && tree.getFoot().gornaddress.equals(".2.1")) {
      System.out.println("Tree looks fine");

@@ -186,7 +186,7 @@ public class Tree {
   }
 
   /** Returns true if node is marked with null adjoin. */
-  boolean isInNA(String gornaddress) {
+  public boolean isInNA(String gornaddress) {
     for (Vertex p : this.NA) {
       if (p.getGornaddress().equals(gornaddress)) {
         return true;

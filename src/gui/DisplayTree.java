@@ -29,7 +29,11 @@ public class DisplayTree extends JFrame {
       drawwidth = 400 * 1 / (width + 1);
       for (Vertex p : tree.getVertexes()) {
         if (p.getGornaddress().split("[.]").length == i) {
-          g.drawString(p.getLabel(), drawwidth, drawheight);
+          String label =
+            p.getLabel() + (tree.isInOA(p.getGornaddress()) ? "_OA" : "")
+              + (tree.isInNA(p.getGornaddress()) ? "_NA" : "")
+              + (tree.getFoot().equals(p) ? "*" : "");
+          g.drawString(label, drawwidth, drawheight);
           nodesdrawn.put(p.getGornaddress(), drawwidth);
           if (i > 1) {
             int xparent = nodesdrawn.get(p.getGornAddressOfParent());
