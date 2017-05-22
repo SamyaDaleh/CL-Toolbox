@@ -1,14 +1,14 @@
 package chartparsing;
 
+import static org.junit.Assert.assertTrue;
+
 import java.text.ParseException;
 
-import chartparsing.CfgToDeductionRulesConverter;
-import chartparsing.Deduction;
-import chartparsing.ParsingSchema;
+import org.junit.Test;
+
 import common.cfg.Cfg;
 import common.lcfrs.Srcg;
 import common.tag.Tag;
-import gui.ParsingTraceTable;
 
 public class DeductionTest {
 
@@ -50,72 +50,67 @@ public class DeductionTest {
     return srcg;
   }
 
-  public static void main(String[] args) throws ParseException {
+  @Test public void testCfgTopdown() {
     String w = "a a b b";
     ParsingSchema schema =
       CfgToDeductionRulesConverter.CfgToTopDownRules(gen_cfgdedtest(), w);
     Deduction deduction = new Deduction();
-    if (deduction.doParse(schema, false)) {
-      System.out.println("CFG Topdown Parsing successful");
-    } else {
-      System.out.println("CFG Topdown Parsing fail");
-    }
+    assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    schema =
+  }
+
+  @Test public void testCfgShiftreduce() {
+    String w = "a a b b";
+    ParsingSchema schema =
       CfgToDeductionRulesConverter.CfgToShiftReduceRules(gen_cfgdedtest(), w);
-    if (deduction.doParse(schema, false)) {
-      System.out.println("CFG Shiftreduce Parsing successful");
-    } else {
-      System.out.println("CFG Shiftreduce Parsing fail");
-    }
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
-    if (deduction.doParse(schema, false)) {
-      System.out.println("CFG Earley Parsing successful");
-    } else {
-      System.out.println("CFG Earley Parsing fail");
-    }
-    deduction.printTrace();
+  }
 
-    schema =
+  @Test public void testCfgEarley() {
+    String w = "a a b b";
+    ParsingSchema schema =
+      CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
+  @Test public void testCfgLeftcorner() {
+    String w = "a a b b";
+    ParsingSchema schema =
       CfgToDeductionRulesConverter.CfgToLeftCornerRules(gen_cfgdedtest(), w);
-    if (deduction.doParse(schema, false)) {
-      System.out.println("CFG Leftcorner Parsing successful");
-    } else {
-      System.out.println("CFG Leftcorner Parsing fail");
-    }
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
+  }
 
+  @Test public void testTagCyk() throws ParseException {
     String w2 = "a c b";
-    schema =
+    ParsingSchema schema =
       TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "cyk");
-    if (deduction.doParse(schema, false)) {
-      System.out.println("TAG CYK Parsing successful");
-    } else {
-      System.out.println("TAG CYK Parsing fail");
-    }
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    schema =
-      TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "earley");
-    if (deduction.doParse(schema, false)) {
-      System.out.println("TAG Earley Parsing successful");
-    } else {
-      System.out.println("TAG Earley Parsing fail");
-    }
-    deduction.printTrace();
+  }
 
+  @Test public void testTagEarley() throws ParseException {
+    String w2 = "a c b";
+    ParsingSchema schema =
+      TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "earley");
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
+  @Test public void testSrcgEarley() throws ParseException {
     String w3 = "a a b b";
-    schema = LcfrsToDeductionRulesConverter.SrcgToParsingSchema(gensrcg(), w3,
-      "earley");
-    deduction = new Deduction();
-    if (deduction.doParse(schema, false)) {
-      System.out.println("Earley sRCG Parsing successful");
-    } else {
-      System.out.println("Earley sRCG Parsing fail");
-    }
-    String[][] data = deduction.printTrace();
-    ParsingTraceTable.displayTrace(data,
-      new String[] {"Id", "Item", "Rules", "Backpointers"});
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .SrcgToParsingSchema(gensrcg(), w3, "earley");
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
   }
 
 }

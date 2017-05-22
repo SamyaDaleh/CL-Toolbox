@@ -311,7 +311,8 @@ public class Cfg {
   }
 
   /** Returns an equivalent CFG without empty productions, only S -> ε is
-   * allowed in which case it is removed from all rhs'. */
+   * allowed in which case it is removed from all rhs'.
+   * May leaves non generating symbols behind. */
   public Cfg removeEmptyProductions() {
     Cfg cfg = new Cfg();
     cfg.terminals = this.terminals;

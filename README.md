@@ -25,7 +25,8 @@ Or if you want to tinker with the code, for me it worked like this:
 - clone
 - create new Java Project in Eclipse
 - copy files into Java Project
-- run test.src.common.CallAllTests.java as Java Application to verify that everything is working. You should see some success messages and parsing outputs.
+- add JUnit to your classpath/build path
+- run the JUnit tests in test.src to verify that everything is working. You should see some success messages and parsing outputs.
 
 
 ## Usage
