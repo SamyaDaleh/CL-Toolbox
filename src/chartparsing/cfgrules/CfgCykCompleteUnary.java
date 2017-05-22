@@ -8,18 +8,18 @@ import common.Item;
 import common.cfg.CfgItem;
 import common.cfg.CfgProductionRule;
 
-/** If two items match the rhs of a rule, get a new item that represents the
- * lhs. */
-public class CfgCykComplete implements DynamicDeductionRule {
+/** If the item matches the rhs of a chain rule, get a new item that represents
+ * the lhs. */
+public class CfgCykCompleteUnary implements DynamicDeductionRule {
 
   private List<Item> antecedences = new LinkedList<Item>();
   private List<Item> consequences = new LinkedList<Item>();
   private String name = null;
 
   private CfgProductionRule rule;
-  private int antneeded = 2;
+  private int antneeded = 1;
 
-  public CfgCykComplete(CfgProductionRule rule) {
+  public CfgCykCompleteUnary(CfgProductionRule rule) {
     this.rule = rule;
     this.name = "complete " + rule.toString();
   }
@@ -49,20 +49,8 @@ public class CfgCykComplete implements DynamicDeductionRule {
       String j1 = itemform1[2];
       int j1int = Integer.parseInt(j1);
 
-      String[] itemform2 = antecedences.get(1).getItemform();
-      String nt2 = itemform2[0];
-      String i2 = itemform2[1];
-      int i2int = Integer.parseInt(i2);
-      String j2 = itemform2[2];
-      int j2int = Integer.parseInt(j2);
-
-      if (nt1.equals(rule.getRhs()[0]) && nt2.equals(rule.getRhs()[1])
-        && i1int + j1int == i2int) {
-        this.consequences.add(new CfgItem(rule.getLhs(), i1int, j1int + j2int));
-      } else if (nt2.equals(rule.getRhs()[0]) && nt1.equals(rule.getRhs()[1])
-        && i2int + j2int == i1int) {
-        // the other way round
-        this.consequences.add(new CfgItem(rule.getLhs(), i2int, j2int + j1int));
+      if (nt1.equals(rule.getRhs()[0])) {
+        this.consequences.add(new CfgItem(rule.getLhs(), i1int, j1int));
       }
     }
     return this.consequences;
@@ -83,9 +71,9 @@ public class CfgCykComplete implements DynamicDeductionRule {
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append(
-      "[" + rule.getRhs()[0] + ",i,j]]");
+      "[" + rule.getRhs()[0] + ",1,l1], [" + rule.getRhs()[1] + ",i+l1,l2]");
     representation.append("\n______ \n");
-    representation.append("[" + rule.getLhs() + ",i,j]");
+    representation.append("[" + rule.getLhs() + ",i,l1+l2]");
     return representation.toString();
   }
 

@@ -65,7 +65,7 @@ public class Cfg {
   }
 
   /** Returns true if mayt is on of the terminal symbols. */
-  private boolean terminalsContain(String mayt) {
+  public boolean terminalsContain(String mayt) {
     for (String term : terminals) {
       if (term.equals(mayt))
         return true;

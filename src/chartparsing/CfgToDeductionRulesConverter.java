@@ -3,6 +3,7 @@ package chartparsing;
 import chartparsing.cfgrules.CfgBottomupReduce;
 import chartparsing.cfgrules.CfgBottomupShift;
 import chartparsing.cfgrules.CfgCykComplete;
+import chartparsing.cfgrules.CfgCykCompleteUnary;
 import chartparsing.cfgrules.CfgEarleyComplete;
 import chartparsing.cfgrules.CfgEarleyPredict;
 import chartparsing.cfgrules.CfgEarleyScan;
@@ -38,6 +39,8 @@ public class CfgToDeductionRulesConverter {
       return CfgToLeftCornerRules(cfg, w);
     case "cyk":
       return CfgToCykRules(cfg, w);
+    case "cyk-extended":
+      return CfgToCykExtendedRules(cfg, w);
     default:
       return null;
     }
@@ -157,21 +160,19 @@ public class CfgToDeductionRulesConverter {
     schema.addGoal(new CfgDollarItem("", "", ""));
     return schema;
   }
-  
-  /**
-   * Converts grammar into rules for CYK parsing for CNF
-   */
+
+  /** Converts grammar into rules for CYK parsing for CNF. */
   public static ParsingSchema CfgToCykRules(Cfg cfg, String w) {
-    if(!cfg.isInChomskyNormalForm()) {
+    if (!cfg.isInChomskyNormalForm()) {
       System.out.println("Grammar has to be in Chomsky Normal Form.");
       return null;
     }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    
+
     for (CfgProductionRule rule : cfg.getR()) {
       if (rule.getRhs().length == 1) {
-        for(int i = 0; i < wsplit.length; i++) {
+        for (int i = 0; i < wsplit.length; i++) {
           if (wsplit[i].equals(rule.getRhs()[0])) {
             StaticDeductionRule scan = new StaticDeductionRule();
             scan.addConsequence(new CfgItem(rule.getLhs(), i, 1));
@@ -184,7 +185,42 @@ public class CfgToDeductionRulesConverter {
         schema.addRule(complete);
       }
     }
-    schema.addGoal(new CfgItem(cfg.getStart_var(),0,wsplit.length));
+    schema.addGoal(new CfgItem(cfg.getStart_var(), 0, wsplit.length));
+    return schema;
+  }
+
+  /** Like CYK parsing, but with an additional deduction rule for chain rules,
+   * hence grammar needs only to be in Canonical Two Form. 
+   * Source: Giogio Satta, ESSLLI 2013*/
+  public static ParsingSchema CfgToCykExtendedRules(Cfg cfg, String w) {
+    if (!cfg.isInCanonicalTwoForm()) {
+      System.out.println("Grammar has to be in Canonical Two Form.");
+      return null;
+    }
+    String[] wsplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+
+    for (CfgProductionRule rule : cfg.getR()) {
+      if (rule.getRhs().length == 1) {
+        if (cfg.terminalsContain(rule.getRhs()[0])) {
+          for (int i = 0; i < wsplit.length; i++) {
+            if (wsplit[i].equals(rule.getRhs()[0])) {
+              StaticDeductionRule scan = new StaticDeductionRule();
+              scan.addConsequence(new CfgItem(rule.getLhs(), i, 1));
+              scan.setName("scan");
+              schema.addAxiom(scan);
+            }
+          }
+        } else {
+          DynamicDeductionRule complete = new CfgCykCompleteUnary(rule);
+          schema.addRule(complete);
+        }
+      } else {
+        DynamicDeductionRule complete = new CfgCykComplete(rule);
+        schema.addRule(complete);
+      }
+    }
+    schema.addGoal(new CfgItem(cfg.getStart_var(), 0, wsplit.length));
     return schema;
   }
 }
