@@ -26,5 +26,25 @@ public class CfgTest {
    } else{
      System.out.println("CFG binarization fail.");
    }
+   
+   Cfg cfgeps = new Cfg();
+   cfgeps.setTerminals(new String[]{"a", "b"});
+   cfgeps.setVars(new String[]{"S", "A", "B"});
+   cfgeps.setR(new String[][]{
+       { "A", "ε" },
+       { "S", "" },
+       { "S", "b A a S b" },
+       { "A", "a" },
+       { "A", "b B" },
+       { "B", "b" }
+   });
+   cfgeps.setStart_var("S");
+   
+   Cfg epsfree = cfgeps.removeEmptyProductions();
+   if (cfgeps.hasEpsilonProductions() && !epsfree.hasEpsilonProductions()) {
+     System.out.println("Cfg successfully got rid of epsilon productions.");
+   } else {
+     System.out.println("You messed up");
+   }
   }
 }

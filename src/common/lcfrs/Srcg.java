@@ -1,5 +1,6 @@
 package common.lcfrs;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,5 +68,57 @@ public class Srcg {
 
   public String[] getNonterminals() {
     return this.nonterminals;
+  }
+  
+  /**
+   * Returns true if each rhs contains at most two predicates.
+   */
+  public boolean isBinarized() {
+    boolean binarized = true;
+    for(Clause clause : this.clauses) {
+      if (clause.getRhs().size() > 2) {
+        binarized = false;
+      }
+    }
+    return binarized;
+  }
+  
+  /**
+   * Returns true if there is some rhs predicate that contains the empty string
+   * in one of its lhs arguments.
+   */
+  public boolean hasEpsilonProductions() {
+    boolean hasepsilon = false;
+    for(Clause clause : this.clauses) {
+      for (String[] argument : clause.getLhs().getSymbols()) {
+        if (argument.length == 1 && argument[0].equals("")){
+          hasepsilon = true;
+        }
+      }
+    }
+    return hasepsilon;
+  }
+  
+  /**
+   * Returns true if all variables in rhs predicates appear in the same order
+   * as in the lhs predicate.
+   */
+  public boolean isOrdered() {
+    for(Clause clause : this.clauses) {
+      for (Predicate rhspred : clause.getRhs()){
+        ArrayList<Integer> posinlhs = new ArrayList<Integer>();
+        for (String symbol : rhspred.getSymbolsAsPlainArray()) {
+          int[] indices = clause.getLhs().find(symbol);
+          int abspos = clause.getLhs().getAbsolutePos(indices[0], indices[1]);
+          posinlhs.add(abspos);
+        }
+        for (int i = 1; i < posinlhs.size(); i++){
+          if (!(posinlhs.get(i-1) < posinlhs.get(i))) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
   }
 }

@@ -82,11 +82,25 @@ public class Cfg {
     return false;
   }
 
-  /** Returns true if there is at least one rule with an empty right side. */
+  /** Returns true if there is at least one rule with an empty right side,
+   * except it's a start symbol rule and the start symbol never occurs on any
+   * rhs. */
   public boolean hasEpsilonProductions() {
     for (CfgProductionRule rule : this.getR()) {
-      if (rule.getLhs().length() == 0) {
-        return true;
+      if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
+        if (rule.getLhs().equals(this.start_var)) {
+
+          for (CfgProductionRule rule2 : this.getR()) {
+            String[] rhs = rule2.getRhs();
+            for (String symbol : rhs) {
+              if (symbol.equals(this.start_var)) {
+                return true;
+              }
+            }
+          }
+        } else {
+          return true;
+        }
       }
     }
     return false;
@@ -202,12 +216,10 @@ public class Cfg {
     }
     return true;
   }
-  
-  /**
-   * Returns an equivalent grammar without non-generating symbols. Call this before removing
-   * non-reachable symbols.
-   */
-  public Cfg removeNonGeneratingSymbols(){
+
+  /** Returns an equivalent grammar without non-generating symbols. Call this
+   * before removing non-reachable symbols. */
+  public Cfg removeNonGeneratingSymbols() {
     Cfg cfg = new Cfg();
     ArrayList<String> generating = new ArrayList<String>();
     boolean changed = true;
@@ -219,11 +231,11 @@ public class Cfg {
           break;
         }
       }
-      if(!ntseen && !generating.contains(rule.lhs)) {
+      if (!ntseen && !generating.contains(rule.lhs)) {
         generating.add(rule.lhs);
       }
     }
-    while(changed) {
+    while (changed) {
       changed = false;
       for (CfgProductionRule rule : this.getR()) {
         boolean notgeneratingseen = false;
@@ -256,25 +268,24 @@ public class Cfg {
     }
     return cfg;
   }
-  
-  /**
-   * Returns an equivalent grammar without non-reachable symbols. Before calling this, remove all non-generating symbols.
-   */
+
+  /** Returns an equivalent grammar without non-reachable symbols. Before
+   * calling this, remove all non-generating symbols. */
   public Cfg removeNonReachableSymbols() {
     Cfg cfg = new Cfg();
     ArrayList<String> reachable = new ArrayList<String>();
     reachable.add(this.start_var);
     boolean changed = true;
-    while(changed) {
-     changed = false;
-     for (CfgProductionRule rule : this.R) {
-       if (reachable.contains(rule.lhs)) {
-         for (String symbol : rule.rhs) {
-           reachable.add(symbol);
-           changed = true;
-         }
-       }
-     }
+    while (changed) {
+      changed = false;
+      for (CfgProductionRule rule : this.R) {
+        if (reachable.contains(rule.lhs)) {
+          for (String symbol : rule.rhs) {
+            reachable.add(symbol);
+            changed = true;
+          }
+        }
+      }
     }
     cfg.start_var = this.start_var;
     ArrayList<String> newvars = new ArrayList<String>();
@@ -296,6 +307,68 @@ public class Cfg {
         cfg.R.add(rule);
       }
     }
+    return cfg;
+  }
+
+  /** Returns an equivalent CFG without empty productions, only S -> ε is
+   * allowed in which case it is removed from all rhs'. */
+  public Cfg removeEmptyProductions() {
+    Cfg cfg = new Cfg();
+    cfg.terminals = this.terminals;
+    cfg.start_var = this.start_var;
+
+    ArrayList<String> newnt = new ArrayList<String>();
+    for (String oldnt : this.vars) {
+      newnt.add(oldnt);
+    }
+    for (CfgProductionRule rule : this.R) {
+      cfg.R.add(rule);
+    }
+    ArrayList<String> eliminateable = new ArrayList<String>();
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (CfgProductionRule rule : this.R) {
+        if (rule.rhs.length == 1 && rule.rhs[0].equals("")
+          && !eliminateable.contains(rule.lhs)) {
+          eliminateable.add(rule.lhs);
+          changed = true;
+        }
+      }
+    }
+    for (String nt : eliminateable) {
+      for (int j = 0; j < cfg.R.size(); j++) {
+        CfgProductionRule rule = cfg.R.get(j);
+        for (int i = 0; i < rule.rhs.length; i++) {
+          if (rule.rhs[i].equals(nt)) {
+            cfg.R.add(new CfgProductionRule(rule.getLhs(),
+              ArrayUtils.getSequenceWithoutIAsArray(rule.rhs, i)));
+          }
+        }
+      }
+      if (nt.equals(this.start_var)) {
+        int i = 1;
+        String newstart = "S" + String.valueOf(i);
+        while (newnt.contains(newstart)) {
+          i++;
+          newstart = "S" + String.valueOf(i);
+        }
+        cfg.R
+          .add(new CfgProductionRule(new String[] {newstart, this.start_var}));
+        cfg.R
+        .add(new CfgProductionRule(new String[] {newstart, ""}));
+        newnt.add(newstart);
+        cfg.start_var = newstart;
+      }
+    }
+    for (int i = cfg.R.size() - 1; i >= 0; i--) {
+      if (cfg.R.get(i).rhs.length == 1 && cfg.R.get(i).rhs[0].equals("")
+        && !cfg.R.get(i).lhs.equals(cfg.start_var)) {
+        cfg.R.remove(i);
+      }
+    }
+
+    cfg.vars = newnt.toArray(new String[newnt.size()]);
     return cfg;
   }
 

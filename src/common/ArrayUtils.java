@@ -2,6 +2,8 @@ package common;
 
 import java.util.ArrayList;
 
+import common.cfg.CfgProductionRule;
+
 /** Open collection of functions to work with arrays. */
 public class ArrayUtils {
 
@@ -53,7 +55,7 @@ public class ArrayUtils {
       if (representation.length() > 1) {
         representation.append(",");
       }
-      if (item[i].equals("")){
+      if (item[i].equals("")) {
         representation.append("ε");
       } else {
         representation.append(item[i]);
@@ -92,6 +94,18 @@ public class ArrayUtils {
       subseq.append(rhs[i]);
     }
     return subseq.toString().split(" ");
+  }
+
+  /** Returns a new array without the element at index i. */
+  public static String[] getSequenceWithoutIAsArray(String[] array, int i) {
+    ArrayList<String> newarray = new ArrayList<String>();
+    for (int j = 0; j < array.length; j++) {
+      if (j != i) {
+        newarray.add(array[j]);
+      }
+
+    }
+    return newarray.toArray(new String[newarray.size()]);
   }
 
 }

@@ -21,7 +21,11 @@ public class Predicate {
       String[] subgroups = rightover.split(",");
       ArrayList<String[]> subgroupcol = new ArrayList<String[]>();
       for (String subgroup : subgroups) {
+        if (subgroup.trim().equals("ε")) {
+          subgroupcol.add(new String[]{""});
+        } else {
         subgroupcol.add(subgroup.trim().split(" "));
+        }
       }
       symbols = subgroupcol.toArray(new String[subgroupcol.size()][]);
     }
@@ -34,8 +38,12 @@ public class Predicate {
     for (int i = 0; i < symbols.length; i++) {
       if (i > 0)
         repr.append(",");
+      if (symbols[i].length == 1 && symbols[i][0] .equals("")) {
+        repr.append("ε");
+      } else {
       repr.append(
         ArrayUtils.getSubSequenceAsString(symbols[i], 0, symbols[i].length));
+      }
     }
     repr.append(')');
     return repr.toString();

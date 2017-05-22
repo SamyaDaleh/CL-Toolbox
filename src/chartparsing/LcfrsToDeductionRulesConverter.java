@@ -30,7 +30,14 @@ public class LcfrsToDeductionRulesConverter {
   }
 
   private static ParsingSchema LcfrsToEarleyRules(Srcg srcg, String w) {
-    // TODO if not ordered or not epsilon free, return note and null
+    if (srcg.hasEpsilonProductions()) {
+      System.out.println("sRCG is not allowed to have epsilon productions for this Earley algorithm.");
+      return null;
+    }
+    if (srcg.hasEpsilonProductions()) {
+      System.out.println("sRCG must be ordered for this Earley algorithm.");
+      return null;
+    }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 

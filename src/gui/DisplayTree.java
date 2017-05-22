@@ -11,6 +11,8 @@ import common.tag.Tree;
 import common.tag.Vertex;
 
 public class DisplayTree extends JFrame {
+  
+  private static final long serialVersionUID = -9123591819196303915L;
   Tree tree;
 
   public DisplayTree(String treestring) throws ParseException {
@@ -20,7 +22,7 @@ public class DisplayTree extends JFrame {
   }
 
   public void paint(Graphics g) {
-    Map<String, Integer> nodesdrawn = new HashMap<String, Integer>();
+    Map<String, Integer[]> nodesdrawn = new HashMap<String, Integer[]>();
     int height = tree.getHeight();
     int drawheight = 60;
     int drawwidth = 0;
@@ -34,11 +36,11 @@ public class DisplayTree extends JFrame {
               + (tree.isInNA(p.getGornaddress()) ? "_NA" : "")
               + (tree.getFoot().equals(p) ? "*" : "");
           g.drawString(label, drawwidth, drawheight);
-          nodesdrawn.put(p.getGornaddress(), drawwidth);
+          nodesdrawn.put(p.getGornaddress(), new Integer[]{drawwidth, drawheight});
           if (i > 1) {
-            int xparent = nodesdrawn.get(p.getGornAddressOfParent());
-            g.drawLine(drawwidth, drawheight - 10, xparent,
-              drawheight - 400 / height + 10);
+            Integer[] xyparent = nodesdrawn.get(p.getGornAddressOfParent());
+            g.drawLine(drawwidth, drawheight - 10, xyparent[0],
+              xyparent[1] + 10);
           }
           drawwidth += 400 / width;
         }
