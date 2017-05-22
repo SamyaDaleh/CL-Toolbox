@@ -86,6 +86,22 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
+  @Test public void testCfgCyk() {
+    Cfg cfg = new Cfg();
+
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setVars(new String[] {"S", "A", "B", "X1"});
+    cfg.setR(new String[][] {{"S", "A X1"}, {"S", "A B"}, {"A", "a"},
+      {"B", "b"}, {"X1", "S B"}});
+    cfg.setStart_var("S");
+
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter.CfgToCykRules(cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
   @Test public void testTagCyk() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =

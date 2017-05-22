@@ -121,8 +121,6 @@ public class Cfg {
         }
       } else if (!varsContain(rule.rhs[0]) || !varsContain(rule.rhs[1])) {
         return false;
-      } else {
-        return false;
       }
     }
     return true;
