@@ -16,7 +16,7 @@ public class Predicate {
     this.nonterminal = predicate.substring(0, lbrack).trim();
     String rightover = predicate.substring(lbrack + 1, rbrack).trim();
     if (rightover.length() == 0 || rightover.equals("ε")) {
-      symbols = new String[][] {};
+      symbols = new String[][] {new String[]{""}};
     } else {
       String[] subgroups = rightover.split(",");
       ArrayList<String[]> subgroupcol = new ArrayList<String[]>();

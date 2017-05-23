@@ -73,6 +73,15 @@ public class Cfg {
     return false;
   }
 
+  /** Returns true if maynt is on of the nonterminal symbols. */
+  public boolean nonterminalsContain(String maynt) {
+    for (String nt : vars) {
+      if (nt.equals(maynt))
+        return true;
+    }
+    return false;
+  }
+
   /** Returns true if mayvar is one of the nonterminal symbols. */
   private boolean varsContain(String mayvar) {
     for (String var : vars) {
@@ -164,7 +173,7 @@ public class Cfg {
   }
 
   /** Returns an equivalent CFG where all rhs' have at most length 2. */
-  Cfg binarize() {
+  public Cfg binarize() {
     Cfg newCfg = new Cfg();
     newCfg.setTerminals(this.terminals);
     newCfg.setStart_var(this.start_var);

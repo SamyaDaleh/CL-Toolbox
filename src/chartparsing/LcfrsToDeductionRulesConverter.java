@@ -29,7 +29,7 @@ public class LcfrsToDeductionRulesConverter {
     }
   }
 
-  private static ParsingSchema LcfrsToEarleyRules(Srcg srcg, String w) {
+  static ParsingSchema LcfrsToEarleyRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println("sRCG is not allowed to have epsilon productions for this Earley algorithm.");
       return null;

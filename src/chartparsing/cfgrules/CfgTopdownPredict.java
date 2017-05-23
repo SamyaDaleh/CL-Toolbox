@@ -49,8 +49,8 @@ public class CfgTopdownPredict implements DynamicDeductionRule {
       String[] stacksplit = stack.split(" ");
       int i = Integer.parseInt(itemform[1]);
       if (stacksplit[0].equals(rule.getLhs())) {
-        // TODO check if epsilon is like rhs length 0 or 1 with entry ""
-        if (rule.getRhs().length == 0) {
+        // TODO why is there a handle for epsilon productions if TopDown can't be called if CFG has one? Recheck
+        if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
           consequences.add(new CfgItem(
             ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
             i));

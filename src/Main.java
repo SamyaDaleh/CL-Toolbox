@@ -1,11 +1,9 @@
 import java.io.IOException;
 import java.text.ParseException;
 
-import chartparsing.CfgToDeductionRulesConverter;
 import chartparsing.Deduction;
-import chartparsing.LcfrsToDeductionRulesConverter;
+import chartparsing.GrammarToDeductionRulesConverter;
 import chartparsing.ParsingSchema;
-import chartparsing.TagToDeductionRulesConverter;
 import common.GrammarParser;
 import common.cfg.Cfg;
 import common.lcfrs.Srcg;
@@ -29,6 +27,9 @@ public class Main {
         "Optional parameters can be: --sucess : prints a trace only of items "
           + "that lead to a goal item.");
       System.out.println(
+        "Optional parameters can be: --please : if a grammar doesn't fit an " 
+      + "algorithm, ask me to convert it.");
+      System.out.println(
         "example: ..\\resources\\grammars\\anbncfg \"a a b b\" cfg-topdown");
       return;
     }
@@ -36,71 +37,31 @@ public class Main {
     String w = args[1];
     String algorithm = args[2];
     boolean success = false;
+    boolean please = false;
     for (int i = 3; i < args.length; i++) {
       if (args[i].equals("--success")) {
         success = true;
       }
+      if (args[i].equals("--please")) {
+        please = true;
+      }
     }
     ParsingSchema schema = null;
+    GrammarToDeductionRulesConverter gdrc = new GrammarToDeductionRulesConverter();
+    if (please) {
+      gdrc.setPlease(true);
+    }
     if (grammarfile.endsWith(".cfg")) {
       Cfg cfg = GrammarParser.parseCfgFile(grammarfile);
-      switch (algorithm) {
-      case "cfg-topdown":
-        schema =
-          CfgToDeductionRulesConverter.CfgToParsingSchema(cfg, w, "topdown");
-        break;
-      case "cfg-shiftreduce":
-        schema = CfgToDeductionRulesConverter.CfgToParsingSchema(cfg, w,
-          "shiftreduce");
-        break;
-      case "cfg-earley":
-        schema =
-          CfgToDeductionRulesConverter.CfgToParsingSchema(cfg, w, "earley");
-        break;
-      case "cfg-leftcorner":
-        schema =
-          CfgToDeductionRulesConverter.CfgToParsingSchema(cfg, w, "leftcorner");
-        break;
-      case "tag-cyk":
-        Tag tag = new Tag(cfg);
-        schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "cyk");
-        break;
-      default:
-        System.out.println(
-          "I did not understand. Please check spelling of parsing algorithm.");
-        return;
-      }
+      schema = gdrc.Convert(cfg,w, algorithm);
     }
     if (grammarfile.endsWith(".tag")) {
       Tag tag = GrammarParser.parseTagFile(grammarfile);
-      switch (algorithm) {
-      case "tag-cyk":
-        schema = TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "cyk");
-        break;
-      case "tag-earley":
-        schema =
-          TagToDeductionRulesConverter.TagToParsingSchema(tag, w, "earley");
-        break;
-      default:
-        System.out.println(
-          "I did not understand. Please check spelling of parsing algorithm "
-            + "and if algorithm is appropriate for grammar.");
-        return;
-      }
+      schema = gdrc.Convert(tag ,w, algorithm);
     }
     if (grammarfile.endsWith(".srcg")) {
       Srcg srcg = GrammarParser.parseSrcgFile(grammarfile);
-      switch (algorithm) {
-      case "srcg-earley":
-        schema =
-          LcfrsToDeductionRulesConverter.SrcgToParsingSchema(srcg, w, "earley");
-        break;
-      default:
-        System.out.println(
-          "I did not understand. Please check spelling of parsing algorithm "
-            + "and if algorithm is appropriate for grammar.");
-        return;
-      }
+      schema = gdrc.Convert(srcg ,w, algorithm);
     }
     Deduction deduction = new Deduction();
     System.out.println(deduction.doParse(schema, success));
