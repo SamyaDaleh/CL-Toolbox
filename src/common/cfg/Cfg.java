@@ -438,6 +438,62 @@ public class Cfg {
     return false;
   }
 
+  /** Returns a new grammar where in all rhs > 1 terminals are replaced by
+   * nonterminals and new rules A -> a are added. */
+  public Cfg replaceTerminals() {
+    Cfg cfg = new Cfg();
+    cfg.start_var = this.start_var;
+    cfg.terminals = this.terminals;
+
+    ArrayList<String[]> newtrules = new ArrayList<String[]>();
+    ArrayList<String> newnt = new ArrayList<String>();
+
+    for (String nt : this.vars) {
+      newnt.add(nt);
+    }
+    int i = 1;
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs.length == 1) {
+        cfg.R.add(rule);
+      } else {
+        ArrayList<String> newrhs = new ArrayList<String>();
+        for (String sym : rule.rhs) {
+          if (nonterminalsContain(sym)) {
+            newrhs.add(sym);
+          } else {
+            String newlhs = null;
+            for (String[] tryrule : newtrules) {
+              if (tryrule[1].equals(sym)) {
+                newlhs = tryrule[0];
+              }
+            }
+            boolean isnew = false;
+            if (newlhs == null) {
+              newlhs = "Y" + String.valueOf(i);
+              i++;
+              isnew = true;
+              cfg.R.add(new CfgProductionRule(newlhs, new String[] {sym}));
+            }
+            while (this.nonterminalsContain(newlhs)) {
+              newlhs = "Y" + String.valueOf(i);
+              i++;
+            }
+            if (isnew) {
+              newnt.add(newlhs);
+              newtrules.add(new String[] {newlhs, sym});
+            }
+            newrhs.add(newlhs);
+          }
+        }
+        cfg.R.add(new CfgProductionRule(rule.lhs,
+          newrhs.toArray(new String[newrhs.size()])));
+      }
+    }
+
+    cfg.vars = newnt.toArray(new String[newnt.size()]);
+    return cfg;
+  }
+
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("G = <N, T, S, P>\n");
