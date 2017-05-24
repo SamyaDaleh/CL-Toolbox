@@ -318,8 +318,8 @@ public class Cfg {
   }
 
   /** Returns an equivalent CFG without empty productions, only S -> ε is
-   * allowed in which case it is removed from all rhs'.
-   * May leaves non generating symbols behind. */
+   * allowed in which case it is removed from all rhs'. May leaves non
+   * generating symbols behind. */
   public Cfg removeEmptyProductions() {
     Cfg cfg = new Cfg();
     cfg.terminals = this.terminals;
@@ -363,8 +363,7 @@ public class Cfg {
         }
         cfg.R
           .add(new CfgProductionRule(new String[] {newstart, this.start_var}));
-        cfg.R
-        .add(new CfgProductionRule(new String[] {newstart, ""}));
+        cfg.R.add(new CfgProductionRule(new String[] {newstart, ""}));
         newnt.add(newstart);
         cfg.start_var = newstart;
       }
@@ -378,6 +377,65 @@ public class Cfg {
 
     cfg.vars = newnt.toArray(new String[newnt.size()]);
     return cfg;
+  }
+
+  /** Returns an equivalent grammar without chain rules, that are rules of the
+   * form A -> B. Remove epsilon productions beforehand. */
+  public Cfg removeChainRules() {
+    Cfg cfg = new Cfg();
+    cfg.terminals = this.terminals;
+    cfg.start_var = this.start_var;
+    cfg.vars = this.vars;
+    for (CfgProductionRule rule : this.R) {
+      if (!(rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0]))) {
+        cfg.R.add(rule);
+      }
+    }
+    ArrayList<String[]> unitpairs = new ArrayList<String[]>();
+    for (String nt : this.vars) {
+      unitpairs.add(new String[] {nt, nt});
+    }
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (CfgProductionRule rule : this.R) {
+        if (rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0])) {
+          boolean found = false;
+          for (String[] unitpair : unitpairs) {
+            if (unitpair[0].equals(rule.lhs)
+              && unitpair[1].equals(rule.rhs[0])) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            unitpairs.add(new String[] {rule.lhs, rule.rhs[0]});
+            changed = true;
+          }
+        }
+      }
+    }
+
+    for (String[] unitpair : unitpairs) {
+      for (CfgProductionRule rule : this.R) {
+        if (!(rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0]))
+          && rule.lhs.equals(unitpair[1])) {
+          cfg.R.add(new CfgProductionRule(unitpair[0], rule.rhs));
+        }
+      }
+    }
+
+    return cfg;
+  }
+
+  /** Returns true if grammar has rules of the form A -> B. */
+  public boolean hasChainRules() {
+    for (CfgProductionRule rule : this.R) {
+      if (rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override public String toString() {

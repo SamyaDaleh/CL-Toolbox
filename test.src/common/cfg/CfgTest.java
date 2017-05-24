@@ -36,4 +36,20 @@ public class CfgTest {
 
     assertTrue(!epsfree.hasEpsilonProductions());
   }
+  
+  @Test public void testRemoveChainRules(){
+
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
+    cfg.setVars(new String[] {"I", "F", "T", "E"});
+    cfg.setR(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"},
+      {"I", "I b"}, {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"}, 
+      {"T", "F"}, {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.setStart_var("E");
+    assertTrue(cfg.hasChainRules());
+
+    Cfg chainfree = cfg.removeChainRules();
+
+    assertTrue(!chainfree.hasChainRules());
+  }
 }

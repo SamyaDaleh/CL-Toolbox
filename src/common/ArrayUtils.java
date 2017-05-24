@@ -2,8 +2,6 @@ package common;
 
 import java.util.ArrayList;
 
-import common.cfg.CfgProductionRule;
-
 /** Open collection of functions to work with arrays. */
 public class ArrayUtils {
 

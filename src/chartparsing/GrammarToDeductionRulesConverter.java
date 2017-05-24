@@ -111,7 +111,7 @@ public class GrammarToDeductionRulesConverter {
         }
       } else {
         Srcg srcg = new Srcg(cfg);
-         return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+        return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
       }
 
     default:
@@ -165,25 +165,9 @@ public class GrammarToDeductionRulesConverter {
     case "tag-earley":
       return TagToDeductionRulesConverter.TagToEarleyRules(tag, w);
     case "srcg-earley":
-      if (!tag.isBinarized()) {
-        if (please) {
-          System.out.println("Not implemented yet.");
-          return null;
-          // TODO
-          // Srcg srcg = new Srcg(cfg.binarize());
-          // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
-        } else {
-          System.out.println(
-            "TAG must be binarized to convert it into a sRCG where CYK parsing is possible.");
-          return null;
-        }
-      } else {
-        System.out.println("Not implemented yet.");
-        return null;
-        // TODO
-        // Srcg srcg = new Srcg(cfg);
-        // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
-      }
+      System.out
+        .println("I can't convert a tree language into a string language.");
+      return null;
 
     default:
       System.out.println(
