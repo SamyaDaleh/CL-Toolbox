@@ -51,12 +51,10 @@ public class GrammarToDeductionRulesConverter {
     case "cfg-cyk":
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
-          System.out.println("Not implemented yet.");
-          return null;
-          // TODO CNF
-          // return CfgToDeductionRulesConverter
-          // .CfgToCykRules(cfg.removeEmptyProductions().removeNonGeneratingSymbols().removeNonReachableSymbols(),
-          // w);
+          return CfgToDeductionRulesConverter
+            .CfgToCykRules(cfg.removeEmptyProductions()
+              .removeNonGeneratingSymbols().removeNonReachableSymbols()
+              .binarize().replaceTerminals().removeChainRules(), w);
         } else {
           System.out
             .println("CFG must be in Chomsky Normal Form for CYK parsing.");
@@ -68,12 +66,10 @@ public class GrammarToDeductionRulesConverter {
     case "cfg-cyk-extended":
       if (!cfg.isInCanonicalTwoForm()) {
         if (please) {
-          System.out.println("Not implemented yet.");
-          return null;
-          // TODO C2F
-          // return CfgToDeductionRulesConverter
-          // .CfgToCykRules(cfg.removeEmptyProductions().removeNonGeneratingSymbols().removeNonReachableSymbols(),
-          // w);
+          return CfgToDeductionRulesConverter.CfgToCykRules(
+            cfg.removeEmptyProductions().removeNonGeneratingSymbols()
+              .removeNonReachableSymbols().binarize().replaceTerminals(),
+            w);
         } else {
           System.out.println(
             "CFG must be in Canonical 2 Form for extended CYK parsing.");

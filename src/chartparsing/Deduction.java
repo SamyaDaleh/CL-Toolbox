@@ -148,6 +148,8 @@ public class Deduction {
     int itemsneeded = rule.getAntecedencesNeeded();
     rule.clearItems();
     // TODO how can I make the depth dynamic?
+    // By a recursive call to a function that counts down the number of items
+    // it shall append to a list
     List<Item> newitems;
     if (itemsneeded == 1) {
       rule.addAntecedence(item);

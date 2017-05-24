@@ -420,7 +420,24 @@ public class Cfg {
       for (CfgProductionRule rule : this.R) {
         if (!(rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0]))
           && rule.lhs.equals(unitpair[1])) {
-          cfg.R.add(new CfgProductionRule(unitpair[0], rule.rhs));
+          boolean alreadythere = false;
+          for (CfgProductionRule rule2 : cfg.getR()) {
+            if (rule.lhs.equals(unitpair[0])
+              && rule2.rhs.length == rule.rhs.length) {
+              boolean alright = false;
+              for (int i = 0; i < rule.rhs.length; i++) {
+                if (!rule.rhs[i].equals(rule2.rhs[i])) {
+                  alright = true;
+                }
+              }
+              if (!alright) {
+                alreadythere = true;
+              }
+            }
+          }
+          if (!alreadythere) {
+            cfg.R.add(new CfgProductionRule(unitpair[0], rule.rhs));
+          }
         }
       }
     }
@@ -509,5 +526,51 @@ public class Cfg {
     }
     builder.append("}\n");
     return builder.toString();
+  }
+
+  /** Removes left recursion. S -> S is ignored. S -> S a | b are replaced by S
+   * -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar and maybe
+   * chain rules. */
+  public Cfg removeLeftRecursion() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(this.terminals);
+    cfg.setStart_var(this.start_var);
+    ArrayList<String> newnts = new ArrayList<String>();
+    for (String nt : this.vars) {
+      newnts.add(nt);
+    }
+    for (String nt : this.vars) {
+      int i = 1;
+      String newnt = nt + String.valueOf(i);
+      i++;
+      while (newnts.contains(newnt)) {
+        newnt = nt + String.valueOf(i);
+        i++;
+      }
+      newnts.add(newnt);
+      cfg.R.add(new CfgProductionRule(newnt, new String[] {""}));
+
+      for (CfgProductionRule rule : this.R) {
+        if (rule.lhs.equals(nt)) {
+          if (rule.rhs[0].equals(nt) && rule.rhs.length > 1) {
+            String[] newrhs = new String[rule.rhs.length];
+            System.arraycopy(rule.rhs, 1, newrhs, 0, rule.rhs.length - 1);
+            newrhs[newrhs.length - 1] = newnt;
+            cfg.R.add(new CfgProductionRule(nt, newrhs));
+          } else if (!rule.rhs[0].equals(nt)) {
+            if (rule.rhs[0].equals("")) {
+              cfg.R.add(new CfgProductionRule(nt, new String[] {newnt}));
+            } else {
+              String[] newrhs = new String[rule.rhs.length + 1];
+              System.arraycopy(rule.rhs, 0, newrhs, 0, rule.rhs.length);
+              newrhs[newrhs.length - 1] = newnt;
+              cfg.R.add(new CfgProductionRule(nt, newrhs));
+            }
+          }
+        }
+      }
+    }
+    cfg.setVars(newnts.toArray(new String[newnts.size()]));
+    return cfg;
   }
 }

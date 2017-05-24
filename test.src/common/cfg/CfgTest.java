@@ -46,7 +46,7 @@ public class CfgTest {
     assertTrue(!chainfree.hasChainRules());
   }
 
-  @Test public void replaceTerminals() {
+  @Test public void testReplaceTerminals() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
     cfg.setVars(new String[] {"I", "F", "T", "E"});
@@ -55,14 +55,53 @@ public class CfgTest {
       {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
     cfg.setStart_var("E");
     Cfg treplaced = cfg.replaceTerminals();
+    assertEquals("G = <N, T, S, P>\n"
+      + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
+      + "T = {a, b, 0, 1, (, ), *, +}\n" + "S = E\n"
+      + "P = {I -> a, I -> b, Y1 -> a, I -> I Y1, Y2 -> b, I -> I Y2, "
+      + "Y3 -> 0, I -> I Y3, Y4 -> 1, I -> I Y4, F -> I, Y5 -> (, Y6 -> ), "
+      + "F -> Y5 E Y6, T -> F, Y7 -> *, T -> T Y7 F, E -> T, Y8 -> +, "
+      + "E -> E Y8 T}\n", treplaced.toString());
+  }
+
+  @Test public void testToCnf() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
+    cfg.setVars(new String[] {"I", "F", "T", "E"});
+    cfg.setR(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"}, {"I", "I b"},
+      {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"}, {"T", "F"},
+      {"T", "T"}, {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.setStart_var("E");
+    assertTrue(cfg.removeEmptyProductions().removeNonGeneratingSymbols()
+      .removeNonReachableSymbols().binarize().replaceTerminals()
+      .removeChainRules().isInChomskyNormalForm());
+  }
+
+  @Test public void testToC2f() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
+    cfg.setVars(new String[] {"I", "F", "T", "E"});
+    cfg.setR(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"}, {"I", "I b"},
+      {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"}, {"T", "F"},
+      {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.setStart_var("E");
+    assertTrue(cfg.removeEmptyProductions().removeNonGeneratingSymbols()
+      .removeNonReachableSymbols().binarize().replaceTerminals()
+      .isInCanonicalTwoForm());
+  }
+
+  @Test public void testremoveLeftRecursion() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b", "c", "d"});
+    cfg.setVars(new String[] {"S"});
+    cfg.setR(new String[][] {{"S", "S"}, {"S", "S a"}, {"S", "S b"}, {"S", "c"},
+      {"S", "d"}});
+    cfg.setStart_var("S");
+    Cfg cfgwlr = cfg.removeLeftRecursion();
     assertEquals(
-      "G = <N, T, S, P>\n"
-        + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
-        + "T = {a, b, 0, 1, (, ), *, +}\n" + "S = E\n"
-        + "P = {I -> a, I -> b, Y1 -> a, I -> I Y1, Y2 -> b, I -> I Y2, " 
-        + "Y3 -> 0, I -> I Y3, Y4 -> 1, I -> I Y4, F -> I, Y5 -> (, Y6 -> ), " 
-        + "F -> Y5 E Y6, T -> F, Y7 -> *, T -> T Y7 F, E -> T, Y8 -> +, " 
-        + "E -> E Y8 T}\n",
-      treplaced.toString());
+      "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
+        + "P = {S1 -> ε, S -> a S1, S -> b S1, S -> c S1, S -> d S1}\n",
+      cfgwlr.toString());
+
   }
 }
