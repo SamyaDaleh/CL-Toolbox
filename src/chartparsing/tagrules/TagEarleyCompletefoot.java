@@ -1,41 +1,24 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
 /** If there is an auxiliary tree and another tree where the aux tree can adjoin
  * into, fill the foot of the aux tree with the span of the other tree. */
-public class TagEarleyCompletefoot implements DynamicDeductionRule {
+public class TagEarleyCompletefoot extends AbstractDynamicDeductionRule {
 
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "complete foot";
-
-  private Tag tag = null;
-
-  private int antneeded = 2;
+  private Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
   public TagEarleyCompletefoot(Tag tag) {
     this.tag = tag;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "complete foot";
+    this.antneeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
@@ -74,19 +57,6 @@ public class TagEarleyCompletefoot implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

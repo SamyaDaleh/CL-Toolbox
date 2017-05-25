@@ -1,39 +1,22 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagCykItem;
 
 /** Goes from bottom into top position without adjoining. */
-public class TagCykNulladjoin implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "null-adjoin";
-
-  private Tag tag = null;
-
-  private int antneeded = 1;
+public class TagCykNulladjoin extends AbstractDynamicDeductionRule {
+  
+  private Tag tag;
 
   /** Constructor needs the grammar to check if adjoins is obligatory. */
   public TagCykNulladjoin(Tag tag) {
     this.tag = tag;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "null-adjoin";
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -65,19 +48,6 @@ public class TagCykNulladjoin implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

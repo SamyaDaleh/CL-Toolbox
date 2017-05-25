@@ -1,25 +1,18 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
 /** If a potential initial tree is complete, substitute it if possible. */
-public class TagEarleySubstitute implements DynamicDeductionRule {
+public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
 
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
-
-  private String outtreename = null;
-  private String outnode = null;
-  private Tag tag = null;
-
-  private int antneeded = 1;
+  private String outtreename;
+  private String outnode;
+  private Tag tag;
 
   /** Constructor takes a tree and a node where maybe is, was, will be adjoined,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -28,18 +21,7 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
     this.outnode = outnode;
     this.tag = tag;
     this.name = "substitute in " + outtreename + "(" + outnode + ")";
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -61,19 +43,6 @@ public class TagEarleySubstitute implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

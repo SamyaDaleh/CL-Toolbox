@@ -1,41 +1,24 @@
 package chartparsing.lcfrsrules;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.lcfrs.Clause;
 import common.lcfrs.SrcgEarleyActiveItem;
 
 /** Whenever the next symbol after the dot is the next terminal in the input, we
  * can scan it. */
-public class SrcgEarleyScan implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "Scan";
+public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
 
   private String[] wsplit;
-
-  private int antneeded = 1;
 
   /** Remembers the input string to compare it with the next symbol to scan. */
   public SrcgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "Scan";
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -67,19 +50,6 @@ public class SrcgEarleyScan implements DynamicDeductionRule {
       }
     }
     return this.consequences;
-  }
-
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
-  @Override public void clearItems() {
-    this.antecedences = new LinkedList<Item>();
-    this.consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

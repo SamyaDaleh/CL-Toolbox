@@ -1,9 +1,8 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDottedItem;
@@ -11,24 +10,11 @@ import common.cfg.CfgDottedItem;
 /** If in one item a dot is before a nonterminal and the other item is a rule
  * with that nonterminal as lhs and the dot at the end, move the dot over the
  * nonterminal. */
-public class CfgEarleyComplete implements DynamicDeductionRule {
+public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
 
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "complete";
-
-  private int antneeded = 2;
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+  public CfgEarleyComplete(){
+    this.name = "complete";
+    this.antneeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
@@ -90,25 +76,12 @@ public class CfgEarleyComplete implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[A -> α •B β,i,j] [B -> ɣ •,j,k]");
     representation.append("\n______\n");
     representation.append("[A -> α B •β,i,k]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }

@@ -1,39 +1,22 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.cfg.CfgItem;
 import common.cfg.CfgProductionRule;
 
 /** If the item matches the rhs of a chain rule, get a new item that represents
  * the lhs. */
-public class CfgCykCompleteUnary implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
+public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
 
   private CfgProductionRule rule;
-  private int antneeded = 1;
 
   public CfgCykCompleteUnary(CfgProductionRule rule) {
     this.rule = rule;
     this.name = "complete " + rule.toString();
-  }
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -52,14 +35,6 @@ public class CfgCykCompleteUnary implements DynamicDeductionRule {
     return this.consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append(
@@ -67,10 +42,5 @@ public class CfgCykCompleteUnary implements DynamicDeductionRule {
     representation.append("\n______ \n");
     representation.append("[" + rule.getLhs() + ",i,j]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 }

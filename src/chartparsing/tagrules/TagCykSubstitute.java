@@ -1,26 +1,19 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagCykItem;
 
 /** Tries to substitute a given initial tree into the node of the tree it
  * remembers. */
-public class TagCykSubstitute implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
-
-  private Tag tag = null;
-  private String nodegorn = null;
-  private String treename = null;
-
-  private int antneeded = 1;
+public class TagCykSubstitute extends AbstractDynamicDeductionRule {
+  
+  private Tag tag;
+  private String nodegorn;
+  private String treename;
 
   /** Remembers tree and node it can substitute in. */
   public TagCykSubstitute(String treename, String nodegorn, Tag tag) {
@@ -28,18 +21,7 @@ public class TagCykSubstitute implements DynamicDeductionRule {
     this.treename = treename;
     this.nodegorn = nodegorn;
     this.name = "substitute in " + treename + "(" + nodegorn + ")";
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -55,19 +37,6 @@ public class TagCykSubstitute implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

@@ -1,39 +1,23 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
 /** If a node has a child, move to the fist child. */
-public class TagEarleyMovedown implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "move down";
-  private Tag tag = null;
-
-  private int antneeded = 1;
+public class TagEarleyMovedown extends AbstractDynamicDeductionRule {
+  
+  private Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
   public TagEarleyMovedown(Tag tag) {
     this.tag = tag;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "move down";
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -61,19 +45,6 @@ public class TagEarleyMovedown implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

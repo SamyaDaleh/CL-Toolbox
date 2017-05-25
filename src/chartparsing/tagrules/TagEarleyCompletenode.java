@@ -1,41 +1,24 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
 /** If you have one item in a node la and another matching in the same node in
  * rb, you can put both together. */
-public class TagEarleyCompletenode implements DynamicDeductionRule {
+public class TagEarleyCompletenode extends AbstractDynamicDeductionRule {
 
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "complete node";
-
-  private Tag tag = null;
-
-  private int antneeded = 2;
+  private Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
   public TagEarleyCompletenode(Tag tag) {
     this.tag = tag;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "complete node";
+    this.antneeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
@@ -79,19 +62,6 @@ public class TagEarleyCompletenode implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

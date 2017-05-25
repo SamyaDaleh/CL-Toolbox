@@ -1,9 +1,8 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagEarleyItem;
@@ -11,16 +10,10 @@ import common.tag.Vertex;
 
 /** If in a node is substitution possible, predict the new tree that can be
  * substituted there. */
-public class TagEarleyPredictsubst implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
-
-  private String initreename = null;
-  private Tag tag = null;
-
-  private int antneeded = 1;
+public class TagEarleyPredictsubst extends AbstractDynamicDeductionRule {
+  
+  private String initreename;
+  private Tag tag;
 
   /** Constructor takes an auxiliary tree for the items the rule shall derive,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -28,18 +21,7 @@ public class TagEarleyPredictsubst implements DynamicDeductionRule {
     this.initreename = auxtreename;
     this.tag = tag;
     this.name = "predict substitution of " + auxtreename;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -62,19 +44,6 @@ public class TagEarleyPredictsubst implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

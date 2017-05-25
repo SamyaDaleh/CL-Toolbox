@@ -1,39 +1,22 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDottedItem;
 
 /** The scan rule for topdown removes a terminal if it is the next input
  * symbol. */
-public class CfgEarleyScan implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "scan";
+public class CfgEarleyScan extends AbstractDynamicDeductionRule {
 
   private String[] wsplit;
 
-  private int antneeded = 1;
-
   public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "scan";
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -62,25 +45,12 @@ public class CfgEarleyScan implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[A -> α •a β,i,j]");
     representation.append("\n______ w_j = a\n");
     representation.append("[A -> α a • β,i,j+1]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }

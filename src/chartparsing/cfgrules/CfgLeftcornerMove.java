@@ -1,39 +1,22 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDollarItem;
 
 /** If the end of a rhs is encountered, move the topmost nonterminal from the
  * stack of lhs to the stack of completed items. */
-public class CfgLeftcornerMove implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "move";
+public class CfgLeftcornerMove extends AbstractDynamicDeductionRule {
 
   private String[] nonterminals;
 
-  private int antneeded = 1;
-
   public CfgLeftcornerMove(String[] nonterminals) {
     this.nonterminals = nonterminals;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "move";
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -67,25 +50,12 @@ public class CfgLeftcornerMove implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[α,$β,Aɣ]");
     representation.append("\n______ A ∈ N\n");
     representation.append("[Aα,β,ɣ]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }

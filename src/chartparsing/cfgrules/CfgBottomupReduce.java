@@ -1,9 +1,8 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgItem;
@@ -11,35 +10,18 @@ import common.cfg.CfgProductionRule;
 
 /** If the top o the stack matches the rhs of a rule, replace it with the
  * lhs. */
-public class CfgBottomupReduce implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
+public class CfgBottomupReduce extends AbstractDynamicDeductionRule{
 
   private CfgProductionRule rule;
 
-  private int antneeded = 1;
-
   public CfgBottomupReduce(CfgProductionRule rule) {
     this.rule = rule;
+    this.antneeded = 1;
     this.name = "reduce " + rule.toString();
   }
 
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
-  }
-
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
+    if (antecedences.size() == this.antneeded) {
       String[] itemform = antecedences.get(0).getItemform();
       String stack = itemform[0];
       String[] stacksplit = stack.split(" ");
@@ -57,25 +39,12 @@ public class CfgBottomupReduce implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]");
     representation.append("\n______" + rule.toString() + "\n");
     representation.append("[Γ " + rule.getLhs() + ",i]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }

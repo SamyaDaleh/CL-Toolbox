@@ -1,9 +1,8 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDottedItem;
@@ -11,31 +10,14 @@ import common.cfg.CfgProductionRule;
 
 /** If the next symbol after the dot is a nonterminal, for a rule with that
  * symbol as lhs predict a new item. */
-public class CfgEarleyPredict implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
+public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
   private CfgProductionRule rule;
-
-  private int antneeded = 1;
 
   public CfgEarleyPredict(CfgProductionRule rule) {
     this.rule = rule;
     this.name ="predict " + rule.toString();
-  }
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -63,14 +45,6 @@ public class CfgEarleyPredict implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[A -> α •" + rule.getLhs() + "β,i,j]");
@@ -78,11 +52,6 @@ public class CfgEarleyPredict implements DynamicDeductionRule {
     representation.append("[" + rule.getLhs() + " -> •"
       + ArrayUtils.toString(rule.getRhs()) + ",j,j]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }

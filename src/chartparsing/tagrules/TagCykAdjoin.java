@@ -1,39 +1,22 @@
 package chartparsing.tagrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.tag.Tag;
 import common.tag.TagCykItem;
 
 /** Adjoin an auxiliary tree into an appropriate node in any other tree. */
-public class TagCykAdjoin implements DynamicDeductionRule {
+public class TagCykAdjoin extends AbstractDynamicDeductionRule {
 
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "adjoin";
-
-  private Tag tag = null;
-
-  private int antneeded = 2;
+  private Tag tag;
 
   /** Rule needs grammar to check if adjoin is possible. */
   public TagCykAdjoin(Tag tag) {
     this.tag = tag;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.name = "adjoin";
+    this.antneeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
@@ -83,19 +66,6 @@ public class TagCykAdjoin implements DynamicDeductionRule {
 
     }
     return consequences;
-  }
-
-  @Override public String getName() {
-    return name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return antneeded;
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

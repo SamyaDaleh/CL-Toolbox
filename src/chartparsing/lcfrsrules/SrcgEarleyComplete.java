@@ -1,10 +1,9 @@
 package chartparsing.lcfrsrules;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.Item;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
@@ -13,24 +12,11 @@ import common.lcfrs.SrcgEarleyActiveItem;
 /** Whenever we have a passive B item we can use it to move the dot over the
  * variable of the last argument of B in a parent A-rule that was used to
  * predict it. */
-public class SrcgEarleyComplete implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "Complete";
-
-  private int antneeded = 2;
-
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return this.antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
+  
+  public SrcgEarleyComplete() {
+    this.name = "Complete";
+    this.antneeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
@@ -131,19 +117,6 @@ public class SrcgEarleyComplete implements DynamicDeductionRule {
       }
     }
     return this.consequences;
-  }
-
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
-  @Override public void clearItems() {
-    this.antecedences = new LinkedList<Item>();
-    this.consequences = new LinkedList<Item>();
   }
 
   @Override public String toString() {

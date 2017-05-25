@@ -1,9 +1,8 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDollarItem;
@@ -12,31 +11,14 @@ import common.cfg.CfgProductionRule;
 /** If the top of the completed stack is the left corner of a production rule,
  * pop that symbol, push the rest of the rhs to the stack to be predicted and
  * add the lhs to the stack of lhs */
-public class CfgLeftcornerReduce implements DynamicDeductionRule {
-
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = null;
+public class CfgLeftcornerReduce extends AbstractDynamicDeductionRule {
 
   private CfgProductionRule rule;
-
-  private int antneeded = 1;
 
   public CfgLeftcornerReduce(CfgProductionRule rule) {
     this.name = "reduce " + rule.toString();
     this.rule = rule;
-  }
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -72,14 +54,6 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[" + rule.getRhs()[0] + "α,Bβ,ɣ]");
@@ -89,11 +63,6 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
       .append("[α," + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
         rule.getRhs().length) + "$Bβ," + rule.getLhs() + "ɣ]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }

@@ -1,33 +1,19 @@
 package chartparsing.cfgrules;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import chartparsing.DynamicDeductionRule;
+import chartparsing.AbstractDynamicDeductionRule;
 import common.ArrayUtils;
 import common.Item;
 import common.cfg.CfgDollarItem;
 
 /** If topmost symbol on stacks completed and predicted are the same, remove
  * both. */
-public class CfgLeftcornerRemove implements DynamicDeductionRule {
+public class CfgLeftcornerRemove extends AbstractDynamicDeductionRule {
 
-  private List<Item> antecedences = new LinkedList<Item>();
-  private List<Item> consequences = new LinkedList<Item>();
-  private String name = "remove";
-
-  private int antneeded = 1;
-
-  @Override public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
-  @Override public List<Item> getAntecedences() {
-    return antecedences;
-  }
-
-  @Override public void setAntecedences(List<Item> antecedences) {
-    this.antecedences = antecedences;
+  public CfgLeftcornerRemove() {
+    this.name = "remove";
+    this.antneeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
@@ -49,25 +35,12 @@ public class CfgLeftcornerRemove implements DynamicDeductionRule {
     return consequences;
   }
 
-  @Override public String getName() {
-    return this.name;
-  }
-
-  @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
-  }
-
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append("[Xα,Xβ,ɣ]");
     representation.append("\n______\n");
     representation.append("[α,β,ɣ]");
     return representation.toString();
-  }
-
-  @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
   }
 
 }
