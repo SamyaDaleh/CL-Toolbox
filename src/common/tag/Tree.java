@@ -2,6 +2,7 @@ package common.tag;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,12 +92,14 @@ public class Tree {
       }
     }
   }
-  
-  /**
-   * Creates a tree from a cfg rule. Hence S -> A B would become (S A B).
-   */
+
+  /** Creates a tree from a cfg rule. Hence S -> A B would become (S A B). */
   public Tree(CfgProductionRule rule) throws ParseException {
     this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
+  }
+
+  private Tree() {
+    super();
   }
 
   /** Actually does the tokenization by throwing away spaces, returning '(', ')'
@@ -169,6 +172,7 @@ public class Tree {
         children.add(edge.getTo());
       }
     }
+    Collections.sort(children, new PrecedenceComparator());
     return children;
   }
 
@@ -240,19 +244,89 @@ public class Tree {
     }
     return width;
   }
-  
-  /**
-   * Returns the max width of the tree, that is the most nodes in a layer.
-   */
+
+  /** Returns the max width of the tree, that is the most nodes in a layer. */
   public int getWidth() {
     int width = 0;
     int nodes = 1;
-    for(int i = 1; nodes != 0;i++){
+    for (int i = 1; nodes != 0; i++) {
       nodes = getWidthInLayer(i);
       if (nodes > width) {
         width = nodes;
       }
     }
     return width;
+  }
+
+  /** Substitutes the given initaltree into this tree at the node at that gorn
+   * address and returns the result as new Tree object. Alters the gorn
+   * addresses in the original tree, be careful. */
+  public Tree substitute(String gorn, Tree initialtree) {
+    Tree newtree = new Tree();
+    newtree.root = this.root;
+    newtree.foot = this.foot;
+    Vertex substnode = null;
+    for (int i = 0; i < vertexes.size(); i++) {
+      if (vertexes.get(i).getGornaddress().equals(gorn)) {
+        substnode = vertexes.get(i);
+        for (Vertex p : initialtree.vertexes) {
+          newtree.vertexes.add(p);
+          p.gornaddress = gorn + p.getGornaddress();
+        }
+      } else {
+        newtree.vertexes.add(vertexes.get(i));
+      }
+    }
+    for (Edge edge : this.edges) {
+      if (edge.getTo().equals(substnode)) {
+        newtree.edges.add(new Edge(edge.getFrom(), initialtree.root));
+      } else {
+        newtree.edges.add(edge);
+      }
+    }
+    for (Edge edge : initialtree.edges) {
+      newtree.edges.add(edge);
+    }
+    return newtree;
+  }
+
+  /** Substitutes the given auxiliary tree into this tree at the node at that
+   * gorn address and returns the result as new Tree object. Alters the gorn
+   * addresses in the original tree, be careful. */
+  public Tree adjoin(String gorn, Tree auxtree) {
+    Tree newtree = new Tree();
+    newtree.root = this.root;
+    newtree.foot = this.foot;
+    Vertex adjnode = null;
+    for (int i = 0; i < vertexes.size(); i++) {
+      if (vertexes.get(i).getGornaddress().equals(gorn)) {
+        adjnode = vertexes.get(i);
+        for (Vertex p : auxtree.vertexes) {
+          newtree.vertexes.add(p);
+          p.gornaddress = gorn + p.getGornaddress();
+        }
+      } else {
+        newtree.vertexes.add(vertexes.get(i));
+      }
+    }
+    for (int i = 0; i < vertexes.size(); i++) {
+      if (adjnode.dominates(vertexes.get(i).getGornaddress())) {
+        vertexes.get(i).gornaddress = auxtree.getFoot().getGornaddress()
+          + vertexes.get(i).getGornaddress();
+      }
+    }
+    for (Edge edge : this.edges) {
+      if (edge.getFrom().equals(adjnode)) {
+        newtree.edges.add(new Edge(auxtree.foot, edge.getTo()));
+      } else if (edge.getTo().equals(adjnode)) {
+        newtree.edges.add(new Edge(edge.getFrom(), auxtree.root));
+      } else {
+        newtree.edges.add(edge);
+      }
+    }
+    for (Edge edge : auxtree.edges) {
+      newtree.edges.add(edge);
+    }
+    return newtree;
   }
 }

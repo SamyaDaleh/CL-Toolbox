@@ -56,4 +56,33 @@ public class Vertex {
     return String.join(".",
       ArrayUtils.getSubSequenceAsArray(gornsplit, 0, gornsplit.length - 1));
   }
+
+  /**
+   * Returns true if this node dominates the given node, that means if it is a 
+   * parent or an ancestor. The root domintes all other nodes.
+   */
+  public boolean dominates(String gornaddress) {
+    if (this.gornaddress.equals("")) {
+      return true;
+    }
+    if (gornaddress.equals("")) {
+      return false;
+    }
+    String[] gorn1split = this.gornaddress.split("[.]");
+    String[] gorn2split = this.gornaddress.split("[.]");
+    
+    int l1 = gorn1split.length;
+    int l2 = gorn2split.length;
+    
+    if(l2 < l1) {
+      return false;
+    }
+    
+    for (int i = 1; i < l1; i++) {
+      if (!gorn1split[i].equals(gorn2split[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
