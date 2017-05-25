@@ -108,7 +108,7 @@ public class SxCalc {
 
   /** Generates a string that is used as key for outside probabilities in a
    * human readable form. */
-  private static String getOutsideKey(String nt, int nl, int l, int nr) {
+  public static String getOutsideKey(String nt, int nl, int l, int nr) {
     return "out(" + nt + "," + String.valueOf(nl) + "," + String.valueOf(l)
       + "," + String.valueOf(nr) + ")";
   }

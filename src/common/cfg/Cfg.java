@@ -19,7 +19,7 @@ public class Cfg {
   }
 
   /** Creates a CFG from a PCFG by throwing away all probabilities. */
-  Cfg(Pcfg pcfg) {
+  public Cfg(Pcfg pcfg) {
     this.vars = pcfg.vars;
     this.terminals = pcfg.terminals;
     this.start_var = pcfg.getStart_var();

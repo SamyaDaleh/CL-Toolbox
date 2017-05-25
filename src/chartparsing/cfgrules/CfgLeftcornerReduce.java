@@ -31,10 +31,6 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
     antecedences.add(item);
   }
 
-  @Override public void addConsequence(Item item) {
-    consequences.add(item);
-  }
-
   @Override public List<Item> getAntecedences() {
     return antecedences;
   }
@@ -74,10 +70,6 @@ public class CfgLeftcornerReduce implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public void setConsequences(List<Item> consequences) {
-    // ignore
   }
 
   @Override public String getName() {

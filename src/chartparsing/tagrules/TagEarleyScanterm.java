@@ -31,10 +31,6 @@ public class TagEarleyScanterm implements DynamicDeductionRule {
     this.antecedences.add(item);
   }
 
-  @Override public void addConsequence(Item item) {
-    this.consequences.add(item);
-  }
-
   @Override public List<Item> getAntecedences() {
     return this.antecedences;
   }
@@ -69,10 +65,6 @@ public class TagEarleyScanterm implements DynamicDeductionRule {
       }
     }
     return consequences;
-  }
-
-  @Override public void setConsequences(List<Item> consequences) {
-    // ignore
   }
 
   @Override public String getName() {

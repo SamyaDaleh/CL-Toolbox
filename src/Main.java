@@ -68,14 +68,6 @@ public class Main {
     String[][] data = deduction.printTrace();
     ParsingTraceTable.displayTrace(data,
       new String[] {"Id", "Item", "Rules", "Backpointers"});
-    // calculate sx estimates
-    /* Map<String,Double> insides = SxCalc.getInsides(gen_pcfg0(), 4);
-     * 
-     * for (String in : insides.keySet()) { System.out.println(in + " = " +
-     * insides.get(in)); } Map<String,Double> outsides =
-     * SxCalc.getOutsides(insides, 4, gen_pcfg0()); for (String out :
-     * outsides.keySet()) { System.out.println(out + " = " + outsides.get(out));
-     * } // */
   }
 
 }

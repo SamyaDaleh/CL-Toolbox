@@ -29,10 +29,6 @@ public class SrcgEarleyPredict implements DynamicDeductionRule {
     this.antecedences.add(item);
   }
 
-  @Override public void addConsequence(Item item) {
-    // ignore
-  }
-
   @Override public List<Item> getAntecedences() {
     return this.antecedences;
   }
@@ -67,10 +63,6 @@ public class SrcgEarleyPredict implements DynamicDeductionRule {
       }
     }
     return this.consequences;
-  }
-
-  @Override public void setConsequences(List<Item> consequences) {
-    // ignore
   }
 
   @Override public String getName() {

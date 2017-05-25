@@ -20,10 +20,6 @@ public class TagCykMovebinary implements DynamicDeductionRule {
     this.antecedences.add(item);
   }
 
-  @Override public void addConsequence(Item item) {
-    this.consequences.add(item);
-  }
-
   @Override public List<Item> getAntecedences() {
     return this.antecedences;
   }
@@ -62,33 +58,33 @@ public class TagCykMovebinary implements DynamicDeductionRule {
       }
       int k1 = Integer.parseInt(itemform1[5]);
       int j = Integer.parseInt(itemform2[5]);
-      boolean node1childofroot = node1.length() > 1 && !node1.substring(1, node1.length()-1).contains(".");
-      boolean node2childofroot = node2.length() > 1 && !node2.substring(1, node2.length()-1).contains(".");
-      if (node1.length() > 1 && node2.length() > 1 && treename1.equals(treename2) &&
-        ( (node1childofroot && node2childofroot) || (!node1childofroot && !node2childofroot && node1.substring(0, node1.length() - 3)
+      boolean node1childofroot = node1.length() > 1
+        && !node1.substring(1, node1.length() - 1).contains(".");
+      boolean node2childofroot = node2.length() > 1
+        && !node2.substring(1, node2.length() - 1).contains(".");
+      if (node1.length() > 1 && node2.length() > 1
+        && treename1.equals(treename2)
+        && ((node1childofroot && node2childofroot) || (!node1childofroot
+          && !node2childofroot && node1.substring(0, node1.length() - 3)
             .equals(node2.substring(0, node2.length() - 3))))) {
-          if (node1.endsWith(".1⊤") && node2.endsWith(".2⊤") && k1 == k2) {
-            String parentnode = node1.substring(0, node1.length() - 3) + "⊥";
-            Integer f1new = (f1 == null) ? f1b : f1;
-            Integer f2new = (f2 == null) ? f2b : f2;
-            consequences
-              .add(new TagCykItem(treename1, parentnode, i, f1new, f2new, j));
-          } else if (node2.endsWith(".1⊤") && node1.endsWith(".2⊤") && j == i) {
-            // the other way around
-            String parentnode = node1.substring(0, node1.length() - 3) + "⊥";
-            Integer f1new = (f1 == null) ? f1b : f1;
-            Integer f2new = (f2 == null) ? f2b : f2;
-            consequences
-              .add(new TagCykItem(treename1, parentnode, k2, f1new, f2new, k1));
-          }
-        
+        if (node1.endsWith(".1⊤") && node2.endsWith(".2⊤") && k1 == k2) {
+          String parentnode = node1.substring(0, node1.length() - 3) + "⊥";
+          Integer f1new = (f1 == null) ? f1b : f1;
+          Integer f2new = (f2 == null) ? f2b : f2;
+          consequences
+            .add(new TagCykItem(treename1, parentnode, i, f1new, f2new, j));
+        } else if (node2.endsWith(".1⊤") && node1.endsWith(".2⊤") && j == i) {
+          // the other way around
+          String parentnode = node1.substring(0, node1.length() - 3) + "⊥";
+          Integer f1new = (f1 == null) ? f1b : f1;
+          Integer f2new = (f2 == null) ? f2b : f2;
+          consequences
+            .add(new TagCykItem(treename1, parentnode, k2, f1new, f2new, k1));
+        }
+
       }
     }
     return consequences;
-  }
-
-  @Override public void setConsequences(List<Item> consequences) {
-    // ignore
   }
 
   @Override public String getName() {

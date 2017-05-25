@@ -9,15 +9,11 @@ public interface DeductionRule {
 
   public void addAntecedence(Item item);
 
-  public void addConsequence(Item item);
-
   public List<Item> getAntecedences();
 
   public void setAntecedences(List<Item> antecedences);
 
   public List<Item> getConsequences();
-
-  public void setConsequences(List<Item> consequences);
 
   public String getName();
 

@@ -7,6 +7,7 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import common.cfg.Cfg;
+import common.cfg.Pcfg;
 import common.lcfrs.Srcg;
 import common.tag.Tag;
 
@@ -141,6 +142,26 @@ public class DeductionTest {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
       .SrcgToParsingSchema(gensrcg(), w3, "earley");
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
+  @Test public void testPcfgAstar() throws ParseException {
+    Pcfg pcfg = new Pcfg();
+    pcfg.setVars(new String[] {"N", "A"});
+    pcfg.setTerminals(new String[] {"camping", "car", "nice", "red", "ugly",
+      "green", "house", "bike"});
+    pcfg.setStart_var("N");
+    pcfg.setR(new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
+      {"N", "car", "0.1"}, {"N", "camping", "0.2"}, {"A", "nice", "0.3"},
+      {"A", "red", "0.2"}, {"N", "A N", "0.2"}, {"N", "green", "0.1"},
+      {"N", "bike", "0.1"}, {"N", "house", "0.1"}, {"A", "ugly", "0.25"},
+      {"A", "green", "0.25"}});
+
+    String w = "red nice ugly car";
+    ParsingSchema schema =
+      PcfgToDeductionRulesConverter.PcfgToParsingSchema(pcfg, w, "astar");
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();

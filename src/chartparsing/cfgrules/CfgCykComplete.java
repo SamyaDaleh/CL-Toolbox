@@ -28,10 +28,6 @@ public class CfgCykComplete implements DynamicDeductionRule {
     antecedences.add(item);
   }
 
-  @Override public void addConsequence(Item item) {
-    // ignore
-  }
-
   @Override public List<Item> getAntecedences() {
     return antecedences;
   }
@@ -68,10 +64,6 @@ public class CfgCykComplete implements DynamicDeductionRule {
     return this.consequences;
   }
 
-  @Override public void setConsequences(List<Item> consequences) {
-    // ignore
-  }
-
   @Override public String getName() {
     return this.name;
   }
@@ -83,9 +75,9 @@ public class CfgCykComplete implements DynamicDeductionRule {
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
     representation.append(
-      "[" + rule.getRhs()[0] + ",i,j]]");
+      "[" + rule.getRhs()[0] + ",1,l1], [" + rule.getRhs()[1] + ",i+l1,l2]");
     representation.append("\n______ \n");
-    representation.append("[" + rule.getLhs() + ",i,j]");
+    representation.append("[" + rule.getLhs() + ",i,l1+l2]");
     return representation.toString();
   }
 

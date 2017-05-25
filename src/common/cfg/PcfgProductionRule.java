@@ -33,4 +33,12 @@ public class PcfgProductionRule {
   public Double getP() {
     return this.p;
   }
+
+  @Override public String toString() {
+    if (rhs[0].equals("")) {
+      return String.valueOf(p) + " : " + lhs + " -> ε";
+    } else {
+      return String.valueOf(p) + " : " + lhs + " -> " + String.join(" ", rhs);
+    }
+  }
 }
