@@ -202,12 +202,45 @@ public class Tag {
     String gornaddress) {
     Tree tree = getTree(treename);
     Tree auxtree = getAuxiliaryTree(auxtreename);
-    boolean labelcheck = auxtree != null
-      && auxtree.getRoot().getLabel()
-        .equals(tree.getNodeByGornAdress(gornaddress).getLabel());
-    boolean issubstnode = isSubstitutionNode(
-      tree.getNodeByGornAdress(gornaddress), treename);
+    boolean labelcheck = auxtree != null && auxtree.getRoot().getLabel()
+      .equals(tree.getNodeByGornAdress(gornaddress).getLabel());
+    boolean issubstnode =
+      isSubstitutionNode(tree.getNodeByGornAdress(gornaddress), treename);
     boolean nulladjoin = tree.isInNA(gornaddress);
     return (labelcheck && !issubstnode && !nulladjoin);
+  }
+
+  @Override public String toString() {
+    StringBuilder builder = new StringBuilder();
+    Set<String> initreesnameset = getInitialTreeNames();
+    String[] initreenames =
+      initreesnameset.toArray(new String[initreesnameset.size()]);
+    Set<String> auxtreesnameset = getAuxiliaryTreeNames();
+    String[] auxtreenames =
+      auxtreesnameset.toArray(new String[auxtreesnameset.size()]);
+    builder.append("G = <N, T, I, A, S>\n");
+    builder.append("N = {" + String.join(", ", nonterminals) + "}\n");
+    builder.append("T = {" + String.join(", ", terminals) + "}\n");
+    builder.append("I = {");
+
+    for (int i = 0; i < initialtrees.size(); i++) {
+      if (i > 0) {
+        builder.append(", ");
+      }
+      builder.append(
+        initreenames[i] + " : " + getInitialTree(initreenames[i]).toString());
+    }
+    builder.append("}\n");
+    builder.append("A = {");
+    for (int i = 0; i < auxiliarytrees.size(); i++) {
+      if (i > 0) {
+        builder.append(", ");
+      }
+      builder.append(
+        auxtreenames[i] + " : " + getAuxiliaryTree(auxtreenames[i]).toString());
+    }
+    builder.append("}\n");
+    builder.append("S = " + startsymbol + "\n");
+    return builder.toString();
   }
 }

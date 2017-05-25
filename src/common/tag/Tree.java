@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import common.cfg.CfgProductionRule;
+
 /** A non-recursive representation of a context-free tree consisting of
  * vertexes, directed edges and in the context of TAG may have a special foot
  * node. */
@@ -88,6 +90,13 @@ public class Tree {
         this.vertexes.add(vertex);
       }
     }
+  }
+  
+  /**
+   * Creates a tree from a cfg rule. Hence S -> A B would become (S A B).
+   */
+  public Tree(CfgProductionRule rule) throws ParseException {
+    this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
   }
 
   /** Actually does the tokenization by throwing away spaces, returning '(', ')'
