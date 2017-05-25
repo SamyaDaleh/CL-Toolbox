@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import common.cfg.Cfg;
+import common.cfg.Pcfg;
 import common.lcfrs.Srcg;
 import common.tag.Tag;
 
@@ -58,6 +59,48 @@ public class GrammarParser {
     return cfg;
   }
 
+  /** Parses a PCFG from a file and returns it as Pcfg. */
+  public static Pcfg parsePcfgFile(String grammarfile) throws IOException {
+    Pcfg pcfg = new Pcfg();
+    BufferedReader in = new BufferedReader(new FileReader(grammarfile));
+    String line = in.readLine().trim();
+    while (line != null) {
+      String linetrim = line.trim();
+      if (linetrim.charAt(0) == 'N') {
+        if (pcfg.getVars() != null) {
+          System.out.println("Declaring N twice is not allowed");
+          in.close();
+          return null;
+        }
+        pcfg.setVars(parseNT(linetrim));
+      } else if (linetrim.charAt(0) == 'T') {
+        if (pcfg.getTerminals() != null) {
+          System.out.println("Declaring T twice is not allowed");
+          in.close();
+          return null;
+        }
+        pcfg.setTerminals(parseNT(linetrim));
+      } else if (linetrim.charAt(0) == 'S') {
+        if (pcfg.getStart_var() != null) {
+          System.out.println("Declaring S twice is not allowed");
+          in.close();
+          return null;
+        }
+        pcfg.setStart_var(parseS(linetrim));
+      } else if (linetrim.charAt(0) == 'P') {
+        if (pcfg.getR().size() > 0) {
+          System.out.println("Declaring P twice is not allowed");
+          in.close();
+          return null;
+        }
+        pcfg.setR(parseProbabilisticRules(linetrim, ":", "->"));
+      }
+      line = in.readLine();
+    }
+    in.close();
+    return pcfg;
+  }
+
   /** For a line like "S -> a b", "S -> A B" it gets the content of each quote,
    * separates it by delimiter, in this case '->' and returns 2d array where
    * each entry represents a rule and each sub array consists of lhs and rhs */
@@ -73,6 +116,31 @@ public class GrammarParser {
           .substring(rawrule.indexOf(delimiter) + delimiter.length()).trim();
         rulelist.add(
           new String[] {lhs.substring(1), rhs.substring(0, rhs.length() - 1)});
+        m.find();
+        rawrule = m.group();
+      }
+    } catch (IllegalStateException e) {
+      //
+    }
+    return rulelist.toArray(new String[rulelist.size()][]);
+  }
+
+  /** For a line like "1 : S -> a b", "1 : S -> A B" it gets the content of each quote,
+   * separates it by delimiters, in this case ':' and '->' and returns 2d array where
+   * each entry represents a rule and each sub array consists of lhs, rhs and p */
+  private static String[][] parseProbabilisticRules(String linetrim, String leftdelimiter, String rightdelimiter) {
+    Matcher m = p.matcher(linetrim);
+    m.find();
+    String rawrule = m.group();
+    ArrayList<String[]> rulelist = new ArrayList<String[]>();
+    try {
+      while (true) {
+        String p = rawrule.substring(0, rawrule.indexOf(leftdelimiter)).trim();
+        String lhs = rawrule.substring(rawrule.indexOf(leftdelimiter)+leftdelimiter.length(), rawrule.indexOf(rightdelimiter)).trim();
+        String rhs = rawrule
+          .substring(rawrule.indexOf(rightdelimiter) + rightdelimiter.length()).trim();
+        rulelist.add(
+          new String[] {lhs, rhs.substring(0, rhs.length() - 1), p.substring(1)});
         m.find();
         rawrule = m.group();
       }

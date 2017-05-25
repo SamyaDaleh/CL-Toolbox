@@ -62,4 +62,21 @@ public class Pcfg {
     }
     return false;
   }
+
+  @Override public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("G = <N, T, S, P>\n");
+    builder.append("N = {" + String.join(", ", vars) + "}\n");
+    builder.append("T = {" + String.join(", ", terminals) + "}\n");
+    builder.append("S = " + start_var + "\n");
+    builder.append("P = {");
+    for (int i = 0; i < R.size(); i++) {
+      if (i > 0) {
+        builder.append(", ");
+      }
+      builder.append(R.get(i).toString());
+    }
+    builder.append("}\n");
+    return builder.toString();
+  }
 }
