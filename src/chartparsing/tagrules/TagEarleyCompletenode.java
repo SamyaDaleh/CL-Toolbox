@@ -11,7 +11,7 @@ import common.tag.TagEarleyItem;
  * rb, you can put both together. */
 public class TagEarleyCompletenode extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
@@ -65,11 +65,8 @@ public class TagEarleyCompletenode extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,la,f,g,h,i,0], [ɣ,p,rb,i,j,k,l,adj]");
-    representation.append("\n______ l(ɣ,p) ∈ N\n");
-    representation.append("[ɣ,p,ra,f,g⊕j,h⊕k,l,0]");
-    return representation.toString();
+    return "[ɣ,p,la,f,g,h,i,0], [ɣ,p,rb,i,j,k,l,adj]" + "\n______ l(ɣ,p) ∈ N\n"
+        + "[ɣ,p,ra,f,g⊕j,h⊕k,l,0]";
   }
 
 }

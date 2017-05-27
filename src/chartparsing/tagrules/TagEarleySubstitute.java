@@ -10,9 +10,9 @@ import common.tag.TagEarleyItem;
 /** If a potential initial tree is complete, substitute it if possible. */
 public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
 
-  private String outtreename;
-  private String outnode;
-  private Tag tag;
+  private final String outtreename;
+  private final String outnode;
+  private final Tag tag;
 
   /** Constructor takes a tree and a node where maybe is, was, will be adjoined,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -46,13 +46,10 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[α,ε,ra,i,-,-,j,0]");
-    representation.append("\n______ " + outtreename + "(" + outnode
-      + ") a substitution node, α ∈ I, l(" + outtreename + "," + outnode
-      + ") = l(α,ε)\n");
-    representation.append("[" + outtreename + "," + outnode + ",rb,i,-,-,j,0]");
-    return representation.toString();
+    return "[α,ε,ra,i,-,-,j,0]" + "\n______ " + outtreename + "(" + outnode
+        + ") a substitution node, α ∈ I, l(" + outtreename + "," + outnode
+        + ") = l(α,ε)\n" + "[" + outtreename + "," + outnode
+        + ",rb,i,-,-,j,0]";
   }
 
 }

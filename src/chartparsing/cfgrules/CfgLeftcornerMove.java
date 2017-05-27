@@ -11,7 +11,7 @@ import common.cfg.CfgDollarItem;
  * stack of lhs to the stack of completed items. */
 public class CfgLeftcornerMove extends AbstractDynamicDeductionRule {
 
-  private String[] nonterminals;
+  private final String[] nonterminals;
 
   public CfgLeftcornerMove(String[] nonterminals) {
     this.nonterminals = nonterminals;
@@ -40,7 +40,7 @@ public class CfgLeftcornerMove extends AbstractDynamicDeductionRule {
             String newpred = ArrayUtils.getSubSequenceAsString(stackpredsplit,
               1, stackpredsplit.length);
             String newlhs = ArrayUtils.getSubSequenceAsString(stacklhssplit, 1,
-              stacklhssplit.length);;
+              stacklhssplit.length);
             consequences.add(new CfgDollarItem(newcompl, newpred, newlhs));
             break;
           }
@@ -51,11 +51,7 @@ public class CfgLeftcornerMove extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[α,$β,Aɣ]");
-    representation.append("\n______ A ∈ N\n");
-    representation.append("[Aα,β,ɣ]");
-    return representation.toString();
+    return "[α,$β,Aɣ]" + "\n______ A ∈ N\n" + "[Aα,β,ɣ]";
   }
 
 }

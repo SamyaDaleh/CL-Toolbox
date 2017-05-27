@@ -10,7 +10,7 @@ import common.cfg.PcfgAstarItem;
 import common.cfg.PcfgProductionRule;
 
 /** Creates parsing schemes for probabilistic parsing of CFGs. */
-public class PcfgToDeductionRulesConverter {
+class PcfgToDeductionRulesConverter {
 
   /** Mapper to make the converting functions easier accessable. */
   public static ParsingSchema PcfgToParsingSchema(Pcfg pcfg, String w,

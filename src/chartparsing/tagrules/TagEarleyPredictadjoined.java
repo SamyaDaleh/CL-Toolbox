@@ -11,9 +11,9 @@ import common.tag.TagEarleyItem;
  * adjoined into another tree and move into that tree at the affected node. */
 public class TagEarleyPredictadjoined extends AbstractDynamicDeductionRule {
 
-  private String outtreename;
-  private String outnode;
-  private Tag tag;
+  private final String outtreename;
+  private final String outnode;
+  private final Tag tag;
 
   /** Constructor takes a tree and a node where maybe is, was, will be adjoined,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -45,12 +45,9 @@ public class TagEarleyPredictadjoined extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[β,pf,lb,l,-,-,l,0]");
-    representation.append("\n______ pf foot node address in β, β ∈ f_SA("
-      + outtreename + "," + outnode + ")\n");
-    representation.append("[" + outtreename + "," + outnode + ",lb,l,-,-,l,0]");
-    return representation.toString();
+    return "[β,pf,lb,l,-,-,l,0]" + "\n______ pf foot node address in β, β ∈ f_SA("
+        + outtreename + "," + outnode + ")\n" + "[" + outtreename + ","
+        + outnode + ",lb,l,-,-,l,0]";
   }
 
 }

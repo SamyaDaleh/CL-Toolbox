@@ -12,7 +12,7 @@ import common.cfg.CfgProductionRule;
  * symbol as lhs predict a new item. */
 public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
-  private CfgProductionRule rule;
+  private final CfgProductionRule rule;
 
   public CfgEarleyPredict(CfgProductionRule rule) {
     this.rule = rule;
@@ -27,15 +27,15 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
       String[] stacksplit = stack.split(" ");
       int j = Integer.parseInt(itemform[2]);
 
-      for (int k = 0; k < stacksplit.length; k++) {
-        if (stacksplit[k].startsWith("•") && stacksplit[k]
-          .substring(1, stacksplit[k].length()).equals(rule.getLhs())) {
+      for (String stacksymbol : stacksplit) {
+        if (stacksymbol.startsWith("•") && stacksymbol
+            .substring(1, stacksymbol.length()).equals(rule.getLhs())) {
           String newstack;
           if (rule.getRhs()[0].equals("")) {
             newstack = rule.getLhs() + " -> •";
           } else {
             newstack =
-              rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
+                rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
           }
           consequences.add(new CfgDottedItem(newstack, j, j));
           break;
@@ -46,12 +46,9 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[A -> α •" + rule.getLhs() + "β,i,j]");
-    representation.append("\n______ " + rule.toString() + "\n");
-    representation.append("[" + rule.getLhs() + " -> •"
-      + ArrayUtils.toString(rule.getRhs()) + ",j,j]");
-    return representation.toString();
+    return "[A -> α •" + rule.getLhs() + "β,i,j]" + "\n______ " + rule.toString()
+        + "\n" + "[" + rule.getLhs() + " -> •" + ArrayUtils
+        .toString(rule.getRhs()) + ",j,j]";
   }
 
 }

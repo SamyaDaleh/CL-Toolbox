@@ -9,7 +9,7 @@ import common.cfg.Pcfg;
 
 public class SxCalcTest {
 
-  static Pcfg gen_pcfg0() {
+  private static Pcfg gen_pcfg0() {
     Pcfg G = new Pcfg();
 
     G.setTerminals(new String[] {"a", "b"});

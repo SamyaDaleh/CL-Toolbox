@@ -2,7 +2,6 @@ package common.tag;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,12 +12,12 @@ import common.cfg.CfgProductionRule;
  * node. */
 public class Tree {
 
-  private List<Vertex> vertexes = new LinkedList<Vertex>();
-  private List<Edge> edges = new LinkedList<Edge>();
+  private final List<Vertex> vertexes = new LinkedList<Vertex>();
+  private final List<Edge> edges = new LinkedList<Edge>();
   private Vertex root = null;
   private Vertex foot = null;
-  private List<Vertex> NA = new LinkedList<Vertex>();
-  private List<Vertex> OA = new LinkedList<Vertex>();
+  private final List<Vertex> NA = new LinkedList<Vertex>();
+  private final List<Vertex> OA = new LinkedList<Vertex>();
 
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
@@ -27,43 +26,51 @@ public class Tree {
     List<Vertex> vertexpath = new LinkedList<Vertex>();
     List<Integer> children = new LinkedList<Integer>();
     for (int i = 0; i < tokens.length; i++) {
-      if (tokens[i].equals("(")) {
+      switch (tokens[i]) {
+      case "(": {
         i++;
-        if (tokens[i].equals("(") || tokens[i].equals(")")
-          || tokens[i].equals("*")) {
-          throw new ParseException("Expecting label of root of subtree, found "
-            + tokens[i] + " instead.", 0);
+        if (tokens[i].equals("(") || tokens[i].equals(")") || tokens[i]
+            .equals("*")) {
+          throw new ParseException(
+              "Expecting label of root of subtree, found " + tokens[i]
+                  + " instead.", 0);
         }
         Vertex vertex = new Vertex(tokens[i]);
         if (this.root == null) {
           this.root = vertex;
           vertex.setGornaddress("");
         } else {
-          children.set(children.size() - 1,
-            children.get(children.size() - 1) + 1);
+          children
+              .set(children.size() - 1, children.get(children.size() - 1) + 1);
           vertex.setGornaddress(
-            vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
-              + children.get(children.size() - 1).toString());
+              vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
+                  + children.get(children.size() - 1).toString());
           Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
           this.edges.add(edge);
         }
         vertexpath.add(vertex);
         children.add(0);
         this.vertexes.add(vertex);
-      } else if (tokens[i].equals(")")) {
+        break;
+      }
+      case ")":
         if (vertexpath.size() == 0) {
           throw new ParseException(
-            "Closing bracket encountered when no nodes in tree were found.", 0);
+              "Closing bracket encountered when no nodes in tree were found.",
+              0);
         }
         vertexpath.remove(vertexpath.size() - 1);
         children.remove(children.size() - 1);
-      } else if (tokens[i].equals("*")) {
+        break;
+      case "*":
         if (this.foot != null) {
           throw new ParseException(
-            "Tried to set foot node twice. Only one foot node is allowed.", 0);
+              "Tried to set foot node twice. Only one foot node is allowed.",
+              0);
         }
         this.foot = this.vertexes.get(this.vertexes.size() - 1);
-      } else if (tokens[i].equals("_")) {
+        break;
+      case "_":
         i++;
         if (tokens[i].equals("NA")) {
           this.NA.add(this.vertexes.get(this.vertexes.size() - 1));
@@ -72,7 +79,8 @@ public class Tree {
         } else {
           throw new ParseException("Unknown subscript " + tokens[i], 0);
         }
-      } else {
+        break;
+      default: {
         // now this can only be children of the last vertex in path
         Vertex vertex;
         if (tokens[i].equals("ε")) {
@@ -80,15 +88,17 @@ public class Tree {
         } else {
           vertex = new Vertex(tokens[i]);
         }
-        children.set(children.size() - 1,
-          children.get(children.size() - 1) + 1);
-        vertex
-          .setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
-            + "." + children.get(children.size() - 1).toString());
+        children
+            .set(children.size() - 1, children.get(children.size() - 1) + 1);
+        vertex.setGornaddress(
+            vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
+                + children.get(children.size() - 1).toString());
 
         Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
         this.edges.add(edge);
         this.vertexes.add(vertex);
+        break;
+      }
       }
     }
   }
@@ -137,14 +147,11 @@ public class Tree {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append(
-      "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
-        + (this.root.equals(foot) ? "*" : "")
-        + (isInOA(this.root.getGornaddress()) ? "_OA" : "")
-        + (isInNA(this.root.getGornaddress()) ? "_NA" : "") + " "
-        + toStringAllChildren(this.root) + ")");
-    return representation.toString();
+    return "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel()) + (
+        this.root.equals(foot) ? "*" : "") + (
+        isInOA(this.root.getGornaddress()) ? "_OA" : "") + (
+        isInNA(this.root.getGornaddress()) ? "_NA" : "") + " "
+        + toStringAllChildren(this.root) + ")";
   }
 
   /** Retrieves all child nodes of a node. Each one is printed with its label
@@ -154,12 +161,12 @@ public class Tree {
     StringBuilder representation = new StringBuilder();
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
-      representation
-        .append("(" + (child.getLabel().equals("") ? "ε" : child.getLabel())
-          + (child.equals(foot) ? "*" : "")
-          + (isInOA(child.getGornaddress()) ? "_OA" : "")
-          + (isInNA(child.getGornaddress()) ? "_NA" : "") + " "
-          + toStringAllChildren(child) + ")");
+      representation.append("(")
+          .append(child.getLabel().equals("") ? "ε" : child.getLabel())
+          .append(child.equals(foot) ? "*" : "")
+          .append(isInOA(child.getGornaddress()) ? "_OA" : "")
+          .append(isInNA(child.getGornaddress()) ? "_NA" : "").append(" ")
+          .append(toStringAllChildren(child)).append(")");
     }
     return representation.toString();
   }
@@ -172,7 +179,7 @@ public class Tree {
         children.add(edge.getTo());
       }
     }
-    Collections.sort(children, new PrecedenceComparator());
+    children.sort(new PrecedenceComparator());
     return children;
   }
 
@@ -182,10 +189,7 @@ public class Tree {
 
   /** Returns true if a given node has at least one child. */
   boolean hasChildren(Vertex p) {
-    if (getChildren(p).isEmpty())
-      return false;
-    else
-      return true;
+    return !getChildren(p).isEmpty();
   }
 
   /** Takes a gorn address and returns the vertex the address belongs to. */
@@ -284,9 +288,7 @@ public class Tree {
         newtree.edges.add(edge);
       }
     }
-    for (Edge edge : initialtree.edges) {
-      newtree.edges.add(edge);
-    }
+    newtree.edges.addAll(initialtree.edges);
     return newtree;
   }
 
@@ -309,10 +311,10 @@ public class Tree {
         newtree.vertexes.add(vertexes.get(i));
       }
     }
-    for (int i = 0; i < vertexes.size(); i++) {
-      if (adjnode.dominates(vertexes.get(i).getGornaddress())) {
-        vertexes.get(i).gornaddress = auxtree.getFoot().getGornaddress()
-          + vertexes.get(i).getGornaddress();
+    for (Vertex vertex : vertexes) {
+      if (adjnode.dominates(vertex.getGornaddress())) {
+        vertex.gornaddress =
+            auxtree.getFoot().getGornaddress() + vertex.getGornaddress();
       }
     }
     for (Edge edge : this.edges) {
@@ -324,9 +326,7 @@ public class Tree {
         newtree.edges.add(edge);
       }
     }
-    for (Edge edge : auxtree.edges) {
-      newtree.edges.add(edge);
-    }
+    newtree.edges.addAll(auxtree.edges);
     return newtree;
   }
 }

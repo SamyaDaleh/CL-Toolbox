@@ -13,7 +13,7 @@ public class Srcg {
   private String[] terminals;
   private String[] variables;
   private String startsymbol;
-  private List<Clause> clauses = new LinkedList<Clause>();
+  private final List<Clause> clauses = new LinkedList<Clause>();
 
   public Srcg(Cfg cfg) {
     this.nonterminals = cfg.getVars();
@@ -24,11 +24,11 @@ public class Srcg {
       StringBuilder lhs = new StringBuilder();
       StringBuilder rhs = new StringBuilder();
       int i = 1;
-      lhs.append(rule.getLhs() + "(");
+      lhs.append(rule.getLhs()).append("(");
       for (String rhssym : rule.getRhs()) {
         if (rhssym.length() > 0) {
           if (cfg.terminalsContain(rhssym)) {
-            lhs.append(" " + rhssym);
+            lhs.append(" ").append(rhssym);
           } else {
             String newvar = "X" + String.valueOf(i);
             while (cfg.nonterminalsContain(newvar)) {
@@ -38,8 +38,8 @@ public class Srcg {
             if (!newvariables.contains(newvar)) {
               newvariables.add(newvar);
             }
-            lhs.append(" " + newvar);
-            rhs.append(rhssym + "(" + newvar + ")");
+            lhs.append(" ").append(newvar);
+            rhs.append(rhssym).append("(").append(newvar).append(")");
           }
         } else {
           rhs.append("ε");
@@ -79,9 +79,9 @@ public class Srcg {
   @Override public String toString() {
     StringBuilder repr = new StringBuilder();
     repr.append("G = <N, T, V, P, S>\n");
-    repr.append("N = {" + String.join(", ", nonterminals) + "}\n");
-    repr.append("T = {" + String.join(", ", terminals) + "}\n");
-    repr.append("V = {" + String.join(", ", variables) + "}\n");
+    repr.append("N = {").append(String.join(", ", nonterminals)).append("}\n");
+    repr.append("T = {").append(String.join(", ", terminals)).append("}\n");
+    repr.append("V = {").append(String.join(", ", variables)).append("}\n");
     repr.append("P = {");
     for (int i = 0; i < clauses.size(); i++) {
       if (i > 0) {
@@ -90,7 +90,7 @@ public class Srcg {
       repr.append(clauses.get(i).toString());
     }
     repr.append("}\n");
-    repr.append("S = " + startsymbol + "\n");
+    repr.append("S = ").append(startsymbol).append("\n");
     return repr.toString();
   }
 

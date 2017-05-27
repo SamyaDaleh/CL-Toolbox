@@ -1,9 +1,9 @@
 package common.tag;
 
 /** A directed edge between two nodes. */
-public class Edge {
-  private Vertex from;
-  private Vertex to;
+class Edge {
+  private final Vertex from;
+  private final Vertex to;
 
   Edge(Vertex from, Vertex to) {
     this.from = from;

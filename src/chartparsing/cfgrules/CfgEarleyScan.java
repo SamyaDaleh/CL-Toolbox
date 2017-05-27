@@ -11,7 +11,7 @@ import common.cfg.CfgDottedItem;
  * symbol. */
 public class CfgEarleyScan extends AbstractDynamicDeductionRule {
 
-  private String[] wsplit;
+  private final String[] wsplit;
 
   public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
@@ -33,10 +33,11 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
           StringBuilder newstack = new StringBuilder();
           newstack.append(ArrayUtils.getSubSequenceAsString(stacksplit, 0, k));
           if (k == stacksplit.length - 1) {
-            newstack.append(" " + wsplit[j] + " •");
+            newstack.append(" ").append(wsplit[j]).append(" •");
           } else {
-            newstack.append(" " + wsplit[j] + " •" + ArrayUtils
-              .getSubSequenceAsString(stacksplit, k + 1, stacksplit.length));
+            newstack.append(" ").append(wsplit[j]).append(" •").append(
+                ArrayUtils.getSubSequenceAsString(stacksplit, k + 1,
+                    stacksplit.length));
           }
           consequences.add(new CfgDottedItem(newstack.toString(), i, j + 1));
         }
@@ -46,11 +47,7 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[A -> α •a β,i,j]");
-    representation.append("\n______ w_j = a\n");
-    representation.append("[A -> α a • β,i,j+1]");
-    return representation.toString();
+    return "[A -> α •a β,i,j]" + "\n______ w_j = a\n" + "[A -> α a • β,i,j+1]";
   }
 
 }

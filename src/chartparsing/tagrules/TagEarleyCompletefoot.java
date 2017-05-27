@@ -11,7 +11,7 @@ import common.tag.TagEarleyItem;
  * into, fill the foot of the aux tree with the span of the other tree. */
 public class TagEarleyCompletefoot extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
@@ -60,11 +60,9 @@ public class TagEarleyCompletefoot extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,rb,i,j,k,l,0], [β,pf,lb,i,-,-,i,0]");
-    representation.append("\n______ pf foot node address in β, β ∈ f_SA(ɣ,p)\n");
-    representation.append("[β,pf,rb,i,i,l,l,0]");
-    return representation.toString();
+    return "[ɣ,p,rb,i,j,k,l,0], [β,pf,lb,i,-,-,i,0]"
+        + "\n______ pf foot node address in β, β ∈ f_SA(ɣ,p)\n"
+        + "[β,pf,rb,i,i,l,l,0]";
   }
 
 }

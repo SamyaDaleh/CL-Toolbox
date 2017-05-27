@@ -10,7 +10,7 @@ import common.tag.TagCykItem;
 /** Goes from bottom into top position without adjoining. */
 public class TagCykNulladjoin extends AbstractDynamicDeductionRule {
   
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to check if adjoins is obligatory. */
   public TagCykNulladjoin(Tag tag) {
@@ -51,11 +51,7 @@ public class TagCykNulladjoin extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p⊥,i,f1,f2,j]");
-    representation.append("\n______ f_OA(ɣ,p) = 0\n");
-    representation.append("[ɣ,p⊤,i,f1,f2,j]");
-    return representation.toString();
+    return "[ɣ,p⊥,i,f1,f2,j]" + "\n______ f_OA(ɣ,p) = 0\n" + "[ɣ,p⊤,i,f1,f2,j]";
   }
 
 }

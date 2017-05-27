@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class CfgTest {
-  static Cfg gen_cfgbintest() {
+  private static Cfg gen_cfgbintest() {
     Cfg G = new Cfg();
     G.setTerminals(new String[] {"a", "b"});
     G.setVars(new String[] {"S"});

@@ -13,7 +13,7 @@ import common.lcfrs.SrcgEarleyActiveItem;
  * the rhs predicates, we resume the rule of the rhs predicate. */
 public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
 
-  private String[] variables;
+  private final String[] variables;
 
   /** Remember variables to check if symbols are one of them. */
   public SrcgEarleyResume(String[] variables) {
@@ -122,12 +122,8 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append(
-      "[A(φ) -> ... B(ξ)...,pos,<i,j>,ρ_A], [B(ψ) -> Ψ,pos',<k-1,l>,ρ_B]");
-    representation.append("\n______ \n");
-    representation.append("[B(ψ) -> Ψ,pos,<k,0>,ρ_B]");
-    return representation.toString();
+    return "[A(φ) -> ... B(ξ)...,pos,<i,j>,ρ_A], [B(ψ) -> Ψ,pos',<k-1,l>,ρ_B]"
+        + "\n______ \n" + "[B(ψ) -> Ψ,pos,<k,0>,ρ_B]";
   }
 
 }

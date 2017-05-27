@@ -5,11 +5,11 @@ import java.util.List;
 
 /** Representation of an arbitrary grammar where lengths of left and right rule
  * sides are unrestricted. */
-public class Grammar {
-  String vars[];
-  List<GrammarProductionRule> R = new LinkedList<GrammarProductionRule>();
-  String start_var;
-  String terminals[];
+class Grammar {
+  private String[] vars;
+  private final List<GrammarProductionRule> R = new LinkedList<GrammarProductionRule>();
+  private String start_var;
+  private String[] terminals;
 
   public String[] getVars() {
     return vars;

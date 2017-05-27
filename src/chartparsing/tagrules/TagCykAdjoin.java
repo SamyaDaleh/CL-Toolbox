@@ -10,7 +10,7 @@ import common.tag.TagCykItem;
 /** Adjoin an auxiliary tree into an appropriate node in any other tree. */
 public class TagCykAdjoin extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Rule needs grammar to check if adjoin is possible. */
   public TagCykAdjoin(Tag tag) {
@@ -69,11 +69,8 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[β,ε⊤,i,f1,f2,j] [ɣ,p⊥,f1,f1',f2',f2]");
-    representation.append("\n______ β ∈ f_SA(ɣ,p)\n");
-    representation.append("[ɣ,p⊤,i,f1',f2',j]");
-    return representation.toString();
+    return "[β,ε⊤,i,f1,f2,j] [ɣ,p⊥,f1,f1',f2',f2]" + "\n______ β ∈ f_SA(ɣ,p)\n"
+        + "[ɣ,p⊤,i,f1',f2',j]";
   }
 
 }

@@ -1,13 +1,12 @@
 package common.lcfrs;
 
-import common.ArrayUtils;
+import common.AbstractItem;
 import common.Item;
 
 /** An item we get if we have fully seen an active item. It is used to move the
  * dot further in active items. */
-public class SrcgEarleyPassiveItem implements Item {
+public class SrcgEarleyPassiveItem extends AbstractItem implements Item {
 
-  private String[] itemform;
   private RangeVector p;
 
   /** Initialize the passive item with a nonterminal and a range vector. */
@@ -26,31 +25,20 @@ public class SrcgEarleyPassiveItem implements Item {
     System.arraycopy(newvector, 0, this.itemform, 1, newvector.length);
   }
 
-  @Override public void setItemform(String[] itemform) {
-    this.itemform = itemform;
-  }
-
-  @Override public String[] getItemform() {
-    return this.itemform;
-  }
-
   @Override public String toString() {
     if (p != null) {
       return "[" + itemform[0] + ", " + p.toString() + "]";
     } else {
       StringBuilder builder = new StringBuilder();
-      builder.append("[" + itemform[0]);
+      builder.append("[").append(itemform[0]);
       for (int i = 0; i*2+2 <itemform.length; i++){
           builder.append(", ");
-        builder.append("<" + itemform[i*2+1] + "," + itemform[i*2+2] + ">");
+        builder.append("<").append(itemform[i * 2 + 1]).append(",")
+            .append(itemform[i * 2 + 2]).append(">");
       }
       builder.append("]");
       return builder.toString();
     }
-  }
-
-  @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemform, ((Item) o).getItemform());
   }
 
 }

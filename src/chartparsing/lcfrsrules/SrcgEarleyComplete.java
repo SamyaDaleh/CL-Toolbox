@@ -120,11 +120,8 @@ public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[B,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]");
-    representation.append("\n______ \n");
-    representation.append("[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]");
-    return representation.toString();
+    return "[B,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]" + "\n______ \n"
+        + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
   }
 
 }

@@ -11,7 +11,7 @@ import common.cfg.CfgProductionRule;
  * the lhs. */
 public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
 
-  private CfgProductionRule rule;
+  private final CfgProductionRule rule;
 
   public CfgCykCompleteUnary(CfgProductionRule rule) {
     this.rule = rule;
@@ -36,11 +36,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append(
-      "[" + rule.getRhs()[0] + ",i,j]]");
-    representation.append("\n______ \n");
-    representation.append("[" + rule.getLhs() + ",i,j]");
-    return representation.toString();
+    return "[" + rule.getRhs()[0] + ",i,j]]" + "\n______ \n" + "[" + rule.getLhs()
+        + ",i,j]";
   }
 }

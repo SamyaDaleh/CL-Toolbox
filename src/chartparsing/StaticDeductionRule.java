@@ -8,9 +8,9 @@ import common.Item;
 /** Static deduction rule that stores a set of antecedences and consequences.
  * Used as axiom. */
 public class StaticDeductionRule implements DeductionRule{
-  List<Item> antecedences = new LinkedList<Item>();
+  private List<Item> antecedences = new LinkedList<Item>();
   List<Item> consequences = new LinkedList<Item>();
-  String name = null;
+  private String name = null;
 
   public void addAntecedence(Item item) {
     antecedences.add(item);

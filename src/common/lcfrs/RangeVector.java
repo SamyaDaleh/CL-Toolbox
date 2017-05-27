@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RangeVector {
   
-  private List<Range> ranges = new LinkedList<Range>();
+  private final List<Range> ranges = new LinkedList<Range>();
 
   /**
    * Creates a new vector of numranges ranges filled with placeholders. 

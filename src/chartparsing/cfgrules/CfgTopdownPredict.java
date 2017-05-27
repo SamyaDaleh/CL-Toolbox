@@ -12,7 +12,7 @@ import common.cfg.CfgProductionRule;
  * is the lhs. */
 public class CfgTopdownPredict extends AbstractDynamicDeductionRule {
 
-  private CfgProductionRule rule;
+  private final CfgProductionRule rule;
 
   public CfgTopdownPredict(CfgProductionRule rule) {
     this.rule = rule;
@@ -46,12 +46,9 @@ public class CfgTopdownPredict extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[" + rule.getLhs() + "α,i]");
-    representation.append("\n______ " + rule.toString() + ", |"
-      + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n");
-    representation.append("[" + ArrayUtils.toString(rule.getRhs()) + " α,i]");
-    return representation.toString();
+    return "[" + rule.getLhs() + "α,i]" + "\n______ " + rule.toString() + ", |"
+        + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n" + "["
+        + ArrayUtils.toString(rule.getRhs()) + " α,i]";
   }
 
 }

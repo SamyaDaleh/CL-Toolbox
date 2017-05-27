@@ -10,8 +10,8 @@ import common.tag.TagEarleyItem;
 /** If the node's label is the next input symbol, consume it. */
 public class TagEarleyScanterm extends AbstractDynamicDeductionRule {
 
-  private String[] wsplit;
-  private Tag tag;
+  private final String[] wsplit;
+  private final Tag tag;
 
   /** Constructor takes the input string to compare with the tree labels, also
    * needs the grammar to retrieve information about the antecedence. */
@@ -43,7 +43,7 @@ public class TagEarleyScanterm extends AbstractDynamicDeductionRule {
       if (l < wsplit.length && pos.equals("la") && adj.equals("0")
         && tag.getTree(treename).getNodeByGornAdress(node).getLabel()
           .equals(wsplit[l])) {
-        consequences.add(new TagEarleyItem(treename, node, "ra", i, (Integer) j,
+        consequences.add(new TagEarleyItem(treename, node, "ra", i, j,
           k, l + 1, false));
       }
     }
@@ -51,11 +51,8 @@ public class TagEarleyScanterm extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,la,i,j,k,l,0]");
-    representation.append("\n______ l(ɣ,p) = w_l\n");
-    representation.append("[ɣ,p,ra,i,j,k,l+1,0]");
-    return representation.toString();
+    return "[ɣ,p,la,i,j,k,l,0]" + "\n______ l(ɣ,p) = w_l\n"
+        + "[ɣ,p,ra,i,j,k,l+1,0]";
   }
 
 }

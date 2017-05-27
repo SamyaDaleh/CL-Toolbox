@@ -4,8 +4,8 @@ package common.cfg;
  * contain one symbol and the rule has a probability. */
 public class PcfgProductionRule {
   private Double p = 0.0;
-  private String lhs;
-  private String[] rhs;
+  private final String lhs;
+  private final String[] rhs;
 
   /** Construction of an array of length 3 where the elements are lhs, rhs and
    * probability. */

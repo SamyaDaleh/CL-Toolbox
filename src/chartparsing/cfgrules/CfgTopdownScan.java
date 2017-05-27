@@ -11,7 +11,7 @@ import common.cfg.CfgItem;
  * symbol. */
 public class CfgTopdownScan extends AbstractDynamicDeductionRule {
 
-  private String[] wsplit;
+  private final String[] wsplit;
 
   public CfgTopdownScan(String[] wsplit) {
     this.wsplit = wsplit;
@@ -35,11 +35,7 @@ public class CfgTopdownScan extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[aα,i]");
-    representation.append("\n______ w_i = a\n");
-    representation.append("[α,i+1]");
-    return representation.toString();
+    return "[aα,i]" + "\n______ w_i = a\n" + "[α,i+1]";
   }
 
 }

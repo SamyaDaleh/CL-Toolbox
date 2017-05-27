@@ -11,8 +11,8 @@ import common.tag.TagEarleyItem;
  * tree that can be adjoined into that node. */
 public class TagEarleyPredictadjoinable extends AbstractDynamicDeductionRule {
 
-  private String auxtreename;
-  private Tag tag;
+  private final String auxtreename;
+  private final Tag tag;
 
   /** Constructor takes an auxiliary tree for the items the rule shall derive,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -39,11 +39,8 @@ public class TagEarleyPredictadjoinable extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,la,i,j,k,l,0]");
-    representation.append("\n______ " + auxtreename + " ∈ f_SA(ɣ,p)\n");
-    representation.append("[" + auxtreename + ",ε,la,l,-,-,l,0]");
-    return representation.toString();
+    return "[ɣ,p,la,i,j,k,l,0]" + "\n______ " + auxtreename + " ∈ f_SA(ɣ,p)\n"
+        + "[" + auxtreename + ",ε,la,l,-,-,l,0]";
   }
 
 }

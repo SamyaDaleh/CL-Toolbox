@@ -77,11 +77,8 @@ public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[A -> α •B β,i,j] [B -> ɣ •,j,k]");
-    representation.append("\n______\n");
-    representation.append("[A -> α B •β,i,k]");
-    return representation.toString();
+    return
+        "[A -> α •B β,i,j] [B -> ɣ •,j,k]" + "\n______\n" + "[A -> α B •β,i,k]";
   }
 
 }

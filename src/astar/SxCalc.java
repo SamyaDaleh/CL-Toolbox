@@ -53,7 +53,7 @@ public class SxCalc {
 
   /** Generates a string that is used as key for inside probabilities in a human
    * readable form. */
-  static String getInsideKey(String nt, int length) {
+  private static String getInsideKey(String nt, int length) {
     return "in(" + nt + "," + String.valueOf(length) + ")";
   }
 

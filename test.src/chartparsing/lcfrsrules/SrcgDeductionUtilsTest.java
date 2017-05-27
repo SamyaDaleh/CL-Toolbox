@@ -1,6 +1,8 @@
 package chartparsing.lcfrsrules;
 
 import common.lcfrs.Clause;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -20,9 +22,9 @@ public class SrcgDeductionUtilsTest {
     String[] itemform12 =
       new String[] {"A(a ,b) -> ε", "1", "1", "1", "0", "1", "?", "?"};
 
-    assertTrue(SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause11, itemform11,
-      rhs11, iinit11, clause12, itemform12));
-    
+    assertTrue(SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause11,
+      itemform11, rhs11, iinit11, clause12, itemform12));
+
     // [S(X1 •X2) -> A(X1,X2), 1, <1,1>, (<0,1>)]]
     // [[A(a •,b) -> ε, 2, <1,1>, (<1,2>, <?,?>)]
     // occurs in resume
@@ -35,8 +37,8 @@ public class SrcgDeductionUtilsTest {
     String[] itemform22 =
       new String[] {"A(a ,b) -> ε", "2", "1", "1", "1", "2", "?", "?"};
 
-    assertTrue(!SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause21, itemform21,
-      rhs21, iinit21, clause22, itemform22));
+    assertTrue(!SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause21,
+      itemform21, rhs21, iinit21, clause22, itemform22));
 
     // [S(X1 •X2) -> A(X1,X2), 1, <1,1>, (<0,1>)]]
     // [[A(a •,b) -> ε, 1, <1,1>, (<0,1>, <?,?>)]
@@ -49,8 +51,22 @@ public class SrcgDeductionUtilsTest {
     String[] itemform32 =
       new String[] {"A(a ,b) -> ε", "1", "1", "1", "0", "1", "?", "?"};
 
-    assertTrue(SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause31, itemform31,
-      rhs31, iinit31, clause32, itemform32));
+    assertTrue(SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause31,
+      itemform31, rhs31, iinit31, clause32, itemform32));
 
+  }
+
+  @Test public void testgetRangesForArguments() {
+    Predicate lhs = new Predicate("A ( a b c, d, e f )");
+    String[] ranges =
+      new String[] {"0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6"};
+    String[] rangesoverarguments =
+      SrcgDeductionUtils.getRangesForArguments(ranges, lhs);
+    assertEquals("0", rangesoverarguments[0]);
+    assertEquals("3", rangesoverarguments[1]);
+    assertEquals("3", rangesoverarguments[2]);
+    assertEquals("4", rangesoverarguments[3]);
+    assertEquals("4", rangesoverarguments[4]);
+    assertEquals("6", rangesoverarguments[5]);
   }
 }

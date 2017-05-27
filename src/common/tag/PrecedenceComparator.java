@@ -2,7 +2,7 @@ package common.tag;
 
 import java.util.Comparator;
 
-public class PrecedenceComparator implements Comparator<Vertex> {
+class PrecedenceComparator implements Comparator<Vertex> {
 
   @Override public int compare(Vertex o1, Vertex o2) {
     

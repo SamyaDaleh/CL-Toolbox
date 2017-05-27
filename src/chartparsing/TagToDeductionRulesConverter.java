@@ -30,7 +30,7 @@ import common.tag.Vertex;
  * parsing algorithms. Based on the slides from Laura Kallmeyer about TAG
  * Parsing
  * https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf */
-public class TagToDeductionRulesConverter {
+class TagToDeductionRulesConverter {
 
   /** Common entry point to comfortably call the different functions. */
   public static ParsingSchema TagToParsingSchema(Tag tag, String w,

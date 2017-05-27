@@ -1,9 +1,9 @@
 package common;
 
 /** Representation of an arbitrary production rule of a grammar. */
-public class GrammarProductionRule {
-  private String[] lhs;
-  private String[] rhs;
+class GrammarProductionRule {
+  private final String[] lhs;
+  private final String[] rhs;
   private Double p = 0.0;
 
   /**

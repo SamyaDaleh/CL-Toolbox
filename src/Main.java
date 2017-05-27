@@ -11,7 +11,7 @@ import common.tag.Tag;
 import gui.ParsingTraceTable;
 
 /** Entry point into toolbox for the calls by command line */
-public class Main {
+class Main {
 
   /** Command line arguments are passed here. Call without arguments displays
    * help about the what arguments to use. */

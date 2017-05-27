@@ -74,11 +74,8 @@ public class TagCykMovebinary extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,(p.1)⊤,i,f1,f2,k] [ɣ,(p.2)⊤,k,f1',f2',j]");
-    representation.append("\n______\n");
-    representation.append("[ɣ,p⊥,i,f1⊕f1',f2⊕f2',j]");
-    return representation.toString();
+    return "[ɣ,(p.1)⊤,i,f1,f2,k] [ɣ,(p.2)⊤,k,f1',f2',j]" + "\n______\n"
+        + "[ɣ,p⊥,i,f1⊕f1',f2⊕f2',j]";
   }
 
 }

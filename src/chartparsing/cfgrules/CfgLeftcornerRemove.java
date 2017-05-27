@@ -36,11 +36,7 @@ public class CfgLeftcornerRemove extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[Xα,Xβ,ɣ]");
-    representation.append("\n______\n");
-    representation.append("[α,β,ɣ]");
-    return representation.toString();
+    return "[Xα,Xβ,ɣ]" + "\n______\n" + "[α,β,ɣ]";
   }
 
 }

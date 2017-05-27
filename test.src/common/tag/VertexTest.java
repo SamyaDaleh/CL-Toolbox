@@ -1,11 +1,11 @@
 package common.tag;
 
-import java.text.ParseException;
-
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+
 public class VertexTest {
-  public void testSiblings() throws ParseException {
+  @Test public void testSiblings() {
     Vertex v1 = new Vertex("S");
     v1.setGornaddress("");
     assertTrue(v1.getGornAddressOfPotentialRightSibling() == null);

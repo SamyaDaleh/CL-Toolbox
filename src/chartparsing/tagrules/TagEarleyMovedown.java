@@ -10,7 +10,7 @@ import common.tag.TagEarleyItem;
 /** If a node has a child, move to the fist child. */
 public class TagEarleyMovedown extends AbstractDynamicDeductionRule {
   
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
@@ -40,19 +40,15 @@ public class TagEarleyMovedown extends AbstractDynamicDeductionRule {
       String adj = itemform[7];
       if (pos.equals("lb") && adj.equals("0")
         && tag.getTree(treename).getNodeByGornAdress(node + ".1") != null) {
-        consequences.add(new TagEarleyItem(treename, node + ".1", "la", i,
-          (Integer) j, k, l, false));
+        consequences.add(new TagEarleyItem(treename, node + ".1", "la", i, j, k, l, false));
       }
     }
     return consequences;
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,lb,i,j,k,l,0]");
-    representation.append("\n______ ɣ(p.1) is defined\n");
-    representation.append("[ɣ,p.1,la,i,j,k,l,0]");
-    return representation.toString();
+    return "[ɣ,p,lb,i,j,k,l,0]" + "\n______ ɣ(p.1) is defined\n"
+        + "[ɣ,p.1,la,i,j,k,l,0]";
   }
 
 }

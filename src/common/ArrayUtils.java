@@ -49,14 +49,14 @@ public class ArrayUtils {
   public static String toString(String[] item) {
     StringBuilder representation = new StringBuilder();
     representation.append("[");
-    for (int i = 0; i < item.length; i++) {
+    for (String element : item) {
       if (representation.length() > 1) {
         representation.append(",");
       }
-      if (item[i].equals("")) {
+      if (element.equals("")) {
         representation.append("ε");
       } else {
-        representation.append(item[i]);
+        representation.append(element);
       }
     }
     representation.append("]");
@@ -86,10 +86,10 @@ public class ArrayUtils {
         subseq.append(" ");
       subseq.append(split[i]);
     }
-    for (int i = 0; i < rhs.length; i++) {
+    for (String sym : rhs) {
       if (subseq.length() > 0)
         subseq.append(" ");
-      subseq.append(rhs[i]);
+      subseq.append(sym);
     }
     return subseq.toString().split(" ");
   }

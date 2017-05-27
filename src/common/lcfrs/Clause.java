@@ -7,8 +7,8 @@ import java.util.List;
  * A1(X1,...,X_dim(A1)) ... */
 public class Clause {
 
-  private Predicate lhs;
-  private List<Predicate> rhs = new LinkedList<Predicate>();
+  private final Predicate lhs;
+  private final List<Predicate> rhs = new LinkedList<Predicate>();
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
    * every part a Predicate */

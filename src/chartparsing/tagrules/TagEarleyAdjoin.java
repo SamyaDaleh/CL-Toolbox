@@ -11,7 +11,7 @@ import common.tag.TagEarleyItem;
  * been adjoined. */
 public class TagEarleyAdjoin extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
@@ -59,14 +59,12 @@ public class TagEarleyAdjoin extends AbstractDynamicDeductionRule {
       boolean adjoinable2 = tag.isAdjoinable(treename2, treename1, node1);
       if (adj1.equals("0") && adj2.equals("0")) {
         if (adjoinable1 && node1.equals("") && pos1.equals("ra")
-          && pos2.equals("rb") && j1.intValue() == j2) {
-          consequences.add(new TagEarleyItem(treename2, node2, "rb", i,
-            (Integer) g, h, l, true));
+          && pos2.equals("rb") && j1 == j2) {
+          consequences.add(new TagEarleyItem(treename2, node2, "rb", i, g, h, l, true));
         } else if (adjoinable2 && node2.equals("") && pos2.equals("ra")
-          && pos1.equals("rb") && g.intValue() == i) {
+          && pos1.equals("rb") && g == i) {
           // the other way around
-          consequences.add(new TagEarleyItem(treename1, node1, "rb", j2,
-            (Integer) j1, k1, k2, true));
+          consequences.add(new TagEarleyItem(treename1, node1, "rb", j2, j1, k1, k2, true));
         }
       }
     }
@@ -74,11 +72,8 @@ public class TagEarleyAdjoin extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[β,ε,ra,i,j,k,l,0], [ɣ,p,rb,j,g,h,k,0]");
-    representation.append("\n______ β ∈ f_SA(ɣ,p)\n");
-    representation.append("[ɣ,p,rb,i,g,h,l,1]");
-    return representation.toString();
+    return "[β,ε,ra,i,j,k,l,0], [ɣ,p,rb,j,g,h,k,0]" + "\n______ β ∈ f_SA(ɣ,p)\n"
+        + "[ɣ,p,rb,i,g,h,l,1]";
   }
 
 }

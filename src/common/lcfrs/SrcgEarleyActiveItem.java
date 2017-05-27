@@ -1,12 +1,11 @@
 package common.lcfrs;
 
-import common.ArrayUtils;
+import common.AbstractItem;
 import common.Item;
 
 /** Active item that has not been fully seen yet. */
-public class SrcgEarleyActiveItem implements Item {
+public class SrcgEarleyActiveItem extends AbstractItem implements Item {
 
-  private String[] itemform;
   private RangeVector p;
 
   /** Constructor with a clause, where a dot marked up until which point the
@@ -39,14 +38,6 @@ public class SrcgEarleyActiveItem implements Item {
     System.arraycopy(rangevector, 0, this.itemform, 4, rangevector.length);
   }
 
-  @Override public void setItemform(String[] itemform) {
-    this.itemform = itemform;
-  }
-
-  @Override public String[] getItemform() {
-    return this.itemform;
-  }
-
   @Override public String toString() {
     String[] clausesplit = itemform[0].split("->");
     Clause clause = new Clause(clausesplit[0], clausesplit[1]);
@@ -62,16 +53,13 @@ public class SrcgEarleyActiveItem implements Item {
         if (i > 0 ) {
           builder.append(", ");
         }
-        builder.append("<" + itemform[i*2+4] + "," + itemform[i*2+5] + ">");
+        builder.append("<").append(itemform[i * 2 + 4]).append(",")
+            .append(itemform[i * 2 + 5]).append(">");
       }
       builder.append(")");
       return "[" + dottedclause + ", " + itemform[1] + ", <" + itemform[2] + ","
         + itemform[3] + ">, " + builder.toString() + "]";
     }
-  }
-
-  @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemform, ((Item) o).getItemform());
   }
 
 }

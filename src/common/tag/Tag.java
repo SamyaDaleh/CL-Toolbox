@@ -15,8 +15,8 @@ public class Tag {
   private String[] nonterminals;
   private String[] terminals;
   private String startsymbol;
-  private Map<String, Tree> initialtrees = new HashMap<String, Tree>();
-  private Map<String, Tree> auxiliarytrees = new HashMap<String, Tree>();
+  private final Map<String, Tree> initialtrees = new HashMap<String, Tree>();
+  private final Map<String, Tree> auxiliarytrees = new HashMap<String, Tree>();
 
   public Tag() {
     super();
@@ -142,7 +142,7 @@ public class Tag {
         break;
       }
     }
-    Tree tree = null;
+    Tree tree;
     if (initialtrees.containsKey(treename)) {
       tree = initialtrees.get(treename);
     } else {
@@ -196,8 +196,7 @@ public class Tag {
 
   /** Returns true if auxtree is adjoinable in tree at node with gorn address.
    * That is the case if the label of the node and the auxiliary tree are the
-   * same and the node is no substitution node.
-   * @return */
+   * same and the node is no substitution node. */
   public boolean isAdjoinable(String auxtreename, String treename,
     String gornaddress) {
     Tree tree = getTree(treename);
@@ -219,16 +218,17 @@ public class Tag {
     String[] auxtreenames =
       auxtreesnameset.toArray(new String[auxtreesnameset.size()]);
     builder.append("G = <N, T, I, A, S>\n");
-    builder.append("N = {" + String.join(", ", nonterminals) + "}\n");
-    builder.append("T = {" + String.join(", ", terminals) + "}\n");
+    builder.append("N = {").append(String.join(", ", nonterminals))
+        .append("}\n");
+    builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
     builder.append("I = {");
 
     for (int i = 0; i < initialtrees.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append(
-        initreenames[i] + " : " + getInitialTree(initreenames[i]).toString());
+      builder.append(initreenames[i]).append(" : ")
+          .append(getInitialTree(initreenames[i]).toString());
     }
     builder.append("}\n");
     builder.append("A = {");
@@ -236,11 +236,11 @@ public class Tag {
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append(
-        auxtreenames[i] + " : " + getAuxiliaryTree(auxtreenames[i]).toString());
+      builder.append(auxtreenames[i]).append(" : ")
+          .append(getAuxiliaryTree(auxtreenames[i]).toString());
     }
     builder.append("}\n");
-    builder.append("S = " + startsymbol + "\n");
+    builder.append("S = ").append(startsymbol).append("\n");
     return builder.toString();
   }
 }

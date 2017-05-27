@@ -13,7 +13,7 @@ import common.cfg.CfgProductionRule;
  * add the lhs to the stack of lhs */
 public class CfgLeftcornerReduce extends AbstractDynamicDeductionRule {
 
-  private CfgProductionRule rule;
+  private final CfgProductionRule rule;
 
   public CfgLeftcornerReduce(CfgProductionRule rule) {
     this.name = "reduce " + rule.toString();
@@ -55,14 +55,10 @@ public class CfgLeftcornerReduce extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[" + rule.getRhs()[0] + "α,Bβ,ɣ]");
-    representation
-      .append("\n______ " + ArrayUtils.toString(rule.getRhs()) + ", B ≠ $\n");
-    representation
-      .append("[α," + ArrayUtils.getSubSequenceAsString(rule.getRhs(), 1,
-        rule.getRhs().length) + "$Bβ," + rule.getLhs() + "ɣ]");
-    return representation.toString();
+    return "[" + rule.getRhs()[0] + "α,Bβ,ɣ]" + "\n______ " + ArrayUtils
+        .toString(rule.getRhs()) + ", B ≠ $\n" + "[α," + ArrayUtils
+        .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length)
+        + "$Bβ," + rule.getLhs() + "ɣ]";
   }
 
 }

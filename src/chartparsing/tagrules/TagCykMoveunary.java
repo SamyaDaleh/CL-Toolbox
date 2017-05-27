@@ -10,7 +10,7 @@ import common.tag.TagCykItem;
 /** From a single-child node move up to the parent node. */
 public class TagCykMoveunary extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
@@ -50,11 +50,8 @@ public class TagCykMoveunary extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,(p.1)⊤,i,f1,f2,j]");
-    representation.append("\n______ node adress p.2 does not exist in ɣ\n");
-    representation.append("[ɣ,p⊥,i,f1,f2,j]");
-    return representation.toString();
+    return "[ɣ,(p.1)⊤,i,f1,f2,j]"
+        + "\n______ node adress p.2 does not exist in ɣ\n" + "[ɣ,p⊥,i,f1,f2,j]";
   }
 
 }

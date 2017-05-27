@@ -1,11 +1,10 @@
 package common.tag;
 
-import common.ArrayUtils;
+import common.AbstractItem;
 import common.Item;
 
 /** Item of length 8 used by TAG Earley parsing. */
-public class TagEarleyItem implements Item {
-  private String[] itemform;
+public class TagEarleyItem extends AbstractItem implements Item {
 
   /** Constructor that replaces the foot node indices by '-' if they are
    * null. */
@@ -28,22 +27,6 @@ public class TagEarleyItem implements Item {
     String adjrep = (adj) ? "1" : "0";
     itemform = new String[] {treename, gornaddress, pos, String.valueOf(i), footfrom, footto,
       String.valueOf(l), adjrep};
-  }
-
-  @Override public void setItemform(String[] itemform) {
-    this.itemform = itemform;
-  }
-
-  @Override public String[] getItemform() {
-    return this.itemform;
-  }
-
-  @Override public String toString() {
-    return ArrayUtils.toString(this.itemform);
-  }
-
-  @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemform, ((Item) o).getItemform());
   }
 
 }

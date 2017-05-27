@@ -15,7 +15,7 @@ import common.tag.Tag;
 
 /** Parses different grammars from text files. */
 public class GrammarParser {
-  private static Pattern p = Pattern.compile("\"(.*?)\"");
+  private static final Pattern p = Pattern.compile("\"(.*?)\"");
 
   /** Parses a CFG from a file and returns it as Cfg. */
   public static Cfg parseCfgFile(String grammarfile) throws IOException {
@@ -231,8 +231,7 @@ public class GrammarParser {
     return s.substring(1, s.length() - 1);
   }
 
-  /** Parses a sRCG from a file and returns it as Srcg. 
-   * @throws IOException */
+  /** Parses a sRCG from a file and returns it as Srcg. */
   public static Srcg parseSrcgFile(String grammarfile) throws IOException {
     Srcg srcg = new Srcg();
     BufferedReader in = new BufferedReader(new FileReader(grammarfile));

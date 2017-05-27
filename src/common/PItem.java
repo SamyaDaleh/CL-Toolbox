@@ -4,6 +4,6 @@ package common;
  * probability or the weight of the item. */
 public interface PItem extends Item {
 
-  public Double getProbability();
+  Double getProbability();
 
 }

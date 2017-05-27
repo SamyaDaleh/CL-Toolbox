@@ -7,15 +7,15 @@ import common.Item;
 /** Interface that defines any kind of rule used for deduction. */
 public interface DeductionRule {
 
-  public void addAntecedence(Item item);
+  void addAntecedence(Item item);
 
-  public List<Item> getAntecedences();
+  List<Item> getAntecedences();
 
-  public void setAntecedences(List<Item> antecedences);
+  void setAntecedences(List<Item> antecedences);
 
-  public List<Item> getConsequences();
+  List<Item> getConsequences();
 
-  public String getName();
+  String getName();
 
-  @Override public String toString();
+  @Override String toString();
 }

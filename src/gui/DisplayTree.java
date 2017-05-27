@@ -5,19 +5,19 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import common.tag.Tree;
 import common.tag.Vertex;
 
 public class DisplayTree extends JFrame {
-  
-  private static final long serialVersionUID = -9123591819196303915L;
-  Tree tree;
 
-  public DisplayTree(String treestring) throws ParseException {
+  private static final long serialVersionUID = -9123591819196303915L;
+  private Tree tree;
+
+  private DisplayTree(String treestring) throws ParseException {
     super();
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     this.tree = new Tree(treestring);
   }
 
@@ -28,19 +28,20 @@ public class DisplayTree extends JFrame {
     int drawwidth = 0;
     for (int i = 1; i <= height; i++) {
       int width = tree.getWidthInLayer(i);
-      drawwidth = 400 * 1 / (width + 1);
+      drawwidth = 400 / (width + 1);
       for (Vertex p : tree.getVertexes()) {
         if (p.getGornaddress().split("[.]").length == i) {
           String label =
-            p.getLabel() + (tree.isInOA(p.getGornaddress()) ? "_OA" : "")
-              + (tree.isInNA(p.getGornaddress()) ? "_NA" : "")
-              + (tree.getFoot().equals(p) ? "*" : "");
+              p.getLabel() + (tree.isInOA(p.getGornaddress()) ? "_OA" : "") + (
+                  tree.isInNA(p.getGornaddress()) ? "_NA" : "") + (
+                  tree.getFoot().equals(p) ? "*" : "");
           g.drawString(label, drawwidth, drawheight);
-          nodesdrawn.put(p.getGornaddress(), new Integer[]{drawwidth, drawheight});
+          nodesdrawn
+              .put(p.getGornaddress(), new Integer[] {drawwidth, drawheight});
           if (i > 1) {
             Integer[] xyparent = nodesdrawn.get(p.getGornAddressOfParent());
             g.drawLine(drawwidth, drawheight - 10, xyparent[0],
-              xyparent[1] + 10);
+                xyparent[1] + 10);
           }
           drawwidth += 400 / width;
         }

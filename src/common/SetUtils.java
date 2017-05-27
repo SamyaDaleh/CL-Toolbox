@@ -1,10 +1,11 @@
 package common;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /** Collection of functions to work with Sets. */
-public class SetUtils {
+class SetUtils {
 
   /** Returns a new set that contains all items that one or both input sets
    * contain. */
@@ -20,8 +21,8 @@ public class SetUtils {
   public static Set<String> intersection(Set<String> a, Set<String> b) {
     Set<String> c = new HashSet<String>();
     for (String element : a.toArray(new String[a.size()])) {
-      if (b.contains((String) element))
-        c.add((String) element);
+      if (b.contains(element))
+        c.add(element);
     }
     return c;
   }
@@ -43,9 +44,7 @@ public class SetUtils {
    * of maxlength, including the empty string. */
   public static Set<String> star(String[] a, int maxlength) {
     Set<String> c = new HashSet<String>();
-    for (String b : a) {
-      c.add(b);
-    }
+    Collections.addAll(c, a);
     return star(c, maxlength);
   }
 
@@ -71,9 +70,7 @@ public class SetUtils {
   public static Set<String> union(String[]... sets) {
     Set<String> c = new HashSet<String>();
     for (String[] set : sets) {
-      for (String element : set) {
-        c.add(element);
-      }
+      Collections.addAll(c, set);
     }
     return c;
   }

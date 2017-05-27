@@ -1,11 +1,10 @@
 package common.cfg;
 
-import common.ArrayUtils;
+import common.AbstractItem;
 import common.Item;
 
 /** Item used for LeftCorner parsing that has length 3. */
-public class CfgDollarItem implements Item {
-  private String[] itemform;
+public class CfgDollarItem extends AbstractItem implements Item {
 
   /**
    * Item is constructed by three stack strings.
@@ -15,19 +14,4 @@ public class CfgDollarItem implements Item {
     itemform = new String[] {stackcompleted, stackpredicted, stacklhs};
   }
 
-  @Override public void setItemform(String[] itemform) {
-    this.itemform = itemform;
-  }
-
-  @Override public String[] getItemform() {
-    return itemform;
-  }
-
-  @Override public String toString() {
-    return ArrayUtils.toString(this.itemform);
-  }
-
-  @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemform, ((Item) o).getItemform());
-  }
 }

@@ -13,20 +13,20 @@ import common.Item;
  * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
 public class Deduction {
   /** All items derived in the process. */
-  List<Item> chart;
+  private List<Item> chart;
   /** Items waiting to be used for further derivation. */
-  List<Item> agenda;
+  private List<Item> agenda;
   /** List of the same length of chart, elements at same indexes belong to each
    * other. Contains lists of lists of backpointers. One item can be derived in
    * different ways from different antecedence items. */
-  ArrayList<ArrayList<ArrayList<Integer>>> deductedfrom;
+  private ArrayList<ArrayList<ArrayList<Integer>>> deductedfrom;
   /** Indexes correspond to entries of chart and deductedfrom. Collects the
    * names of the rules that were applied to retrieve new items. */
-  ArrayList<ArrayList<String>> appliedRule;
+  private ArrayList<ArrayList<String>> appliedRule;
   /** When true print only items that lead to a goal. */
-  boolean successfultrace = false;
+  private boolean successfultrace = false;
   /** Markers if items lead to goal */
-  boolean[] usefulitem;
+  private boolean[] usefulitem;
 
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
@@ -106,9 +106,7 @@ public class Deduction {
     getPointersAsArray(ArrayList<ArrayList<Integer>> backpointers) {
     ArrayList<Integer> pointerlist = new ArrayList<Integer>();
     for (ArrayList<Integer> pointertuple : backpointers) {
-      for (int i = 0; i < pointertuple.size(); i++) {
-        pointerlist.add(pointertuple.get(i));
-      }
+      pointerlist.addAll(pointertuple);
     }
     return pointerlist;
   }
@@ -211,9 +209,9 @@ public class Deduction {
     }
   }
 
-  static int column1 = 5;
-  static int column2 = 25;
-  static int column3 = 20;
+  private static final int column1 = 5;
+  private static final int column2 = 25;
+  private static final int column3 = 20;
 
   /** Pretty-prints rows of the parsing process by filling up all columns up to
    * a specific length with spaces. Returns the data it prints as string
@@ -237,7 +235,7 @@ public class Deduction {
     String backpointersrep = backpointersToString(backpointers);
     line.append(backpointersrep);
     System.out.println(line.toString());
-    return new String[] {String.valueOf(i + 1), item.toString(), rulesrep,
+    return new String[] {String.valueOf(i + 1), item, rulesrep,
       backpointersrep};
   }
 

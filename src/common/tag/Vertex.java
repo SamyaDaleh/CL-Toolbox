@@ -4,7 +4,7 @@ import common.ArrayUtils;
 
 /** A node in a tree, also called vertex. */
 public class Vertex {
-  String label;
+  final String label;
   String gornaddress;
 
   /** Constructs a node with the given label. */
@@ -20,7 +20,7 @@ public class Vertex {
     return this.gornaddress;
   }
 
-  protected void setGornaddress(String gornaddress) {
+  void setGornaddress(String gornaddress) {
     this.gornaddress = gornaddress;
   }
 

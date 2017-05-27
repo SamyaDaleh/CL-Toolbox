@@ -12,8 +12,8 @@ import common.tag.Vertex;
  * substituted there. */
 public class TagEarleyPredictsubst extends AbstractDynamicDeductionRule {
   
-  private String initreename;
-  private Tag tag;
+  private final String initreename;
+  private final Tag tag;
 
   /** Constructor takes an auxiliary tree for the items the rule shall derive,
    * also needs the grammar to retrieve information about the antecedence. */
@@ -47,12 +47,9 @@ public class TagEarleyPredictsubst extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,lb,i,-,-,i,0]");
-    representation.append("\n______ ɣ(p) a substitution node, " + initreename
-      + " ∈ I, l(ɣ,p) = l(" + initreename + ",ε)\n");
-    representation.append("[" + initreename + ",ε,la,i,-,-,i,0]");
-    return representation.toString();
+    return "[ɣ,p,lb,i,-,-,i,0]" + "\n______ ɣ(p) a substitution node, "
+        + initreename + " ∈ I, l(ɣ,p) = l(" + initreename + ",ε)\n" + "["
+        + initreename + ",ε,la,i,-,-,i,0]";
   }
 
 }

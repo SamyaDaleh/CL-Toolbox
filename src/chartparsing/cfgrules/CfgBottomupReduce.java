@@ -12,7 +12,7 @@ import common.cfg.CfgProductionRule;
  * lhs. */
 public class CfgBottomupReduce extends AbstractDynamicDeductionRule{
 
-  private CfgProductionRule rule;
+  private final CfgProductionRule rule;
 
   public CfgBottomupReduce(CfgProductionRule rule) {
     this.rule = rule;
@@ -40,11 +40,8 @@ public class CfgBottomupReduce extends AbstractDynamicDeductionRule{
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]");
-    representation.append("\n______" + rule.toString() + "\n");
-    representation.append("[Γ " + rule.getLhs() + ",i]");
-    return representation.toString();
+    return "[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]" + "\n______" + rule
+        .toString() + "\n" + "[Γ " + rule.getLhs() + ",i]";
   }
 
 }

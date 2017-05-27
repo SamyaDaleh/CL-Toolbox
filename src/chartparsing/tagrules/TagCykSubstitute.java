@@ -11,9 +11,9 @@ import common.tag.TagCykItem;
  * remembers. */
 public class TagCykSubstitute extends AbstractDynamicDeductionRule {
   
-  private Tag tag;
-  private String nodegorn;
-  private String treename;
+  private final Tag tag;
+  private final String nodegorn;
+  private final String treename;
 
   /** Remembers tree and node it can substitute in. */
   public TagCykSubstitute(String treename, String nodegorn, Tag tag) {
@@ -40,12 +40,9 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[α,ε⊤,i,-,-,j]");
-    representation.append("\n______ l(α,ε) = l(" + treename + "," + nodegorn
-      + "), " + treename + "(" + nodegorn + ") a substitution node\n");
-    representation.append("[" + treename + "," + nodegorn + "⊤,i,-,-,j]");
-    return representation.toString();
+    return "[α,ε⊤,i,-,-,j]" + "\n______ l(α,ε) = l(" + treename + "," + nodegorn
+        + "), " + treename + "(" + nodegorn + ") a substitution node\n"
+        + "[" + treename + "," + nodegorn + "⊤,i,-,-,j]";
   }
 
 }

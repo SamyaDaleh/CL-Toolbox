@@ -1,6 +1,7 @@
 package common.cfg;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import common.ArrayUtils;
  * terminals, production rules and a start symbol. */
 public class Cfg {
   private String vars[];
-  private List<CfgProductionRule> R = new LinkedList<CfgProductionRule>();
+  private final List<CfgProductionRule> R = new LinkedList<CfgProductionRule>();
   private String start_var;
   private String terminals[];
 
@@ -178,9 +179,7 @@ public class Cfg {
     newCfg.setTerminals(this.terminals);
     newCfg.setStart_var(this.start_var);
     ArrayList<String> newnt = new ArrayList<String>();
-    for (String nt : this.vars) {
-      newnt.add(nt);
-    }
+    Collections.addAll(newnt, this.vars);
     ArrayList<String[]> newp = new ArrayList<String[]>();
     int i = 1;
     for (CfgProductionRule rule : this.R) {
@@ -326,12 +325,8 @@ public class Cfg {
     cfg.start_var = this.start_var;
 
     ArrayList<String> newnt = new ArrayList<String>();
-    for (String oldnt : this.vars) {
-      newnt.add(oldnt);
-    }
-    for (CfgProductionRule rule : this.R) {
-      cfg.R.add(rule);
-    }
+    Collections.addAll(newnt, this.vars);
+    cfg.R.addAll(this.R);
     ArrayList<String> eliminateable = new ArrayList<String>();
     boolean changed = true;
     while (changed) {
@@ -465,9 +460,7 @@ public class Cfg {
     ArrayList<String[]> newtrules = new ArrayList<String[]>();
     ArrayList<String> newnt = new ArrayList<String>();
 
-    for (String nt : this.vars) {
-      newnt.add(nt);
-    }
+    Collections.addAll(newnt, this.vars);
     int i = 1;
     for (CfgProductionRule rule : this.R) {
       if (rule.rhs.length == 1) {
@@ -514,9 +507,9 @@ public class Cfg {
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("G = <N, T, S, P>\n");
-    builder.append("N = {" + String.join(", ", vars) + "}\n");
-    builder.append("T = {" + String.join(", ", terminals) + "}\n");
-    builder.append("S = " + start_var + "\n");
+    builder.append("N = {").append(String.join(", ", vars)).append("}\n");
+    builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
+    builder.append("S = ").append(start_var).append("\n");
     builder.append("P = {");
     for (int i = 0; i < R.size(); i++) {
       if (i > 0) {
@@ -536,9 +529,7 @@ public class Cfg {
     cfg.setTerminals(this.terminals);
     cfg.setStart_var(this.start_var);
     ArrayList<String> newnts = new ArrayList<String>();
-    for (String nt : this.vars) {
-      newnts.add(nt);
-    }
+    Collections.addAll(newnts, this.vars);
     for (String nt : this.vars) {
       int i = 1;
       String newnt = nt + String.valueOf(i);

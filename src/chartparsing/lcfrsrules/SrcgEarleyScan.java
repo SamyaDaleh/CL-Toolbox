@@ -12,7 +12,7 @@ import common.lcfrs.SrcgEarleyActiveItem;
  * can scan it. */
 public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
 
-  private String[] wsplit;
+  private final String[] wsplit;
 
   /** Remembers the input string to compare it with the next symbol to scan. */
   public SrcgEarleyScan(String[] wsplit) {
@@ -53,10 +53,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[A(φ) -> Φ,pos,<i,j>,ρ]");
-    representation.append("\n______ φ(i,j) = w_pos\n");
-    representation.append("[A(φ) -> Φ,pos,<i,j+1>,ρ']");
-    return representation.toString();
+    return "[A(φ) -> Φ,pos,<i,j>,ρ]" + "\n______ φ(i,j) = w_pos\n"
+        + "[A(φ) -> Φ,pos,<i,j+1>,ρ']";
   }
 }

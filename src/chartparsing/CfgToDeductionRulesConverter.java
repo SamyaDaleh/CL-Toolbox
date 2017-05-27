@@ -20,7 +20,7 @@ import common.cfg.CfgProductionRule;
 
 /** Generates different parsing schemes. Based on the slides from Laura
  * Kallmeyer about Parsing as Deduction. */
-public class CfgToDeductionRulesConverter {
+class CfgToDeductionRulesConverter {
 
   /** Instead of calling the respective function this method works as entry
    * point for all of them. Takes a cfg, an input string w and a string

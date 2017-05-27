@@ -10,7 +10,7 @@ import common.tag.TagEarleyItem;
 /** If the node's label is epsilon, just move on. */
 public class TagEarleyScaneps extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
@@ -41,18 +41,15 @@ public class TagEarleyScaneps extends AbstractDynamicDeductionRule {
       if (pos.equals("la") && adj.equals("0") && tag.getTree(treename)
         .getNodeByGornAdress(node).getLabel().equals("")) {
         consequences.add(
-          new TagEarleyItem(treename, node, "ra", i, (Integer) j, k, l, false));
+          new TagEarleyItem(treename, node, "ra", i, j, k, l, false));
       }
     }
     return consequences;
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,la,i,j,k,l,0]");
-    representation.append("\n______ l(ɣ,p) = ε\n");
-    representation.append("[ɣ,p,ra,i,j,k,l,0]");
-    return representation.toString();
+    return
+        "[ɣ,p,la,i,j,k,l,0]" + "\n______ l(ɣ,p) = ε\n" + "[ɣ,p,ra,i,j,k,l,0]";
   }
 
 }

@@ -1,11 +1,10 @@
 package common.cfg;
 
-import common.ArrayUtils;
+import common.AbstractItem;
 import common.Item;
 
 /** Item of length 3 used for Earley parsing. */
-public class CfgDottedItem implements Item {
-  private String[] itemform;
+public class CfgDottedItem extends AbstractItem implements Item {
 
   /** Item is constructed by a dotted item (not checked) and indices
    * representing its range. */
@@ -13,19 +12,4 @@ public class CfgDottedItem implements Item {
     itemform = new String[] {ntdot, String.valueOf(from), String.valueOf(to)};
   }
 
-  @Override public void setItemform(String[] itemform) {
-    this.itemform = itemform;
-  }
-
-  @Override public String[] getItemform() {
-    return itemform;
-  }
-
-  @Override public String toString() {
-    return ArrayUtils.toString(this.itemform);
-  }
-
-  @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemform, ((Item) o).getItemform());
-  }
 }

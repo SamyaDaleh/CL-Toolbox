@@ -10,7 +10,7 @@ import common.tag.TagEarleyItem;
 /** If a node has a right sibling, move to that sibling. */
 public class TagEarleyMoveright extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
@@ -42,19 +42,15 @@ public class TagEarleyMoveright extends AbstractDynamicDeductionRule {
         .getGornAddressOfPotentialRightSibling();
       if (pos.equals("ra") && adj.equals("0")
         && tag.getTree(treename).getNodeByGornAdress(siblinggorn) != null) {
-        consequences.add(new TagEarleyItem(treename, siblinggorn, "la", i,
-          (Integer) j, k, l, false));
+        consequences.add(new TagEarleyItem(treename, siblinggorn, "la", i, j, k, l, false));
       }
     }
     return consequences;
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,ra,i,j,k,l,0]");
-    representation.append("\n______ ɣ(p+1) is defined\n");
-    representation.append("[ɣ,p+1,la,i,j,k,l,0]");
-    return representation.toString();
+    return "[ɣ,p,ra,i,j,k,l,0]" + "\n______ ɣ(p+1) is defined\n"
+        + "[ɣ,p+1,la,i,j,k,l,0]";
   }
   
 }

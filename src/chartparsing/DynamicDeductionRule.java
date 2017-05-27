@@ -6,6 +6,6 @@ package chartparsing;
  * how many antecedences to set.
  */
 public interface DynamicDeductionRule extends DeductionRule{
-  public int getAntecedencesNeeded();
-  public void clearItems();
+  int getAntecedencesNeeded();
+  void clearItems();
 }

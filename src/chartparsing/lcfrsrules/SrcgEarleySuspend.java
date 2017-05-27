@@ -16,7 +16,7 @@ import common.lcfrs.SrcgEarleyActiveItem;
  * used to predict it. */
 public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
 
-  private String[] variables;
+  private final String[] variables;
 
   /** Remember variables to check if symbols are one of them. */
   public SrcgEarleySuspend(String[] variables) {
@@ -74,7 +74,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
                   SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1parsed,
                     itemform1, rhspred, iint1, clause2parsed, itemform2);
                 if (vectorsmatch) {
-                  ArrayList<String> newvector = new ArrayList<String>();
+                  ArrayList<String> newvector;
                   newvector = new ArrayList<String>(Arrays.asList(ArrayUtils
                     .getSubSequenceAsArray(itemform2, 4, itemform2.length)));
                   int indabspos =
@@ -118,7 +118,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
                   SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause2parsed,
                     itemform2, rhspred, iint2, clause1parsed, itemform1);
                 if (vectorsmatch) {
-                  ArrayList<String> newvector = new ArrayList<String>();
+                  ArrayList<String> newvector;
                   newvector = new ArrayList<String>(Arrays.asList(ArrayUtils
                     .getSubSequenceAsArray(itemform1, 4, itemform1.length)));
                   int indabspos =
@@ -143,12 +143,8 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append(
-      "[B(ψ) -> Ψ,pos',<i,j>,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]");
-    representation.append("\n______ \n");
-    representation.append("[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]");
-    return representation.toString();
+    return "[B(ψ) -> Ψ,pos',<i,j>,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]"
+        + "\n______ \n" + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
   }
 
 }

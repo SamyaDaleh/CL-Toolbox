@@ -13,7 +13,7 @@ import common.lcfrs.SrcgEarleyActiveItem;
  * rhs predicate B, we predict new B-rules. */
 public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
   
-  private Clause outclause;
+  private final Clause outclause;
 
   public SrcgEarleyPredict(Clause outclause) {
     this.outclause = outclause;
@@ -50,11 +50,8 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[A(φ) -> ... B(X,...)...,pos,<i,j>,ρ_A]");
-    representation.append("\n______ φ(i,j) = X\n");
-    representation.append("[" + outclause.toString() + ",pos,<1,0>,ρ_init']");
-    return representation.toString();
+    return "[A(φ) -> ... B(X,...)...,pos,<i,j>,ρ_A]" + "\n______ φ(i,j) = X\n"
+        + "[" + outclause.toString() + ",pos,<1,0>,ρ_init']";
   }
 
 }

@@ -9,7 +9,7 @@ import common.cfg.CfgItem;
 /** Moves the next input symbol onto the stack */
 public class CfgBottomupShift extends AbstractDynamicDeductionRule {
 
-  private String[] wsplit;
+  private final String[] wsplit;
 
   public CfgBottomupShift(String[] wsplit) {
     this.wsplit = wsplit;
@@ -34,11 +34,7 @@ public class CfgBottomupShift extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[Γ,i]");
-    representation.append("\n______ w_i = a\n");
-    representation.append("[Γa,i+1]");
-    return representation.toString();
+    return "[Γ,i]" + "\n______ w_i = a\n" + "[Γa,i+1]";
   }
   
 }

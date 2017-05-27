@@ -10,7 +10,7 @@ import common.tag.TagEarleyItem;
 /** If the dot is at a node where adjunction is not obligatory, just skip it. */
 public class TagEarleyPredictnoadj extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
@@ -37,11 +37,8 @@ public class TagEarleyPredictnoadj extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    StringBuilder representation = new StringBuilder();
-    representation.append("[ɣ,p,la,i,j,k,l,0]");
-    representation.append("\n______ f_OA(ɣ,p) = 0\n");
-    representation.append("[ɣ,p,lb,l,-,-,l,0]");
-    return representation.toString();
+    return "[ɣ,p,la,i,j,k,l,0]" + "\n______ f_OA(ɣ,p) = 0\n"
+        + "[ɣ,p,lb,l,-,-,l,0]";
   }
 
 }

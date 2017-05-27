@@ -35,10 +35,6 @@ public abstract class AbstractDynamicDeductionRule
     return this.antneeded;
   }
 
-  public void setAntecedednesNeeded(int antneeded) {
-    this.antneeded = antneeded;
-  }
-
   @Override public void clearItems() {
     antecedences = new LinkedList<Item>();
     consequences = new LinkedList<Item>();
