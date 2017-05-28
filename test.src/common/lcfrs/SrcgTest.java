@@ -45,11 +45,30 @@ public class SrcgTest {
 
     Srcg srcg = new Srcg(cfgeps);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C}\n"
-      + "T = {a, b}\n" + "V = {X1}\n"
+      + "T = {a, b}\n" + "V = {X1, X2, X3}\n"
       + "P = {A(ε) -> ε, S(ε) -> ε, C(ε) -> ε, " 
-      + "S(b X1 a X1 b X1) -> A(X1) S(X1) C(X1), A(a) -> ε, " 
+      + "S(b X1 a X2 b X3) -> A(X1) S(X2) C(X3), A(a) -> ε, " 
       + "A(b X1) -> B(X1), B(b) -> ε}\n"
       + "S = S\n", srcg.toString());
   }
+
+  @Test public void testCfgToSrcgConversion2() {
+
+    Cfg cfgeps = new Cfg();
+    cfgeps.setTerminals(new String[] {"a", "b"});
+    cfgeps.setVars(new String[] {"S", "X1", "Y1", "Y2"});
+    cfgeps.setR(new String[][] {{"Y1", "a"}, {"S", "Y1 X1"}, {"Y2", "b"},
+      {"X1", "S Y2"}, {"S", "Y1 Y2"}});
+    cfgeps.setStart_var("S");
+
+    Srcg srcg = new Srcg(cfgeps);
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, X1, Y1, Y2}\n"
+      + "T = {a, b}\n" + "V = {X2, X3}\n"
+      + "P = {Y1(a) -> ε, S(X2 X3) -> Y1(X2) X1(X3), Y2(b) -> ε, "
+      + "X1(X2 X3) -> S(X2) Y2(X3), S(X2 X3) -> Y1(X2) Y2(X3)}\n"
+      + "S = S\n", srcg.toString());
+    
+  }
+  
 
 }

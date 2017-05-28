@@ -102,12 +102,41 @@ public class GrammarToDeductionRulesConverter {
           return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
         } else {
           System.out.println(
-            "CFG must be binarized to convert it into a sRCG where CYK parsing is possible.");
+            "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");
           return null;
         }
       } else {
         Srcg srcg = new Srcg(cfg);
         return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+      }
+    case "srcg-cyk":
+      if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
+        if (please) {
+          Srcg srcg = new Srcg(cfg.binarize().removeChainRules().replaceTerminals());
+          return LcfrsToDeductionRulesConverter.LcfrsToCykRules(srcg, w);
+        } else {
+          System.out.println(
+            "CFG must be binarized, not contain chain rules and not contain rules with mixed rhs sides to convert it into a sRCG where CYK parsing is possible.");
+          return null;
+        }
+      } else {
+        Srcg srcg = new Srcg(cfg);
+        return LcfrsToDeductionRulesConverter.LcfrsToCykRules(srcg, w);
+      }
+    case "srcg-cyk-extended":
+      if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
+        if (please) {
+          Srcg srcg = new Srcg(cfg.binarize().replaceTerminals());
+          return LcfrsToDeductionRulesConverter.LcfrsToCykExtendedRules(srcg,
+            w);
+        } else {
+          System.out.println(
+            "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
+          return null;
+        }
+      } else {
+        Srcg srcg = new Srcg(cfg);
+        return LcfrsToDeductionRulesConverter.LcfrsToCykExtendedRules(srcg, w);
       }
 
     default:
@@ -164,6 +193,14 @@ public class GrammarToDeductionRulesConverter {
       System.out
         .println("I can't convert a tree language into a string language.");
       return null;
+    case "srcg-cyk":
+      System.out
+        .println("I can't convert a tree language into a string language.");
+      return null;
+    case "srcg-cyk-extended":
+      System.out
+        .println("I can't convert a tree language into a string language.");
+      return null;
 
     default:
       System.out.println(
@@ -215,11 +252,43 @@ public class GrammarToDeductionRulesConverter {
           // Srcg srcg = new Srcg(cfg.binarize());
           // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
         } else {
-          System.out.println("sRCG must be binarized to apply CYK parsing");
+          System.out.println("sRCG must be binarized to apply Earley parsing");
           return null;
         }
       } else {
         return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+      }
+    case "srcg-cyk":
+      if (!srcg.isBinarized() || srcg.hasChainRules() || srcg.hasEpsilonProductions()) {
+        if (please) {
+          System.out.println("Not implemented yet.");
+          return null;
+          // TODO
+          // Srcg srcg = new Srcg(cfg.binarize());
+          // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+        } else {
+          System.out.println(
+            "sRCG must be binarized not contain chain rules and not contain empty productions to apply CYK parsing");
+          return null;
+        }
+      } else {
+        return LcfrsToDeductionRulesConverter.LcfrsToCykRules(srcg, w);
+      }
+    case "srcg-cyk-extended":
+      if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
+        if (please) {
+          System.out.println("Not implemented yet.");
+          return null;
+          // TODO
+          // Srcg srcg = new Srcg(cfg.binarize());
+          // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+        } else {
+          System.out
+            .println("sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
+          return null;
+        }
+      } else {
+        return LcfrsToDeductionRulesConverter.LcfrsToCykExtendedRules(srcg, w);
       }
 
     default:

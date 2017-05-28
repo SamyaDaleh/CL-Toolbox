@@ -228,25 +228,16 @@ public class Cfg {
   public Cfg removeNonGeneratingSymbols() {
     Cfg cfg = new Cfg();
     ArrayList<String> generating = new ArrayList<String>();
-    boolean changed = true;
-    for (CfgProductionRule rule : this.getR()) {
-      boolean ntseen = false;
-      for (String symbol : rule.getRhs()) {
-        if (this.varsContain(symbol)) {
-          ntseen = true;
-          break;
-        }
-      }
-      if (!ntseen && !generating.contains(rule.lhs)) {
-        generating.add(rule.lhs);
-      }
+    for (String t : this.terminals) {
+      generating.add(t);
     }
+    boolean changed = true;
     while (changed) {
       changed = false;
       for (CfgProductionRule rule : this.getR()) {
         boolean notgeneratingseen = false;
         for (String symbol : rule.getRhs()) {
-          if (!this.terminalsContain(symbol) && !generating.contains(symbol)) {
+          if (!generating.contains(symbol)) {
             notgeneratingseen = true;
             break;
           }
@@ -259,16 +250,22 @@ public class Cfg {
     }
     cfg.terminals = this.getTerminals();
     cfg.start_var = this.start_var;
-    cfg.vars = generating.toArray(new String[generating.size()]);
+    ArrayList<String> restnts = new ArrayList<String>();
+    for (String symbol : generating) {
+      if (this.nonterminalsContain(symbol)) {
+        restnts.add(symbol);
+      }
+    }
+    cfg.vars = restnts.toArray(new String[restnts.size()]);
     for (CfgProductionRule rule : this.getR()) {
       boolean notgeneratingseen = false;
       for (String symbol : rule.getRhs()) {
-        if (!this.terminalsContain(symbol) && !generating.contains(symbol)) {
+        if (!generating.contains(symbol)) {
           notgeneratingseen = true;
           break;
         }
       }
-      if (!notgeneratingseen && !generating.contains(rule.lhs)) {
+      if (!notgeneratingseen && generating.contains(rule.lhs)) {
         cfg.R.add(rule);
       }
     }
@@ -287,8 +284,10 @@ public class Cfg {
       for (CfgProductionRule rule : this.R) {
         if (reachable.contains(rule.lhs)) {
           for (String symbol : rule.rhs) {
-            reachable.add(symbol);
-            changed = true;
+            if (!reachable.contains(symbol)) {
+              reachable.add(symbol);
+              changed = true;
+            }
           }
         }
       }
@@ -563,5 +562,19 @@ public class Cfg {
     }
     cfg.setVars(newnts.toArray(new String[newnts.size()]));
     return cfg;
+  }
+
+  public boolean hasMixedRhs() {
+    for (CfgProductionRule rule : this.R) {
+      for (int i = 1; i < rule.getRhs().length; i++) {
+        if ((this.terminalsContain(rule.getRhs()[i - 1])
+          && this.varsContain(rule.getRhs()[i]))
+          || (this.terminalsContain(rule.getRhs()[i])
+            && this.varsContain(rule.getRhs()[i - 1]))) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

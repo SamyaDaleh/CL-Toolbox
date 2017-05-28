@@ -140,10 +140,30 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testSrcgCyk() throws ParseException {
+  @Test public void testSrcgCykUnary() throws ParseException {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
         .SrcgToParsingSchema(gensrcg(), w3, "cyk-extended");
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+  
+  @Test public void testSrcgCykBinary(){
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
+    srcg.setTerminals(new String[]{"a", "b", "c"});
+    srcg.setVariables(new String[]{"U", "V", "W", "X", "Y", "Z"});
+    srcg.setStartSymbol("S");
+    srcg.addClause("S(V Y W Z X )", "A(V,W,X) B(Y,Z)");
+    srcg.addClause("A(a,a,a)", "ε");
+    srcg.addClause("A(X U, Y V, Z W)", "A(X,Y,Z) C(U,V,W)");
+    srcg.addClause("B(b,b)", "ε");
+    srcg.addClause("B(X V,W Y)", "B(X,Y) B(V,W)");
+    srcg.addClause("C(a,c,c)", "ε");
+    String w = "a a b b a c b b a c";
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+        .SrcgToParsingSchema(srcg, w, "cyk-extended");
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();

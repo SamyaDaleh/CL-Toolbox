@@ -33,6 +33,8 @@ class LcfrsToDeductionRulesConverter {
     switch (schema) {
     case "earley":
       return LcfrsToEarleyRules(srcg, w);
+    case "cyk":
+      return LcfrsToCykRules(srcg, w);
     case "cyk-extended":
       return LcfrsToCykExtendedRules(srcg, w);
     default:
@@ -40,7 +42,43 @@ class LcfrsToDeductionRulesConverter {
     }
   }
 
-  private static ParsingSchema LcfrsToCykExtendedRules(Srcg srcg, String w) {
+  static ParsingSchema LcfrsToCykRules(Srcg srcg, String w) {
+    if (srcg.hasEpsilonProductions()) {
+      System.out.println(
+        "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
+      return null;
+    }
+    if (!srcg.isBinarized()) {
+      System.out.println("sRCG must be binarized for this CYK algorithm.");
+      return null;
+    }
+    if (srcg.hasChainRules()) {
+      System.out
+        .println("sRCG must not contain chain rules for this CYK algorithm.");
+      return null;
+    }
+    String[] wsplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+
+    for (Clause clause : srcg.getClauses()) {
+      if (clause.getRhs().size() == 2) {
+        DynamicDeductionRule binary = new SrcgCykBinary(clause, wsplit);
+        schema.addRule(binary);
+      } else if (clause.getRhs().size() == 0) {
+        for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
+          StaticDeductionRule scan = new StaticDeductionRule();
+          scan.addConsequence(
+            new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
+          scan.setName("Scan");
+          schema.addAxiom(scan);
+        }
+      }
+    }
+    schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
+    return schema;
+  }
+
+  static ParsingSchema LcfrsToCykExtendedRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
@@ -55,7 +93,7 @@ class LcfrsToDeductionRulesConverter {
 
     for (Clause clause : srcg.getClauses()) {
       if (clause.getRhs().size() == 2) {
-        DynamicDeductionRule binary = new SrcgCykBinary(clause);
+        DynamicDeductionRule binary = new SrcgCykBinary(clause, wsplit);
         schema.addRule(binary);
       } else if (clause.getRhs().size() == 0) {
         for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
@@ -65,7 +103,7 @@ class LcfrsToDeductionRulesConverter {
           scan.setName("Scan");
           schema.addAxiom(scan);
         }
-      } else {
+      } else if (clause.getRhs().size() == 1) {
         DynamicDeductionRule unary = new SrcgCykUnary(clause, wsplit);
         schema.addRule(unary);
       }
@@ -92,19 +130,19 @@ class LcfrsToDeductionRulesConverter {
         tryoutrange.add(end);
         tryoutrange.add(end + 1);
       }
-      if (tryoutrange.get(tryoutrange.size() - 2) >= wsplit.length) {
-        break;
-      }
+      if (tryoutrange.get(tryoutrange.size() - 2) < wsplit.length) {
 
-      boolean match = true;
-      for (int i = 0; i * 2 < tryoutrange.size(); i++) {
-        if (!lhsSymbolsAsPlainArray[i].equals(wsplit[tryoutrange.get(i * 2)])) {
-          match = false;
+        boolean match = true;
+        for (int i = 0; i * 2 < tryoutrange.size(); i++) {
+          if (!lhsSymbolsAsPlainArray[i]
+            .equals(wsplit[tryoutrange.get(i * 2)])) {
+            match = false;
+          }
         }
-      }
-      if (match) {
-        ranges.add(SrcgDeductionUtils.getRangesForArguments(
-          tryoutrange.toArray(new Integer[tryoutrange.size()]), lhs));
+        if (match) {
+          ranges.add(SrcgDeductionUtils.getRangesForArguments(
+            tryoutrange.toArray(new Integer[tryoutrange.size()]), lhs));
+        }
       }
       tryoutrange.set(tryoutrange.size() - 2,
         tryoutrange.get(tryoutrange.size() - 2) + 1);
@@ -113,6 +151,9 @@ class LcfrsToDeductionRulesConverter {
       while (tryoutrange.get(tryoutrange.size() - 1) > wsplit.length) {
         tryoutrange.remove(tryoutrange.size() - 1);
         tryoutrange.remove(tryoutrange.size() - 1);
+        if (tryoutrange.size() == 0) {
+          break;
+        }
         tryoutrange.set(tryoutrange.size() - 2,
           tryoutrange.get(tryoutrange.size() - 2) + 1);
         tryoutrange.set(tryoutrange.size() - 1,

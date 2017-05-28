@@ -6,12 +6,14 @@ A Parsing-as-Deduction system implemented in Java that parses everything and som
 The implementation is based on the slides from Laura Kallmeyer. At the moment it contains:
 
 Parsing as Deduction:
+- CYK for CFG
+- Earley for CFG
 - Top Down for CFG
 - Shift Reduce for CFG
-- Earley for CFG
 - Left Corner for CFG
 - CYK for TAG
 - Earley for TAG
+- CYK for sRCG
 - Earley for sRCG
 
 It prints out full parsing traces along with applied rules and antecedence items.
@@ -23,15 +25,15 @@ Download the jar from /releases and that's it. You need Java 8 installed for the
 
 Or if you want to tinker with the code, for me it worked like this:
 - clone
-- create new Java Project in Eclipse
-- copy files into Java Project
+- create a new project in your favorite IDE
+- copy the files into it or import them
 - add JUnit to your classpath/build path
 - run the JUnit tests in test.src to verify that everything is working. You should see some success messages and parsing outputs.
 
 
 ## Usage
 
-Run it in Eclipse. Or download the jar from folder releases and run it from the command line. Run it without parameters to get a help about how to use it.
+Run it in your IDE. Or download the jar from folder releases and run it from the command line. Run it without parameters to get a help about how to use it.
 
 Example:
 

@@ -21,14 +21,14 @@ class Main {
         "Please pass at least 3 parameters: [grammar file] [input string] "
           + "[parsing algorithm] [<optional parameters>]");
       System.out.println(
-        "Parsing algorithm can be: cfg-topdown, cfg-shiftreduce, cfg-earley, "
-          + "cfg-leftcorner, tag-cyk, tag-earley, srcg-earley");
+        "Parsing algorithm can be: cfg-cyk, cfg-cyk-extended, cfg-earley, cfg-topdown, cfg-shiftreduce, "
+          + "cfg-leftcorner, tag-cyk, tag-earley, srcg-cyk, srcg-cyk-extended, srcg-earley");
       System.out.println(
         "Optional parameters can be: --sucess : prints a trace only of items "
           + "that lead to a goal item.");
       System.out.println(
         "Optional parameters can be: --please : if a grammar doesn't fit an " 
-      + "algorithm, ask me to convert it.");
+      + "algorithm, ask me to convert it. No promises.");
       System.out.println(
         "example: ..\\resources\\grammars\\anbncfg \"a a b b\" cfg-topdown");
       return;

@@ -72,11 +72,14 @@ public class Tree {
         break;
       case "_":
         i++;
-        if (tokens[i].equals("NA")) {
+        switch (tokens[i]) {
+        case "NA":
           this.NA.add(this.vertexes.get(this.vertexes.size() - 1));
-        } else if (tokens[i].equals("OA")) {
+          break;
+        case "OA":
           this.OA.add(this.vertexes.get(this.vertexes.size() - 1));
-        } else {
+          break;
+        default:
           throw new ParseException("Unknown subscript " + tokens[i], 0);
         }
         break;

@@ -23,13 +23,14 @@ public class Srcg {
     for (CfgProductionRule rule : cfg.getR()) {
       StringBuilder lhs = new StringBuilder();
       StringBuilder rhs = new StringBuilder();
-      int i = 1;
+      int i = 0;
       lhs.append(rule.getLhs()).append("(");
       for (String rhssym : rule.getRhs()) {
         if (rhssym.length() > 0) {
           if (cfg.terminalsContain(rhssym)) {
             lhs.append(" ").append(rhssym);
           } else {
+            i++;
             String newvar = "X" + String.valueOf(i);
             while (cfg.nonterminalsContain(newvar)) {
               i++;
@@ -158,5 +159,16 @@ public class Srcg {
       }
     }
     return true;
+  }
+
+  /** Returns true if grammar has chain rules, that are rules with exactly one
+   * rhs predicate. */
+  public boolean hasChainRules() {
+    for(Clause clause : this.clauses) {
+      if (clause.getRhs().size() == 1) {
+        return true;
+      }
+    }
+    return false;
   }
 }

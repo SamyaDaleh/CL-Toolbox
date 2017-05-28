@@ -42,7 +42,6 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
               vectorranges.add(itemform[(indices[0] - 1) * 2 + 2]);
             }
           }
-          // Now I have vectorranges like ?, ?, 1, 2 ?, ?, 3, 4 for a X b Y
           int i = 0;
           for (; i * 2 < vectorranges.size(); i++) {
             if (!vectorranges.get(i * 2).equals("?")) {
@@ -94,4 +93,8 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     return this.consequences;
   }
 
+  @Override public String toString() {
+    return "[" + clause.getRhs().get(0).toString() + ",ρ]]" + "\n______ \n"
+      + "[" + clause.getLhs().toString() + ",ρ]";
+  }
 }
