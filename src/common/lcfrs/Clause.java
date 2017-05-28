@@ -55,11 +55,6 @@ public class Clause {
     return repr.toString();
   }
 
-  /** Return the nonterminal of the left predicate. */
-  public String getLhsNonterminal() {
-    return lhs.getNonterminal();
-  }
-
   /** Returns a string representation where the dot is at the ith argument at
    * the jth element of the lhs. */
   public String setDotAt(int i, int j) {

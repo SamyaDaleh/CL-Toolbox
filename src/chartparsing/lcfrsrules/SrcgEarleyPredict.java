@@ -37,7 +37,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
           String mayv = clauseparsed.getLhsSymAt(iint, jint);
           for (Predicate rhspred : clauseparsed.getRhs()) {
             if (rhspred.getSymAt(1, 0).equals(mayv) && rhspred.getNonterminal()
-              .equals(outclause.getLhsNonterminal())) {
+              .equals(outclause.getLhs().getNonterminal())) {
               consequences.add(new SrcgEarleyActiveItem(outclause.toString(),
                 posint, 1, 0, new RangeVector(
                   outclause.getLhs().getSymbolsAsPlainArray().length)));

@@ -81,12 +81,12 @@ public class SrcgDeductionUtils {
     Predicate lhs) {
     ArrayList<Integer> rangeoverarguments = new ArrayList<Integer>();
     for (int i = 0; i < lhs.getDim(); i++) {
-      rangeoverarguments.add(rangeoverelements[lhs.getAbsolutePos(i, 0)*2]);
+      rangeoverarguments.add(rangeoverelements[lhs.getAbsolutePos(i+1, 0)*2]);
       if (i == lhs.getDim() - 1) {
         rangeoverarguments.add(rangeoverelements[rangeoverelements.length - 1]);
       } else {
         rangeoverarguments
-          .add(rangeoverelements[lhs.getAbsolutePos(i + 1, 0)*2 - 1]);
+          .add(rangeoverelements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
       }
     }
     return rangeoverarguments.toArray(new Integer[rangeoverarguments.size()]);

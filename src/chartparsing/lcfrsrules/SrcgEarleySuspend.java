@@ -63,7 +63,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
             Predicate rhspred = clause2parsed.getRhs().get(n);
             if (rhspred.getSymAt(iint1, 0).equals(mayv2) &&  isvar2
               && rhspred.getNonterminal()
-                .equals(clause1parsed.getLhsNonterminal())
+                .equals(clause1parsed.getLhs().getNonterminal())
               && itemform1.length > (iint1 - 1) * 2 + 5
               && itemform2.length > (iint1 - 1 + n) * 2 + 5) {
               if (itemform1[2 * (iint1 - 1) + 4].equals(pos2)
@@ -107,7 +107,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
             Predicate rhspred = clause1parsed.getRhs().get(n);
             if (rhspred.getSymAt(iint2, 0).equals(mayv1) &&  isvar1
               && rhspred.getNonterminal()
-                .equals(clause2parsed.getLhsNonterminal())
+                .equals(clause2parsed.getLhs().getNonterminal())
               && itemform2.length > (iint2 - 1) * 2 + 5
               && itemform1.length > (iint2 - 1 + n) * 2 + 5) {
               if (itemform2[2 * (iint2-1) + 4].equals(pos1)

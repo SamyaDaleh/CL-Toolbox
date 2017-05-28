@@ -42,7 +42,7 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
             lhs);
 
           consequences.add(new SrcgEarleyPassiveItem(
-            clauseparsed.getLhsNonterminal(), newvector));
+            clauseparsed.getLhs().getNonterminal(), newvector));
         }
       }
     }

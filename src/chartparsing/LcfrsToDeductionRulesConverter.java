@@ -57,8 +57,7 @@ class LcfrsToDeductionRulesConverter {
       if (clause.getRhs().size() == 2) {
         DynamicDeductionRule binary = new SrcgCykBinary(clause);
         schema.addRule(binary);
-      } else if (clause.getRhs().size() == 1
-        && clause.getRhs().get(0).getSymAt(1, 0).equals("")) {
+      } else if (clause.getRhs().size() == 0) {
         for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
           StaticDeductionRule scan = new StaticDeductionRule();
           scan.addConsequence(
@@ -67,7 +66,7 @@ class LcfrsToDeductionRulesConverter {
           schema.addAxiom(scan);
         }
       } else {
-        DynamicDeductionRule unary = new SrcgCykUnary(clause);
+        DynamicDeductionRule unary = new SrcgCykUnary(clause, wsplit);
         schema.addRule(unary);
       }
     }
@@ -90,8 +89,11 @@ class LcfrsToDeductionRulesConverter {
     while (tryoutrange.size() > 0) {
       while (tryoutrange.size() < lhsSymbolsAsPlainArray.length * 2) {
         int end = tryoutrange.get(tryoutrange.size() - 1);
+        tryoutrange.add(end);
         tryoutrange.add(end + 1);
-        tryoutrange.add(end + 2);
+      }
+      if (tryoutrange.get(tryoutrange.size() - 2) >= wsplit.length) {
+        break;
       }
 
       boolean match = true;
@@ -136,7 +138,7 @@ class LcfrsToDeductionRulesConverter {
     for (Clause clause : srcg.getClauses()) {
       DynamicDeductionRule predict = new SrcgEarleyPredict(clause);
       schema.addRule(predict);
-      if (clause.getLhsNonterminal().equals(srcg.getStartSymbol())) {
+      if (clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
         initialize
           .addConsequence(new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,

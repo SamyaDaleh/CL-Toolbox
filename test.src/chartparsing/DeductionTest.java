@@ -143,7 +143,7 @@ public class DeductionTest {
   @Test public void testSrcgCyk() throws ParseException {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .SrcgToParsingSchema(gensrcg(), w3, "cyk");
+        .SrcgToParsingSchema(gensrcg(), w3, "cyk-extended");
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
