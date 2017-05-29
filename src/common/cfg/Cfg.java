@@ -228,9 +228,7 @@ public class Cfg {
   public Cfg removeNonGeneratingSymbols() {
     Cfg cfg = new Cfg();
     ArrayList<String> generating = new ArrayList<String>();
-    for (String t : this.terminals) {
-      generating.add(t);
-    }
+    Collections.addAll(generating, this.terminals);
     boolean changed = true;
     while (changed) {
       changed = false;

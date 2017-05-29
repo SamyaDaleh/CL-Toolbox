@@ -1,5 +1,7 @@
 package common.lcfrs;
 
+import java.text.ParseException;
+
 import common.AbstractItem;
 import common.Item;
 
@@ -25,9 +27,8 @@ public class SrcgEarleyActiveItem extends AbstractItem implements Item {
     this.p = p;
   }
 
-  /**
-   * Constructor with string array instead of a range vector to spare me a lot of conversions.
-   */
+  /** Constructor with string array instead of a range vector to spare me a lot
+   * of conversions. */
   public SrcgEarleyActiveItem(String clause, int pos, int i, int j,
     String[] rangevector) {
     this.itemform = new String[rangevector.length + 4];
@@ -40,26 +41,45 @@ public class SrcgEarleyActiveItem extends AbstractItem implements Item {
 
   @Override public String toString() {
     String[] clausesplit = itemform[0].split("->");
-    Clause clause = new Clause(clausesplit[0], clausesplit[1]);
-    String dottedclause = clause.setDotAt(Integer.parseInt(itemform[2]),
-      Integer.parseInt(itemform[3]));
-    if (p != null) {
-      return "[" + dottedclause + ", " + itemform[1] + ", <" + itemform[2] + ","
-        + itemform[3] + ">, " + p.toString() + "]";
-    } else {
-      StringBuilder builder = new StringBuilder();
-      builder.append("(");
-      for (int i = 0; i*2+5 < itemform.length;i++){
-        if (i > 0 ) {
-          builder.append(", ");
-        }
-        builder.append("<").append(itemform[i * 2 + 4]).append(",")
+    try {
+      Clause clause = new Clause(clausesplit[0], clausesplit[1]);
+      String dottedclause = clause.setDotAt(Integer.parseInt(itemform[2]),
+        Integer.parseInt(itemform[3]));
+      if (p != null) {
+        return "[" + dottedclause + ", " + itemform[1] + ", <" + itemform[2]
+          + "," + itemform[3] + ">, " + p.toString() + "]";
+      } else {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        for (int i = 0; i * 2 + 5 < itemform.length; i++) {
+          if (i > 0) {
+            builder.append(", ");
+          }
+          builder.append("<").append(itemform[i * 2 + 4]).append(",")
             .append(itemform[i * 2 + 5]).append(">");
+        }
+        builder.append(")");
+        return "[" + dottedclause + ", " + itemform[1] + ", <" + itemform[2]
+          + "," + itemform[3] + ">, " + builder.toString() + "]";
       }
-      builder.append(")");
-      return "[" + dottedclause + ", " + itemform[1] + ", <" + itemform[2] + ","
-        + itemform[3] + ">, " + builder.toString() + "]";
+    } catch (ParseException e) {
+      if (p != null) {
+        return "[A(ɸ) -> A_1(ɸ_1) ... A_m(ɸ_m), " + itemform[1] + ", <"
+          + itemform[2] + "," + itemform[3] + ">, " + p.toString() + "]";
+      } else {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        for (int i = 0; i * 2 + 5 < itemform.length; i++) {
+          if (i > 0) {
+            builder.append(", ");
+          }
+          builder.append("<").append(itemform[i * 2 + 4]).append(",")
+            .append(itemform[i * 2 + 5]).append(">");
+        }
+        builder.append(")");
+        return "[A(ɸ) -> A_1(ɸ_1) ... A_m(ɸ_m), " + itemform[1] + ", <"
+          + itemform[2] + "," + itemform[3] + ">, " + builder.toString() + "]";
+      }
     }
   }
-
 }

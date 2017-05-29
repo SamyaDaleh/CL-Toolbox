@@ -125,10 +125,12 @@ public class GrammarParser {
     return rulelist.toArray(new String[rulelist.size()][]);
   }
 
-  /** For a line like "1 : S -> a b", "1 : S -> A B" it gets the content of each quote,
-   * separates it by delimiters, in this case ':' and '->' and returns 2d array where
-   * each entry represents a rule and each sub array consists of lhs, rhs and p */
-  private static String[][] parseProbabilisticRules(String linetrim, String leftdelimiter, String rightdelimiter) {
+  /** For a line like "1 : S -> a b", "1 : S -> A B" it gets the content of each
+   * quote, separates it by delimiters, in this case ':' and '->' and returns 2d
+   * array where each entry represents a rule and each sub array consists of
+   * lhs, rhs and p */
+  private static String[][] parseProbabilisticRules(String linetrim,
+    String leftdelimiter, String rightdelimiter) {
     Matcher m = p.matcher(linetrim);
     m.find();
     String rawrule = m.group();
@@ -136,11 +138,15 @@ public class GrammarParser {
     try {
       while (true) {
         String p = rawrule.substring(0, rawrule.indexOf(leftdelimiter)).trim();
-        String lhs = rawrule.substring(rawrule.indexOf(leftdelimiter)+leftdelimiter.length(), rawrule.indexOf(rightdelimiter)).trim();
+        String lhs = rawrule
+          .substring(rawrule.indexOf(leftdelimiter) + leftdelimiter.length(),
+            rawrule.indexOf(rightdelimiter))
+          .trim();
         String rhs = rawrule
-          .substring(rawrule.indexOf(rightdelimiter) + rightdelimiter.length()).trim();
-        rulelist.add(
-          new String[] {lhs, rhs.substring(0, rhs.length() - 1), p.substring(1)});
+          .substring(rawrule.indexOf(rightdelimiter) + rightdelimiter.length())
+          .trim();
+        rulelist.add(new String[] {lhs, rhs.substring(0, rhs.length() - 1),
+          p.substring(1)});
         m.find();
         rawrule = m.group();
       }
@@ -232,7 +238,8 @@ public class GrammarParser {
   }
 
   /** Parses a sRCG from a file and returns it as Srcg. */
-  public static Srcg parseSrcgFile(String grammarfile) throws IOException {
+  public static Srcg parseSrcgFile(String grammarfile)
+    throws IOException, ParseException {
     Srcg srcg = new Srcg();
     BufferedReader in = new BufferedReader(new FileReader(grammarfile));
     String line = in.readLine().trim();

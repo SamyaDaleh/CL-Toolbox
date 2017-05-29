@@ -1,5 +1,6 @@
 package chartparsing.lcfrsrules;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,13 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
       String[] itemform = antecedences.get(0).getItemform();
       String clause = itemform[0];
       if (itemform[0].contains("->")) {
-        Clause clauseparsed = new Clause(clause);
+        Clause clauseparsed;
+        try {
+          clauseparsed = new Clause(clause);
+        } catch (ParseException e) {
+          e.printStackTrace();
+          return this.consequences;
+        }
         String pos = itemform[1];
         int posint = Integer.parseInt(pos);
         String i = itemform[2];

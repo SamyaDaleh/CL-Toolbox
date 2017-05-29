@@ -1,5 +1,6 @@
 package common.lcfrs;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +16,10 @@ public class Srcg {
   private String startsymbol;
   private final List<Clause> clauses = new LinkedList<Clause>();
 
-  public Srcg(Cfg cfg) {
+  /**
+   * Converts a CFG to a sRCG with dimension = 1.
+   */
+  public Srcg(Cfg cfg) throws ParseException {
     this.nonterminals = cfg.getVars();
     this.terminals = cfg.getTerminals();
     this.startsymbol = cfg.getStart_var();
@@ -73,7 +77,7 @@ public class Srcg {
     this.startsymbol = startsymbol;
   }
 
-  public void addClause(String lhs, String rhs) {
+  public void addClause(String lhs, String rhs) throws ParseException {
     this.clauses.add(new Clause(lhs, rhs));
   }
 

@@ -1,5 +1,6 @@
 package common.lcfrs;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -11,7 +12,19 @@ public class Predicate {
   private final String[][] symbols;
 
   /** Constructor that creates the predicate from a string representation. */
-  public Predicate(String predicate) {
+  public Predicate(String predicate) throws ParseException {
+    int lbracknum = 0;
+    int rbracknum = 0;
+    for (int i = 0; i < predicate.length(); i++) {
+      if (predicate.charAt(i) == '(')
+        lbracknum++;
+      if (predicate.charAt(i) == ')')
+        rbracknum++;
+    }
+    if (lbracknum != rbracknum) {
+      throw new ParseException(
+        "Amounts of opening and closing brackets are different.", 0);
+    }
     int lbrack = predicate.indexOf('(');
     int rbrack = predicate.indexOf(')');
     this.nonterminal = predicate.substring(0, lbrack).trim();

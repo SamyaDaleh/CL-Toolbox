@@ -3,13 +3,15 @@ package common.lcfrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 
 import common.cfg.Cfg;
 
 public class SrcgTest {
 
-  @Test public void testOrder() {
+  @Test public void testOrder() throws ParseException {
     Srcg srcg1 = new Srcg();
     srcg1.setNonterminals(new String[] {"S", "A"});
     srcg1.setTerminals(new String[] {"a"});
@@ -22,7 +24,7 @@ public class SrcgTest {
 
   }
 
-  @Test public void testEmptyProductions() {
+  @Test public void testEmptyProductions() throws ParseException {
     Srcg srcg1 = new Srcg();
     srcg1.setNonterminals(new String[] {"S", "A"});
     srcg1.setTerminals(new String[] {"a"});
@@ -34,7 +36,7 @@ public class SrcgTest {
     assertTrue(srcg1.hasEpsilonProductions());
   }
 
-  @Test public void testCfgToSrcgConversion() {
+  @Test public void testCfgToSrcgConversion() throws ParseException {
 
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
@@ -52,7 +54,7 @@ public class SrcgTest {
       + "S = S\n", srcg.toString());
   }
 
-  @Test public void testCfgToSrcgConversion2() {
+  @Test public void testCfgToSrcgConversion2() throws ParseException {
 
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});

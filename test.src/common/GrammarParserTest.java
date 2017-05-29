@@ -31,7 +31,7 @@ public class GrammarParserTest {
       tag.toString());
   }
 
-  @Test public void testparseSrcgFile() throws IOException {
+  @Test public void testparseSrcgFile() throws IOException, ParseException {
     Srcg srcg =
       GrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
     assert srcg != null;

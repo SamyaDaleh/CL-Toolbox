@@ -5,12 +5,14 @@ import common.lcfrs.Clause;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 
 import common.lcfrs.Predicate;
 
 public class SrcgDeductionUtilsTest {
-  @Test public void testVectorMatch() {
+  @Test public void testVectorMatch() throws ParseException {
     // [S(•X1 X2) -> A(X1,X2), 0, <1,0>, (<?,?>)]]
     // [[A(a •,b) -> ε, 1, <1,1>, (<0,1>, <?,?>)]
     Clause clause11 = new Clause("S(X1 X2) -> A(X1,X2)");
@@ -56,7 +58,7 @@ public class SrcgDeductionUtilsTest {
 
   }
 
-  @Test public void testgetRangesForArguments() {
+  @Test public void testgetRangesForArguments() throws ParseException {
     Predicate lhs = new Predicate("A ( a b c, d, e f )");
     String[] ranges =
       new String[] {"0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6"};

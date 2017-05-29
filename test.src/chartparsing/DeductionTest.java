@@ -39,7 +39,7 @@ public class DeductionTest {
     return g;
   }
 
-  private static Srcg gensrcg() {
+  private static Srcg gensrcg() throws ParseException {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});
     srcg.setTerminals(new String[] {"a", "b"});
@@ -149,7 +149,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
   
-  @Test public void testSrcgCykBinary(){
+  @Test public void testSrcgCykBinary() throws ParseException{
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
     srcg.setTerminals(new String[]{"a", "b", "c"});

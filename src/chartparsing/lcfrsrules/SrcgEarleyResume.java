@@ -1,5 +1,6 @@
 package chartparsing.lcfrsrules;
 
+import java.text.ParseException;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
@@ -39,7 +40,13 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
     String clause2 = itemform2[0];
 
     if (itemform1[0].contains("->") && itemform2[0].contains("->")) {
-      Clause clause1parsed = new Clause(clause1);
+      Clause clause1parsed;
+      try {
+        clause1parsed = new Clause(clause1);
+      } catch (ParseException e) {
+        e.printStackTrace();
+        return;
+      }
       String pos1 = itemform1[1];
       int posint1 = Integer.parseInt(pos1);
       String i1 = itemform1[2];
@@ -47,7 +54,13 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
       String j1 = itemform1[3];
       int jint1 = Integer.parseInt(j1);
 
-      Clause clause2parsed = new Clause(clause2);
+      Clause clause2parsed;
+      try {
+        clause2parsed = new Clause(clause2);
+      } catch (ParseException e) {
+        e.printStackTrace();
+        return;
+      }
       String i2 = itemform2[2];
       int iint2 = Integer.parseInt(i2);
       String j2 = itemform2[3];

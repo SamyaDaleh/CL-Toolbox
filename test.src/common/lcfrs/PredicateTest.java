@@ -2,10 +2,12 @@ package common.lcfrs;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 
 public class PredicateTest {
-  @Test public void testGetAbsPos(){
+  @Test public void testGetAbsPos() throws ParseException{
     Predicate lhs = new Predicate("A ( a b c, d, e f )");
     assertEquals(0, lhs.getAbsolutePos(1, 0));
     assertEquals(1, lhs.getAbsolutePos(1, 1));

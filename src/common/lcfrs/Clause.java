@@ -1,5 +1,6 @@
 package common.lcfrs;
 
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,8 +12,8 @@ public class Clause {
   private final List<Predicate> rhs = new LinkedList<Predicate>();
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
-   * every part a Predicate */
-  Clause(String lhs, String rhs) {
+   * every part a Predicate  */
+  Clause(String lhs, String rhs) throws ParseException {
     this.lhs = new Predicate(lhs);
     int start = 0;
     for (int i = 1; i < rhs.length(); i++) {
@@ -24,9 +25,9 @@ public class Clause {
   }
 
   /**
-   * Does the split at "->" for you.
+   * Does the split at "->" for you. 
    */
-  public Clause(String clause) {
+  public Clause(String clause) throws ParseException {
     String[] clausesplit = clause.split("->");
     this.lhs = new Predicate(clausesplit[0]);
     String rhs = clausesplit[1];
