@@ -55,66 +55,60 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antneeded) {
       String[] itemform1 = antecedences.get(0).getItemform();
-      String nt1 = itemform1[0];
-      String i1 = itemform1[1];
-      int i1int = Integer.parseInt(i1);
-      String j1 = itemform1[2];
-      int j1int = Integer.parseInt(j1);
-      Double w1 = antecedences.get(0).getProbability();
-
-      String outkey1 =
-        SxCalc.getOutsideKey(nt1, i1int, j1int - i1int, n - j1int);
-      if (!outsides.containsKey(outkey1)) {
-        return new LinkedList<Item>();
-      }
-      Double x1 = w1 - outsides
-        .get(SxCalc.getOutsideKey(nt1, i1int, j1int - i1int, n - j1int));
-
       String[] itemform2 = antecedences.get(1).getItemform();
-      String nt2 = itemform2[0];
-      String i2 = itemform2[1];
-      int i2int = Integer.parseInt(i2);
-      String j2 = itemform2[2];
-      int j2int = Integer.parseInt(j2);
-      Double w2 = antecedences.get(1).getProbability();
+      calculateConsequences(itemform1, itemform2);
+      calculateConsequences(itemform2, itemform1);
 
-      String outkey2 =
-        SxCalc.getOutsideKey(nt2, i2int, j2int - i2int, n - j2int);
-      if (!outsides.containsKey(outkey2)) {
-        return new LinkedList<Item>();
-      }
-      Double x2 = w2 - outsides
-        .get(SxCalc.getOutsideKey(nt2, i2int, j2int - i2int, n - j2int));
-
-      if (nt1.equals(prule.getRhs()[0]) && nt2.equals(prule.getRhs()[1])
-        && j1int == i2int) {
-        String outkey3 =
-          SxCalc.getOutsideKey(prule.getLhs(), i1int, j2int - i1int, n - j2int);
-        if (!outsides.containsKey(outkey3)) {
-          return new LinkedList<Item>();
-        }
-        Double newoutw = outsides.get(outkey3);
-        this.consequences
-          .add(new PcfgAstarItem(x1 + x2 + -Math.log(prule.getP()), newoutw,
-            prule.getLhs(), i1int, j2int));
-
-      } else if (nt2.equals(prule.getRhs()[0]) && nt1.equals(prule.getRhs()[1])
-        && j2int == i1int) {
-        String outkey3 =
-          SxCalc.getOutsideKey(prule.getLhs(), i2int, j1int - i2int, n - j1int);
-        if (!outsides.containsKey(outkey3)) {
-          return new LinkedList<Item>();
-        }
-        Double newoutw = outsides.get(outkey3);
-        this.consequences
-          .add(new PcfgAstarItem(x1 + x2 + -Math.log(prule.getP()), newoutw,
-            prule.getLhs(), i2int, j1int));
-
-      }
     }
     List<Item> outcon = new LinkedList<Item>();
     outcon.addAll(this.consequences);
     return outcon;
+  }
+  
+
+  private void calculateConsequences(String[] itemform1, String[] itemform2) {
+    String nt1 = itemform1[0];
+    String i1 = itemform1[1];
+    int i1int = Integer.parseInt(i1);
+    String j1 = itemform1[2];
+    int j1int = Integer.parseInt(j1);
+    Double w1 = antecedences.get(0).getProbability();
+
+    String outkey1 =
+      SxCalc.getOutsideKey(nt1, i1int, j1int - i1int, n - j1int);
+    if (!outsides.containsKey(outkey1)) {
+      return;
+    }
+    Double x1 = w1 - outsides
+      .get(SxCalc.getOutsideKey(nt1, i1int, j1int - i1int, n - j1int));
+
+    String nt2 = itemform2[0];
+    String i2 = itemform2[1];
+    int i2int = Integer.parseInt(i2);
+    String j2 = itemform2[2];
+    int j2int = Integer.parseInt(j2);
+    Double w2 = antecedences.get(1).getProbability();
+
+    String outkey2 =
+      SxCalc.getOutsideKey(nt2, i2int, j2int - i2int, n - j2int);
+    if (!outsides.containsKey(outkey2)) {
+      return;
+    }
+    Double x2 = w2 - outsides
+      .get(SxCalc.getOutsideKey(nt2, i2int, j2int - i2int, n - j2int));
+
+    if (nt1.equals(prule.getRhs()[0]) && nt2.equals(prule.getRhs()[1])
+      && j1int == i2int) {
+      String outkey3 =
+        SxCalc.getOutsideKey(prule.getLhs(), i1int, j2int - i1int, n - j2int);
+      if (!outsides.containsKey(outkey3)) {
+        return;
+      }
+      Double newoutw = outsides.get(outkey3);
+      this.consequences
+        .add(new PcfgAstarItem(x1 + x2 + -Math.log(prule.getP()), newoutw,
+          prule.getLhs(), i1int, j2int));
+    }
   }
 
   @Override public String getName() {
