@@ -42,6 +42,7 @@ Example:
 Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters. Or call CL-Toolbox.bat (Windows) or CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have to type in the encoding.
 
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
+
 true
 <table border="0">
 <tr><td>1</td><td>[S,0]</td><td>axiom</td><td>{}</td></tr>
@@ -68,6 +69,7 @@ P = {"S -> a S b", "S -> a b"}
 ```
 
 CL-Toolbox.bat ancb.tag "a c b" tag-cyk --success
+
 true
 <table border="0">
 <tr><td>1</td><td>[β,.1⊤,0,-,-,1]</td><td>lex-scan a</td><td>{}</td></tr>
