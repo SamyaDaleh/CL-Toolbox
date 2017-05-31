@@ -11,7 +11,7 @@ public class CfgItem extends AbstractItem implements Item {
     itemform = new String[] {ntdot, String.valueOf(span)};
   }
 
-  /** Constructor with twi integers used for CYK parsing. Now Item has length
+  /** Constructor with two integers used for CYK parsing. Now Item has length
    * 3. */
   public CfgItem(String lhs, int i, int j) {
     itemform = new String[] {lhs, String.valueOf(i), String.valueOf(j)};

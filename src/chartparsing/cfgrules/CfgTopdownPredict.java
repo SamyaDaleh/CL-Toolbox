@@ -27,18 +27,22 @@ public class CfgTopdownPredict extends AbstractDynamicDeductionRule {
       String[] stacksplit = stack.split(" ");
       int i = Integer.parseInt(itemform[1]);
       if (stacksplit[0].equals(rule.getLhs())) {
-        // TODO why is there a handle for epsilon productions if TopDown can't be called if CFG has one? Recheck
+        // TODO why is there a handle for epsilon productions if TopDown can't
+        // be called if CFG has one? Recheck
         if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
           consequences.add(new CfgItem(
             ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
             i));
         } else {
-          consequences
-            .add(
-              new CfgItem(
+          if (stacksplit.length == 1) {
+            consequences.add(new CfgItem(String.join(" ", rule.getRhs()), i));
+          } else {
+            consequences
+              .add(new CfgItem(
                 String.join(" ", rule.getRhs()) + " " + ArrayUtils
                   .getSubSequenceAsString(stacksplit, 1, stacksplit.length),
                 i));
+          }
         }
       }
     }
@@ -47,8 +51,8 @@ public class CfgTopdownPredict extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[" + rule.getLhs() + "α,i]" + "\n______ " + rule.toString() + ", |"
-        + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n" + "["
-        + ArrayUtils.toString(rule.getRhs()) + " α,i]";
+      + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n" + "["
+      + ArrayUtils.toString(rule.getRhs()) + " α,i]";
   }
 
 }

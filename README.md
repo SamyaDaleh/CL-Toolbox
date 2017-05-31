@@ -46,8 +46,8 @@ java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
 true
 <table border="0">
 <tr><td>1</td><td>[S,0]</td><td>axiom</td><td>{}</td></tr>
-<tr><td>2</td><td>[a b ,0]</td><td>predict S -> a b</td><td>{1}</td></tr>
-<tr><td>3</td><td>[a S b ,0]</td><td>predict S -> a S b</td><td>{1}</td></tr>
+<tr><td>2</td><td>[a b,0]</td><td>predict S -> a b</td><td>{1}</td></tr>
+<tr><td>3</td><td>[a S b,0]</td><td>predict S -> a S b</td><td>{1}</td></tr>
 <tr><td>4</td><td>[b,1]</td><td>scan</td><td>{2}</td></tr>
 <tr><td>5</td><td>[S b,1]</td><td>scan</td><td>{3}</td></tr>
 <tr><td>6</td><td>[a b b,1]</td><td>predict S -> a b</td><td>{5}</td></tr>
