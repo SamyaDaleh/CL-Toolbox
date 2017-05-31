@@ -24,7 +24,8 @@ public class CfgLeftcornerRemove extends AbstractDynamicDeductionRule {
       String stackpred = itemform[1];
       String[] stackpredsplit = stackpred.split(" ");
       String stacklhs = itemform[2];
-      if (stackcomplsplit[0].equals(stackpredsplit[0])) {
+      if (stackcompl.length() > 0 && stackpred.length() > 0
+        && stackcomplsplit[0].equals(stackpredsplit[0])) {
         String newcompl = ArrayUtils.getSubSequenceAsString(stackcomplsplit, 1,
           stackcomplsplit.length);
         String newpred = ArrayUtils.getSubSequenceAsString(stackpredsplit, 1,
