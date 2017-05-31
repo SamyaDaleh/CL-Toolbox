@@ -47,7 +47,21 @@ public class GrammarToDeductionRulesConverter {
     case "cfg-earley":
       return CfgToDeductionRulesConverter.CfgToEarleyRules(cfg, w);
     case "cfg-leftcorner":
-      return CfgToDeductionRulesConverter.CfgToLeftCornerRules(cfg, w);
+
+      if (cfg.hasEpsilonProductions() || cfg.hasDirectLeftRecursion()) {
+        if (please) {
+          return CfgToDeductionRulesConverter
+            .CfgToTopDownRules(cfg.removeEmptyProductions()
+              .removeLeftRecursion().removeEmptyProductions()
+              .removeNonGeneratingSymbols().removeNonReachableSymbols(), w);
+        } else {
+          System.out.println(
+            "CFG must not contain empty productions or left recursion for left corner parsing.");
+          return null;
+        }
+      } else {
+        return CfgToDeductionRulesConverter.CfgToLeftCornerRules(cfg, w);
+      }
     case "cfg-cyk":
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
@@ -112,7 +126,8 @@ public class GrammarToDeductionRulesConverter {
     case "srcg-cyk":
       if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
         if (please) {
-          Srcg srcg = new Srcg(cfg.binarize().removeChainRules().replaceTerminals());
+          Srcg srcg =
+            new Srcg(cfg.binarize().removeChainRules().replaceTerminals());
           return LcfrsToDeductionRulesConverter.LcfrsToCykRules(srcg, w);
         } else {
           System.out.println(
@@ -259,7 +274,8 @@ public class GrammarToDeductionRulesConverter {
         return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
       }
     case "srcg-cyk":
-      if (!srcg.isBinarized() || srcg.hasChainRules() || srcg.hasEpsilonProductions()) {
+      if (!srcg.isBinarized() || srcg.hasChainRules()
+        || srcg.hasEpsilonProductions()) {
         if (please) {
           System.out.println("Not implemented yet.");
           return null;
@@ -283,8 +299,8 @@ public class GrammarToDeductionRulesConverter {
           // Srcg srcg = new Srcg(cfg.binarize());
           // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
         } else {
-          System.out
-            .println("sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
+          System.out.println(
+            "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
           return null;
         }
       } else {

@@ -140,6 +140,16 @@ class CfgToDeductionRulesConverter {
    * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
    * to be used. */
   public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
+    if (cfg.hasEpsilonProductions()) {
+      System.out
+        .println("CFG must not contain empty productions for Leftcorner parsing.");
+      return null;
+    }
+    if (cfg.hasDirectLeftRecursion()) {
+      System.out
+        .println("CFG must not contain left recursion for Leftcorner parsing.");
+      return null;
+    }
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new CfgDollarItem(w, cfg.getStart_var(), ""));

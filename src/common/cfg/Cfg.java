@@ -518,9 +518,22 @@ public class Cfg {
     return builder.toString();
   }
 
-  /** Removes left recursion. S -> S is ignored. S -> S a | b are replaced by S
-   * -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar and maybe
-   * chain rules. */
+  /** Returns true if CFG has one rule with direct left recursion, of the form A
+   * -> A.... Remove epsilon productions to make sure no indirect left recursion
+   * is left. */
+  public boolean hasDirectLeftRecursion() {
+    for (CfgProductionRule rule : this.getR()) {
+      if (rule.getLhs().equals(rule.getRhs()[0])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Removes direct left recursion. S -> S is ignored. S -> S a | b are
+   * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
+   * and maybe chain rules. Remove empty productions first to make sure grammar
+   * does not contain indirect left recursion. */
   public Cfg removeLeftRecursion() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(this.terminals);
