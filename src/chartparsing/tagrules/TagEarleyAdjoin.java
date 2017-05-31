@@ -60,11 +60,19 @@ public class TagEarleyAdjoin extends AbstractDynamicDeductionRule {
       if (adj1.equals("0") && adj2.equals("0")) {
         if (adjoinable1 && node1.equals("") && pos1.equals("ra")
           && pos2.equals("rb") && j1 == j2) {
-          consequences.add(new TagEarleyItem(treename2, node2, "rb", i, g, h, l, true));
+          consequences
+            .add(new TagEarleyItem(treename2, node2, "rb", i, g, h, l, true));
+          String node2name = node2.length() == 0 ? "ε" : node2;
+          this.name =
+            "adjoin " + treename2 + "[" + node2name + "," + treename1 + "]";
         } else if (adjoinable2 && node2.equals("") && pos2.equals("ra")
           && pos1.equals("rb") && g == i) {
           // the other way around
-          consequences.add(new TagEarleyItem(treename1, node1, "rb", j2, j1, k1, k2, true));
+          String node1name = node1.length() == 0 ? "ε" : node1;
+          consequences.add(
+            new TagEarleyItem(treename1, node1, "rb", j2, j1, k1, k2, true));
+          this.name =
+            "adjoin " + treename1 + "[" + node1name + "," + treename2 + "]";
         }
       }
     }
@@ -73,7 +81,7 @@ public class TagEarleyAdjoin extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[β,ε,ra,i,j,k,l,0], [ɣ,p,rb,j,g,h,k,0]" + "\n______ β ∈ f_SA(ɣ,p)\n"
-        + "[ɣ,p,rb,i,g,h,l,1]";
+      + "[ɣ,p,rb,i,g,h,l,1]";
   }
 
 }

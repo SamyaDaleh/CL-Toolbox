@@ -40,6 +40,11 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
         && pos.equals("ra")) {
         consequences.add(new TagEarleyItem(outtreename, outnode, "rb", i,
           (Integer) null, null, j, false));
+        // imagine a tree with 1 node where you would substitute into the root
+        // ...
+        String outnodename = outnode.length() == 0 ? "ε" : outnode;
+        this.name = "substitute " + outtreename + "[" + outnodename + ","
+          + treename + "]";
       }
     }
     return consequences;
@@ -47,9 +52,8 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[α,ε,ra,i,-,-,j,0]" + "\n______ " + outtreename + "(" + outnode
-        + ") a substitution node, α ∈ I, l(" + outtreename + "," + outnode
-        + ") = l(α,ε)\n" + "[" + outtreename + "," + outnode
-        + ",rb,i,-,-,j,0]";
+      + ") a substitution node, α ∈ I, l(" + outtreename + "," + outnode
+      + ") = l(α,ε)\n" + "[" + outtreename + "," + outnode + ",rb,i,-,-,j,0]";
   }
 
 }

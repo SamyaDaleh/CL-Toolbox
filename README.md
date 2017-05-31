@@ -79,8 +79,8 @@ true
 <tr><td>15</td><td>[β,ε⊥,0,1,2,2]</td><td>move-binary</td><td>{1, 7}</td></tr>
 <tr><td>16</td><td>[α2,ε⊥,1,-,-,2]</td><td>move-unary</td><td>{3}</td></tr>
 <tr><td>19</td><td>[β,ε⊤,0,1,2,2]</td><td>null-adjoin</td><td>{15}</td></tr>
-<tr><td>21</td><td>[α2,ε⊤,0,-,-,2]</td><td>adjoin</td><td>{16, 19}</td></tr>
-<tr><td>23</td><td>[α1,.1⊤,0,-,-,2]</td><td>substitute in α1(.1)</td><td>{21}</td></tr>
+<tr><td>21</td><td>[α2,ε⊤,0,-,-,2]</td><td>adjoin α2[ε,β]</td><td>{16, 19}</td></tr>
+<tr><td>23</td><td>[α1,.1⊤,0,-,-,2]</td><td>substitute α1[.1,α2]</td><td>{21}</td></tr>
 <tr><td>25</td><td>[α1,ε⊥,0,-,-,3]</td><td>move-binary</td><td>{12, 23}</td></tr>
 <tr><td>27</td><td>[α1,ε⊤,0,-,-,3]</td><td>null-adjoin</td><td>{25}</td></tr>
 </table>

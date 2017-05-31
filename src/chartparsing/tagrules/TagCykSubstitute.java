@@ -34,6 +34,7 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
       if (tag.getInitialTree(treename) != null && node.equals("⊤")) {
         consequences.add(
           new TagCykItem(this.treename, this.nodegorn + "⊤", i, null, null, j));
+        this.name = "substitute " + this.treename + "[" + this.nodegorn + ","+ treename + "]";
       }
     }
     return consequences;
