@@ -16,4 +16,24 @@ public class TagCykItem extends AbstractItem implements Item {
       String.valueOf(j)};
   }
 
+  @Override public String toString(){
+    StringBuilder representation = new StringBuilder();
+    representation.append("[");
+    for (String element : itemform) {
+      if (representation.length() > 1) {
+        representation.append(",");
+      }
+      if (element.equals("⊤")) {
+        representation.append("ε⊤");
+      } else if (element.equals("⊥")) {
+        representation.append("ε⊥");
+      } else if (element.equals("")) {
+        representation.append("ε");
+      } else {
+        representation.append(element);
+      }
+    }
+    representation.append("]");
+    return representation.toString();
+  }
 }
