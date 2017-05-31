@@ -42,15 +42,52 @@ Example:
 Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters. Or call CL-Toolbox.bat (Windows) or CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have to type in the encoding.
 
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
-<table border="0">
-<tr><td>1</td><td>[S,0]</td><td>axiom</td><td></td></tr>
-<tr><td>2</td><td>[a S b,0]</td><td>predict S -> a S b</td><td>1</td></tr>
-<tr><td>3</td><td>[a b,0]</td><td>predict S -> a b</td><td>1</td></tr>
-<tr><td>4</td><td>[S b,1]</td><td>scan a</td><td>2</td></tr>
-<tr><td>5</td><td>[b,1]</td><td>scan a</td></td><td>3</tr>
-<tr><td>6</td><td>[a b b,1]</td><td>predict S -> a b</td><td>4</td></tr>
-<tr><td>7</td><td>[b b,2]</td><td>scan a</td><td>6</td></tr>
-<tr><td>8</td><td>[b,3]</td><td>scan b</td><td>7</td></tr>
-<tr><td>9</td><td>[,4]</td><td>scan b</td><td>8</td></tr>
-</table>
 true
+<table border="0">
+<tr><td>1</td><td>[S,0]</td><td>axiom</td><td>{}</td></tr>
+<tr><td>2</td><td>[a b ,0]</td><td>predict S -> a b</td><td>{1}</td></tr>
+<tr><td>3</td><td>[a S b ,0]</td><td>predict S -> a S b</td><td>{1}</td></tr>
+<tr><td>4</td><td>[b,1]</td><td>scan</td><td>{2}</td></tr>
+<tr><td>5</td><td>[S b,1]</td><td>scan</td><td>{3}</td></tr>
+<tr><td>6</td><td>[a b b,1]</td><td>predict S -> a b</td><td>{5}</td></tr>
+<tr><td>7</td><td>[a S b b,1]</td><td>predict S -> a S b</td><td>{5}</td></tr>
+<tr><td>8</td><td>[b b,2]</td><td>scan</td><td>{6}</td></tr>
+<tr><td>9</td><td>[S b b,2]</td><td>scan</td><td>{7}</td></tr>
+<tr><td>10</td><td>[b,3]</td><td>scan</td><td>{8}</td></tr>
+<tr><td>11</td><td>[a b b b,2]</td><td>predict S -> a b</td><td>{9}</td></tr>
+<tr><td>12</td><td>[a S b b b,2]</td><td>predict S -> a S b</td><td>{9}</td></tr>
+<tr><td>13</td><td>[ε,4]</td><td>scan</td><td>{10}</td></tr>
+</table>
+
+Where ancb.cfg is:
+```
+N = {"S"}
+T = {"a", "b"}
+S = "S"
+P = {"S -> a S b", "S -> a b"}
+```
+
+CL-Toolbox.bat ancb.tag "a c b" tag-cyk --success
+true
+<table border="0">
+<tr><td>1</td><td>[β,.1⊤,0,-,-,1]</td><td>lex-scan a</td><td>{}</td></tr>
+<tr><td>3</td><td>[α2,.1⊤,1,-,-,2]</td><td>lex-scan c</td><td>{}</td></tr>
+<tr><td>7</td><td>[β,.2⊤,1,1,2,2]</td><td>foot-predict</td><td>{}</td></tr>
+<tr><td>12</td><td>[α1,.2⊤,2,-,-,3]</td><td>lex-scan b</td><td>{}</td></tr>
+<tr><td>15</td><td>[β,⊥,0,1,2,2]</td><td>move-binary</td><td>{1, 7}</td></tr>
+<tr><td>16</td><td>[α2,⊥,1,-,-,2]</td><td>move-unary</td><td>{3}</td></tr>
+<tr><td>19</td><td>[β,⊤,0,1,2,2]</td><td>null-adjoin</td><td>{15}</td></tr>
+<tr><td>21</td><td>[α2,⊤,0,-,-,2]</td><td>adjoin</td><td>{16, 19}</td></tr>
+<tr><td>23</td><td>[α1,.1⊤,0,-,-,2]</td><td>substitute in α1(.1)</td><td>{21}</td></tr>
+<tr><td>25</td><td>[α1,⊥,0,-,-,3]</td><td>move-binary</td><td>{12, 23}</td></tr>
+<tr><td>27</td><td>[α1,⊤,0,-,-,3]</td><td>null-adjoin</td><td>{25}</td></tr>
+</table>
+
+Where ancb.tag is:
+```
+N = {"S", "T"}
+T = {"a", "b", "c"}
+S = "S"
+I = {"α1 : (S T b)", "α2 : (T c)"}
+A = {"β : (T a T*)"}
+```
