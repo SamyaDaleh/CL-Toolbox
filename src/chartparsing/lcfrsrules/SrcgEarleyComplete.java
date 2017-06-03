@@ -16,7 +16,7 @@ import common.lcfrs.SrcgEarleyActiveItem;
 public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
   
   public SrcgEarleyComplete() {
-    this.name = "Complete";
+    this.name = "complete";
     this.antneeded = 2;
   }
 

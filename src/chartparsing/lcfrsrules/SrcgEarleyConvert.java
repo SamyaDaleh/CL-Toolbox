@@ -16,7 +16,7 @@ import common.lcfrs.SrcgEarleyPassiveItem;
 public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
 
   public SrcgEarleyConvert() {
-    this.name = "Convert";
+    this.name = "convert";
     this.antneeded = 1;
   }
 

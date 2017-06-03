@@ -19,7 +19,7 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
   /** Remember variables to check if symbols are one of them. */
   public SrcgEarleyResume(String[] variables) {
     this.variables = variables;
-    this.name = "Resume";
+    this.name = "resume";
     this.antneeded = 2;
   }
 

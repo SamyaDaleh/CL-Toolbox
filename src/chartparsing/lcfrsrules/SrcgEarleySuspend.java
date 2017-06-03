@@ -22,7 +22,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
   /** Remember variables to check if symbols are one of them. */
   public SrcgEarleySuspend(String[] variables) {
     this.variables = variables;
-    this.name = "Suspend";
+    this.name = "suspend";
     this.antneeded = 2;
   }
 

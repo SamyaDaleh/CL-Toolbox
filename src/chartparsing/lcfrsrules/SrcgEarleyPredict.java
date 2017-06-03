@@ -18,7 +18,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
 
   public SrcgEarleyPredict(Clause outclause) {
     this.outclause = outclause;
-    this.name = "Predict";
+    this.name = "predict";
     this.antneeded = 1;
   }
 
@@ -48,6 +48,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
               consequences.add(new SrcgEarleyActiveItem(outclause.toString(),
                 posint, 1, 0, new RangeVector(
                   outclause.getLhs().getSymbolsAsPlainArray().length)));
+              this.name = "predict " + outclause.toString();
             }
           }
         }

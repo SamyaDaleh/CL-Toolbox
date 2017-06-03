@@ -69,7 +69,7 @@ class LcfrsToDeductionRulesConverter {
           StaticDeductionRule scan = new StaticDeductionRule();
           scan.addConsequence(
             new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
-          scan.setName("Scan");
+          scan.setName("scan");
           schema.addAxiom(scan);
         }
       }
@@ -100,7 +100,7 @@ class LcfrsToDeductionRulesConverter {
           StaticDeductionRule scan = new StaticDeductionRule();
           scan.addConsequence(
             new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
-          scan.setName("Scan");
+          scan.setName("scan");
           schema.addAxiom(scan);
         }
       } else if (clause.getRhs().size() == 1) {
@@ -184,7 +184,7 @@ class LcfrsToDeductionRulesConverter {
         initialize
           .addConsequence(new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
             new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
-        initialize.setName("Initialize");
+        initialize.setName("initialize");
         schema.addAxiom(initialize);
         schema.addGoal(new SrcgEarleyActiveItem(clause.toString(),
           wsplit.length, 1, clause.getLhs().getSymbolsAsPlainArray().length,

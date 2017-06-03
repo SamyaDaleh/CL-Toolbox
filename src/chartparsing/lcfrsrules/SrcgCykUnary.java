@@ -16,7 +16,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
   private final String[] wsplit;
 
   public SrcgCykUnary(Clause clause, String[] wsplit) {
-    this.name = "Unary";
+    this.name = "unary";
     this.antneeded = 1;
     this.clause = clause;
     this.wsplit = wsplit;
@@ -86,6 +86,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
             clause.getLhs());
           consequences
             .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newvector));
+          this.name = "complete " + clause.toString();
         }
       }
 

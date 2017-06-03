@@ -18,7 +18,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
   /** Remembers the input string to compare it with the next symbol to scan. */
   public SrcgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
-    this.name = "Scan";
+    this.name = "scan";
     this.antneeded = 1;
   }
 
