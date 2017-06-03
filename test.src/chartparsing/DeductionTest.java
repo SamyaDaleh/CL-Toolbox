@@ -17,9 +17,9 @@ public class DeductionTest {
     Cfg G = new Cfg();
 
     G.setTerminals(new String[] {"a", "b"});
-    G.setVars(new String[] {"S"});
-    G.setR(new String[][] {{"S", "a S b"}, {"S", "a b"}});
-    G.setStart_var("S");
+    G.setNonterminals(new String[] {"S"});
+    G.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
+    G.setStartsymbol("S");
 
     return G;
   }
@@ -91,11 +91,11 @@ public class DeductionTest {
     Cfg cfg = new Cfg();
 
     cfg.setTerminals(new String[] {"a", "b"});
-    cfg.setVars(new String[] {"S", "A", "B", "X1"});
-    cfg.setR(
+    cfg.setNonterminals(new String[] {"S", "A", "B", "X1"});
+    cfg.setProductionrules(
         new String[][] {{"S", "A X1"}, {"S", "A B"}, {"A", "a"}, {"B", "b"},
             {"X1", "S B"}});
-    cfg.setStart_var("S");
+    cfg.setStartsymbol("S");
 
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter.CfgToCykRules(cfg, w);
@@ -108,11 +108,11 @@ public class DeductionTest {
     Cfg cfg = new Cfg();
 
     cfg.setTerminals(new String[] {"a", "b"});
-    cfg.setVars(new String[] {"S", "A", "B", "C", "X1"});
-    cfg.setR(
+    cfg.setNonterminals(new String[] {"S", "A", "B", "C", "X1"});
+    cfg.setProductionrules(
         new String[][] {{"S", "A X1"}, {"S", "A B"}, {"C", "a"}, {"B", "b"},
             {"X1", "S B"}, {"A", "C"}});
-    cfg.setStart_var("S");
+    cfg.setStartsymbol("S");
 
     String w = "a a b b";
     ParsingSchema schema =
@@ -180,12 +180,12 @@ public class DeductionTest {
 
   @Test public void testPcfgAstar() throws ParseException {
     Pcfg pcfg = new Pcfg();
-    pcfg.setVars(new String[] {"N", "A"});
+    pcfg.setNonterminals(new String[] {"N", "A"});
     pcfg.setTerminals(
         new String[] {"camping", "car", "nice", "red", "ugly", "green", "house",
             "bike"});
-    pcfg.setStart_var("N");
-    pcfg.setR(new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
+    pcfg.setStartsymbol("N");
+    pcfg.setProductionrules(new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
         {"N", "car", "0.1"}, {"N", "camping", "0.2"}, {"A", "nice", "0.3"},
         {"A", "red", "0.2"}, {"N", "A N", "0.2"}, {"N", "green", "0.1"},
         {"N", "bike", "0.1"}, {"N", "house", "0.1"}, {"A", "ugly", "0.25"},

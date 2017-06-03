@@ -6,35 +6,35 @@ import java.util.List;
 /** Representation of a context free grammar where the rules have
  * probabilities. */
 public class Pcfg {
-  String vars[];
-  private final List<PcfgProductionRule> R = new LinkedList<PcfgProductionRule>();
-  private String start_var;
-  String terminals[];
+  private String nonterminals[];
+  private final List<PcfgProductionRule> productionrules = new LinkedList<PcfgProductionRule>();
+  private String startsymbol;
+  private String terminals[];
 
-  public String[] getVars() {
-    return vars;
+  public String[] getNonterminals() {
+    return nonterminals;
   }
 
-  public void setVars(String[] vars) {
-    this.vars = vars;
+  public void setNonterminals(String[] nonterminals) {
+    this.nonterminals = nonterminals;
   }
 
-  public List<PcfgProductionRule> getR() {
-    return R;
+  public List<PcfgProductionRule> getProductionrules() {
+    return productionrules;
   }
 
-  public void setR(String[][] rules) {
+  public void setProductionrules(String[][] rules) {
     for (String[] rule : rules) {
-      this.R.add(new PcfgProductionRule(rule));
+      this.productionrules.add(new PcfgProductionRule(rule));
     }
   }
 
-  public String getStart_var() {
-    return start_var;
+  public String getStartsymbol() {
+    return startsymbol;
   }
 
-  public void setStart_var(String start_var) {
-    this.start_var = start_var;
+  public void setStartsymbol(String startsymbol) {
+    this.startsymbol = startsymbol;
   }
 
   public String[] getTerminals() {
@@ -55,9 +55,9 @@ public class Pcfg {
   }
 
   /** Returns true if there is at least one rule with an empty right side. */
-  public boolean varsContain(String mayvar) {
-    for (String var : vars) {
-      if (var.equals(mayvar))
+  public boolean nonterminalsContain(String maynt) {
+    for (String nt : nonterminals) {
+      if (nt.equals(maynt))
         return true;
     }
     return false;
@@ -66,15 +66,15 @@ public class Pcfg {
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("G = <N, T, S, P>\n");
-    builder.append("N = {").append(String.join(", ", vars)).append("}\n");
+    builder.append("N = {").append(String.join(", ", nonterminals)).append("}\n");
     builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
-    builder.append("S = ").append(start_var).append("\n");
+    builder.append("S = ").append(startsymbol).append("\n");
     builder.append("P = {");
-    for (int i = 0; i < R.size(); i++) {
+    for (int i = 0; i < productionrules.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append(R.get(i).toString());
+      builder.append(productionrules.get(i).toString());
     }
     builder.append("}\n");
     return builder.toString();

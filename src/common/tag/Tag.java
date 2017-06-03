@@ -25,11 +25,11 @@ public class Tag {
   /** Creates a TAG from a context free grammar by converting all rules to
    * trees. */
   public Tag(Cfg cfg) throws ParseException {
-    this.nonterminals = cfg.getVars();
+    this.nonterminals = cfg.getNonterminals();
     this.terminals = cfg.getTerminals();
-    this.startsymbol = cfg.getStart_var();
+    this.startsymbol = cfg.getStartsymbol();
     int i = 1;
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       String treestring =
         "(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")";
       this.addInitialTree("α" + String.valueOf(i), treestring);

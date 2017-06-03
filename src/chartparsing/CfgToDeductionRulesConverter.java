@@ -59,13 +59,13 @@ class CfgToDeductionRulesConverter {
     DynamicDeductionRule scan = new CfgTopdownScan(wsplit);
     schema.addRule(scan);
 
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       DynamicDeductionRule predict = new CfgTopdownPredict(rule);
       schema.addRule(predict);
     }
 
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(new CfgItem(cfg.getStart_var(), 0));
+    axiom.addConsequence(new CfgItem(cfg.getStartsymbol(), 0));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
     schema.addGoal(new CfgItem("", wsplit.length));
@@ -85,7 +85,7 @@ class CfgToDeductionRulesConverter {
     DynamicDeductionRule shift = new CfgBottomupShift(wsplit);
     schema.addRule(shift);
 
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       DynamicDeductionRule reduce = new CfgBottomupReduce(rule);
       schema.addRule(reduce);
     }
@@ -94,7 +94,7 @@ class CfgToDeductionRulesConverter {
     axiom.addConsequence(new CfgItem("", 0));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
-    schema.addGoal(new CfgItem(cfg.getStart_var(), wsplit.length));
+    schema.addGoal(new CfgItem(cfg.getStartsymbol(), wsplit.length));
     return schema;
   }
 
@@ -110,8 +110,8 @@ class CfgToDeductionRulesConverter {
     DynamicDeductionRule complete = new CfgEarleyComplete();
     schema.addRule(complete);
 
-    for (CfgProductionRule rule : cfg.getR()) {
-      if (rule.getLhs().equals(cfg.getStart_var())) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
+      if (rule.getLhs().equals(cfg.getStartsymbol())) {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
           axiom.addConsequence(new CfgDottedItem("S -> •", 0, 0));
@@ -152,11 +152,11 @@ class CfgToDeductionRulesConverter {
     }
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(new CfgDollarItem(w, cfg.getStart_var(), ""));
+    axiom.addConsequence(new CfgDollarItem(w, cfg.getStartsymbol(), ""));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
 
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       DynamicDeductionRule reduce = new CfgLeftcornerReduce(rule);
       schema.addRule(reduce);
     }
@@ -164,7 +164,7 @@ class CfgToDeductionRulesConverter {
     DynamicDeductionRule remove = new CfgLeftcornerRemove();
     schema.addRule(remove);
 
-    DynamicDeductionRule move = new CfgLeftcornerMove(cfg.getVars());
+    DynamicDeductionRule move = new CfgLeftcornerMove(cfg.getNonterminals());
     schema.addRule(move);
 
     schema.addGoal(new CfgDollarItem("", "", ""));
@@ -180,7 +180,7 @@ class CfgToDeductionRulesConverter {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       if (rule.getRhs().length == 1) {
         for (int i = 0; i < wsplit.length; i++) {
           if (wsplit[i].equals(rule.getRhs()[0])) {
@@ -195,7 +195,7 @@ class CfgToDeductionRulesConverter {
         schema.addRule(complete);
       }
     }
-    schema.addGoal(new CfgItem(cfg.getStart_var(), 0, wsplit.length));
+    schema.addGoal(new CfgItem(cfg.getStartsymbol(), 0, wsplit.length));
     return schema;
   }
 
@@ -210,7 +210,7 @@ class CfgToDeductionRulesConverter {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       if (rule.getRhs().length == 1) {
         if (cfg.terminalsContain(rule.getRhs()[0])) {
           for (int i = 0; i < wsplit.length; i++) {
@@ -230,7 +230,7 @@ class CfgToDeductionRulesConverter {
         schema.addRule(complete);
       }
     }
-    schema.addGoal(new CfgItem(cfg.getStart_var(), 0, wsplit.length));
+    schema.addGoal(new CfgItem(cfg.getStartsymbol(), 0, wsplit.length));
     return schema;
   }
 }

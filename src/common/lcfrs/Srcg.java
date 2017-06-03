@@ -20,11 +20,11 @@ public class Srcg {
    * Converts a CFG to a sRCG with dimension = 1.
    */
   public Srcg(Cfg cfg) throws ParseException {
-    this.nonterminals = cfg.getVars();
+    this.nonterminals = cfg.getNonterminals();
     this.terminals = cfg.getTerminals();
-    this.startsymbol = cfg.getStart_var();
+    this.startsymbol = cfg.getStartsymbol();
     ArrayList<String> newvariables = new ArrayList<String>();
-    for (CfgProductionRule rule : cfg.getR()) {
+    for (CfgProductionRule rule : cfg.getProductionrules()) {
       StringBuilder lhs = new StringBuilder();
       StringBuilder rhs = new StringBuilder();
       int i = 0;

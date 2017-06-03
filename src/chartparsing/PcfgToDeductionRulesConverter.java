@@ -37,7 +37,7 @@ class PcfgToDeductionRulesConverter {
     Map<String, Double> outsides =
       SxCalc.getOutsides(insides, wsplit.length, pcfg);
 
-    for (PcfgProductionRule prule : pcfg.getR()) {
+    for (PcfgProductionRule prule : pcfg.getProductionrules()) {
       if (prule.getRhs().length == 1) {
         for (int i = 0; i < wsplit.length; i++) {
           if (prule.getRhs()[0].equals(wsplit[i])) {
@@ -58,7 +58,7 @@ class PcfgToDeductionRulesConverter {
       }
     }
     schema
-      .addGoal(new PcfgAstarItem(0, 0, pcfg.getStart_var(), 0, wsplit.length));
+      .addGoal(new PcfgAstarItem(0, 0, pcfg.getStartsymbol(), 0, wsplit.length));
 
     return schema;
   }

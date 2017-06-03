@@ -10,9 +10,9 @@ import common.ArrayUtils;
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
 public class Cfg {
-  private String vars[];
-  private final List<CfgProductionRule> R = new LinkedList<CfgProductionRule>();
-  private String start_var;
+  private String nonterminals[];
+  private final List<CfgProductionRule> productionrules = new LinkedList<CfgProductionRule>();
+  private String startsymbol;
   private String terminals[];
 
   public Cfg() {
@@ -21,40 +21,40 @@ public class Cfg {
 
   /** Creates a CFG from a PCFG by throwing away all probabilities. */
   public Cfg(Pcfg pcfg) {
-    this.vars = pcfg.vars;
-    this.terminals = pcfg.terminals;
-    this.start_var = pcfg.getStart_var();
-    for (PcfgProductionRule rule : pcfg.getR()) {
+    this.nonterminals = pcfg.getNonterminals();
+    this.terminals = pcfg.getTerminals();
+    this.startsymbol = pcfg.getStartsymbol();
+    for (PcfgProductionRule rule : pcfg.getProductionrules()) {
       CfgProductionRule newrule =
         new CfgProductionRule(rule.getLhs(), rule.getRhs());
-      this.R.add(newrule);
+      this.productionrules.add(newrule);
     }
   }
 
-  public String[] getVars() {
-    return vars;
+  public String[] getNonterminals() {
+    return nonterminals;
   }
 
-  public void setVars(String[] vars) {
-    this.vars = vars;
+  public void setNonterminals(String[] nonterminals) {
+    this.nonterminals = nonterminals;
   }
 
-  public List<CfgProductionRule> getR() {
-    return R;
+  public List<CfgProductionRule> getProductionrules() {
+    return productionrules;
   }
 
-  public void setR(String[][] rules) {
+  public void setProductionrules(String[][] rules) {
     for (String[] rule : rules) {
-      this.R.add(new CfgProductionRule(rule));
+      this.productionrules.add(new CfgProductionRule(rule));
     }
   }
 
-  public String getStart_var() {
-    return start_var;
+  public String getStartsymbol() {
+    return startsymbol;
   }
 
-  public void setStart_var(String start_var) {
-    this.start_var = start_var;
+  public void setStartsymbol(String startsymbol) {
+    this.startsymbol = startsymbol;
   }
 
   public String[] getTerminals() {
@@ -76,17 +76,8 @@ public class Cfg {
 
   /** Returns true if maynt is on of the nonterminal symbols. */
   public boolean nonterminalsContain(String maynt) {
-    for (String nt : vars) {
+    for (String nt : nonterminals) {
       if (nt.equals(maynt))
-        return true;
-    }
-    return false;
-  }
-
-  /** Returns true if mayvar is one of the nonterminal symbols. */
-  private boolean varsContain(String mayvar) {
-    for (String var : vars) {
-      if (var.equals(mayvar))
         return true;
     }
     return false;
@@ -96,14 +87,14 @@ public class Cfg {
    * except it's a start symbol rule and the start symbol never occurs on any
    * rhs. */
   public boolean hasEpsilonProductions() {
-    for (CfgProductionRule rule : this.getR()) {
+    for (CfgProductionRule rule : this.getProductionrules()) {
       if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
-        if (rule.getLhs().equals(this.start_var)) {
+        if (rule.getLhs().equals(this.startsymbol)) {
 
-          for (CfgProductionRule rule2 : this.getR()) {
+          for (CfgProductionRule rule2 : this.getProductionrules()) {
             String[] rhs = rule2.getRhs();
             for (String symbol : rhs) {
-              if (symbol.equals(this.start_var)) {
+              if (symbol.equals(this.startsymbol)) {
                 return true;
               }
             }
@@ -119,17 +110,17 @@ public class Cfg {
   /** Returns true if grammar is in Canonical Two Form. C2F is like Chomsky
    * Normal form, but chain rules are also allowed. */
   public boolean isInCanonicalTwoForm() {
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs.length == 1) {
-        if (rule.lhs.equals(start_var) && rule.rhs[0].equals("")) {
-          for (CfgProductionRule rule2 : this.R) {
-            if (rule2.rhs[0].equals(start_var)
-              || rule2.rhs[1].equals(start_var)) {
+        if (rule.lhs.equals(startsymbol) && rule.rhs[0].equals("")) {
+          for (CfgProductionRule rule2 : this.productionrules) {
+            if (rule2.rhs[0].equals(startsymbol)
+              || rule2.rhs[1].equals(startsymbol)) {
               return false;
             }
           }
         }
-      } else if (!varsContain(rule.rhs[0]) || !varsContain(rule.rhs[1])) {
+      } else if (!nonterminalsContain(rule.rhs[0]) || !nonterminalsContain(rule.rhs[1])) {
         return false;
       }
     }
@@ -143,7 +134,7 @@ public class Cfg {
     if (!isInCanonicalTwoForm()) {
       return false;
     }
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs.length == 1) {
         if (!terminalsContain(rule.rhs[0])) {
           return false;
@@ -157,7 +148,7 @@ public class Cfg {
    * must start with a terminal, followed by arbitrary many nonterminals
    * including none. */
   public boolean isInGreibachNormalForm() {
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs[0].equals("")) {
         return false;
       }
@@ -165,7 +156,7 @@ public class Cfg {
         return false;
       }
       for (int i = 1; i < rule.rhs.length; i++) {
-        if (!varsContain(rule.rhs[i])) {
+        if (!nonterminalsContain(rule.rhs[i])) {
           return false;
         }
       }
@@ -177,17 +168,17 @@ public class Cfg {
   public Cfg binarize() {
     Cfg newCfg = new Cfg();
     newCfg.setTerminals(this.terminals);
-    newCfg.setStart_var(this.start_var);
+    newCfg.setStartsymbol(this.startsymbol);
     ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, this.vars);
+    Collections.addAll(newnt, this.nonterminals);
     ArrayList<String[]> newp = new ArrayList<String[]>();
     int i = 1;
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs.length > 2) {
         CfgProductionRule rulerest = rule;
         while (rulerest.rhs.length > 2) {
           String newn = "X" + String.valueOf(i);
-          while (varsContain(newn)) {
+          while (nonterminalsContain(newn)) {
             i++;
             newn = "X" + String.valueOf(i);
           }
@@ -208,14 +199,14 @@ public class Cfg {
         newp.add(new String[] {rule.lhs, rule.rhs[0]});
       }
     }
-    newCfg.setVars(newnt.toArray(new String[newnt.size()]));
-    newCfg.setR(newp.toArray(new String[newp.size()][]));
+    newCfg.setNonterminals(newnt.toArray(new String[newnt.size()]));
+    newCfg.setProductionrules(newp.toArray(new String[newp.size()][]));
     return newCfg;
   }
 
   /** Returns true if all rhs' have at most length 2. */
   public boolean isBinarized() {
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs.length > 2) {
         return false;
       }
@@ -232,7 +223,7 @@ public class Cfg {
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : this.getR()) {
+      for (CfgProductionRule rule : this.getProductionrules()) {
         boolean notgeneratingseen = false;
         for (String symbol : rule.getRhs()) {
           if (!generating.contains(symbol)) {
@@ -247,15 +238,15 @@ public class Cfg {
       }
     }
     cfg.terminals = this.getTerminals();
-    cfg.start_var = this.start_var;
+    cfg.startsymbol = this.startsymbol;
     ArrayList<String> restnts = new ArrayList<String>();
     for (String symbol : generating) {
       if (this.nonterminalsContain(symbol)) {
         restnts.add(symbol);
       }
     }
-    cfg.vars = restnts.toArray(new String[restnts.size()]);
-    for (CfgProductionRule rule : this.getR()) {
+    cfg.nonterminals = restnts.toArray(new String[restnts.size()]);
+    for (CfgProductionRule rule : this.getProductionrules()) {
       boolean notgeneratingseen = false;
       for (String symbol : rule.getRhs()) {
         if (!generating.contains(symbol)) {
@@ -264,7 +255,7 @@ public class Cfg {
         }
       }
       if (!notgeneratingseen && generating.contains(rule.lhs)) {
-        cfg.R.add(rule);
+        cfg.productionrules.add(rule);
       }
     }
     return cfg;
@@ -275,11 +266,11 @@ public class Cfg {
   public Cfg removeNonReachableSymbols() {
     Cfg cfg = new Cfg();
     ArrayList<String> reachable = new ArrayList<String>();
-    reachable.add(this.start_var);
+    reachable.add(this.startsymbol);
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : this.R) {
+      for (CfgProductionRule rule : this.productionrules) {
         if (reachable.contains(rule.lhs)) {
           for (String symbol : rule.rhs) {
             if (!reachable.contains(symbol)) {
@@ -290,9 +281,9 @@ public class Cfg {
         }
       }
     }
-    cfg.start_var = this.start_var;
+    cfg.startsymbol = this.startsymbol;
     ArrayList<String> newvars = new ArrayList<String>();
-    for (String nt : this.vars) {
+    for (String nt : this.nonterminals) {
       if (reachable.contains(nt)) {
         newvars.add(nt);
       }
@@ -303,11 +294,11 @@ public class Cfg {
         newterms.add(t);
       }
     }
-    cfg.vars = newvars.toArray(new String[newvars.size()]);
+    cfg.nonterminals = newvars.toArray(new String[newvars.size()]);
     cfg.terminals = newterms.toArray(new String[newterms.size()]);
-    for (CfgProductionRule rule : this.getR()) {
+    for (CfgProductionRule rule : this.getProductionrules()) {
       if (reachable.contains(rule.lhs)) {
-        cfg.R.add(rule);
+        cfg.productionrules.add(rule);
       }
     }
     return cfg;
@@ -319,16 +310,16 @@ public class Cfg {
   public Cfg removeEmptyProductions() {
     Cfg cfg = new Cfg();
     cfg.terminals = this.terminals;
-    cfg.start_var = this.start_var;
+    cfg.startsymbol = this.startsymbol;
 
     ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, this.vars);
-    cfg.R.addAll(this.R);
+    Collections.addAll(newnt, this.nonterminals);
+    cfg.productionrules.addAll(this.productionrules);
     ArrayList<String> eliminateable = new ArrayList<String>();
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : this.R) {
+      for (CfgProductionRule rule : this.productionrules) {
         if (rule.rhs.length == 1 && rule.rhs[0].equals("")
           && !eliminateable.contains(rule.lhs)) {
           eliminateable.add(rule.lhs);
@@ -337,37 +328,37 @@ public class Cfg {
       }
     }
     for (String nt : eliminateable) {
-      for (int j = 0; j < cfg.R.size(); j++) {
-        CfgProductionRule rule = cfg.R.get(j);
+      for (int j = 0; j < cfg.productionrules.size(); j++) {
+        CfgProductionRule rule = cfg.productionrules.get(j);
         for (int i = 0; i < rule.rhs.length; i++) {
           if (rule.rhs[i].equals(nt)) {
-            cfg.R.add(new CfgProductionRule(rule.getLhs(),
+            cfg.productionrules.add(new CfgProductionRule(rule.getLhs(),
               ArrayUtils.getSequenceWithoutIAsArray(rule.rhs, i)));
           }
         }
       }
-      if (nt.equals(this.start_var)) {
+      if (nt.equals(this.startsymbol)) {
         int i = 1;
         String newstart = "S" + String.valueOf(i);
         while (newnt.contains(newstart)) {
           i++;
           newstart = "S" + String.valueOf(i);
         }
-        cfg.R
-          .add(new CfgProductionRule(new String[] {newstart, this.start_var}));
-        cfg.R.add(new CfgProductionRule(new String[] {newstart, ""}));
+        cfg.productionrules
+          .add(new CfgProductionRule(new String[] {newstart, this.startsymbol}));
+        cfg.productionrules.add(new CfgProductionRule(new String[] {newstart, ""}));
         newnt.add(newstart);
-        cfg.start_var = newstart;
+        cfg.startsymbol = newstart;
       }
     }
-    for (int i = cfg.R.size() - 1; i >= 0; i--) {
-      if (cfg.R.get(i).rhs.length == 1 && cfg.R.get(i).rhs[0].equals("")
-        && !cfg.R.get(i).lhs.equals(cfg.start_var)) {
-        cfg.R.remove(i);
+    for (int i = cfg.productionrules.size() - 1; i >= 0; i--) {
+      if (cfg.productionrules.get(i).rhs.length == 1 && cfg.productionrules.get(i).rhs[0].equals("")
+        && !cfg.productionrules.get(i).lhs.equals(cfg.startsymbol)) {
+        cfg.productionrules.remove(i);
       }
     }
 
-    cfg.vars = newnt.toArray(new String[newnt.size()]);
+    cfg.nonterminals = newnt.toArray(new String[newnt.size()]);
     return cfg;
   }
 
@@ -376,21 +367,21 @@ public class Cfg {
   public Cfg removeChainRules() {
     Cfg cfg = new Cfg();
     cfg.terminals = this.terminals;
-    cfg.start_var = this.start_var;
-    cfg.vars = this.vars;
-    for (CfgProductionRule rule : this.R) {
+    cfg.startsymbol = this.startsymbol;
+    cfg.nonterminals = this.nonterminals;
+    for (CfgProductionRule rule : this.productionrules) {
       if (!(rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0]))) {
-        cfg.R.add(rule);
+        cfg.productionrules.add(rule);
       }
     }
     ArrayList<String[]> unitpairs = new ArrayList<String[]>();
-    for (String nt : this.vars) {
+    for (String nt : this.nonterminals) {
       unitpairs.add(new String[] {nt, nt});
     }
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : this.R) {
+      for (CfgProductionRule rule : this.productionrules) {
         if (rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0])) {
           boolean found = false;
           for (String[] unitpair : unitpairs) {
@@ -409,11 +400,11 @@ public class Cfg {
     }
 
     for (String[] unitpair : unitpairs) {
-      for (CfgProductionRule rule : this.R) {
+      for (CfgProductionRule rule : this.productionrules) {
         if (!(rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0]))
           && rule.lhs.equals(unitpair[1])) {
           boolean alreadythere = false;
-          for (CfgProductionRule rule2 : cfg.getR()) {
+          for (CfgProductionRule rule2 : cfg.getProductionrules()) {
             if (rule.lhs.equals(unitpair[0])
               && rule2.rhs.length == rule.rhs.length) {
               boolean alright = false;
@@ -428,7 +419,7 @@ public class Cfg {
             }
           }
           if (!alreadythere) {
-            cfg.R.add(new CfgProductionRule(unitpair[0], rule.rhs));
+            cfg.productionrules.add(new CfgProductionRule(unitpair[0], rule.rhs));
           }
         }
       }
@@ -439,7 +430,7 @@ public class Cfg {
 
   /** Returns true if grammar has rules of the form A -> B. */
   public boolean hasChainRules() {
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs.length == 1 && nonterminalsContain(rule.rhs[0])) {
         return true;
       }
@@ -451,17 +442,17 @@ public class Cfg {
    * nonterminals and new rules A -> a are added. */
   public Cfg replaceTerminals() {
     Cfg cfg = new Cfg();
-    cfg.start_var = this.start_var;
+    cfg.startsymbol = this.startsymbol;
     cfg.terminals = this.terminals;
 
     ArrayList<String[]> newtrules = new ArrayList<String[]>();
     ArrayList<String> newnt = new ArrayList<String>();
 
-    Collections.addAll(newnt, this.vars);
+    Collections.addAll(newnt, this.nonterminals);
     int i = 1;
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       if (rule.rhs.length == 1) {
-        cfg.R.add(rule);
+        cfg.productionrules.add(rule);
       } else {
         ArrayList<String> newrhs = new ArrayList<String>();
         for (String sym : rule.rhs) {
@@ -479,7 +470,7 @@ public class Cfg {
               newlhs = "Y" + String.valueOf(i);
               i++;
               isnew = true;
-              cfg.R.add(new CfgProductionRule(newlhs, new String[] {sym}));
+              cfg.productionrules.add(new CfgProductionRule(newlhs, new String[] {sym}));
             }
             while (this.nonterminalsContain(newlhs)) {
               newlhs = "Y" + String.valueOf(i);
@@ -492,27 +483,27 @@ public class Cfg {
             newrhs.add(newlhs);
           }
         }
-        cfg.R.add(new CfgProductionRule(rule.lhs,
+        cfg.productionrules.add(new CfgProductionRule(rule.lhs,
           newrhs.toArray(new String[newrhs.size()])));
       }
     }
 
-    cfg.vars = newnt.toArray(new String[newnt.size()]);
+    cfg.nonterminals = newnt.toArray(new String[newnt.size()]);
     return cfg;
   }
 
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("G = <N, T, S, P>\n");
-    builder.append("N = {").append(String.join(", ", vars)).append("}\n");
+    builder.append("N = {").append(String.join(", ", nonterminals)).append("}\n");
     builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
-    builder.append("S = ").append(start_var).append("\n");
+    builder.append("S = ").append(startsymbol).append("\n");
     builder.append("P = {");
-    for (int i = 0; i < R.size(); i++) {
+    for (int i = 0; i < productionrules.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append(R.get(i).toString());
+      builder.append(productionrules.get(i).toString());
     }
     builder.append("}\n");
     return builder.toString();
@@ -522,7 +513,7 @@ public class Cfg {
    * -> A.... Remove epsilon productions to make sure no indirect left recursion
    * is left. */
   public boolean hasDirectLeftRecursion() {
-    for (CfgProductionRule rule : this.getR()) {
+    for (CfgProductionRule rule : this.getProductionrules()) {
       if (rule.getLhs().equals(rule.getRhs()[0])) {
         return true;
       }
@@ -537,10 +528,10 @@ public class Cfg {
   public Cfg removeLeftRecursion() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(this.terminals);
-    cfg.setStart_var(this.start_var);
+    cfg.setStartsymbol(this.startsymbol);
     ArrayList<String> newnts = new ArrayList<String>();
-    Collections.addAll(newnts, this.vars);
-    for (String nt : this.vars) {
+    Collections.addAll(newnts, this.nonterminals);
+    for (String nt : this.nonterminals) {
       int i = 1;
       String newnt = nt + String.valueOf(i);
       i++;
@@ -549,39 +540,43 @@ public class Cfg {
         i++;
       }
       newnts.add(newnt);
-      cfg.R.add(new CfgProductionRule(newnt, new String[] {""}));
+      cfg.productionrules.add(new CfgProductionRule(newnt, new String[] {""}));
 
-      for (CfgProductionRule rule : this.R) {
+      for (CfgProductionRule rule : this.productionrules) {
         if (rule.lhs.equals(nt)) {
           if (rule.rhs[0].equals(nt) && rule.rhs.length > 1) {
             String[] newrhs = new String[rule.rhs.length];
             System.arraycopy(rule.rhs, 1, newrhs, 0, rule.rhs.length - 1);
             newrhs[newrhs.length - 1] = newnt;
-            cfg.R.add(new CfgProductionRule(nt, newrhs));
+            cfg.productionrules.add(new CfgProductionRule(nt, newrhs));
           } else if (!rule.rhs[0].equals(nt)) {
             if (rule.rhs[0].equals("")) {
-              cfg.R.add(new CfgProductionRule(nt, new String[] {newnt}));
+              cfg.productionrules.add(new CfgProductionRule(nt, new String[] {newnt}));
             } else {
               String[] newrhs = new String[rule.rhs.length + 1];
               System.arraycopy(rule.rhs, 0, newrhs, 0, rule.rhs.length);
               newrhs[newrhs.length - 1] = newnt;
-              cfg.R.add(new CfgProductionRule(nt, newrhs));
+              cfg.productionrules.add(new CfgProductionRule(nt, newrhs));
             }
           }
         }
       }
     }
-    cfg.setVars(newnts.toArray(new String[newnts.size()]));
+    cfg.setNonterminals(newnts.toArray(new String[newnts.size()]));
     return cfg;
   }
 
+  /**
+   * Returns true if there is at least one production rule that contains
+   * terminals and nonterminals as rhs symbols.
+   */
   public boolean hasMixedRhs() {
-    for (CfgProductionRule rule : this.R) {
+    for (CfgProductionRule rule : this.productionrules) {
       for (int i = 1; i < rule.getRhs().length; i++) {
         if ((this.terminalsContain(rule.getRhs()[i - 1])
-          && this.varsContain(rule.getRhs()[i]))
+          && this.nonterminalsContain(rule.getRhs()[i]))
           || (this.terminalsContain(rule.getRhs()[i])
-            && this.varsContain(rule.getRhs()[i - 1]))) {
+            && this.nonterminalsContain(rule.getRhs()[i - 1]))) {
           return true;
         }
       }

@@ -16,13 +16,13 @@ public class SxCalc {
   public static Map<String, Double> getInsides(Pcfg cfg, int nmax) {
     Map<String, Double> insides = new HashMap<String, Double>();
     for (int n = 1; n <= nmax; n++) {
-      for (String nt : cfg.getVars()) {
+      for (String nt : cfg.getNonterminals()) {
         insides.put(getInsideKey(nt, n), Double.MAX_VALUE);
       }
-      for (String nt : cfg.getVars()) {
+      for (String nt : cfg.getNonterminals()) {
         for (int l = 1; l <= n; l++) {
           if (l == 1) {
-            for (PcfgProductionRule rule : cfg.getR()) {
+            for (PcfgProductionRule rule : cfg.getProductionrules()) {
               String[] vars = rule.getRhs();
               Double logp = -Math.log(rule.getP());
               if (rule.getLhs().equals(nt) && vars.length == 1
@@ -32,7 +32,7 @@ public class SxCalc {
             }
           } else {
             for (int l1 = 1; l1 <= l - 1; l1++) {
-              for (PcfgProductionRule rule : cfg.getR()) {
+              for (PcfgProductionRule rule : cfg.getProductionrules()) {
                 String[] vars = rule.getRhs();
                 if (nt.equals(rule.getLhs()) && vars.length == 2) {
                   Double newp = -Math.log(rule.getP());
@@ -66,13 +66,13 @@ public class SxCalc {
     for (int l = n; l >= 1; l--) {
       for (int nl = 0; nl <= n - l; nl++) {
         int nr = n - nl - l;
-        for (String nt : pcfg.getVars()) {
+        for (String nt : pcfg.getNonterminals()) {
           outsides.put(getOutsideKey(nt, nl, l, nr), Double.MAX_VALUE);
-          if (nl == 0 && nr == 0 && nt.equals(pcfg.getStart_var())) {
+          if (nl == 0 && nr == 0 && nt.equals(pcfg.getStartsymbol())) {
             outsides.put(getOutsideKey(nt, nl, l, nr), 0.0);
           } else {
             for (int lc = 1; lc <= nr; lc++) {
-              for (PcfgProductionRule rule : pcfg.getR()) {
+              for (PcfgProductionRule rule : pcfg.getProductionrules()) {
                 String[] vars = rule.getRhs();
                 if (vars.length == 2 && vars[0].equals(nt)) {
                   Double newp = -Math.log(rule.getP());
@@ -85,7 +85,7 @@ public class SxCalc {
               }
             }
             for (int lc = 1; lc <= nl; lc++) {
-              for (PcfgProductionRule rule : pcfg.getR()) {
+              for (PcfgProductionRule rule : pcfg.getProductionrules()) {
                 String[] vars = rule.getRhs();
                 if (vars.length == 2 && vars[1].equals(nt)) {
                   Double newp = -Math.log(rule.getP());

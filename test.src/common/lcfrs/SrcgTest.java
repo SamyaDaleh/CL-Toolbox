@@ -40,10 +40,10 @@ public class SrcgTest {
 
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
-    cfgeps.setVars(new String[] {"S", "A", "B", "C"});
-    cfgeps.setR(new String[][] {{"A", "ε"}, {"S", ""}, {"C", ""},
+    cfgeps.setNonterminals(new String[] {"S", "A", "B", "C"});
+    cfgeps.setProductionrules(new String[][] {{"A", "ε"}, {"S", ""}, {"C", ""},
       {"S", "b A a S b C"}, {"A", "a"}, {"A", "b B"}, {"B", "b"}});
-    cfgeps.setStart_var("S");
+    cfgeps.setStartsymbol("S");
 
     Srcg srcg = new Srcg(cfgeps);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C}\n"
@@ -58,10 +58,10 @@ public class SrcgTest {
 
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
-    cfgeps.setVars(new String[] {"S", "X1", "Y1", "Y2"});
-    cfgeps.setR(new String[][] {{"Y1", "a"}, {"S", "Y1 X1"}, {"Y2", "b"},
+    cfgeps.setNonterminals(new String[] {"S", "X1", "Y1", "Y2"});
+    cfgeps.setProductionrules(new String[][] {{"Y1", "a"}, {"S", "Y1 X1"}, {"Y2", "b"},
       {"X1", "S Y2"}, {"S", "Y1 Y2"}});
-    cfgeps.setStart_var("S");
+    cfgeps.setStartsymbol("S");
 
     Srcg srcg = new Srcg(cfgeps);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, X1, Y1, Y2}\n"
