@@ -3,7 +3,7 @@ package common.tag;
 import common.ArrayUtils;
 
 /** A node in a tree, also called vertex. */
-public class Vertex {
+public class Vertex implements Cloneable {
   final String label;
   String gornaddress;
 
@@ -62,14 +62,14 @@ public class Vertex {
    * parent or an ancestor. The root domintes all other nodes.
    */
   public boolean dominates(String gornaddress) {
+    if (gornaddress.equals("") || gornaddress.equals(this.gornaddress)) {
+      return false;
+    }
     if (this.gornaddress.equals("")) {
       return true;
     }
-    if (gornaddress.equals("")) {
-      return false;
-    }
     String[] gorn1split = this.gornaddress.split("[.]");
-    String[] gorn2split = this.gornaddress.split("[.]");
+    String[] gorn2split = gornaddress.split("[.]");
     
     int l1 = gorn1split.length;
     int l2 = gorn2split.length;
@@ -84,5 +84,11 @@ public class Vertex {
       }
     }
     return true;
+  }
+  
+  @Override protected Vertex clone() {
+    Vertex p = new Vertex(this.label);
+    p.gornaddress = this.gornaddress;
+    return p;
   }
 }

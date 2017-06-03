@@ -29,22 +29,21 @@ public class Tree {
       switch (tokens[i]) {
       case "(": {
         i++;
-        if (tokens[i].equals("(") || tokens[i].equals(")") || tokens[i]
-            .equals("*")) {
-          throw new ParseException(
-              "Expecting label of root of subtree, found " + tokens[i]
-                  + " instead.", 0);
+        if (tokens[i].equals("(") || tokens[i].equals(")")
+          || tokens[i].equals("*")) {
+          throw new ParseException("Expecting label of root of subtree, found "
+            + tokens[i] + " instead.", 0);
         }
         Vertex vertex = new Vertex(tokens[i]);
         if (this.root == null) {
           this.root = vertex;
           vertex.setGornaddress("");
         } else {
-          children
-              .set(children.size() - 1, children.get(children.size() - 1) + 1);
+          children.set(children.size() - 1,
+            children.get(children.size() - 1) + 1);
           vertex.setGornaddress(
-              vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
-                  + children.get(children.size() - 1).toString());
+            vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
+              + children.get(children.size() - 1).toString());
           Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
           this.edges.add(edge);
         }
@@ -56,8 +55,7 @@ public class Tree {
       case ")":
         if (vertexpath.size() == 0) {
           throw new ParseException(
-              "Closing bracket encountered when no nodes in tree were found.",
-              0);
+            "Closing bracket encountered when no nodes in tree were found.", 0);
         }
         vertexpath.remove(vertexpath.size() - 1);
         children.remove(children.size() - 1);
@@ -65,8 +63,7 @@ public class Tree {
       case "*":
         if (this.foot != null) {
           throw new ParseException(
-              "Tried to set foot node twice. Only one foot node is allowed.",
-              0);
+            "Tried to set foot node twice. Only one foot node is allowed.", 0);
         }
         this.foot = this.vertexes.get(this.vertexes.size() - 1);
         break;
@@ -91,11 +88,11 @@ public class Tree {
         } else {
           vertex = new Vertex(tokens[i]);
         }
-        children
-            .set(children.size() - 1, children.get(children.size() - 1) + 1);
-        vertex.setGornaddress(
-            vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
-                + children.get(children.size() - 1).toString());
+        children.set(children.size() - 1,
+          children.get(children.size() - 1) + 1);
+        vertex
+          .setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
+            + "." + children.get(children.size() - 1).toString());
 
         Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
         this.edges.add(edge);
@@ -111,7 +108,7 @@ public class Tree {
     this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
   }
 
-  private Tree() {
+  protected Tree() {
     super();
   }
 
@@ -150,11 +147,11 @@ public class Tree {
   }
 
   @Override public String toString() {
-    return "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel()) + (
-        this.root.equals(foot) ? "*" : "") + (
-        isInOA(this.root.getGornaddress()) ? "_OA" : "") + (
-        isInNA(this.root.getGornaddress()) ? "_NA" : "") + " "
-        + toStringAllChildren(this.root) + ")";
+    return "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
+      + (this.root.equals(foot) ? "*" : "")
+      + (isInOA(this.root.getGornaddress()) ? "_OA" : "")
+      + (isInNA(this.root.getGornaddress()) ? "_NA" : "") + " "
+      + toStringAllChildren(this.root) + ")";
   }
 
   /** Retrieves all child nodes of a node. Each one is printed with its label
@@ -165,11 +162,11 @@ public class Tree {
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
       representation.append("(")
-          .append(child.getLabel().equals("") ? "ε" : child.getLabel())
-          .append(child.equals(foot) ? "*" : "")
-          .append(isInOA(child.getGornaddress()) ? "_OA" : "")
-          .append(isInNA(child.getGornaddress()) ? "_NA" : "").append(" ")
-          .append(toStringAllChildren(child)).append(")");
+        .append(child.getLabel().equals("") ? "ε" : child.getLabel())
+        .append(child.equals(foot) ? "*" : "")
+        .append(isInOA(child.getGornaddress()) ? "_OA" : "")
+        .append(isInNA(child.getGornaddress()) ? "_NA" : "").append(" ")
+        .append(toStringAllChildren(child)).append(")");
     }
     return representation.toString();
   }
@@ -266,70 +263,113 @@ public class Tree {
   }
 
   /** Substitutes the given initaltree into this tree at the node at that gorn
-   * address and returns the result as new Tree object. Alters the gorn
-   * addresses in the original tree, be careful. */
+   * address and returns the result as new Tree object. Clones all nodes for
+   * doing so. */
   public Tree substitute(String gorn, Tree initialtree) {
     Tree newtree = new Tree();
-    newtree.root = this.root;
-    newtree.foot = this.foot;
     Vertex substnode = null;
     for (int i = 0; i < vertexes.size(); i++) {
       if (vertexes.get(i).getGornaddress().equals(gorn)) {
         substnode = vertexes.get(i);
         for (Vertex p : initialtree.vertexes) {
-          newtree.vertexes.add(p);
-          p.gornaddress = gorn + p.getGornaddress();
+          newtree.vertexes.add(p.clone());
+          newtree.vertexes.get(newtree.vertexes.size() - 1)
+            .setGornaddress(gorn + p.getGornaddress());
         }
       } else {
-        newtree.vertexes.add(vertexes.get(i));
+        newtree.vertexes.add(vertexes.get(i).clone());
+      }
+      if (vertexes.get(i).getGornaddress().equals("")) {
+        newtree.root = newtree.vertexes.get(newtree.vertexes.size() - 1);
+      } else if (vertexes.get(i).equals(this.foot)) {
+        newtree.foot = newtree.vertexes.get(newtree.vertexes.size() - 1);
       }
     }
     for (Edge edge : this.edges) {
       if (edge.getTo().equals(substnode)) {
-        newtree.edges.add(new Edge(edge.getFrom(), initialtree.root));
+        Vertex newfrom =
+          newtree.getNodeByGornAdress(edge.getFrom().gornaddress);
+        Vertex newto = newtree.getNodeByGornAdress(gorn);
+        newtree.edges.add(new Edge(newfrom, newto));
       } else {
-        newtree.edges.add(edge);
+        Vertex newfrom =
+          newtree.getNodeByGornAdress(edge.getFrom().gornaddress);
+        Vertex newto = newtree.getNodeByGornAdress(edge.getTo().gornaddress);
+        newtree.edges.add(new Edge(newfrom, newto));
       }
     }
-    newtree.edges.addAll(initialtree.edges);
+    for (Edge edge : initialtree.edges) {
+      Vertex newfrom =
+        newtree.getNodeByGornAdress(gorn + edge.getFrom().gornaddress);
+      Vertex newto =
+        newtree.getNodeByGornAdress(gorn + edge.getTo().gornaddress);
+      newtree.edges.add(new Edge(newfrom, newto));
+    }
     return newtree;
   }
 
-  /** Substitutes the given auxiliary tree into this tree at the node at that
-   * gorn address and returns the result as new Tree object. Alters the gorn
-   * addresses in the original tree, be careful. */
+  /** Adjoins the given auxiliary tree into this tree at the node at that gorn
+   * address and returns the result as new Tree object. Clones all nodes for
+   * doing so. */
   public Tree adjoin(String gorn, Tree auxtree) {
     Tree newtree = new Tree();
-    newtree.root = this.root;
-    newtree.foot = this.foot;
     Vertex adjnode = null;
     for (int i = 0; i < vertexes.size(); i++) {
       if (vertexes.get(i).getGornaddress().equals(gorn)) {
         adjnode = vertexes.get(i);
-        for (Vertex p : auxtree.vertexes) {
-          newtree.vertexes.add(p);
-          p.gornaddress = gorn + p.getGornaddress();
-        }
       } else {
-        newtree.vertexes.add(vertexes.get(i));
+        newtree.vertexes.add(vertexes.get(i).clone());
       }
     }
     for (Vertex vertex : vertexes) {
+      if (vertex.equals(this.foot)) {
+        newtree.foot = newtree.getNodeByGornAdress(vertex.getGornaddress());
+      }
       if (adjnode.dominates(vertex.getGornaddress())) {
-        vertex.gornaddress =
-            auxtree.getFoot().getGornaddress() + vertex.getGornaddress();
+        Vertex p = newtree.getNodeByGornAdress(vertex.getGornaddress());
+        p.gornaddress = gorn + auxtree.getFoot().getGornaddress()
+          + vertex.getGornaddress().substring(adjnode.gornaddress.length());
       }
     }
+    for (Vertex p : auxtree.vertexes) {
+      newtree.vertexes.add(p.clone());
+      newtree.vertexes.get(newtree.vertexes.size() - 1)
+        .setGornaddress(gorn + p.getGornaddress());
+    }
+    newtree.root = newtree.getNodeByGornAdress("");
     for (Edge edge : this.edges) {
       if (edge.getFrom().equals(adjnode)) {
-        newtree.edges.add(new Edge(auxtree.foot, edge.getTo()));
-      } else if (edge.getTo().equals(adjnode)) {
-        newtree.edges.add(new Edge(edge.getFrom(), auxtree.root));
+        Vertex newfrom = newtree.getNodeByGornAdress(
+          gorn + auxtree.getFoot().getGornaddress() + edge.getFrom()
+            .getGornaddress().substring(adjnode.gornaddress.length()));
+        Vertex newto =
+          newtree.getNodeByGornAdress(
+          gorn + auxtree.getFoot().getGornaddress() + edge.getTo()
+            .getGornaddress().substring(adjnode.gornaddress.length()));
+        newtree.edges.add(new Edge(newfrom, newto));
+      } else if (adjnode.dominates(edge.getFrom().getGornaddress())) {
+        Vertex newfrom = newtree.getNodeByGornAdress(
+          gorn + auxtree.getFoot().getGornaddress() + edge.getFrom()
+            .getGornaddress().substring(adjnode.gornaddress.length()));
+        Vertex newto =
+          newtree.getNodeByGornAdress(
+          gorn + auxtree.getFoot().getGornaddress() + edge.getTo()
+            .getGornaddress().substring(adjnode.gornaddress.length()));
+        newtree.edges.add(new Edge(newfrom, newto));
       } else {
-        newtree.edges.add(edge);
+        Vertex newfrom =
+          newtree.getNodeByGornAdress(edge.getFrom().gornaddress);
+        Vertex newto = newtree.getNodeByGornAdress(edge.getTo().gornaddress);
+        newtree.edges.add(new Edge(newfrom, newto));
       }
     }
-    newtree.edges.addAll(auxtree.edges);
+    for (Edge edge : auxtree.edges) {
+      Vertex newfrom =
+        newtree.getNodeByGornAdress(gorn + edge.getFrom().gornaddress);
+      Vertex newto =
+        newtree.getNodeByGornAdress(gorn + edge.getTo().gornaddress);
+      newtree.edges.add(new Edge(newfrom, newto));
+    }
     return newtree;
   }
 }

@@ -24,7 +24,7 @@ public class TreeTest {
     DisplayTree.main(new String[] {tree.toString()});
   }
 
-  @Test public void testSubstitution() throws ParseException {
+  @Test public void testSubstitute() throws ParseException {
     Tree tree = new Tree("(S NP (VP (V walks) ) )");
     Tree initree = new Tree("(NP Mary)");
     Tree substres = tree.substitute(".1", initree);
@@ -37,6 +37,10 @@ public class TreeTest {
     Tree substres = tree.adjoin(".2", auxtree);
     assertEquals("(S (NP (Mary ))(VP (ADV (sometimes ))(VP (V (walks )))))",
       substres.toString());
+
+    Tree beta = new Tree("(T a T*)");
+    Tree adjtree = beta.adjoin("", beta);
+    assertEquals("(T (a )(T (a )(T* )))", adjtree.toString());
   }
 
 }

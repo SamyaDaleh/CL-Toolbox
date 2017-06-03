@@ -277,4 +277,12 @@ public class Deduction {
   public  List<Item> getChart() {
     return this.chart;
   }
+  
+  public ArrayList<ArrayList<ArrayList<Integer>>> getBackpointers(){
+    return this.deductedfrom;
+  }
+  
+  public ArrayList<ArrayList<String>> getAppliedRules(){
+    return this.appliedRule;
+  }
 }
