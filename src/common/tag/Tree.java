@@ -172,7 +172,7 @@ public class Tree {
   }
 
   /** Returns a list of all child nodes of the given node. */
-  private List<Vertex> getChildren(Vertex node) {
+  public List<Vertex> getChildren(Vertex node) {
     List<Vertex> children = new LinkedList<Vertex>();
     for (Edge edge : this.edges) {
       if (edge.getFrom().equals(node)) {

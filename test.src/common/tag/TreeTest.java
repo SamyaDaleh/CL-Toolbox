@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import common.tag.Tree;
-import gui.DisplayTree;
 
 public class TreeTest {
   @Test public void testTreeFunctions() throws ParseException {
@@ -16,12 +15,8 @@ public class TreeTest {
     assertTrue(tree.getRoot().getLabel().equals("T"));
     assertTrue(tree.getFoot().getLabel().equals("T"));
     assertTrue(tree.getFoot().getGornaddress().equals(".2.1"));
-
     assertTrue(tree.getHeight() == 4);
-
     assertTrue(tree.getWidth() == 2);
-
-    DisplayTree.main(new String[] {tree.toString()});
   }
 
   @Test public void testSubstitute() throws ParseException {
