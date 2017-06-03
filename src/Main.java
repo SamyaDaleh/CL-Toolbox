@@ -75,8 +75,8 @@ class Main {
     String[][] data = deduction.printTrace();
     ParsingTraceTable.displayTrace(data,
       new String[] {"Id", "Item", "Rules", "Backpointers"});
-    if (algorithm.equals("tag-cyk")) {
-      Tree derivedtree = ChartToTreeConverter.TagCykToDerivatedTree(
+    if (algorithm.startsWith("tag")) {
+      Tree derivedtree = ChartToTreeConverter.tagToDerivatedTree(
         deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
         deduction.getBackpointers(), tag);
       if (derivedtree != null) {

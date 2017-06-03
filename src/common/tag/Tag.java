@@ -196,17 +196,17 @@ public class Tag {
 
   /** Returns true if auxtree is adjoinable in tree at node with gorn address.
    * That is the case if the label of the node and the auxiliary tree are the
-   * same and the node is no substitution node. */
+   * same and the node is no leaf. */
   public boolean isAdjoinable(String auxtreename, String treename,
     String gornaddress) {
     Tree tree = getTree(treename);
     Tree auxtree = getAuxiliaryTree(auxtreename);
     boolean labelcheck = auxtree != null && auxtree.getRoot().getLabel()
       .equals(tree.getNodeByGornAdress(gornaddress).getLabel());
-    boolean issubstnode =
-      isSubstitutionNode(tree.getNodeByGornAdress(gornaddress), treename);
+    boolean isleaf =
+      tree.getChildren(tree.getNodeByGornAdress(gornaddress)).isEmpty();
     boolean nulladjoin = tree.isInNA(gornaddress);
-    return (labelcheck && !issubstnode && !nulladjoin);
+    return (labelcheck && !isleaf && !nulladjoin);
   }
 
   @Override public String toString() {
@@ -219,7 +219,7 @@ public class Tag {
       auxtreesnameset.toArray(new String[auxtreesnameset.size()]);
     builder.append("G = <N, T, I, A, S>\n");
     builder.append("N = {").append(String.join(", ", nonterminals))
-        .append("}\n");
+      .append("}\n");
     builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
     builder.append("I = {");
 
@@ -228,7 +228,7 @@ public class Tag {
         builder.append(", ");
       }
       builder.append(initreenames[i]).append(" : ")
-          .append(getInitialTree(initreenames[i]).toString());
+        .append(getInitialTree(initreenames[i]).toString());
     }
     builder.append("}\n");
     builder.append("A = {");
@@ -237,7 +237,7 @@ public class Tag {
         builder.append(", ");
       }
       builder.append(auxtreenames[i]).append(" : ")
-          .append(getAuxiliaryTree(auxtreenames[i]).toString());
+        .append(getAuxiliaryTree(auxtreenames[i]).toString());
     }
     builder.append("}\n");
     builder.append("S = ").append(startsymbol).append("\n");

@@ -28,7 +28,19 @@ public class ChartToTreeConverterTest {
       TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "cyk");
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivatedTree = ChartToTreeConverter.TagCykToDerivatedTree(
+    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(
+      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
+      deduction.getBackpointers(), gentag());
+    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
+  }
+  
+  @Test public void testTagEarleyToDerivatedTree() throws ParseException {
+    String w2 = "a a c b";
+    ParsingSchema schema =
+      TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "earley");
+    Deduction deduction = new Deduction();
+    deduction.doParse(schema, false);
+    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(
       deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
       deduction.getBackpointers(), gentag());
     assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
