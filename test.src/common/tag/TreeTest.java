@@ -13,9 +13,9 @@ import gui.DisplayTree;
 public class TreeTest {
   @Test public void testTreeFunctions() throws ParseException {
     Tree tree = new Tree("(T_NA (B (T a ε) ) (B_OA T*))");
-    assertTrue(tree.getRoot().label.equals("T"));
-    assertTrue(tree.getFoot().label.equals("T"));
-    assertTrue(tree.getFoot().gornaddress.equals(".2.1"));
+    assertTrue(tree.getRoot().getLabel().equals("T"));
+    assertTrue(tree.getFoot().getLabel().equals("T"));
+    assertTrue(tree.getFoot().getGornaddress().equals(".2.1"));
 
     assertTrue(tree.getHeight() == 4);
 

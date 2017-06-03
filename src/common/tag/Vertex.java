@@ -4,8 +4,8 @@ import common.ArrayUtils;
 
 /** A node in a tree, also called vertex. */
 public class Vertex implements Cloneable {
-  final String label;
-  String gornaddress;
+  private final String label;
+  private String gornaddress;
 
   /** Constructs a node with the given label. */
   Vertex(String label) {

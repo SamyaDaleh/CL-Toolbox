@@ -288,21 +288,22 @@ public class Tree {
     for (Edge edge : this.edges) {
       if (edge.getTo().equals(substnode)) {
         Vertex newfrom =
-          newtree.getNodeByGornAdress(edge.getFrom().gornaddress);
+          newtree.getNodeByGornAdress(edge.getFrom().getGornaddress());
         Vertex newto = newtree.getNodeByGornAdress(gorn);
         newtree.edges.add(new Edge(newfrom, newto));
       } else {
         Vertex newfrom =
-          newtree.getNodeByGornAdress(edge.getFrom().gornaddress);
-        Vertex newto = newtree.getNodeByGornAdress(edge.getTo().gornaddress);
+          newtree.getNodeByGornAdress(edge.getFrom().getGornaddress());
+        Vertex newto =
+          newtree.getNodeByGornAdress(edge.getTo().getGornaddress());
         newtree.edges.add(new Edge(newfrom, newto));
       }
     }
     for (Edge edge : initialtree.edges) {
       Vertex newfrom =
-        newtree.getNodeByGornAdress(gorn + edge.getFrom().gornaddress);
+        newtree.getNodeByGornAdress(gorn + edge.getFrom().getGornaddress());
       Vertex newto =
-        newtree.getNodeByGornAdress(gorn + edge.getTo().gornaddress);
+        newtree.getNodeByGornAdress(gorn + edge.getTo().getGornaddress());
       newtree.edges.add(new Edge(newfrom, newto));
     }
     return newtree;
@@ -327,8 +328,8 @@ public class Tree {
       }
       if (adjnode.dominates(vertex.getGornaddress())) {
         Vertex p = newtree.getNodeByGornAdress(vertex.getGornaddress());
-        p.gornaddress = gorn + auxtree.getFoot().getGornaddress()
-          + vertex.getGornaddress().substring(adjnode.gornaddress.length());
+        p.setGornaddress(gorn + auxtree.getFoot().getGornaddress() + vertex
+          .getGornaddress().substring(adjnode.getGornaddress().length()));
       }
     }
     for (Vertex p : auxtree.vertexes) {
@@ -341,33 +342,32 @@ public class Tree {
       if (edge.getFrom().equals(adjnode)) {
         Vertex newfrom = newtree.getNodeByGornAdress(
           gorn + auxtree.getFoot().getGornaddress() + edge.getFrom()
-            .getGornaddress().substring(adjnode.gornaddress.length()));
-        Vertex newto =
-          newtree.getNodeByGornAdress(
+            .getGornaddress().substring(adjnode.getGornaddress().length()));
+        Vertex newto = newtree.getNodeByGornAdress(
           gorn + auxtree.getFoot().getGornaddress() + edge.getTo()
-            .getGornaddress().substring(adjnode.gornaddress.length()));
+            .getGornaddress().substring(adjnode.getGornaddress().length()));
         newtree.edges.add(new Edge(newfrom, newto));
       } else if (adjnode.dominates(edge.getFrom().getGornaddress())) {
         Vertex newfrom = newtree.getNodeByGornAdress(
           gorn + auxtree.getFoot().getGornaddress() + edge.getFrom()
-            .getGornaddress().substring(adjnode.gornaddress.length()));
-        Vertex newto =
-          newtree.getNodeByGornAdress(
+            .getGornaddress().substring(adjnode.getGornaddress().length()));
+        Vertex newto = newtree.getNodeByGornAdress(
           gorn + auxtree.getFoot().getGornaddress() + edge.getTo()
-            .getGornaddress().substring(adjnode.gornaddress.length()));
+            .getGornaddress().substring(adjnode.getGornaddress().length()));
         newtree.edges.add(new Edge(newfrom, newto));
       } else {
         Vertex newfrom =
-          newtree.getNodeByGornAdress(edge.getFrom().gornaddress);
-        Vertex newto = newtree.getNodeByGornAdress(edge.getTo().gornaddress);
+          newtree.getNodeByGornAdress(edge.getFrom().getGornaddress());
+        Vertex newto =
+          newtree.getNodeByGornAdress(edge.getTo().getGornaddress());
         newtree.edges.add(new Edge(newfrom, newto));
       }
     }
     for (Edge edge : auxtree.edges) {
       Vertex newfrom =
-        newtree.getNodeByGornAdress(gorn + edge.getFrom().gornaddress);
+        newtree.getNodeByGornAdress(gorn + edge.getFrom().getGornaddress());
       Vertex newto =
-        newtree.getNodeByGornAdress(gorn + edge.getTo().gornaddress);
+        newtree.getNodeByGornAdress(gorn + edge.getTo().getGornaddress());
       newtree.edges.add(new Edge(newfrom, newto));
     }
     return newtree;
