@@ -261,6 +261,38 @@ public class Tree {
     }
     return width;
   }
+  
+  /**
+   * Returns the max width of the subtree below node p, that is the most nodes
+   * in one layer where all nodes are dominated by p.
+   */
+  public int getWidthBelowNode(Vertex p){
+    int width = 0;
+    int nodes = 1;
+    for (int i = p.getGornaddress().split("[.]").length+1; nodes != 0; i++) {
+      nodes = getWidthInLayerBelowNode(p, i);
+      if (nodes > width) {
+        width = nodes;
+      }
+    }
+    return width;
+  }
+  
+  /**
+   * Returns the number of nodes in one layer that are dominated by p.
+   */
+  public int getWidthInLayerBelowNode(Vertex p, int layer) {
+    int width = 0;
+    for (Vertex node : this.vertexes) {
+      if (p.dominates(node.getGornaddress())) {
+        String[] nodesplit = node.getGornaddress().split("[.]");
+        if (nodesplit.length == layer) {
+          width++;
+        }
+      }
+    }
+    return width;
+  }
 
   /** Substitutes the given initaltree into this tree at the node at that gorn
    * address and returns the result as new Tree object. Clones all nodes for

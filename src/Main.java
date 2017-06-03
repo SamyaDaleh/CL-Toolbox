@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.text.ParseException;
 
+import chartparsing.ChartToTreeConverter;
 import chartparsing.Deduction;
 import chartparsing.GrammarToDeductionRulesConverter;
 import chartparsing.ParsingSchema;
@@ -8,6 +9,8 @@ import common.GrammarParser;
 import common.cfg.Cfg;
 import common.lcfrs.Srcg;
 import common.tag.Tag;
+import common.tag.Tree;
+import gui.DisplayTree;
 import gui.ParsingTraceTable;
 
 /** Entry point into toolbox for the calls by command line */
@@ -27,8 +30,8 @@ class Main {
         "Optional parameters can be: --sucess : prints a trace only of items "
           + "that lead to a goal item.");
       System.out.println(
-        "Optional parameters can be: --please : if a grammar doesn't fit an " 
-      + "algorithm, ask me to convert it. No promises.");
+        "Optional parameters can be: --please : if a grammar doesn't fit an "
+          + "algorithm, ask me to convert it. No promises.");
       System.out.println(
         "example: ..\\resources\\grammars\\anbncfg \"a a b b\" cfg-topdown");
       return;
@@ -47,27 +50,39 @@ class Main {
       }
     }
     ParsingSchema schema = null;
-    GrammarToDeductionRulesConverter gdrc = new GrammarToDeductionRulesConverter();
+    GrammarToDeductionRulesConverter gdrc =
+      new GrammarToDeductionRulesConverter();
     if (please) {
       gdrc.setPlease(true);
     }
+    Cfg cfg;
+    Tag tag = null;
+    Srcg srcg;
     if (grammarfile.endsWith(".cfg")) {
-      Cfg cfg = GrammarParser.parseCfgFile(grammarfile);
-      schema = gdrc.Convert(cfg,w, algorithm);
+      cfg = GrammarParser.parseCfgFile(grammarfile);
+      schema = gdrc.Convert(cfg, w, algorithm);
     }
     if (grammarfile.endsWith(".tag")) {
-      Tag tag = GrammarParser.parseTagFile(grammarfile);
-      schema = gdrc.Convert(tag ,w, algorithm);
+      tag = GrammarParser.parseTagFile(grammarfile);
+      schema = gdrc.Convert(tag, w, algorithm);
     }
     if (grammarfile.endsWith(".srcg")) {
-      Srcg srcg = GrammarParser.parseSrcgFile(grammarfile);
-      schema = gdrc.Convert(srcg ,w, algorithm);
+      srcg = GrammarParser.parseSrcgFile(grammarfile);
+      schema = gdrc.Convert(srcg, w, algorithm);
     }
     Deduction deduction = new Deduction();
     System.out.println(deduction.doParse(schema, success));
     String[][] data = deduction.printTrace();
     ParsingTraceTable.displayTrace(data,
       new String[] {"Id", "Item", "Rules", "Backpointers"});
+    if (algorithm.equals("tag-cyk")) {
+      Tree derivedtree = ChartToTreeConverter.TagCykToDerivatedTree(
+        deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
+        deduction.getBackpointers(), tag);
+      if (derivedtree != null) {
+        DisplayTree.main(new String[] {derivedtree.toString()});
+      }
+    }
   }
 
 }
