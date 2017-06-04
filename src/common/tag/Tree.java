@@ -28,28 +28,7 @@ public class Tree {
     for (int i = 0; i < tokens.length; i++) {
       switch (tokens[i]) {
       case "(": {
-        i++;
-        if (tokens[i].equals("(") || tokens[i].equals(")")
-          || tokens[i].equals("*")) {
-          throw new ParseException("Expecting label of root of subtree, found "
-            + tokens[i] + " instead.", 0);
-        }
-        Vertex vertex = new Vertex(tokens[i]);
-        if (this.root == null) {
-          this.root = vertex;
-          vertex.setGornaddress("");
-        } else {
-          children.set(children.size() - 1,
-            children.get(children.size() - 1) + 1);
-          vertex.setGornaddress(
-            vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
-              + children.get(children.size() - 1).toString());
-          Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
-          this.edges.add(edge);
-        }
-        vertexpath.add(vertex);
-        children.add(0);
-        this.vertexes.add(vertex);
+        i = openSubTree(tokens, vertexpath, children, i);
         break;
       }
       case ")":
@@ -68,39 +47,75 @@ public class Tree {
         this.foot = this.vertexes.get(this.vertexes.size() - 1);
         break;
       case "_":
-        i++;
-        switch (tokens[i]) {
-        case "NA":
-          this.NA.add(this.vertexes.get(this.vertexes.size() - 1));
-          break;
-        case "OA":
-          this.OA.add(this.vertexes.get(this.vertexes.size() - 1));
-          break;
-        default:
-          throw new ParseException("Unknown subscript " + tokens[i], 0);
-        }
+        i = handleSubscript(tokens, i);
         break;
       default: {
-        // now this can only be children of the last vertex in path
-        Vertex vertex;
-        if (tokens[i].equals("ε")) {
-          vertex = new Vertex("");
-        } else {
-          vertex = new Vertex(tokens[i]);
-        }
-        children.set(children.size() - 1,
-          children.get(children.size() - 1) + 1);
-        vertex
-          .setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
-            + "." + children.get(children.size() - 1).toString());
-
-        Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
-        this.edges.add(edge);
-        this.vertexes.add(vertex);
+        handleChildNode(tokens, vertexpath, children, i);
         break;
       }
       }
     }
+  }
+
+  private int handleSubscript(String[] tokens, int i) throws ParseException {
+    i++;
+    switch (tokens[i]) {
+    case "NA":
+      this.NA.add(this.vertexes.get(this.vertexes.size() - 1));
+      break;
+    case "OA":
+      this.OA.add(this.vertexes.get(this.vertexes.size() - 1));
+      break;
+    default:
+      throw new ParseException("Unknown subscript " + tokens[i], 0);
+    }
+    return i;
+  }
+
+  private void handleChildNode(String[] tokens, List<Vertex> vertexpath,
+    List<Integer> children, int i) {
+    Vertex vertex;
+    if (tokens[i].equals("ε")) {
+      vertex = new Vertex("");
+    } else {
+      vertex = new Vertex(tokens[i]);
+    }
+    children.set(children.size() - 1,
+      children.get(children.size() - 1) + 1);
+    vertex
+      .setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
+        + "." + children.get(children.size() - 1).toString());
+
+    Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
+    this.edges.add(edge);
+    this.vertexes.add(vertex);
+  }
+
+  private int openSubTree(String[] tokens, List<Vertex> vertexpath,
+    List<Integer> children, int i) throws ParseException {
+    i++;
+    if (tokens[i].equals("(") || tokens[i].equals(")")
+      || tokens[i].equals("*")) {
+      throw new ParseException("Expecting label of root of subtree, found "
+        + tokens[i] + " instead.", 0);
+    }
+    Vertex vertex = new Vertex(tokens[i]);
+    if (this.root == null) {
+      this.root = vertex;
+      vertex.setGornaddress("");
+    } else {
+      children.set(children.size() - 1,
+        children.get(children.size() - 1) + 1);
+      vertex.setGornaddress(
+        vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
+          + children.get(children.size() - 1).toString());
+      Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
+      this.edges.add(edge);
+    }
+    vertexpath.add(vertex);
+    children.add(0);
+    this.vertexes.add(vertex);
+    return i;
   }
 
   /** Creates a tree from a cfg rule. Hence S -> A B would become (S A B). */
@@ -261,15 +276,13 @@ public class Tree {
     }
     return width;
   }
-  
-  /**
-   * Returns the max width of the subtree below node p, that is the most nodes
-   * in one layer where all nodes are dominated by p.
-   */
-  public int getWidthBelowNode(Vertex p){
+
+  /** Returns the max width of the subtree below node p, that is the most nodes
+   * in one layer where all nodes are dominated by p. */
+  public int getWidthBelowNode(Vertex p) {
     int width = 0;
     int nodes = 1;
-    for (int i = p.getGornaddress().split("[.]").length+1; nodes != 0; i++) {
+    for (int i = p.getGornaddress().split("[.]").length + 1; nodes != 0; i++) {
       nodes = getWidthInLayerBelowNode(p, i);
       if (nodes > width) {
         width = nodes;
@@ -277,10 +290,8 @@ public class Tree {
     }
     return width;
   }
-  
-  /**
-   * Returns the number of nodes in one layer that are dominated by p.
-   */
+
+  /** Returns the number of nodes in one layer that are dominated by p. */
   private int getWidthInLayerBelowNode(Vertex p, int layer) {
     int width = 0;
     for (Vertex node : this.vertexes) {

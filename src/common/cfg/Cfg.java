@@ -151,23 +151,14 @@ public class Cfg extends AbstractCfg {
   public Cfg replaceTerminals() {
     return MixedRhs.replaceTerminals(this);
   }
-
-  @Override public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("G = <N, T, S, P>\n");
-    builder.append("N = {").append(String.join(", ", nonterminals))
-      .append("}\n");
-    builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
-    builder.append("S = ").append(startsymbol).append("\n");
-    builder.append("P = {");
+  
+  protected void appendRuleRepresentation(StringBuilder builder) {
     for (int i = 0; i < productionrules.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
       builder.append(productionrules.get(i).toString());
     }
-    builder.append("}\n");
-    return builder.toString();
   }
 
   /** Returns true if CFG has one rule with direct left recursion, of the form A

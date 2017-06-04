@@ -46,4 +46,19 @@ public abstract class AbstractCfg {
     }
     return false;
   }
+  
+  @Override public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("G = <N, T, S, P>\n");
+    builder.append("N = {").append(String.join(", ", nonterminals))
+      .append("}\n");
+    builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
+    builder.append("S = ").append(startsymbol).append("\n");
+    builder.append("P = {");
+    appendRuleRepresentation(builder);
+    builder.append("}\n");
+    return builder.toString();
+  }
+  
+  protected abstract void appendRuleRepresentation(StringBuilder builder);
 }
