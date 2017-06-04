@@ -274,18 +274,7 @@ public class Cfg extends AbstractCfg{
     ArrayList<String> newnt = new ArrayList<String>();
     Collections.addAll(newnt, this.nonterminals);
     cfg.productionrules.addAll(this.productionrules);
-    ArrayList<String> eliminateable = new ArrayList<String>();
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : this.productionrules) {
-        if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")
-          && !eliminateable.contains(rule.getLhs())) {
-          eliminateable.add(rule.getLhs());
-          changed = true;
-        }
-      }
-    }
+    ArrayList<String> eliminateable = getEliminateable();
     for (String nt : eliminateable) {
       for (int j = 0; j < cfg.productionrules.size(); j++) {
         CfgProductionRule rule = cfg.productionrules.get(j);
@@ -321,6 +310,25 @@ public class Cfg extends AbstractCfg{
 
     cfg.nonterminals = newnt.toArray(new String[newnt.size()]);
     return cfg;
+  }
+
+  /**
+   * Gets all nonterminals where a derivation =>* ε is possible.
+   */
+  private ArrayList<String> getEliminateable() {
+    ArrayList<String> eliminateable = new ArrayList<String>();
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (CfgProductionRule rule : this.productionrules) {
+        if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")
+          && !eliminateable.contains(rule.getLhs())) {
+          eliminateable.add(rule.getLhs());
+          changed = true;
+        }
+      }
+    }
+    return eliminateable;
   }
 
   /** Returns an equivalent grammar without chain rules, that are rules of the
