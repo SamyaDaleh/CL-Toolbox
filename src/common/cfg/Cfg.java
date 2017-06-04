@@ -1,13 +1,14 @@
 package common.cfg;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import common.ArrayUtils;
 import common.cfg.util.Binarization;
 import common.cfg.util.ChainRules;
+import common.cfg.util.EmptyProductions;
+import common.cfg.util.LeftRecursion;
+import common.cfg.util.MixedRhs;
+import common.cfg.util.UselessSymbols;
 
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
@@ -45,24 +46,7 @@ public class Cfg extends AbstractCfg {
    * except it's a start symbol rule and the start symbol never occurs on any
    * rhs. */
   public boolean hasEpsilonProductions() {
-    for (CfgProductionRule rule : this.getProductionrules()) {
-      if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
-        if (rule.getLhs().equals(this.startsymbol)) {
-
-          for (CfgProductionRule rule2 : this.getProductionrules()) {
-            String[] rhs = rule2.getRhs();
-            for (String symbol : rhs) {
-              if (symbol.equals(this.startsymbol)) {
-                return true;
-              }
-            }
-          }
-        } else {
-          return true;
-        }
-      }
-    }
-    return false;
+    return EmptyProductions.hasEpsilonProductions(this);
   }
 
   /** Returns true if grammar is in Canonical Two Form. C2F is like Chomsky
@@ -136,179 +120,19 @@ public class Cfg extends AbstractCfg {
   /** Returns an equivalent grammar without non-generating symbols. Call this
    * before removing non-reachable symbols. */
   public Cfg removeNonGeneratingSymbols() {
-    Cfg cfg = new Cfg();
-    ArrayList<String> generating = new ArrayList<String>();
-    Collections.addAll(generating, this.terminals);
-    getGeneratingSymbols(generating);
-    cfg.terminals = this.getTerminals();
-    cfg.startsymbol = this.startsymbol;
-    ArrayList<String> restnts = new ArrayList<String>();
-    for (String symbol : generating) {
-      if (this.nonterminalsContain(symbol)) {
-        restnts.add(symbol);
-      }
-    }
-    cfg.nonterminals = restnts.toArray(new String[restnts.size()]);
-    for (CfgProductionRule rule : this.getProductionrules()) {
-      boolean notgeneratingseen = false;
-      for (String symbol : rule.getRhs()) {
-        if (!generating.contains(symbol)) {
-          notgeneratingseen = true;
-          break;
-        }
-      }
-      if (!notgeneratingseen && generating.contains(rule.getLhs())) {
-        cfg.productionrules.add(rule);
-      }
-    }
-    return cfg;
+    return UselessSymbols.removeNonGeneratingSymbols(this);
   }
-
-  /** Returns all symbols where strings only containing terinals can be derived
-   * from. */
-  private void getGeneratingSymbols(ArrayList<String> generating) {
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : this.getProductionrules()) {
-        boolean notgeneratingseen = false;
-        for (String symbol : rule.getRhs()) {
-          if (!generating.contains(symbol)) {
-            notgeneratingseen = true;
-            break;
-          }
-        }
-        if (!notgeneratingseen && !generating.contains(rule.getLhs())) {
-          changed = true;
-          generating.add(rule.getLhs());
-        }
-      }
-    }
-  }
-
   /** Returns an equivalent grammar without non-reachable symbols. Before
    * calling this, remove all non-generating symbols. */
   public Cfg removeNonReachableSymbols() {
-    Cfg cfg = new Cfg();
-    ArrayList<String> reachable = new ArrayList<String>();
-    reachable.add(this.startsymbol);
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : this.productionrules) {
-        if (reachable.contains(rule.getLhs())) {
-          for (String symbol : rule.getRhs()) {
-            if (!reachable.contains(symbol)) {
-              reachable.add(symbol);
-              changed = true;
-            }
-          }
-        }
-      }
-    }
-    cfg.startsymbol = this.startsymbol;
-    ArrayList<String> newvars = new ArrayList<String>();
-    for (String nt : this.nonterminals) {
-      if (reachable.contains(nt)) {
-        newvars.add(nt);
-      }
-    }
-    ArrayList<String> newterms = new ArrayList<String>();
-    for (String t : this.terminals) {
-      if (reachable.contains(t)) {
-        newterms.add(t);
-      }
-    }
-    cfg.nonterminals = newvars.toArray(new String[newvars.size()]);
-    cfg.terminals = newterms.toArray(new String[newterms.size()]);
-    for (CfgProductionRule rule : this.getProductionrules()) {
-      if (reachable.contains(rule.getLhs())) {
-        cfg.productionrules.add(rule);
-      }
-    }
-    return cfg;
+    return UselessSymbols.removeNonReachableSymbols(this);
   }
 
   /** Returns an equivalent CFG without empty productions, only S -> ε is
    * allowed in which case it is removed from all rhs'. May leaves non
    * generating symbols behind. */
   public Cfg removeEmptyProductions() {
-    Cfg cfg = new Cfg();
-    cfg.terminals = this.terminals;
-    cfg.startsymbol = this.startsymbol;
-
-    ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, this.nonterminals);
-    cfg.productionrules.addAll(this.productionrules);
-    ArrayList<String> eliminateable = getEliminateable();
-    doEliminateEmptyProductions(cfg, newnt, eliminateable);
-    for (int i = cfg.productionrules.size() - 1; i >= 0; i--) {
-      if (ifEmptyProductionShouldBeRemoved(cfg, i)) {
-        cfg.productionrules.remove(i);
-      }
-    }
-
-    cfg.nonterminals = newnt.toArray(new String[newnt.size()]);
-    return cfg;
-  }
-
-  /**
-   * Returns true if production derives to the empty string and doesn't have
-   * the start symbol as lhs.
-   */
-  private boolean ifEmptyProductionShouldBeRemoved(Cfg cfg, int i) {
-    return cfg.productionrules.get(i).getRhs().length == 1
-      && cfg.productionrules.get(i).getRhs()[0].equals("")
-      && !cfg.productionrules.get(i).getLhs().equals(cfg.startsymbol);
-  }
-
-  /** Removes all empty productions except if epsilon can be derived from the
-   * start symbol, in which case if the start symbol appears in a rhs, a new
-   * start symbol is added. */
-  private void doEliminateEmptyProductions(Cfg cfg, ArrayList<String> newnt,
-    ArrayList<String> eliminateable) {
-    for (String nt : eliminateable) {
-      for (int j = 0; j < cfg.productionrules.size(); j++) {
-        CfgProductionRule rule = cfg.productionrules.get(j);
-        for (int i = 0; i < rule.getRhs().length; i++) {
-          if (rule.getRhs()[i].equals(nt)) {
-            cfg.productionrules.add(new CfgProductionRule(rule.getLhs(),
-              ArrayUtils.getSequenceWithoutIAsArray(rule.getRhs(), i)));
-          }
-        }
-      }
-      if (nt.equals(this.startsymbol)) {
-        int i = 1;
-        String newstart = "S" + String.valueOf(i);
-        while (newnt.contains(newstart)) {
-          i++;
-          newstart = "S" + String.valueOf(i);
-        }
-        cfg.productionrules.add(
-          new CfgProductionRule(new String[] {newstart, this.startsymbol}));
-        cfg.productionrules
-          .add(new CfgProductionRule(new String[] {newstart, ""}));
-        newnt.add(newstart);
-        cfg.startsymbol = newstart;
-      }
-    }
-  }
-
-  /** Gets all nonterminals where a derivation =>* ε is possible. */
-  private ArrayList<String> getEliminateable() {
-    ArrayList<String> eliminateable = new ArrayList<String>();
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : this.productionrules) {
-        if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")
-          && !eliminateable.contains(rule.getLhs())) {
-          eliminateable.add(rule.getLhs());
-          changed = true;
-        }
-      }
-    }
-    return eliminateable;
+    return EmptyProductions.removeEmptyProductions(this);
   }
 
   /** Returns an equivalent grammar without chain rules, that are rules of the
@@ -325,60 +149,7 @@ public class Cfg extends AbstractCfg {
   /** Returns a new grammar where in all rhs > 1 terminals are replaced by
    * nonterminals and new rules A -> a are added. */
   public Cfg replaceTerminals() {
-    Cfg cfg = new Cfg();
-    cfg.startsymbol = this.startsymbol;
-    cfg.terminals = this.terminals;
-    ArrayList<String[]> newtrules = new ArrayList<String[]>();
-    ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, this.nonterminals);
-    doReplaceTerminals(cfg, newtrules, newnt);
-    cfg.nonterminals = newnt.toArray(new String[newnt.size()]);
-    return cfg;
-  }
-
-  /** In rhs > 1 all terminals are replaced by a new nonterminal, new rules X1
-   * -> a are added. Adds only one new nonterminal for each terminal. */
-  private void doReplaceTerminals(Cfg cfg, ArrayList<String[]> newtrules,
-    ArrayList<String> newnt) {
-    int i = 1;
-    for (CfgProductionRule rule : this.productionrules) {
-      if (rule.getRhs().length == 1) {
-        cfg.productionrules.add(rule);
-      } else {
-        ArrayList<String> newrhs = new ArrayList<String>();
-        for (String sym : rule.getRhs()) {
-          if (nonterminalsContain(sym)) {
-            newrhs.add(sym);
-          } else {
-            String newlhs = null;
-            for (String[] tryrule : newtrules) {
-              if (tryrule[1].equals(sym)) {
-                newlhs = tryrule[0];
-              }
-            }
-            boolean isnew = false;
-            if (newlhs == null) {
-              newlhs = "Y" + String.valueOf(i);
-              i++;
-              isnew = true;
-              cfg.productionrules
-                .add(new CfgProductionRule(newlhs, new String[] {sym}));
-            }
-            while (this.nonterminalsContain(newlhs)) {
-              newlhs = "Y" + String.valueOf(i);
-              i++;
-            }
-            if (isnew) {
-              newnt.add(newlhs);
-              newtrules.add(new String[] {newlhs, sym});
-            }
-            newrhs.add(newlhs);
-          }
-        }
-        cfg.productionrules.add(new CfgProductionRule(rule.getLhs(),
-          newrhs.toArray(new String[newrhs.size()])));
-      }
-    }
+    return MixedRhs.replaceTerminals(this);
   }
 
   @Override public String toString() {
@@ -403,12 +174,7 @@ public class Cfg extends AbstractCfg {
    * -> A.... Remove epsilon productions to make sure no indirect left recursion
    * is left. */
   public boolean hasDirectLeftRecursion() {
-    for (CfgProductionRule rule : this.getProductionrules()) {
-      if (rule.getLhs().equals(rule.getRhs()[0])) {
-        return true;
-      }
-    }
-    return false;
+    return LeftRecursion.hasDirectLeftRecursion(this);
   }
 
   /** Removes direct left recursion. S -> S is ignored. S -> S a | b are
@@ -416,75 +182,12 @@ public class Cfg extends AbstractCfg {
    * and maybe chain rules. Remove empty productions first to make sure grammar
    * does not contain indirect left recursion. */
   public Cfg removeLeftRecursion() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(this.terminals);
-    cfg.setStartsymbol(this.startsymbol);
-    ArrayList<String> newnts = new ArrayList<String>();
-    Collections.addAll(newnts, this.nonterminals);
-    for (String nt : this.nonterminals) {
-      int i = 1;
-      String newnt = nt + String.valueOf(i);
-      i++;
-      while (newnts.contains(newnt)) {
-        newnt = nt + String.valueOf(i);
-        i++;
-      }
-      newnts.add(newnt);
-      cfg.productionrules.add(new CfgProductionRule(newnt, new String[] {""}));
-      doRemoveLeftRecursion(cfg, nt, newnt);
-    }
-    cfg.setNonterminals(newnts.toArray(new String[newnts.size()]));
-    return cfg;
-  }
-
-  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 where nt is the
-   * old nonterminal and newnt is S1 in this example. */
-  private void doRemoveLeftRecursion(Cfg cfg, String nt, String newnt) {
-    for (CfgProductionRule rule : this.productionrules) {
-      if (rule.getLhs().equals(nt)) {
-        if (rule.getRhs()[0].equals(nt) && rule.getRhs().length > 1) {
-          String[] newrhs = new String[rule.getRhs().length];
-          System.arraycopy(rule.getRhs(), 1, newrhs, 0,
-            rule.getRhs().length - 1);
-          newrhs[newrhs.length - 1] = newnt;
-          cfg.productionrules.add(new CfgProductionRule(nt, newrhs));
-        } else if (!rule.getRhs()[0].equals(nt)) {
-          if (rule.getRhs()[0].equals("")) {
-            cfg.productionrules
-              .add(new CfgProductionRule(nt, new String[] {newnt}));
-          } else {
-            String[] newrhs = new String[rule.getRhs().length + 1];
-            System.arraycopy(rule.getRhs(), 0, newrhs, 0, rule.getRhs().length);
-            newrhs[newrhs.length - 1] = newnt;
-            cfg.productionrules.add(new CfgProductionRule(nt, newrhs));
-          }
-        }
-      }
-    }
+    return LeftRecursion.removeLeftRecursion(this);
   }
 
   /** Returns true if there is at least one production rule that contains
    * terminals and nonterminals as rhs symbols. */
   public boolean hasMixedRhs() {
-    for (CfgProductionRule rule : this.productionrules) {
-      for (int i = 1; i < rule.getRhs().length; i++) {
-        if (ifSymbolIsOneKindAndPreviousSymbolIsAnother(rule, i)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * returns true if current symbol is nonterminal and previous one is terminal
-   * or vice versa.
-   */
-  private boolean
-    ifSymbolIsOneKindAndPreviousSymbolIsAnother(CfgProductionRule rule, int i) {
-    return (this.terminalsContain(rule.getRhs()[i - 1])
-      && this.nonterminalsContain(rule.getRhs()[i]))
-      || (this.terminalsContain(rule.getRhs()[i])
-        && this.nonterminalsContain(rule.getRhs()[i - 1]));
+    return MixedRhs.hasMixedRhs(this);
   }
 }

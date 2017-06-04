@@ -7,7 +7,7 @@ public class CfgProductionRule {
   private final String[] rhs;
 
   /** Construction with an array of length 2 which contains lhs and rhs. */
-  CfgProductionRule(String[] rule) {
+  public CfgProductionRule(String[] rule) {
     this.lhs = rule[0];
     String[] rulesplit = rule[1].split(" ");
     if (rulesplit.length == 1 && rulesplit[0].equals("ε")) {

@@ -13,7 +13,6 @@ public abstract class AbstractCfg {
     this.nonterminals = nonterminals;
   }
 
-
   public String getStartsymbol() {
     return startsymbol;
   }
