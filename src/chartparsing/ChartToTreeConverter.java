@@ -3,15 +3,18 @@ package chartparsing;
 import common.tag.Tag;
 import common.tag.Tree;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.Item;
+import common.cfg.CfgProductionRule;
 
 /** Collection of functions that take a chart and a list of goal items and
  * return one tree that represents the successful parse. */
 public class ChartToTreeConverter {
 
+  /** Returns the first possible tree that spans the whole input string. */
   public static Tree tagToDerivatedTree(List<Item> chart, List<Item> goals,
     ArrayList<ArrayList<String>> appliedRules,
     ArrayList<ArrayList<ArrayList<Integer>>> backPointers, Tag tag) {
@@ -19,8 +22,8 @@ public class ChartToTreeConverter {
     for (Item goal : goals) {
       for (int i = 0; i < chart.size(); i++) {
         if (chart.get(i).equals(goal)) {
-          ArrayList<String> steps =
-            retrieveSteps(i, appliedRules, backPointers);
+          ArrayList<String> steps = retrieveSteps(i, appliedRules, backPointers,
+            new String[] {"subst", "adjoin"});
           for (int j = steps.size() - 1; j >= 0; j--) {
             derivationtree = applyStep(tag, derivationtree, steps, j);
           }
@@ -29,6 +32,60 @@ public class ChartToTreeConverter {
       }
     }
     return null;
+  }
+
+  public static Tree cfgToDerivatedTree(List<Item> chart, List<Item> goals,
+    ArrayList<ArrayList<String>> appliedRules,
+    ArrayList<ArrayList<ArrayList<Integer>>> backPointers, String algorithm)
+    throws ParseException {
+    Tree derivationtree = null;
+    for (Item goal : goals) {
+      for (int i = 0; i < chart.size(); i++) {
+        if (chart.get(i).equals(goal)) {
+          ArrayList<String> steps = retrieveSteps(i, appliedRules, backPointers,
+            new String[] {"predict"});
+          if (algorithm.equals("earley")) {
+            derivationtree =
+              new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
+                goal.getItemform()[0].length() - 2)));
+          }
+          if (algorithm.equals("topdown")) {
+            for (int j = steps.size() - 1; j >= 0; j--) {
+              String step = steps.get(j);
+              if (j == steps.size() - 1) {
+                derivationtree = new Tree(
+                  new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
+
+              } else {
+                derivationtree = applyStep(derivationtree, step);
+              }
+            }
+          } else if (algorithm.equals("earley")) {
+            for (int j = 0; j < steps.size(); j++) {
+              String step = steps.get(j);
+              derivationtree = applyStep(derivationtree, step);
+            }
+          }
+          return derivationtree;
+        }
+      }
+    }
+    return null;
+  }
+
+  /** Applies one derivation step in a CFG parsing process. */
+  private static Tree applyStep(Tree derivationtree, String step)
+    throws ParseException {
+    Tree newruletree =
+      new Tree(new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
+    String dertreestring = derivationtree.toString();
+    String lhs = step.substring(step.indexOf(" ") + 1,
+      step.indexOf(" ", step.indexOf(" ", step.indexOf(" ") + 1)));
+    derivationtree = new Tree(
+      dertreestring.substring(0, dertreestring.indexOf("(" + lhs + " )"))
+        + newruletree.toString() + dertreestring.substring(
+          dertreestring.indexOf("(" + lhs + " )") + lhs.length() + 3));
+    return derivationtree;
   }
 
   /** Applies a single derivation step, either creating a new tree with
@@ -66,18 +123,25 @@ public class ChartToTreeConverter {
    * item. */
   private static ArrayList<String> retrieveSteps(int i,
     ArrayList<ArrayList<String>> appliedRules,
-    ArrayList<ArrayList<ArrayList<Integer>>> backPointers) {
+    ArrayList<ArrayList<ArrayList<Integer>>> backPointers, String[] prefixes) {
     ArrayList<String> steps = new ArrayList<String>();
-    ArrayList<Integer> ids = new ArrayList<Integer>();
-    ids.add(i);
-    while (ids.size() > 0) {
-      int currentid = ids.get(0);
-      ids.remove(0);
-      if (appliedRules.get(currentid).get(0).startsWith("adjoin")
-        || appliedRules.get(currentid).get(0).startsWith("subst")) {
-        steps.add(appliedRules.get(currentid).get(0));
+    ArrayList<Integer> idagenda = new ArrayList<Integer>();
+    ArrayList<Integer> allids = new ArrayList<Integer>();
+    idagenda.add(i);
+    while (idagenda.size() > 0) {
+      int currentid = idagenda.get(0);
+      idagenda.remove(0);
+      for (String prefix : prefixes) {
+        if (appliedRules.get(currentid).get(0).startsWith(prefix)) {
+          steps.add(appliedRules.get(currentid).get(0));
+        }
       }
-      ids.addAll(backPointers.get(currentid).get(0));
+      for (Integer pointer : backPointers.get(currentid).get(0)) {
+        if (!allids.contains(pointer)) {
+          idagenda.add(pointer);
+          allids.add(pointer);
+        }
+      }
     }
     return steps;
   }

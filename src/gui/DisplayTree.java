@@ -16,7 +16,7 @@ public class DisplayTree extends JFrame {
 
   private static final long serialVersionUID = -9123591819196303915L;
   private Tree tree;
-  Map<String, Integer[]> nodesdrawn;
+  private Map<String, Integer[]> nodesdrawn;
 
   /** Constructor that sets up the tree and the node map, instantiates the
    * closing functionality. */

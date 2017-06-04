@@ -14,14 +14,14 @@ import common.tag.Tag;
 public class DeductionTest {
 
   private static Cfg gen_cfgdedtest() {
-    Cfg G = new Cfg();
+    Cfg cfg = new Cfg();
 
-    G.setTerminals(new String[] {"a", "b"});
-    G.setNonterminals(new String[] {"S"});
-    G.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
-    G.setStartsymbol("S");
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
+    cfg.setStartsymbol("S");
 
-    return G;
+    return cfg;
   }
 
   private static Tag gentag() throws ParseException {

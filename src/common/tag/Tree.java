@@ -108,7 +108,7 @@ public class Tree {
     this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
   }
 
-  protected Tree() {
+  private Tree() {
     super();
   }
 
@@ -238,7 +238,7 @@ public class Tree {
   /** return the max width, that is the number of nodes in a layer. The layer is
    * the number of parts when splitting the gorn address at '.', hence root is
    * in layer 1, its children are layer 2 etc. */
-  public int getWidthInLayer(int layer) {
+  private int getWidthInLayer(int layer) {
     int width = 0;
     for (Vertex p : this.vertexes) {
       String[] psplit = p.getGornaddress().split("[.]");
@@ -281,7 +281,7 @@ public class Tree {
   /**
    * Returns the number of nodes in one layer that are dominated by p.
    */
-  public int getWidthInLayerBelowNode(Vertex p, int layer) {
+  private int getWidthInLayerBelowNode(Vertex p, int layer) {
     int width = 0;
     for (Vertex node : this.vertexes) {
       if (p.dominates(node.getGornaddress())) {

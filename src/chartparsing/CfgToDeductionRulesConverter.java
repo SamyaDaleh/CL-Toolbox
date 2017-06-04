@@ -186,7 +186,7 @@ class CfgToDeductionRulesConverter {
           if (wsplit[i].equals(rule.getRhs()[0])) {
             StaticDeductionRule scan = new StaticDeductionRule();
             scan.addConsequence(new CfgItem(rule.getLhs(), i, 1));
-            scan.setName("scan");
+            scan.setName("scan " + rule.toString());
             schema.addAxiom(scan);
           }
         }
@@ -217,7 +217,7 @@ class CfgToDeductionRulesConverter {
             if (wsplit[i].equals(rule.getRhs()[0])) {
               StaticDeductionRule scan = new StaticDeductionRule();
               scan.addConsequence(new CfgItem(rule.getLhs(), i, 1));
-              scan.setName("scan");
+              scan.setName("scan " + rule.toString());
               schema.addAxiom(scan);
             }
           }

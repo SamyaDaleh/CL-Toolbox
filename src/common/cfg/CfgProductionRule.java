@@ -30,6 +30,21 @@ public class CfgProductionRule {
     }
   }
 
+  /**
+   * Creates a rule from a String representation like S -> A B
+   */
+  public CfgProductionRule(String rulestring) {
+    String[] rulesplit = rulestring.split("->");
+    this.lhs = rulesplit[0].trim();
+    if (rulesplit[1].trim().equals("") || rulesplit[1].trim().equals("ε")) {
+      this.rhs = new String[] {""};
+    } else {
+      this.rhs = rulesplit[1].trim().split(" ");
+    }
+  }
+
+
+
   public String getLhs() {
     return this.lhs;
   }

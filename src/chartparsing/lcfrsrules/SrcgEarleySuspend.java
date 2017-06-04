@@ -12,7 +12,7 @@ import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 import common.lcfrs.SrcgEarleyActiveItem;
 
-/** Whenever we arrive at the end of an argumebt that is not the last argument,
+/** Whenever we arrive at the end of an argument that is not the last argument,
  * we suspend the processing of this rule and we go back to the item that we
  * used to predict it. */
 public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {

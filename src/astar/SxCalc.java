@@ -9,8 +9,6 @@ import common.cfg.PcfgProductionRule;
 /** Calculates the SX estimates to be used for astar parsing. */
 public class SxCalc {
 
-  Map<String, Map<Integer, Double>> insides = null;
-
   /** Calculates all inside probabilities (as absolute logs) for all
    * nonterminals in Pcfg up until nmax length. */
   public static Map<String, Double> getInsides(Pcfg cfg, int nmax) {

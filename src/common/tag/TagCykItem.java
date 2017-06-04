@@ -23,14 +23,19 @@ public class TagCykItem extends AbstractItem implements Item {
       if (representation.length() > 1) {
         representation.append(",");
       }
-      if (element.equals("⊤")) {
+      switch (element) {
+      case "⊤":
         representation.append("ε⊤");
-      } else if (element.equals("⊥")) {
+        break;
+      case "⊥":
         representation.append("ε⊥");
-      } else if (element.equals("")) {
+        break;
+      case "":
         representation.append("ε");
-      } else {
+        break;
+      default:
         representation.append(element);
+        break;
       }
     }
     representation.append("]");
