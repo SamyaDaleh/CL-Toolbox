@@ -3,8 +3,8 @@ package common.cfg;
 /** Representation of a CFG production rule where the lhs consists of one
  * nonterminal and the rhs can be any length. */
 public class CfgProductionRule {
-  final String lhs;
-  final String[] rhs;
+  private final String lhs;
+  private final String[] rhs;
 
   /** Construction with an array of length 2 which contains lhs and rhs. */
   CfgProductionRule(String[] rule) {

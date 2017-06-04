@@ -15,10 +15,16 @@ public class PcfgProductionRule {
     this.p = Double.parseDouble(rule[2]);
   }
 
-  /** Costructor with lhs, rhs and probability passed separately. */
+  /** Constructor with lhs, rhs and probability passed separately. */
   PcfgProductionRule(String lhs, String rhs, Double p) {
     this.lhs = lhs;
     this.rhs = rhs.split(" ");
+    this.p = p;
+  }
+
+  public PcfgProductionRule(String lhs, String[] rhs, double p) {
+    this.lhs = lhs;
+    this.rhs = rhs;
     this.p = p;
   }
 

@@ -7,9 +7,35 @@ import java.util.List;
  * probabilities. */
 public class Pcfg {
   private String nonterminals[];
-  private final List<PcfgProductionRule> productionrules = new LinkedList<PcfgProductionRule>();
+  private final List<PcfgProductionRule> productionrules =
+    new LinkedList<PcfgProductionRule>();
   private String startsymbol;
   private String terminals[];
+
+  public Pcfg() {
+    super();
+  }
+
+  /** Create a PCFG from a CFG where all rules have the same probability. */
+  public Pcfg(Cfg cfg) {
+    this.nonterminals = cfg.getNonterminals();
+    this.terminals = cfg.getTerminals();
+    this.startsymbol = cfg.getStartsymbol();
+    for (String nt : nonterminals) {
+      int rulecount = 0;
+      for (CfgProductionRule rule : cfg.getProductionrules()) {
+        if (rule.getLhs().equals(nt)) {
+          rulecount++;
+        }
+      }
+      for (CfgProductionRule rule : cfg.getProductionrules()) {
+        if (rule.getLhs().equals(nt)) {
+          this.productionrules.add(new PcfgProductionRule(rule.getLhs(),
+            rule.getRhs(), 1.0 / rulecount));
+        }
+      }
+    }
+  }
 
   public String[] getNonterminals() {
     return nonterminals;
@@ -66,7 +92,8 @@ public class Pcfg {
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("G = <N, T, S, P>\n");
-    builder.append("N = {").append(String.join(", ", nonterminals)).append("}\n");
+    builder.append("N = {").append(String.join(", ", nonterminals))
+      .append("}\n");
     builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
     builder.append("S = ").append(startsymbol).append("\n");
     builder.append("P = {");
