@@ -21,7 +21,7 @@ public class CfgProductionRule {
 
   /** Lhs and Rhs passed separately, used when converting one rule format to
    * another. */
-  CfgProductionRule(String lhs, String[] rhs) {
+  public CfgProductionRule(String lhs, String[] rhs) {
     this.lhs = lhs;
     if (rhs.length == 1 && rhs[0].equals("ε")) {
       this.rhs = new String[] {""};

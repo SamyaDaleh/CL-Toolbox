@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import common.ArrayUtils;
+import common.cfg.util.Binarization;
+import common.cfg.util.ChainRules;
 
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
@@ -123,60 +125,12 @@ public class Cfg extends AbstractCfg {
 
   /** Returns an equivalent CFG where all rhs' have at most length 2. */
   public Cfg binarize() {
-    Cfg newCfg = new Cfg();
-    newCfg.setTerminals(this.terminals);
-    newCfg.setStartsymbol(this.startsymbol);
-    ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, this.nonterminals);
-    ArrayList<String[]> newp = new ArrayList<String[]>();
-    doBinarize(newnt, newp);
-    newCfg.setNonterminals(newnt.toArray(new String[newnt.size()]));
-    newCfg.setProductionrules(newp.toArray(new String[newp.size()][]));
-    return newCfg;
-  }
-
-  /** Splits production rules with rhs length > 2 and replaces overlong part by
-   * new nonterminals. */
-  private void doBinarize(ArrayList<String> newnt, ArrayList<String[]> newp) {
-    int i = 1;
-    for (CfgProductionRule rule : this.productionrules) {
-      if (rule.getRhs().length > 2) {
-        CfgProductionRule rulerest = rule;
-        while (rulerest.getRhs().length > 2) {
-          String newn = "X" + String.valueOf(i);
-          while (nonterminalsContain(newn)) {
-            i++;
-            newn = "X" + String.valueOf(i);
-          }
-          newnt.add(newn);
-          String newrhs = rulerest.getRhs()[0] + " " + newn;
-          String[] newrule = new String[] {rulerest.getLhs(), newrhs};
-          newp.add(newrule);
-          i++;
-          rulerest =
-            new CfgProductionRule(newn, ArrayUtils.getSubSequenceAsArray(
-              rulerest.getRhs(), 1, rulerest.getRhs().length));
-        }
-        newp.add(new String[] {rulerest.getLhs(),
-          rulerest.getRhs()[0] + " " + rulerest.getRhs()[1]});
-      } else if (rule.getRhs().length == 2) {
-        newp.add(new String[] {rule.getLhs(),
-          rule.getRhs()[0] + " " + rule.getRhs()[1]});
-      }
-      if (rule.getRhs().length == 1) {
-        newp.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
-      }
-    }
+    return Binarization.binarize(this);
   }
 
   /** Returns true if all rhs' have at most length 2. */
   public boolean isBinarized() {
-    for (CfgProductionRule rule : this.productionrules) {
-      if (rule.getRhs().length > 2) {
-        return false;
-      }
-    }
-    return true;
+    return Binarization.isBinarized(this);
   }
 
   /** Returns an equivalent grammar without non-generating symbols. Call this
@@ -360,101 +314,12 @@ public class Cfg extends AbstractCfg {
   /** Returns an equivalent grammar without chain rules, that are rules of the
    * form A -> B. Remove epsilon productions beforehand. */
   public Cfg removeChainRules() {
-    Cfg cfg = new Cfg();
-    cfg.terminals = this.terminals;
-    cfg.startsymbol = this.startsymbol;
-    cfg.nonterminals = this.nonterminals;
-    for (CfgProductionRule rule : this.productionrules) {
-      if (!(rule.getRhs().length == 1
-        && nonterminalsContain(rule.getRhs()[0]))) {
-        cfg.productionrules.add(rule);
-      }
-    }
-    ArrayList<String[]> unitpairs = getUnitPairs();
-    doRemoveChainRules(cfg, unitpairs);
-    return cfg;
-  }
-
-  /** Removes chain rules and for example S -> A all rhs of rules with A on the
-   * left side are added as rules to S. */
-  private void doRemoveChainRules(Cfg cfg, ArrayList<String[]> unitpairs) {
-    for (String[] unitpair : unitpairs) {
-      for (CfgProductionRule rule : this.productionrules) {
-        if (isChainRuleAndConcernOfUnitPair(unitpair, rule)) {
-          boolean alreadythere = false;
-          for (CfgProductionRule rule2 : cfg.getProductionrules()) {
-            if (rule.getLhs().equals(unitpair[0])
-              && rule2.getRhs().length == rule.getRhs().length) {
-              boolean alright = false;
-              for (int i = 0; i < rule.getRhs().length; i++) {
-                if (!rule.getRhs()[i].equals(rule2.getRhs()[i])) {
-                  alright = true;
-                }
-              }
-              if (!alright) {
-                alreadythere = true;
-              }
-            }
-          }
-          if (!alreadythere) {
-            cfg.productionrules
-              .add(new CfgProductionRule(unitpair[0], rule.getRhs()));
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Returns true if rules is chain rule with a nonterminal as rhs and lhs
-   * is second component of unit pair.
-   */
-  private boolean isChainRuleAndConcernOfUnitPair(String[] unitpair,
-    CfgProductionRule rule) {
-    return !(rule.getRhs().length == 1
-      && nonterminalsContain(rule.getRhs()[0]))
-      && rule.getLhs().equals(unitpair[1]);
-  }
-
-  /** Get all unit pairs, that are pairs of nonterminals where the derivation A
-   * =>* B is possible. */
-  private ArrayList<String[]> getUnitPairs() {
-    ArrayList<String[]> unitpairs = new ArrayList<String[]>();
-    for (String nt : this.nonterminals) {
-      unitpairs.add(new String[] {nt, nt});
-    }
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : this.productionrules) {
-        if (rule.getRhs().length == 1
-          && nonterminalsContain(rule.getRhs()[0])) {
-          boolean found = false;
-          for (String[] unitpair : unitpairs) {
-            if (unitpair[0].equals(rule.getLhs())
-              && unitpair[1].equals(rule.getRhs()[0])) {
-              found = true;
-              break;
-            }
-          }
-          if (!found) {
-            unitpairs.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
-            changed = true;
-          }
-        }
-      }
-    }
-    return unitpairs;
+    return ChainRules.removeChainRules(this);
   }
 
   /** Returns true if grammar has rules of the form A -> B. */
   public boolean hasChainRules() {
-    for (CfgProductionRule rule : this.productionrules) {
-      if (rule.getRhs().length == 1 && nonterminalsContain(rule.getRhs()[0])) {
-        return true;
-      }
-    }
-    return false;
+    return ChainRules.hasChainRules(this);
   }
 
   /** Returns a new grammar where in all rhs > 1 terminals are replaced by
