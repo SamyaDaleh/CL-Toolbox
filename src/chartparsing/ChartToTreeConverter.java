@@ -42,8 +42,14 @@ public class ChartToTreeConverter {
     for (Item goal : goals) {
       for (int i = 0; i < chart.size(); i++) {
         if (chart.get(i).equals(goal)) {
-          ArrayList<String> steps = retrieveSteps(i, appliedRules, backPointers,
-            new String[] {"predict"});
+          ArrayList<String> steps = null;
+          if (algorithm.equals("topdown") || algorithm.equals("earley")) {
+            steps = retrieveSteps(i, appliedRules, backPointers,
+              new String[] {"predict"});
+          } else if (algorithm.equals("shiftreduce")) {
+            steps = retrieveSteps(i, appliedRules, backPointers,
+              new String[] {"reduce"});
+          }
           if (algorithm.equals("earley")) {
             derivationtree =
               new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
@@ -55,15 +61,24 @@ public class ChartToTreeConverter {
               if (j == steps.size() - 1) {
                 derivationtree = new Tree(
                   new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
-
               } else {
-                derivationtree = applyStep(derivationtree, step);
+                derivationtree = applyStep(derivationtree, step, false);
               }
             }
-          } else if (algorithm.equals("earley")) {
+          } else if (algorithm.equals("earley")
+            || algorithm.equals("shiftreduce")) {
             for (int j = 0; j < steps.size(); j++) {
               String step = steps.get(j);
-              derivationtree = applyStep(derivationtree, step);
+              if (algorithm.equals("earley")) {
+                derivationtree = applyStep(derivationtree, step, false);
+              } else if (algorithm.equals("shiftreduce")) {
+                if (j == 0) {
+                  derivationtree = new Tree(new CfgProductionRule(
+                    step.substring(step.indexOf(" ") + 1)));
+                } else {
+                  derivationtree = applyStep(derivationtree, step, true);
+                }
+              }
             }
           }
           return derivationtree;
@@ -74,17 +89,24 @@ public class ChartToTreeConverter {
   }
 
   /** Applies one derivation step in a CFG parsing process. */
-  private static Tree applyStep(Tree derivationtree, String step)
-    throws ParseException {
+  private static Tree applyStep(Tree derivationtree, String step,
+    boolean rightmost) throws ParseException {
     Tree newruletree =
       new Tree(new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
     String dertreestring = derivationtree.toString();
     String lhs = step.substring(step.indexOf(" ") + 1,
       step.indexOf(" ", step.indexOf(" ", step.indexOf(" ") + 1)));
-    derivationtree = new Tree(
-      dertreestring.substring(0, dertreestring.indexOf("(" + lhs + " )"))
-        + newruletree.toString() + dertreestring.substring(
-          dertreestring.indexOf("(" + lhs + " )") + lhs.length() + 3));
+    if (rightmost) {
+      derivationtree = new Tree(
+        dertreestring.substring(0, dertreestring.lastIndexOf("(" + lhs + " )"))
+          + newruletree.toString() + dertreestring.substring(
+            dertreestring.lastIndexOf("(" + lhs + " )") + lhs.length() + 3));
+    } else {
+      derivationtree = new Tree(
+        dertreestring.substring(0, dertreestring.indexOf("(" + lhs + " )"))
+          + newruletree.toString() + dertreestring.substring(
+            dertreestring.indexOf("(" + lhs + " )") + lhs.length() + 3));
+    }
     return derivationtree;
   }
 
