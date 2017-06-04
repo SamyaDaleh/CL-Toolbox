@@ -51,9 +51,8 @@ public class ChartToTreeConverterTest {
       TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "cyk");
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), gentag());
+    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
+      schema.getGoals(), gentag());
     assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
   }
 
@@ -63,9 +62,8 @@ public class ChartToTreeConverterTest {
       TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "earley");
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), gentag());
+    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
+      schema.getGoals(), gentag());
     assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
 
   }
@@ -76,9 +74,8 @@ public class ChartToTreeConverterTest {
       CfgToDeductionRulesConverter.cfgToTopDownRules(gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), "topdown");
+    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      schema.getGoals(), "topdown");
     assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
 
     w = "a a a b b b";
@@ -86,9 +83,8 @@ public class ChartToTreeConverterTest {
       CfgToDeductionRulesConverter.cfgToTopDownRules(gen_cfgdedtest(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
-    derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), "topdown");
+    derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      schema.getGoals(), "topdown");
     assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
       derivationTree.toString());
   }
@@ -99,18 +95,16 @@ public class ChartToTreeConverterTest {
       CfgToDeductionRulesConverter.cfgToEarleyRules(gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), "earley");
+    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      schema.getGoals(), "earley");
     assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
 
     w = "a a a b b b";
     schema = CfgToDeductionRulesConverter.cfgToEarleyRules(gen_cfgdedtest(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
-    derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), "earley");
+    derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      schema.getGoals(), "earley");
     assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
       derivationTree.toString());
   }
@@ -121,9 +115,8 @@ public class ChartToTreeConverterTest {
       CfgToDeductionRulesConverter.cfgToShiftReduceRules(gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
-      deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-      deduction.getBackpointers(), "shiftreduce");
+    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      schema.getGoals(), "shiftreduce");
     assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
   }
 }

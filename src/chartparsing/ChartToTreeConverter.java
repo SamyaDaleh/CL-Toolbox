@@ -15,15 +15,15 @@ import common.cfg.CfgProductionRule;
 public class ChartToTreeConverter {
 
   /** Returns the first possible tree that spans the whole input string. */
-  public static Tree tagToDerivatedTree(List<Item> chart, List<Item> goals,
-    ArrayList<ArrayList<String>> appliedRules,
-    ArrayList<ArrayList<ArrayList<Integer>>> backPointers, Tag tag) {
+  public static Tree tagToDerivatedTree(Deduction deduction, List<Item> goals,
+    Tag tag) {
     Tree derivationtree = null;
     for (Item goal : goals) {
-      for (int i = 0; i < chart.size(); i++) {
-        if (chart.get(i).equals(goal)) {
-          ArrayList<String> steps = retrieveSteps(i, appliedRules, backPointers,
-            new String[] {"subst", "adjoin"});
+      for (int i = 0; i < deduction.getChart().size(); i++) {
+        if (deduction.getChart().get(i).equals(goal)) {
+          ArrayList<String> steps =
+            retrieveSteps(i, deduction.getAppliedRules(),
+              deduction.getBackpointers(), new String[] {"subst", "adjoin"});
           for (int j = steps.size() - 1; j >= 0; j--) {
             derivationtree = applyStep(tag, derivationtree, steps, j);
           }
@@ -34,21 +34,19 @@ public class ChartToTreeConverter {
     return null;
   }
 
-  public static Tree cfgToDerivatedTree(List<Item> chart, List<Item> goals,
-    ArrayList<ArrayList<String>> appliedRules,
-    ArrayList<ArrayList<ArrayList<Integer>>> backPointers, String algorithm)
-    throws ParseException {
+  public static Tree cfgToDerivatedTree(Deduction deduction, List<Item> goals,
+    String algorithm) throws ParseException {
     Tree derivationtree = null;
     for (Item goal : goals) {
-      for (int i = 0; i < chart.size(); i++) {
-        if (chart.get(i).equals(goal)) {
+      for (int i = 0; i < deduction.getChart().size(); i++) {
+        if (deduction.getChart().get(i).equals(goal)) {
           ArrayList<String> steps = null;
           if (algorithm.equals("topdown") || algorithm.equals("earley")) {
-            steps = retrieveSteps(i, appliedRules, backPointers,
-              new String[] {"predict"});
+            steps = retrieveSteps(i, deduction.getAppliedRules(),
+              deduction.getBackpointers(), new String[] {"predict"});
           } else if (algorithm.equals("shiftreduce")) {
-            steps = retrieveSteps(i, appliedRules, backPointers,
-              new String[] {"reduce"});
+            steps = retrieveSteps(i, deduction.getAppliedRules(),
+              deduction.getBackpointers(), new String[] {"reduce"});
           }
           if (algorithm.equals("earley")) {
             derivationtree =

@@ -158,16 +158,14 @@ class Main {
     if (schema != null) {
       if (algorithm.startsWith("tag")) {
         Tree derivedtree = ChartToTreeConverter.tagToDerivatedTree(
-          deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-          deduction.getBackpointers(), tag);
+          deduction, schema.getGoals(), tag);
         if (derivedtree != null) {
           DisplayTree.main(new String[] {derivedtree.toString()});
         }
       }
       if (algorithm.startsWith("cfg")) {
         Tree derivedtree = ChartToTreeConverter.cfgToDerivatedTree(
-          deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
-          deduction.getBackpointers(), algorithm.substring(4));
+          deduction, schema.getGoals(), algorithm.substring(4));
         if (derivedtree != null) {
           DisplayTree.main(new String[] {derivedtree.toString()});
         }
