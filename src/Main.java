@@ -1,10 +1,11 @@
 import java.io.IOException;
 import java.text.ParseException;
 
-import chartparsing.ChartToTreeConverter;
 import chartparsing.Deduction;
-import chartparsing.GrammarToDeductionRulesConverter;
 import chartparsing.ParsingSchema;
+import chartparsing.converter.ChartToTreeConverter;
+import chartparsing.converter.GrammarToDeductionRulesConverter;
+import chartparsing.converter.GrammarToGrammarConverter;
 import common.GrammarParser;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
@@ -51,11 +52,9 @@ class Main {
       }
     }
     ParsingSchema schema = null;
+    GrammarToGrammarConverter ggc = new GrammarToGrammarConverter(please);
     GrammarToDeductionRulesConverter gdrc =
       new GrammarToDeductionRulesConverter();
-    if (please) {
-      gdrc.setPlease(true);
-    }
     Cfg cfg;
     Tag tag = null;
     Srcg srcg;
@@ -63,22 +62,22 @@ class Main {
     if (grammarfile.endsWith(".cfg")) {
       cfg = GrammarParser.parseCfgFile(grammarfile);
       if (algorithm.startsWith("cfg")){
-        cfg = gdrc.checkAndMayConvertToCfg(cfg, algorithm);
+        cfg = ggc.checkAndMayConvertToCfg(cfg, algorithm);
         if (cfg != null) {
           schema = gdrc.convertToSchema(cfg, w, algorithm);
         }
       } else  if (algorithm.startsWith("tag")){
-        tag = gdrc.checkAndMayConvertToTag(cfg, algorithm);
+        tag = ggc.checkAndMayConvertToTag(cfg, algorithm);
         if (tag != null) {
           schema = gdrc.convertToSchema(tag, w, algorithm);
         }
       } else if (algorithm.startsWith("pcfg")) {
-        pcfg = gdrc.checkAndMayConvertToPcfg(cfg, algorithm);
+        pcfg = ggc.checkAndMayConvertToPcfg(cfg, algorithm);
         if (pcfg != null) {
           schema = gdrc.convertToSchema(pcfg, w, algorithm);
         }
       } else if (algorithm.startsWith("srcg")) {
-        srcg = gdrc.checkAndMayConvertToSrcg(cfg, algorithm);
+        srcg = ggc.checkAndMayConvertToSrcg(cfg, algorithm);
         if (srcg != null) {
           schema = gdrc.convertToSchema(srcg, w, algorithm);
         }
@@ -90,22 +89,22 @@ class Main {
       if (grammarfile.endsWith(".pcfg")) {
         pcfg = GrammarParser.parsePcfgFile(grammarfile);
         if (algorithm.startsWith("cfg")){
-          cfg = gdrc.checkAndMayConvertToCfg(pcfg, algorithm);
+          cfg = ggc.checkAndMayConvertToCfg(pcfg, algorithm);
           if (cfg != null) {
             schema = gdrc.convertToSchema(cfg, w, algorithm);
           }
         } else  if (algorithm.startsWith("tag")){
-          tag = gdrc.checkAndMayConvertToTag(pcfg, algorithm);
+          tag = ggc.checkAndMayConvertToTag(pcfg, algorithm);
           if (tag != null) {
             schema = gdrc.convertToSchema(tag, w, algorithm);
           }
         } else if (algorithm.startsWith("pcfg")) {
-          pcfg = gdrc.checkAndMayConvertToPcfg(pcfg, algorithm);
+          pcfg = ggc.checkAndMayConvertToPcfg(pcfg, algorithm);
           if (pcfg != null) {
             schema = gdrc.convertToSchema(pcfg, w, algorithm);
           }
         } else if (algorithm.startsWith("srcg")) {
-          srcg = gdrc.checkAndMayConvertToSrcg(pcfg, algorithm);
+          srcg = ggc.checkAndMayConvertToSrcg(pcfg, algorithm);
           if (srcg != null) {
             schema = gdrc.convertToSchema(srcg, w, algorithm);
           }
@@ -119,7 +118,7 @@ class Main {
         System.out.println("I can't parse with a less expressive formalism.");
         return;
       } else  if (algorithm.startsWith("tag")){
-        tag = gdrc.checkAndMayConvertToTag(tag, algorithm);
+        tag = ggc.checkAndMayConvertToTag(tag, algorithm);
         if (tag != null) {
           schema = gdrc.convertToSchema(tag, w, algorithm);
         }
@@ -141,7 +140,7 @@ class Main {
       } else if (algorithm.startsWith("pcfg")) {
         System.out.println("I can't parse with a less expressive formalism.");
       } else if (algorithm.startsWith("srcg")) {
-        srcg = gdrc.checkAndMayConvertToSrcg(srcg, algorithm);
+        srcg = ggc.checkAndMayConvertToSrcg(srcg, algorithm);
         if (srcg != null) {
           schema = gdrc.convertToSchema(srcg, w, algorithm);
         }

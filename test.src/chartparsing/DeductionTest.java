@@ -6,6 +6,10 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
+import chartparsing.converter.CfgToDeductionRulesConverter;
+import chartparsing.converter.LcfrsToDeductionRulesConverter;
+import chartparsing.converter.PcfgToDeductionRulesConverter;
+import chartparsing.converter.TagToDeductionRulesConverter;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
 import common.lcfrs.Srcg;

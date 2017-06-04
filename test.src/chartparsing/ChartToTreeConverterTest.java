@@ -6,6 +6,9 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
+import chartparsing.converter.CfgToDeductionRulesConverter;
+import chartparsing.converter.ChartToTreeConverter;
+import chartparsing.converter.TagToDeductionRulesConverter;
 import common.cfg.Cfg;
 import common.tag.Tag;
 import common.tag.Tree;
