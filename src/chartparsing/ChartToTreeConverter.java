@@ -56,6 +56,7 @@ public class ChartToTreeConverter {
                 goal.getItemform()[0].length() - 2)));
           }
           if (algorithm.equals("topdown")) {
+            assert steps != null;
             for (int j = steps.size() - 1; j >= 0; j--) {
               String step = steps.get(j);
               if (j == steps.size() - 1) {
@@ -67,6 +68,7 @@ public class ChartToTreeConverter {
             }
           } else if (algorithm.equals("earley")
             || algorithm.equals("shiftreduce")) {
+            assert steps != null;
             for (int j = 0; j < steps.size(); j++) {
               String step = steps.get(j);
               if (algorithm.equals("earley")) {

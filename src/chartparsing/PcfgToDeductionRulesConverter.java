@@ -13,11 +13,11 @@ import common.cfg.PcfgProductionRule;
 class PcfgToDeductionRulesConverter {
 
   /** Mapper to make the converting functions easier accessable. */
-  public static ParsingSchema PcfgToParsingSchema(Pcfg pcfg, String w,
+  public static ParsingSchema pcfgToParsingSchema(Pcfg pcfg, String w,
     String schema) {
     switch (schema) {
     case "astar":
-      return PcfgToTopDownRules(pcfg, w);
+      return pcfgToAstarRules(pcfg, w);
     default:
       return null;
     }
@@ -25,7 +25,7 @@ class PcfgToDeductionRulesConverter {
 
   /** Converts a probabilistic CFG to a schema for a star parsing, which is
    * similar to CYK but with weights. */
-  private static ParsingSchema PcfgToTopDownRules(Pcfg pcfg, String w) {
+  static ParsingSchema pcfgToAstarRules(Pcfg pcfg, String w) {
     if (!(new Cfg(pcfg)).isInChomskyNormalForm()) {
       System.out.println(
         "PCFG must be in Chomsky Normal Form to apply this kind of astar parsing.");

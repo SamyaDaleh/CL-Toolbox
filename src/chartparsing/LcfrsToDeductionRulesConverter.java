@@ -28,21 +28,21 @@ class LcfrsToDeductionRulesConverter {
    * point for all of them. Takes a srcg, an input string w and a string
    * specifying which parsing algorithm shall be applied. Returns the respective
    * parsing scheme. */
-  public static ParsingSchema SrcgToParsingSchema(Srcg srcg, String w,
+  public static ParsingSchema srcgToParsingSchema(Srcg srcg, String w,
     String schema) {
     switch (schema) {
     case "earley":
-      return LcfrsToEarleyRules(srcg, w);
+      return srcgToEarleyRules(srcg, w);
     case "cyk":
-      return LcfrsToCykRules(srcg, w);
+      return srcgToCykRules(srcg, w);
     case "cyk-extended":
-      return LcfrsToCykExtendedRules(srcg, w);
+      return srcgToCykExtendedRules(srcg, w);
     default:
       return null;
     }
   }
 
-  static ParsingSchema LcfrsToCykRules(Srcg srcg, String w) {
+  static ParsingSchema srcgToCykRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
@@ -78,7 +78,7 @@ class LcfrsToDeductionRulesConverter {
     return schema;
   }
 
-  static ParsingSchema LcfrsToCykExtendedRules(Srcg srcg, String w) {
+  static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
@@ -163,7 +163,7 @@ class LcfrsToDeductionRulesConverter {
     return ranges;
   }
 
-  static ParsingSchema LcfrsToEarleyRules(Srcg srcg, String w) {
+  static ParsingSchema srcgToEarleyRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this Earley algorithm.");

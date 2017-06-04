@@ -33,20 +33,20 @@ import common.tag.Vertex;
 class TagToDeductionRulesConverter {
 
   /** Common entry point to comfortably call the different functions. */
-  public static ParsingSchema TagToParsingSchema(Tag tag, String w,
+  public static ParsingSchema tagToParsingSchema(Tag tag, String w,
     String schema) {
     switch (schema) {
     case "cyk":
-      return TagToCykRules(tag, w);
+      return tagToCykRules(tag, w);
     case "earley":
-      return TagToEarleyRules(tag, w);
+      return tagToEarleyRules(tag, w);
     default:
       return null;
     }
   }
 
   /** Returns a parsing schema for CYK parsing of the given input w with tag. */
-  public static ParsingSchema TagToCykRules(Tag tag, String w) {
+  public static ParsingSchema tagToCykRules(Tag tag, String w) {
     if (!tag.isBinarized()) {
       System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
       return null;
@@ -125,7 +125,7 @@ class TagToDeductionRulesConverter {
 
   /** Returns a parsing schema for Earley parsing of the given input w with
    * tag. */
-  public static ParsingSchema TagToEarleyRules(Tag tag, String w) {
+  public static ParsingSchema tagToEarleyRules(Tag tag, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     Set<String> initreesnameset = tag.getInitialTreeNames();

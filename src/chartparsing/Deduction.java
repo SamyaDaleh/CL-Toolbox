@@ -32,13 +32,13 @@ public class Deduction {
    * to the items until all items were used. Returns true if a goal item was
    * derived. */
   public boolean doParse(ParsingSchema schema, boolean success) {
-    if (schema == null)
-      return false;
     successfultrace = success;
     chart = new LinkedList<Item>();
     agenda = new LinkedList<Item>();
     deductedfrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
     appliedRule = new ArrayList<ArrayList<String>>();
+    if (schema == null)
+      return false;
     for (StaticDeductionRule rule : schema.getAxioms()) {
       applyAxiomRule(rule);
     }

@@ -26,21 +26,21 @@ class CfgToDeductionRulesConverter {
    * point for all of them. Takes a cfg, an input string w and a string
    * specifying which parsing algorithm shall be applied. Returns the respective
    * parsing scheme. */
-  public static ParsingSchema CfgToParsingSchema(Cfg cfg, String w,
+  public static ParsingSchema cfgToParsingSchema(Cfg cfg, String w,
     String schema) {
     switch (schema) {
     case "topdown":
-      return CfgToTopDownRules(cfg, w);
+      return cfgToTopDownRules(cfg, w);
     case "shiftreduce":
-      return CfgToShiftReduceRules(cfg, w);
+      return cfgToShiftReduceRules(cfg, w);
     case "earley":
-      return CfgToEarleyRules(cfg, w);
+      return cfgToEarleyRules(cfg, w);
     case "leftcorner":
-      return CfgToLeftCornerRules(cfg, w);
+      return cfgToLeftCornerRules(cfg, w);
     case "cyk":
-      return CfgToCykRules(cfg, w);
+      return cfgToCykRules(cfg, w);
     case "cyk-extended":
-      return CfgToCykExtendedRules(cfg, w);
+      return cfgToCykExtendedRules(cfg, w);
     default:
       return null;
     }
@@ -48,7 +48,7 @@ class CfgToDeductionRulesConverter {
 
   /** Converts a cfg to a parsing scheme for Topdown parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
-  public static ParsingSchema CfgToTopDownRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out
         .println("CFG must not contain empty productions for TopDown parsing.");
@@ -74,7 +74,7 @@ class CfgToDeductionRulesConverter {
 
   /** Converts a cfg to a parsing scheme for ShiftReduce parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf */
-  public static ParsingSchema CfgToShiftReduceRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToShiftReduceRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out.println(
         "CFG must not contain empty productions for ShiftReduce parsing.");
@@ -100,7 +100,7 @@ class CfgToDeductionRulesConverter {
 
   /** Converts a cfg to a parsing scheme for Earley parsing. Based n
    * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf */
-  public static ParsingSchema CfgToEarleyRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w) {
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
@@ -139,7 +139,7 @@ class CfgToDeductionRulesConverter {
   /** Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
    * to be used. */
-  public static ParsingSchema CfgToLeftCornerRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToLeftCornerRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out
         .println("CFG must not contain empty productions for Leftcorner parsing.");
@@ -172,7 +172,7 @@ class CfgToDeductionRulesConverter {
   }
 
   /** Converts grammar into rules for CYK parsing for CNF. */
-  public static ParsingSchema CfgToCykRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToCykRules(Cfg cfg, String w) {
     if (!cfg.isInChomskyNormalForm()) {
       System.out.println("Grammar has to be in Chomsky Normal Form.");
       return null;
@@ -202,7 +202,7 @@ class CfgToDeductionRulesConverter {
   /** Like CYK parsing, but with an additional deduction rule for chain rules,
    * hence grammar needs only to be in Canonical Two Form. 
    * Source: Giogio Satta, ESSLLI 2013*/
-  public static ParsingSchema CfgToCykExtendedRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w) {
     if (!cfg.isInCanonicalTwoForm()) {
       System.out.println("Grammar has to be in Canonical Two Form.");
       return null;

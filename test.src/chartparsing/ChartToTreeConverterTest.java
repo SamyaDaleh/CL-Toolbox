@@ -48,7 +48,7 @@ public class ChartToTreeConverterTest {
   @Test public void testTagCykToDerivatedTree() throws ParseException {
     String w2 = "a a c b";
     ParsingSchema schema =
-      TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "cyk");
+      TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "cyk");
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(
@@ -60,19 +60,20 @@ public class ChartToTreeConverterTest {
   @Test public void testTagEarleyToDerivatedTree() throws ParseException {
     String w2 = "a a c b";
     ParsingSchema schema =
-      TagToDeductionRulesConverter.TagToParsingSchema(gentag(), w2, "earley");
+      TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "earley");
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(
       deduction.getChart(), schema.getGoals(), deduction.getAppliedRules(),
       deduction.getBackpointers(), gentag());
     assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
+
   }
 
   @Test public void testCfgTopdownToDerivationTree() throws ParseException {
     String w = "a c b";
     ParsingSchema schema =
-      CfgToDeductionRulesConverter.CfgToTopDownRules(gencfg(), w);
+      CfgToDeductionRulesConverter.cfgToTopDownRules(gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
@@ -82,7 +83,7 @@ public class ChartToTreeConverterTest {
 
     w = "a a a b b b";
     schema =
-      CfgToDeductionRulesConverter.CfgToTopDownRules(gen_cfgdedtest(), w);
+      CfgToDeductionRulesConverter.cfgToTopDownRules(gen_cfgdedtest(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
     derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
@@ -95,7 +96,7 @@ public class ChartToTreeConverterTest {
   @Test public void testCfgEarleyToDerivationTree() throws ParseException {
     String w = "a c b";
     ParsingSchema schema =
-      CfgToDeductionRulesConverter.CfgToEarleyRules(gencfg(), w);
+      CfgToDeductionRulesConverter.cfgToEarleyRules(gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
@@ -104,7 +105,7 @@ public class ChartToTreeConverterTest {
     assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
 
     w = "a a a b b b";
-    schema = CfgToDeductionRulesConverter.CfgToEarleyRules(gen_cfgdedtest(), w);
+    schema = CfgToDeductionRulesConverter.cfgToEarleyRules(gen_cfgdedtest(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
     derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
@@ -117,7 +118,7 @@ public class ChartToTreeConverterTest {
   @Test public void testCfgShiftReduceToDerivationTree() throws ParseException {
     String w = "a c b";
     ParsingSchema schema =
-      CfgToDeductionRulesConverter.CfgToShiftReduceRules(gencfg(), w);
+      CfgToDeductionRulesConverter.cfgToShiftReduceRules(gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(
