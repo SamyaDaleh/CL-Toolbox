@@ -336,31 +336,7 @@ public class Cfg extends AbstractCfg{
         cfg.productionrules.add(rule);
       }
     }
-    ArrayList<String[]> unitpairs = new ArrayList<String[]>();
-    for (String nt : this.nonterminals) {
-      unitpairs.add(new String[] {nt, nt});
-    }
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : this.productionrules) {
-        if (rule.getRhs().length == 1
-          && nonterminalsContain(rule.getRhs()[0])) {
-          boolean found = false;
-          for (String[] unitpair : unitpairs) {
-            if (unitpair[0].equals(rule.getLhs())
-              && unitpair[1].equals(rule.getRhs()[0])) {
-              found = true;
-              break;
-            }
-          }
-          if (!found) {
-            unitpairs.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
-            changed = true;
-          }
-        }
-      }
-    }
+    ArrayList<String[]> unitpairs = getUnitPairs();
 
     for (String[] unitpair : unitpairs) {
       for (CfgProductionRule rule : this.productionrules) {
@@ -391,6 +367,39 @@ public class Cfg extends AbstractCfg{
     }
 
     return cfg;
+  }
+
+  /**
+   * Get all unit pairs, that are pairs of nonterminals where the derivation
+   * A =>* B is possible.
+   */
+  private ArrayList<String[]> getUnitPairs() {
+    ArrayList<String[]> unitpairs = new ArrayList<String[]>();
+    for (String nt : this.nonterminals) {
+      unitpairs.add(new String[] {nt, nt});
+    }
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (CfgProductionRule rule : this.productionrules) {
+        if (rule.getRhs().length == 1
+          && nonterminalsContain(rule.getRhs()[0])) {
+          boolean found = false;
+          for (String[] unitpair : unitpairs) {
+            if (unitpair[0].equals(rule.getLhs())
+              && unitpair[1].equals(rule.getRhs()[0])) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            unitpairs.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
+            changed = true;
+          }
+        }
+      }
+    }
+    return unitpairs;
   }
 
   /** Returns true if grammar has rules of the form A -> B. */
