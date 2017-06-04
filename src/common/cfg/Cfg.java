@@ -289,9 +289,7 @@ public class Cfg extends AbstractCfg {
     ArrayList<String> eliminateable = getEliminateable();
     doEliminateEmptyProductions(cfg, newnt, eliminateable);
     for (int i = cfg.productionrules.size() - 1; i >= 0; i--) {
-      if (cfg.productionrules.get(i).getRhs().length == 1
-        && cfg.productionrules.get(i).getRhs()[0].equals("")
-        && !cfg.productionrules.get(i).getLhs().equals(cfg.startsymbol)) {
+      if (ifEmptyProductionShouldBeRemoved(cfg, i)) {
         cfg.productionrules.remove(i);
       }
     }
@@ -299,12 +297,20 @@ public class Cfg extends AbstractCfg {
     cfg.nonterminals = newnt.toArray(new String[newnt.size()]);
     return cfg;
   }
-  
-/**
- * Removes all empty productions except if epsilon can be derived from the
- * start symbol, in which case if the start symbol appears in a rhs, a new
- * start symbol is added.
- */
+
+  /**
+   * Returns true if production derives to the empty string and doesn't have
+   * the start symbol as lhs.
+   */
+  private boolean ifEmptyProductionShouldBeRemoved(Cfg cfg, int i) {
+    return cfg.productionrules.get(i).getRhs().length == 1
+      && cfg.productionrules.get(i).getRhs()[0].equals("")
+      && !cfg.productionrules.get(i).getLhs().equals(cfg.startsymbol);
+  }
+
+  /** Removes all empty productions except if epsilon can be derived from the
+   * start symbol, in which case if the start symbol appears in a rhs, a new
+   * start symbol is added. */
   private void doEliminateEmptyProductions(Cfg cfg, ArrayList<String> newnt,
     ArrayList<String> eliminateable) {
     for (String nt : eliminateable) {
@@ -369,16 +375,12 @@ public class Cfg extends AbstractCfg {
     return cfg;
   }
 
-  /**
-   * Removes chain rules and for example S -> A all rhs of rules with A on the
-   * left side are added as rules to S.
-   */
+  /** Removes chain rules and for example S -> A all rhs of rules with A on the
+   * left side are added as rules to S. */
   private void doRemoveChainRules(Cfg cfg, ArrayList<String[]> unitpairs) {
     for (String[] unitpair : unitpairs) {
       for (CfgProductionRule rule : this.productionrules) {
-        if (!(rule.getRhs().length == 1
-          && nonterminalsContain(rule.getRhs()[0]))
-          && rule.getLhs().equals(unitpair[1])) {
+        if (isChainRuleAndConcernOfUnitPair(unitpair, rule)) {
           boolean alreadythere = false;
           for (CfgProductionRule rule2 : cfg.getProductionrules()) {
             if (rule.getLhs().equals(unitpair[0])
@@ -401,6 +403,17 @@ public class Cfg extends AbstractCfg {
         }
       }
     }
+  }
+
+  /**
+   * Returns true if rules is chain rule with a nonterminal as rhs and lhs
+   * is second component of unit pair.
+   */
+  private boolean isChainRuleAndConcernOfUnitPair(String[] unitpair,
+    CfgProductionRule rule) {
+    return !(rule.getRhs().length == 1
+      && nonterminalsContain(rule.getRhs()[0]))
+      && rule.getLhs().equals(unitpair[1]);
   }
 
   /** Get all unit pairs, that are pairs of nonterminals where the derivation A
@@ -458,10 +471,8 @@ public class Cfg extends AbstractCfg {
     return cfg;
   }
 
-  /**
-   * In rhs > 1 all terminals are replaced by a new nonterminal, new rules
-   * X1 -> a are added. Adds only one new nonterminal for each terminal.
-   */
+  /** In rhs > 1 all terminals are replaced by a new nonterminal, new rules X1
+   * -> a are added. Adds only one new nonterminal for each terminal. */
   private void doReplaceTerminals(Cfg cfg, ArrayList<String[]> newtrules,
     ArrayList<String> newnt) {
     int i = 1;
@@ -561,10 +572,8 @@ public class Cfg extends AbstractCfg {
     return cfg;
   }
 
-  /**
-   * Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 where nt is the
-   * old nonterminal and newnt is S1 in this example.
-   */
+  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 where nt is the
+   * old nonterminal and newnt is S1 in this example. */
   private void doRemoveLeftRecursion(Cfg cfg, String nt, String newnt) {
     for (CfgProductionRule rule : this.productionrules) {
       if (rule.getLhs().equals(nt)) {
@@ -580,8 +589,7 @@ public class Cfg extends AbstractCfg {
               .add(new CfgProductionRule(nt, new String[] {newnt}));
           } else {
             String[] newrhs = new String[rule.getRhs().length + 1];
-            System.arraycopy(rule.getRhs(), 0, newrhs, 0,
-              rule.getRhs().length);
+            System.arraycopy(rule.getRhs(), 0, newrhs, 0, rule.getRhs().length);
             newrhs[newrhs.length - 1] = newnt;
             cfg.productionrules.add(new CfgProductionRule(nt, newrhs));
           }
@@ -595,14 +603,23 @@ public class Cfg extends AbstractCfg {
   public boolean hasMixedRhs() {
     for (CfgProductionRule rule : this.productionrules) {
       for (int i = 1; i < rule.getRhs().length; i++) {
-        if ((this.terminalsContain(rule.getRhs()[i - 1])
-          && this.nonterminalsContain(rule.getRhs()[i]))
-          || (this.terminalsContain(rule.getRhs()[i])
-            && this.nonterminalsContain(rule.getRhs()[i - 1]))) {
+        if (ifSymbolIsOneKindAndPreviousSymbolIsAnother(rule, i)) {
           return true;
         }
       }
     }
     return false;
+  }
+
+  /**
+   * returns true if current symbol is nonterminal and previous one is terminal
+   * or vice versa.
+   */
+  private boolean
+    ifSymbolIsOneKindAndPreviousSymbolIsAnother(CfgProductionRule rule, int i) {
+    return (this.terminalsContain(rule.getRhs()[i - 1])
+      && this.nonterminalsContain(rule.getRhs()[i]))
+      || (this.terminalsContain(rule.getRhs()[i])
+        && this.nonterminalsContain(rule.getRhs()[i - 1]));
   }
 }
