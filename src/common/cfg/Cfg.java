@@ -9,12 +9,9 @@ import common.ArrayUtils;
 
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
-public class Cfg {
-  private String nonterminals[];
+public class Cfg extends AbstractCfg{
   private final List<CfgProductionRule> productionrules =
     new LinkedList<CfgProductionRule>();
-  private String startsymbol;
-  private String terminals[];
 
   public Cfg() {
     super();
@@ -32,14 +29,6 @@ public class Cfg {
     }
   }
 
-  public String[] getNonterminals() {
-    return nonterminals;
-  }
-
-  public void setNonterminals(String[] nonterminals) {
-    this.nonterminals = nonterminals;
-  }
-
   public List<CfgProductionRule> getProductionrules() {
     return productionrules;
   }
@@ -48,40 +37,6 @@ public class Cfg {
     for (String[] rule : rules) {
       this.productionrules.add(new CfgProductionRule(rule));
     }
-  }
-
-  public String getStartsymbol() {
-    return startsymbol;
-  }
-
-  public void setStartsymbol(String startsymbol) {
-    this.startsymbol = startsymbol;
-  }
-
-  public String[] getTerminals() {
-    return terminals;
-  }
-
-  public void setTerminals(String[] terminals) {
-    this.terminals = terminals;
-  }
-
-  /** Returns true if mayt is on of the terminal symbols. */
-  public boolean terminalsContain(String mayt) {
-    for (String term : terminals) {
-      if (term.equals(mayt))
-        return true;
-    }
-    return false;
-  }
-
-  /** Returns true if maynt is on of the nonterminal symbols. */
-  public boolean nonterminalsContain(String maynt) {
-    for (String nt : nonterminals) {
-      if (nt.equals(maynt))
-        return true;
-    }
-    return false;
   }
 
   /** Returns true if there is at least one rule with an empty right side,
