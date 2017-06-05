@@ -132,11 +132,11 @@ public class TreeWithCrossingEdges extends Tree {
     return representation.toString();
   }
   
-  public String[] getLeafOrder() {
-    return this.leaforder.toArray(new String[leaforder.size()]);
+  public ArrayList<String> getLeafOrder() {
+    return this.leaforder;
   }
   
-  public String[] getLeafGorns() {
-    return this.leafgorns.toArray(new String[leafgorns.size()]);
+  public ArrayList<String> getLeafGorns() {
+    return this.leafgorns;
   }
 }
