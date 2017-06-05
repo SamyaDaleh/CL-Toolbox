@@ -19,10 +19,27 @@ public class DisplayTree extends JFrame {
   private Map<String, Integer[]> nodesdrawn;
   private String[] itemform;
 
-  /** Constructor that sets up the tree and the node map, instantiates the
-   * closing functionality. */
-  private DisplayTree(String[] args) throws ParseException {
+  /** Called with a tree in bracket format as argument, retrieves the depth by
+   * brackets to estimate needed windows size. */
+  public DisplayTree(String[] args) throws ParseException {
     super();
+    this.setLocation(100, 500);
+
+    int currentdepth = 0;
+    int maxdepth = 0;
+    for (int i = 0; i < args[0].length(); i++) {
+      if (args[0].charAt(i) == '(') {
+        currentdepth++;
+        if (currentdepth > maxdepth) {
+          maxdepth = currentdepth;
+        }
+      } else if (args[0].charAt(i) == ')') {
+        currentdepth--;
+      }
+    }
+    this.setSize(80 * maxdepth, 80 * maxdepth);
+    this.setVisible(true);
+    
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     this.tree = new Tree(args[0]);
     if (args.length > 1) {
@@ -61,7 +78,7 @@ public class DisplayTree extends JFrame {
     }
     if (tree.getFoot() != null && tree.getFoot().equals(p)) {
       label.append("*");
-      int halflabelwidth = label.length() * 8 / 2;
+      int halflabelwidth = label.length() * 10 / 2;
       if (itemform.length == 6) {
         g.drawString(itemform[3], nodex-halflabelwidth-10, height);
         g.drawString(itemform[4], nodex+halflabelwidth+10, height);
@@ -141,25 +158,5 @@ public class DisplayTree extends JFrame {
         drawwidth += widthdelta / children.size();
       }
     }
-  }
-
-  /** Called with a tree in bracket format as argument, retrieves the depth by
-   * brackets to estimate needed windows size. */
-  public static void main(String[] args) throws ParseException {
-    DisplayTree dt = new DisplayTree(args);
-    int currentdepth = 0;
-    int maxdepth = 0;
-    for (int i = 0; i < args[0].length(); i++) {
-      if (args[0].charAt(i) == '(') {
-        currentdepth++;
-        if (currentdepth > maxdepth) {
-          maxdepth = currentdepth;
-        }
-      } else if (args[0].charAt(i) == ')') {
-        currentdepth--;
-      }
-    }
-    dt.setSize(80 * maxdepth, 80 * maxdepth);
-    dt.setVisible(true);
   }
 }

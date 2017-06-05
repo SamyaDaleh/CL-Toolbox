@@ -29,7 +29,7 @@ class Main {
         "Parsing algorithm can be: cfg-cyk, cfg-cyk-extended, cfg-earley, cfg-topdown, cfg-shiftreduce, "
           + "cfg-leftcorner, pcfg-astar, tag-cyk, tag-earley, srcg-cyk, srcg-cyk-extended, srcg-earley");
       System.out.println(
-        "Optional parameters can be: --sucess : prints a trace only of items "
+        "Optional parameters can be: --success : prints a trace only of items "
           + "that lead to a goal item.");
       System.out.println(
         "Optional parameters can be: --please : if a grammar doesn't fit an "
@@ -152,21 +152,26 @@ class Main {
     Deduction deduction = new Deduction();
     System.out.println(deduction.doParse(schema, success));
     String[][] data = deduction.printTrace();
-    ParsingTraceTable.displayTrace(data,
-      new String[] {"Id", "Item", "Rules", "Backpointers"});
+    if (tag != null) {
+      new ParsingTraceTable(data,
+        new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
+    } else {
+      ParsingTraceTable.displayTrace(data,
+        new String[] {"Id", "Item", "Rules", "Backpointers"});
+    }
     if (schema != null) {
       if (algorithm.startsWith("tag")) {
         Tree derivedtree = ChartToTreeConverter.tagToDerivatedTree(
           deduction, schema.getGoals(), tag);
         if (derivedtree != null) {
-          DisplayTree.main(new String[] {derivedtree.toString()});
+          new DisplayTree(new String[] {derivedtree.toString()});
         }
       }
       if (algorithm.startsWith("cfg")) {
         Tree derivedtree = ChartToTreeConverter.cfgToDerivatedTree(
           deduction, schema.getGoals(), algorithm.substring(4));
         if (derivedtree != null) {
-          DisplayTree.main(new String[] {derivedtree.toString()});
+          new DisplayTree(new String[] {derivedtree.toString()});
         }
       }
     }

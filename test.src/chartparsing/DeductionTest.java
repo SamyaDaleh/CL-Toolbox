@@ -33,10 +33,6 @@ public class DeductionTest {
     g.setNonterminals(new String[] {"S", "T"});
     g.setTerminals(new String[] {"a", "b", "c"});
     g.setStartsymbol("S");
-    // Tree bracket format: (Elder Child1 Child2 Child3)
-    // or (Elder (ElderOf1stSubtree Child1OfFirstSubtree) (ElderOf2ndSubtree
-    // Child1Of2ndSubtree Child2Of2ndSubtree))
-    // or with Gorn addresses: (0 (1 1.1) (2 2.1 2.2))
     g.addInitialTree("α1", "(S T b)");
     g.addInitialTree("α2", "(T c)");
     g.addAuxiliaryTree("β", "(T a T*)");
