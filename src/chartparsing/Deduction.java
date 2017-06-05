@@ -59,8 +59,8 @@ public class Deduction {
   }
 
   /** Prints the trace to the command line. If only the useful items shall be
-   * retrieved, it checks all items if they lead to a goal. 
-   * Returns the printed chart data as string array with columns: Id, Item, Rules, Backpointers. */
+   * retrieved, it checks all items if they lead to a goal. Returns the printed
+   * chart data as string array with columns: Id, Item, Rules, Backpointers. */
   public String[][] printTrace() {
     if (successfultrace) {
       boolean changed = true;
@@ -96,10 +96,9 @@ public class Deduction {
         chartdata.add(line);
       }
     }
-   
-     return chartdata.toArray(new String[chartdata.size()][]);
+
+    return chartdata.toArray(new String[chartdata.size()][]);
   }
-  
 
   /** Returns the backpointers in this list of lists as plain list. */
   private static ArrayList<Integer>
@@ -125,15 +124,22 @@ public class Deduction {
 
   /** Applies an axiom rule, that is a rule without antecedence items and adds
    * the consequence items to chart and agenda. */
-  private void applyAxiomRule(StaticDeductionRule rule) {
+  @SuppressWarnings("serial") private void
+    applyAxiomRule(StaticDeductionRule rule) {
     for (Item item : rule.consequences) {
       if (!chart.contains(item)) {
         chart.add(item);
         agenda.add(item);
-        deductedfrom.add(new ArrayList<ArrayList<Integer>>());
-        deductedfrom.get(deductedfrom.size() - 1).add(new ArrayList<Integer>());
-        appliedRule.add(new ArrayList<String>());
-        appliedRule.get(appliedRule.size() - 1).add(rule.getName());
+        deductedfrom.add(new ArrayList<ArrayList<Integer>>() {
+          {
+            add(new ArrayList<Integer>());
+          }
+        });
+        appliedRule.add(new ArrayList<String>() {
+          {
+            add(rule.getName());
+          }
+        });
       }
     }
   }
@@ -181,8 +187,7 @@ public class Deduction {
     }
   }
 
-  private void processNewItems(List<Item> newitems,
-    DynamicDeductionRule rule) {
+  private void processNewItems(List<Item> newitems, DynamicDeductionRule rule) {
 
     ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
     for (Item itemtocheck : rule.getAntecedences()) {
@@ -273,16 +278,16 @@ public class Deduction {
     }
     return builder.toString();
   }
-  
-  public  List<Item> getChart() {
+
+  public List<Item> getChart() {
     return this.chart;
   }
-  
-  public ArrayList<ArrayList<ArrayList<Integer>>> getBackpointers(){
+
+  public ArrayList<ArrayList<ArrayList<Integer>>> getBackpointers() {
     return this.deductedfrom;
   }
-  
-  public ArrayList<ArrayList<String>> getAppliedRules(){
+
+  public ArrayList<ArrayList<String>> getAppliedRules() {
     return this.appliedRule;
   }
 }
