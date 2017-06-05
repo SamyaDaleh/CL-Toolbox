@@ -12,10 +12,10 @@ import common.cfg.CfgProductionRule;
  * node. */
 public class Tree {
 
-  private final List<Vertex> vertexes = new LinkedList<Vertex>();
+  protected final List<Vertex> vertexes = new LinkedList<Vertex>();
   private final List<Edge> edges = new LinkedList<Edge>();
-  private Vertex root = null;
-  private Vertex foot = null;
+  protected Vertex root = null;
+  protected Vertex foot = null;
   private final List<Vertex> NA = new LinkedList<Vertex>();
   private final List<Vertex> OA = new LinkedList<Vertex>();
 
@@ -57,7 +57,7 @@ public class Tree {
     }
   }
 
-  private int handleSubscript(String[] tokens, int i) throws ParseException {
+  protected int handleSubscript(String[] tokens, int i) throws ParseException {
     i++;
     switch (tokens[i]) {
     case "NA":
@@ -72,7 +72,7 @@ public class Tree {
     return i;
   }
 
-  private void handleChildNode(String[] tokens, List<Vertex> vertexpath,
+  protected void handleChildNode(String[] tokens, List<Vertex> vertexpath,
     List<Integer> children, int i) {
     Vertex vertex;
     if (tokens[i].equals("ε")) {
@@ -80,35 +80,33 @@ public class Tree {
     } else {
       vertex = new Vertex(tokens[i]);
     }
-    children.set(children.size() - 1,
-      children.get(children.size() - 1) + 1);
-    vertex
-      .setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
-        + "." + children.get(children.size() - 1).toString());
+    children.set(children.size() - 1, children.get(children.size() - 1) + 1);
+    vertex.setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
+      + "." + children.get(children.size() - 1).toString());
 
     Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
     this.edges.add(edge);
     this.vertexes.add(vertex);
   }
 
-  private int openSubTree(String[] tokens, List<Vertex> vertexpath,
+  protected int openSubTree(String[] tokens, List<Vertex> vertexpath,
     List<Integer> children, int i) throws ParseException {
     i++;
     if (tokens[i].equals("(") || tokens[i].equals(")")
       || tokens[i].equals("*")) {
-      throw new ParseException("Expecting label of root of subtree, found "
-        + tokens[i] + " instead.", 0);
+      throw new ParseException(
+        "Expecting label of root of subtree, found " + tokens[i] + " instead.",
+        0);
     }
     Vertex vertex = new Vertex(tokens[i]);
     if (this.root == null) {
       this.root = vertex;
       vertex.setGornaddress("");
     } else {
-      children.set(children.size() - 1,
-        children.get(children.size() - 1) + 1);
-      vertex.setGornaddress(
-        vertexpath.get(vertexpath.size() - 1).getGornaddress() + "."
-          + children.get(children.size() - 1).toString());
+      children.set(children.size() - 1, children.get(children.size() - 1) + 1);
+      vertex
+        .setGornaddress(vertexpath.get(vertexpath.size() - 1).getGornaddress()
+          + "." + children.get(children.size() - 1).toString());
       Edge edge = new Edge(vertexpath.get(vertexpath.size() - 1), vertex);
       this.edges.add(edge);
     }
@@ -123,7 +121,7 @@ public class Tree {
     this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
   }
 
-  private Tree() {
+  protected Tree() {
     super();
   }
 
