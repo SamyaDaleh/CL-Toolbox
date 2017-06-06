@@ -12,7 +12,7 @@ import common.cfg.CfgDottedItem;
  * nonterminal. */
 public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
 
-  public CfgEarleyComplete(){
+  public CfgEarleyComplete() {
     this.name = "complete";
     this.antneeded = 2;
   }
@@ -26,9 +26,9 @@ public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
     }
     return consequences;
   }
-  
+
   private void calculateConsequences(String[] itemform1, String[] itemform2) {
-    
+
     String stack1 = itemform1[0];
     String[] stacksplit1 = stack1.split(" ");
     int i1 = Integer.parseInt(itemform1[1]);
@@ -48,10 +48,9 @@ public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
             newstack = ArrayUtils.getSubSequenceAsString(stacksplit1, 0, l)
               + " " + stacksplit2[0] + " •";
           } else {
-            newstack =
-              ArrayUtils.getSubSequenceAsString(stacksplit1, 0, l) + " "
-                + stacksplit2[0] + " •" + ArrayUtils.getSubSequenceAsString(
-                  stacksplit1, l + 1, stacksplit1.length);
+            newstack = ArrayUtils.getSubSequenceAsString(stacksplit1, 0, l)
+              + " " + stacksplit2[0] + " •" + ArrayUtils
+                .getSubSequenceAsString(stacksplit1, l + 1, stacksplit1.length);
           }
           consequences.add(new CfgDottedItem(newstack, i1, k2));
           break;
@@ -61,8 +60,8 @@ public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    return
-        "[A -> α •B β,i,j] [B -> ɣ •,j,k]" + "\n______\n" + "[A -> α B •β,i,k]";
+    return "[A -> α •B β,i,j] [B -> ɣ •,j,k]" + "\n______\n"
+      + "[A -> α B •β,i,k]";
   }
 
 }

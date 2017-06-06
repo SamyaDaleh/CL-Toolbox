@@ -16,7 +16,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
   public CfgEarleyPredict(CfgProductionRule rule) {
     this.rule = rule;
-    this.name ="predict " + rule.toString();
+    this.name = "predict " + rule.toString();
     this.antneeded = 1;
   }
 
@@ -29,13 +29,13 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
       for (String stacksymbol : stacksplit) {
         if (stacksymbol.startsWith("•") && stacksymbol
-            .substring(1, stacksymbol.length()).equals(rule.getLhs())) {
+          .substring(1, stacksymbol.length()).equals(rule.getLhs())) {
           String newstack;
           if (rule.getRhs()[0].equals("")) {
             newstack = rule.getLhs() + " -> •";
           } else {
             newstack =
-                rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
+              rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
           }
           consequences.add(new CfgDottedItem(newstack, j, j));
           break;
@@ -46,9 +46,9 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    return "[A -> α •" + rule.getLhs() + "β,i,j]" + "\n______ " + rule.toString()
-        + "\n" + "[" + rule.getLhs() + " -> •" + ArrayUtils
-        .toString(rule.getRhs()) + ",j,j]";
+    return "[A -> α •" + rule.getLhs() + "β,i,j]" + "\n______ "
+      + rule.toString() + "\n" + "[" + rule.getLhs() + " -> •"
+      + ArrayUtils.toString(rule.getRhs()) + ",j,j]";
   }
 
 }

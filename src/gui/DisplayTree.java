@@ -61,12 +61,24 @@ public class DisplayTree extends JFrame {
       g.drawString(itemform[6], this.getWidth() - 30, 60);
     }
     drawSubTree(g, tree.getNodeByGornAdress(""), 60, 0, this.getWidth());
+    for (int i = 0; i < tree.getLeafOrder().size(); i++) {
+      int index = tree.getLeafOrder().indexOf(String.valueOf(i));
+      Vertex p = tree.getNodeByGornAdress(tree.getLeafGorns().get(index));
+      int nodex = (i + 1) * this.getWidth() / (tree.getLeafOrder().size() + 1);
+      int height = this.getHeight() - 50;
+      g.drawString(p.getLabel(), nodex, height);
+      Integer[] xyparent = nodesdrawn.get(p.getGornAddressOfParent());
+      g.drawLine(nodex, height - 10, xyparent[0], xyparent[1] + 10);
+    }
   }
 
   /** Draws the root of a subtree in the middle, divides its space by the number
    * of its children's width, triggers to draw the children. */
   private void drawSubTree(Graphics g, Vertex p, int height, int widthfrom,
     int widthdelta) {
+    if (tree.getLeafGorns().contains(p.getGornaddress())) {
+      return;
+    }
     int nodex = widthfrom + widthdelta / 2;
     StringBuilder label = new StringBuilder();
     label.append(p.getLabel());

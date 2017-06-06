@@ -10,6 +10,8 @@ import java.util.List;
 import chartparsing.Deduction;
 import common.Item;
 import common.cfg.CfgProductionRule;
+import common.lcfrs.Clause;
+import common.lcfrs.Predicate;
 
 /** Collection of functions that take a chart and a list of goal items and
  * return one tree that represents the successful parse. */
@@ -29,6 +31,46 @@ public class ChartToTreeConverter {
             derivationtree = applyStep(tag, derivationtree, steps, j);
           }
           return derivationtree;
+        }
+      }
+    }
+    return null;
+  }
+
+  public static Tree srcgToDerivatedTree(Deduction deduction, List<Item> goals,
+    String algorithm) throws ParseException {
+    Tree derivationtree = null;
+    for (Item goal : goals) {
+      for (int i = 0; i < deduction.getChart().size(); i++) {
+        if (deduction.getChart().get(i).equals(goal)) {
+          ArrayList<String> steps = null;
+          if (algorithm.equals("earley")) {
+            steps = retrieveSteps(i, deduction.getAppliedRules(),
+              deduction.getBackpointers(), new String[] {"predict"});
+          }
+          if (algorithm.equals("earley")) {
+            Clause clause = new Clause(goal.getItemform()[0]);
+            StringBuilder extractedrule = new StringBuilder();
+            extractedrule.append(clause.getLhs().getNonterminal()).append(" ->")
+              .append(clause.getRhs());
+            for (Predicate rhs : clause.getRhs()) {
+              extractedrule.append(" ").append(rhs.getNonterminal());
+            }
+            derivationtree =
+              new Tree(new CfgProductionRule(extractedrule.toString()));
+          }
+          if (algorithm.equals("earley")) {
+            for (int j = 0; j < steps.size(); j++) {
+              String step = steps.get(j);
+              if (algorithm.equals("earley")) {
+                if (step.charAt(step.length()-1) == 'ε' ) {
+                  
+                } else {
+                  derivationtree = applyStep(derivationtree, step, false);
+                }
+              }
+            }
+          }
         }
       }
     }

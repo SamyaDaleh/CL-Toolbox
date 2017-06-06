@@ -35,9 +35,9 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
           if (k == stacksplit.length - 1) {
             newstack.append(" ").append(wsplit[j]).append(" •");
           } else {
-            newstack.append(" ").append(wsplit[j]).append(" •").append(
-                ArrayUtils.getSubSequenceAsString(stacksplit, k + 1,
-                    stacksplit.length));
+            newstack.append(" ").append(wsplit[j]).append(" •")
+              .append(ArrayUtils.getSubSequenceAsString(stacksplit, k + 1,
+                stacksplit.length));
           }
           consequences.add(new CfgDottedItem(newstack.toString(), i, j + 1));
         }

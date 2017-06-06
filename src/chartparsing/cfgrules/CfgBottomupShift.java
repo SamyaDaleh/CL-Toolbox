@@ -36,5 +36,5 @@ public class CfgBottomupShift extends AbstractDynamicDeductionRule {
   @Override public String toString() {
     return "[Γ,i]" + "\n______ w_i = a\n" + "[Γa,i+1]";
   }
-  
+
 }

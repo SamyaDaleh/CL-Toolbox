@@ -64,7 +64,6 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
     outcon.addAll(this.consequences);
     return outcon;
   }
-  
 
   private void calculateConsequences(String[] itemform1, String[] itemform2) {
     String nt1 = itemform1[0];
@@ -74,8 +73,7 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
     int j1int = Integer.parseInt(j1);
     Double w1 = antecedences.get(0).getProbability();
 
-    String outkey1 =
-      SxCalc.getOutsideKey(nt1, i1int, j1int - i1int, n - j1int);
+    String outkey1 = SxCalc.getOutsideKey(nt1, i1int, j1int - i1int, n - j1int);
     if (!outsides.containsKey(outkey1)) {
       return;
     }
@@ -89,8 +87,7 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
     int j2int = Integer.parseInt(j2);
     Double w2 = antecedences.get(1).getProbability();
 
-    String outkey2 =
-      SxCalc.getOutsideKey(nt2, i2int, j2int - i2int, n - j2int);
+    String outkey2 = SxCalc.getOutsideKey(nt2, i2int, j2int - i2int, n - j2int);
     if (!outsides.containsKey(outkey2)) {
       return;
     }
@@ -105,9 +102,8 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
         return;
       }
       Double newoutw = outsides.get(outkey3);
-      this.consequences
-        .add(new PcfgAstarItem(x1 + x2 + -Math.log(prule.getP()), newoutw,
-          prule.getLhs(), i1int, j2int));
+      this.consequences.add(new PcfgAstarItem(x1 + x2 + -Math.log(prule.getP()),
+        newoutw, prule.getLhs(), i1int, j2int));
     }
   }
 
@@ -120,12 +116,11 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
   }
 
   @Override public String toString() {
-    return "x1 + out(" + prule.getRhs()[0] + ", i, j - i, n - j) : [" + prule
-        .getRhs()[0] + ",i,j], x2 + out(" + prule.getRhs()[1]
-        + ", j, k - j, n - k) : [" + prule.getRhs()[1] + ", j, k]"
-        + "\n______ \n" + "x1 + x2 + |log(" + String.valueOf(prule.getP())
-        + ")| + out(" + prule.getLhs() + ", i, k - i, n - k) : [" + prule
-        .getLhs() + ", i, k]";
+    return "x1 + out(" + prule.getRhs()[0] + ", i, j - i, n - j) : ["
+      + prule.getRhs()[0] + ",i,j], x2 + out(" + prule.getRhs()[1]
+      + ", j, k - j, n - k) : [" + prule.getRhs()[1] + ", j, k]" + "\n______ \n"
+      + "x1 + x2 + |log(" + String.valueOf(prule.getP()) + ")| + out("
+      + prule.getLhs() + ", i, k - i, n - k) : [" + prule.getLhs() + ", i, k]";
   }
 
   @Override public void clearItems() {

@@ -10,7 +10,7 @@ import common.cfg.CfgProductionRule;
 
 /** If the top o the stack matches the rhs of a rule, replace it with the
  * lhs. */
-public class CfgBottomupReduce extends AbstractDynamicDeductionRule{
+public class CfgBottomupReduce extends AbstractDynamicDeductionRule {
 
   private final CfgProductionRule rule;
 
@@ -40,8 +40,8 @@ public class CfgBottomupReduce extends AbstractDynamicDeductionRule{
   }
 
   @Override public String toString() {
-    return "[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]" + "\n______" + rule
-        .toString() + "\n" + "[Γ " + rule.getLhs() + ",i]";
+    return "[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]" + "\n______"
+      + rule.toString() + "\n" + "[Γ " + rule.getLhs() + ",i]";
   }
 
 }

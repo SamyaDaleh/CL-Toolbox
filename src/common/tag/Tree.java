@@ -19,9 +19,14 @@ public class Tree {
   private final List<Vertex> NA = new LinkedList<Vertex>();
   private final List<Vertex> OA = new LinkedList<Vertex>();
 
+  private ArrayList<String> leaforder;
+  private ArrayList<String> leafgorns;
+
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
   public Tree(String tree) throws ParseException {
+    leaforder = new ArrayList<String>();
+    leafgorns = new ArrayList<String>();
     String[] tokens = tokenize(tree);
     List<Vertex> vertexpath = new LinkedList<Vertex>();
     List<Integer> children = new LinkedList<Integer>();
@@ -48,6 +53,12 @@ public class Tree {
         break;
       case "_":
         i = handleSubscript(tokens, i);
+        break;
+      case "<":
+        leaforder.add(tokens[i + 1]);
+        leafgorns
+          .add(this.vertexes.get(this.vertexes.size() - 1).getGornaddress());
+        i += 2;
         break;
       default: {
         handleChildNode(tokens, vertexpath, children, i);
@@ -119,10 +130,14 @@ public class Tree {
   /** Creates a tree from a cfg rule. Hence S -> A B would become (S A B). */
   public Tree(CfgProductionRule rule) throws ParseException {
     this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
+    leaforder = new ArrayList<String>();
+    leafgorns = new ArrayList<String>();
   }
 
   protected Tree() {
     super();
+    leaforder = new ArrayList<String>();
+    leafgorns = new ArrayList<String>();
   }
 
   /** Actually does the tokenization by throwing away spaces, returning '(', ')'
@@ -138,7 +153,8 @@ public class Tree {
           builder = new StringBuilder();
         }
       } else if ((tree.charAt(i) == '(' || tree.charAt(i) == ')'
-        || tree.charAt(i) == '*') || tree.charAt(i) == '_') {
+        || tree.charAt(i) == '*') || tree.charAt(i) == '_'
+        || tree.charAt(i) == '<' || tree.charAt(i) == '>') {
         if (builder.length() > 0) {
           tokens.add(builder.toString());
           builder = new StringBuilder();
@@ -175,11 +191,18 @@ public class Tree {
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
       representation.append("(")
-        .append(child.getLabel().equals("") ? "ε" : child.getLabel())
-        .append(child.equals(foot) ? "*" : "")
-        .append(isInOA(child.getGornaddress()) ? "_OA" : "")
-        .append(isInNA(child.getGornaddress()) ? "_NA" : "").append(" ")
-        .append(toStringAllChildren(child)).append(")");
+      .append(child.getLabel().equals("") ? "ε" : child.getLabel())
+      .append(child.equals(foot) ? "*" : "")
+      .append(isInOA(child.getGornaddress()) ? "_OA" : "")
+      .append(isInNA(child.getGornaddress()) ? "_NA" : "");
+    if (leafgorns.contains(child.getGornaddress())) {
+      representation.append('<');
+      representation
+        .append(leaforder.get(leafgorns.indexOf(child.getGornaddress())));
+      representation.append('>');
+    }
+      representation.append(" ")
+      .append(toStringAllChildren(child)).append(")");
     }
     return representation.toString();
   }
@@ -412,5 +435,13 @@ public class Tree {
       newtree.edges.add(new Edge(newfrom, newto));
     }
     return newtree;
+  }
+  
+  public ArrayList<String> getLeafOrder() {
+    return this.leaforder;
+  }
+  
+  public ArrayList<String> getLeafGorns() {
+    return this.leafgorns;
   }
 }

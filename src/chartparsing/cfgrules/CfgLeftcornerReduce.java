@@ -55,10 +55,10 @@ public class CfgLeftcornerReduce extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    return "[" + rule.getRhs()[0] + "α,Bβ,ɣ]" + "\n______ " + ArrayUtils
-        .toString(rule.getRhs()) + ", B ≠ $\n" + "[α," + ArrayUtils
+    return "[" + rule.getRhs()[0] + "α,Bβ,ɣ]" + "\n______ "
+      + ArrayUtils.toString(rule.getRhs()) + ", B ≠ $\n" + "[α," + ArrayUtils
         .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length)
-        + "$Bβ," + rule.getLhs() + "ɣ]";
+      + "$Bβ," + rule.getLhs() + "ɣ]";
   }
 
 }

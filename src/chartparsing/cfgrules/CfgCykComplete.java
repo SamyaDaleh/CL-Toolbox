@@ -49,6 +49,6 @@ public class CfgCykComplete extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[" + rule.getRhs()[0] + ",1,l1], [" + rule.getRhs()[1] + ",i+l1,l2]"
-        + "\n______ \n" + "[" + rule.getLhs() + ",i,l1+l2]";
+      + "\n______ \n" + "[" + rule.getLhs() + ",i,l1+l2]";
   }
 }

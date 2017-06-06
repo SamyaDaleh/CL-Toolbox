@@ -18,4 +18,10 @@ public class DisplayTreeTest {
     new DisplayTree(new String[] {beta.toString(), "[β,.2,rb,1,1,2,2,0]"});
     assertTrue(true);
   }
+
+  @Test public void testDisplayTreeWithCrossingEdges() throws ParseException {
+    Tree tree = new Tree("(S (Comp (dat<0> ))(VP (NP (Jan<1> ))(VP (NP (Piet<2> ))(VP (NP (de-kinderen<3> ))(V (zwemmen<6> )))(V (helpen<5> )))(V (zag<4> ))))");
+    new DisplayTree(new String[] {tree.toString()});
+    assertTrue(true);
+  }
 }
