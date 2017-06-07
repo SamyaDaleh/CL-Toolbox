@@ -94,3 +94,11 @@ S = "S"
 I = {"α1 : (S T b)", "α2 : (T c)"}
 A = {"β : (T a T*)"}
 ```
+
+## Features
+
+- prints full traces or only successful traces
+- automatically transforms grammars into more expressive formalisms
+- can convert grammars to fit the algorithm
+- displays derivated trees for CFG Topdown, Shiftreduce, Earley and TAG CYK and Earley
+- for TAG displays item trees on mouseover
