@@ -38,7 +38,7 @@ class Main {
         "example: ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown");
       return;
     }
-    String grammarfile = args[0];
+    String grammarFile = args[0];
     String w = args[1];
     String algorithm = args[2];
     boolean success = false;
@@ -59,8 +59,8 @@ class Main {
     Tag tag = null;
     Srcg srcg;
     Pcfg pcfg;
-    if (grammarfile.endsWith(".cfg")) {
-      cfg = GrammarParser.parseCfgFile(grammarfile);
+    if (grammarFile.endsWith(".cfg")) {
+      cfg = GrammarParser.parseCfgFile(grammarFile);
       if (algorithm.startsWith("cfg")){
         cfg = ggc.checkAndMayConvertToCfg(cfg, algorithm);
         if (cfg != null) {
@@ -86,8 +86,8 @@ class Main {
         return;
       }
     } else 
-      if (grammarfile.endsWith(".pcfg")) {
-        pcfg = GrammarParser.parsePcfgFile(grammarfile);
+      if (grammarFile.endsWith(".pcfg")) {
+        pcfg = GrammarParser.parsePcfgFile(grammarFile);
         if (algorithm.startsWith("cfg")){
           cfg = ggc.checkAndMayConvertToCfg(pcfg, algorithm);
           if (cfg != null) {
@@ -112,8 +112,8 @@ class Main {
           System.out.println("I don't know that formalism, please check the spelling.");
           return;
         }
-      }else if (grammarfile.endsWith(".tag")) {
-        tag = GrammarParser.parseTagFile(grammarfile);
+      }else if (grammarFile.endsWith(".tag")) {
+        tag = GrammarParser.parseTagFile(grammarFile);
       if (algorithm.startsWith("cfg")){
         System.out.println("I can't parse with a less expressive formalism.");
         return;
@@ -131,8 +131,8 @@ class Main {
         System.out.println("I don't know that formalism, please check the spelling.");
         return;
       }
-    } else if (grammarfile.endsWith(".srcg")) {
-      srcg = GrammarParser.parseSrcgFile(grammarfile);
+    } else if (grammarFile.endsWith(".srcg")) {
+      srcg = GrammarParser.parseSrcgFile(grammarFile);
       if (algorithm.startsWith("cfg")){
         System.out.println("I can't parse with a less expressive formalism.");
       } else  if (algorithm.startsWith("tag")){
@@ -161,17 +161,17 @@ class Main {
     }
     if (schema != null) {
       if (algorithm.startsWith("tag")) {
-        Tree derivedtree = ChartToTreeConverter.tagToDerivatedTree(
+        Tree derivedTree = ChartToTreeConverter.tagToDerivatedTree(
           deduction, schema.getGoals(), tag);
-        if (derivedtree != null) {
-          new DisplayTree(new String[] {derivedtree.toString()});
+        if (derivedTree != null) {
+          new DisplayTree(new String[] {derivedTree.toString()});
         }
       }
       if (algorithm.startsWith("cfg")) {
-        Tree derivedtree = ChartToTreeConverter.cfgToDerivatedTree(
+        Tree derivedTree = ChartToTreeConverter.cfgToDerivatedTree(
           deduction, schema.getGoals(), algorithm.substring(4));
-        if (derivedtree != null) {
-          new DisplayTree(new String[] {derivedtree.toString()});
+        if (derivedTree != null) {
+          new DisplayTree(new String[] {derivedTree.toString()});
         }
       }
     }

@@ -15,8 +15,8 @@ public class RangeVector {
   /**
    * Creates a new vector of numranges ranges filled with placeholders. 
    */
-  public RangeVector(int numranges) {
-    for (int i = 0; i < numranges; i++) {
+  public RangeVector(int numRanges) {
+    for (int i = 0; i < numRanges; i++) {
       ranges.add(new Range("?","?"));
     }
   }
@@ -25,12 +25,12 @@ public class RangeVector {
    * Returns ranges as 1d array.
    */
   public String[] getRangesAsPlainArray() {
-    ArrayList<String> rangesarray = new ArrayList<String>();
+    ArrayList<String> rangesArray = new ArrayList<String>();
     for (Range range : ranges) {
-      rangesarray.add(range.getRange()[0]);
-      rangesarray.add(range.getRange()[1]);
+      rangesArray.add(range.getRange()[0]);
+      rangesArray.add(range.getRange()[1]);
     }
-    return rangesarray.toArray(new String[rangesarray.size()]);
+    return rangesArray.toArray(new String[rangesArray.size()]);
   }
 
   @Override public String toString() {

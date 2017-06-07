@@ -9,11 +9,11 @@ public class CfgProductionRule {
   /** Construction with an array of length 2 which contains lhs and rhs. */
   public CfgProductionRule(String[] rule) {
     this.lhs = rule[0];
-    String[] rulesplit = rule[1].split(" ");
-    if (rulesplit.length == 1 && rulesplit[0].equals("ε")) {
+    String[] ruleSplit = rule[1].split(" ");
+    if (ruleSplit.length == 1 && ruleSplit[0].equals("ε")) {
       this.rhs = new String[] {""};
     } else {
-      this.rhs = rulesplit;
+      this.rhs = ruleSplit;
     }
   }
 
@@ -33,17 +33,15 @@ public class CfgProductionRule {
   /**
    * Creates a rule from a String representation like S -> A B
    */
-  public CfgProductionRule(String rulestring) {
-    String[] rulesplit = rulestring.split("->");
-    this.lhs = rulesplit[0].trim();
-    if (rulesplit[1].trim().equals("") || rulesplit[1].trim().equals("ε")) {
+  public CfgProductionRule(String ruleString) {
+    String[] ruleSplit = ruleString.split("->");
+    this.lhs = ruleSplit[0].trim();
+    if (ruleSplit[1].trim().equals("") || ruleSplit[1].trim().equals("ε")) {
       this.rhs = new String[] {""};
     } else {
-      this.rhs = rulesplit[1].trim().split(" ");
+      this.rhs = ruleSplit[1].trim().split(" ");
     }
   }
-
-
 
   public String getLhs() {
     return this.lhs;

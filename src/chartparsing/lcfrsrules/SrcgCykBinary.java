@@ -14,88 +14,88 @@ import common.lcfrs.SrcgCykItem;
 public class SrcgCykBinary extends AbstractDynamicDeductionRule {
 
   private final Clause clause;
-  private final String[] wsplit;
+  private final String[] wSplit;
 
-  public SrcgCykBinary(Clause clause, String[] wsplit) {
+  public SrcgCykBinary(Clause clause, String[] wSplit) {
     this.name = "complete";
-    this.antneeded = 2;
+    this.antNeeded = 2;
     this.clause = clause;
-    this.wsplit = wsplit;
+    this.wSplit = wSplit;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform1 = antecedences.get(0).getItemform();
-      String[] itemform2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemform1, itemform2);
-      calculateConsequences(itemform2, itemform1);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm1 = antecedences.get(0).getItemform();
+      String[] itemForm2 = antecedences.get(1).getItemform();
+      calculateConsequences(itemForm1, itemForm2);
+      calculateConsequences(itemForm2, itemForm1);
     }
     return this.consequences;
   }
 
-  private void calculateConsequences(String[] itemform2, String[] itemform1) {
-    String nt1 = itemform1[0];
-    String nt2 = itemform2[0];
+  private void calculateConsequences(String[] itemForm2, String[] itemForm1) {
+    String nt1 = itemForm1[0];
+    String nt2 = itemForm2[0];
     if (nt2.equals(clause.getRhs().get(0).getNonterminal())
       && nt1.equals(clause.getRhs().get(1).getNonterminal())) {
-      boolean looksgood = true;
-      ArrayList<Integer> overallranges = new ArrayList<Integer>();
+      boolean looksGood = true;
+      ArrayList<Integer> overallRanges = new ArrayList<Integer>();
       for (String[] argument : clause.getLhs().getSymbols()) {
-        ArrayList<String> vectorranges = new ArrayList<String>();
+        ArrayList<String> vectorRanges = new ArrayList<String>();
         for (String element : argument) {
           int[] indices = clause.getRhs().get(0).find(element);
           if (indices[0] == -1) {
             indices = clause.getRhs().get(1).find(element);
             if (indices[0] == -1) {
-              vectorranges.add("?");
-              vectorranges.add("?");
+              vectorRanges.add("?");
+              vectorRanges.add("?");
             } else {
-              vectorranges.add(itemform1[(indices[0] - 1) * 2 + 1]);
-              vectorranges.add(itemform1[(indices[0] - 1) * 2 + 2]);
+              vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 1]);
+              vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 2]);
             }
           } else {
-            vectorranges.add(itemform2[(indices[0] - 1) * 2 + 1]);
-            vectorranges.add(itemform2[(indices[0] - 1) * 2 + 2]);
+            vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 1]);
+            vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 2]);
           }
         }
         int i = 0;
-        for (; i * 2 < vectorranges.size(); i++) {
-          if (!vectorranges.get(i * 2).equals("?")) {
+        for (; i * 2 < vectorRanges.size(); i++) {
+          if (!vectorRanges.get(i * 2).equals("?")) {
             break;
           }
         }
-        int prevnum = Integer.parseInt(vectorranges.get(i * 2));
+        int prevnum = Integer.parseInt(vectorRanges.get(i * 2));
         while (i > 0) {
           i--;
-          vectorranges.set(i * 2, String.valueOf(prevnum - 1));
-          vectorranges.set(i * 2 + 1, String.valueOf(prevnum));
-          if (prevnum == 0 || !wsplit[prevnum - 1].equals(argument[i])) {
-            looksgood = false;
+          vectorRanges.set(i * 2, String.valueOf(prevnum - 1));
+          vectorRanges.set(i * 2 + 1, String.valueOf(prevnum));
+          if (prevnum == 0 || !wSplit[prevnum - 1].equals(argument[i])) {
+            looksGood = false;
           }
           prevnum--;
         }
         i = 1;
-        for (; i * 2 < vectorranges.size(); i++) {
-          prevnum = Integer.parseInt(vectorranges.get(i * 2 - 1));
-          if (vectorranges.get(i * 2).equals("?")) {
-            vectorranges.set(i * 2, String.valueOf(prevnum));
-            vectorranges.set(i * 2 + 1, String.valueOf(prevnum + 1));
-            if (!wsplit[prevnum].equals(argument[i])) {
-              looksgood = false;
+        for (; i * 2 < vectorRanges.size(); i++) {
+          prevnum = Integer.parseInt(vectorRanges.get(i * 2 - 1));
+          if (vectorRanges.get(i * 2).equals("?")) {
+            vectorRanges.set(i * 2, String.valueOf(prevnum));
+            vectorRanges.set(i * 2 + 1, String.valueOf(prevnum + 1));
+            if (!wSplit[prevnum].equals(argument[i])) {
+              looksGood = false;
             }
-          } else if (!vectorranges.get(i * 2)
-            .equals(vectorranges.get(i * 2 - 1))) {
-            looksgood = false;
+          } else if (!vectorRanges.get(i * 2)
+            .equals(vectorRanges.get(i * 2 - 1))) {
+            looksGood = false;
           }
         }
-        for (String elem : vectorranges) {
-          overallranges.add(Integer.parseInt(elem));
+        for (String elem : vectorRanges) {
+          overallRanges.add(Integer.parseInt(elem));
         }
 
       }
-      if (looksgood && overallranges.size() > 0) {
+      if (looksGood && overallRanges.size() > 0) {
         Integer[] newvector = SrcgDeductionUtils.getRangesForArguments(
-          overallranges.toArray(new Integer[overallranges.size()]),
+          overallRanges.toArray(new Integer[overallRanges.size()]),
           clause.getLhs());
         consequences
           .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newvector));

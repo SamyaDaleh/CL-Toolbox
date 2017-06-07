@@ -13,7 +13,7 @@ public abstract class AbstractDynamicDeductionRule
   protected List<Item> consequences;
   protected String name;
 
-  protected int antneeded;
+  protected int antNeeded;
 
   @Override public void addAntecedence(Item item) {
     this.antecedences.add(item);
@@ -32,7 +32,7 @@ public abstract class AbstractDynamicDeductionRule
   }
 
   @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
+    return this.antNeeded;
   }
 
   @Override public void clearItems() {

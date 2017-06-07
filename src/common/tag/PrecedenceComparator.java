@@ -6,11 +6,11 @@ class PrecedenceComparator implements Comparator<Vertex> {
 
   @Override public int compare(Vertex o1, Vertex o2) {
 
-    if (o1.getGornaddress().equals("") || o2.getGornaddress().equals("")) {
+    if (o1.getGornAddress().equals("") || o2.getGornAddress().equals("")) {
       return 0;
     }
-    String[] gorn1 = o1.getGornaddress().split("[.]");
-    String[] gorn2 = o2.getGornaddress().split("[.]");
+    String[] gorn1 = o1.getGornAddress().split("[.]");
+    String[] gorn2 = o2.getGornAddress().split("[.]");
 
     int l1 = gorn1.length;
     int l2 = gorn2.length;

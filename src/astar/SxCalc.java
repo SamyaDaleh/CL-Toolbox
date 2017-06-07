@@ -20,7 +20,7 @@ public class SxCalc {
       for (String nt : cfg.getNonterminals()) {
         for (int l = 1; l <= n; l++) {
           if (l == 1) {
-            for (PcfgProductionRule rule : cfg.getProductionrules()) {
+            for (PcfgProductionRule rule : cfg.getProductionRules()) {
               String[] vars = rule.getRhs();
               Double logp = -Math.log(rule.getP());
               if (rule.getLhs().equals(nt) && vars.length == 1
@@ -30,7 +30,7 @@ public class SxCalc {
             }
           } else {
             for (int l1 = 1; l1 <= l - 1; l1++) {
-              for (PcfgProductionRule rule : cfg.getProductionrules()) {
+              for (PcfgProductionRule rule : cfg.getProductionRules()) {
                 String[] vars = rule.getRhs();
                 if (nt.equals(rule.getLhs()) && vars.length == 2) {
                   Double newp = -Math.log(rule.getP());
@@ -66,11 +66,11 @@ public class SxCalc {
         int nr = n - nl - l;
         for (String nt : pcfg.getNonterminals()) {
           outsides.put(getOutsideKey(nt, nl, l, nr), Double.MAX_VALUE);
-          if (nl == 0 && nr == 0 && nt.equals(pcfg.getStartsymbol())) {
+          if (nl == 0 && nr == 0 && nt.equals(pcfg.getStartSymbol())) {
             outsides.put(getOutsideKey(nt, nl, l, nr), 0.0);
           } else {
             for (int lc = 1; lc <= nr; lc++) {
-              for (PcfgProductionRule rule : pcfg.getProductionrules()) {
+              for (PcfgProductionRule rule : pcfg.getProductionRules()) {
                 String[] vars = rule.getRhs();
                 if (vars.length == 2 && vars[0].equals(nt)) {
                   Double newp = -Math.log(rule.getP());
@@ -83,7 +83,7 @@ public class SxCalc {
               }
             }
             for (int lc = 1; lc <= nl; lc++) {
-              for (PcfgProductionRule rule : pcfg.getProductionrules()) {
+              for (PcfgProductionRule rule : pcfg.getProductionRules()) {
                 String[] vars = rule.getRhs();
                 if (vars.length == 2 && vars[1].equals(nt)) {
                   Double newp = -Math.log(rule.getP());
@@ -100,7 +100,6 @@ public class SxCalc {
         }
       }
     }
-
     return outsides;
   }
 

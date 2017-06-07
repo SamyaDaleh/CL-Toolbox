@@ -13,35 +13,35 @@ public class Predicate {
 
   /** Constructor that creates the predicate from a string representation. */
   public Predicate(String predicate) throws ParseException {
-    int lbracknum = 0;
-    int rbracknum = 0;
+    int lBrackNum = 0;
+    int rBrackNum = 0;
     for (int i = 0; i < predicate.length(); i++) {
       if (predicate.charAt(i) == '(')
-        lbracknum++;
+        lBrackNum++;
       if (predicate.charAt(i) == ')')
-        rbracknum++;
+        rBrackNum++;
     }
-    if (lbracknum != rbracknum) {
+    if (lBrackNum != rBrackNum) {
       throw new ParseException(
         "Amounts of opening and closing brackets are different.", 0);
     }
-    int lbrack = predicate.indexOf('(');
-    int rbrack = predicate.indexOf(')');
-    this.nonterminal = predicate.substring(0, lbrack).trim();
-    String rightover = predicate.substring(lbrack + 1, rbrack).trim();
-    if (rightover.length() == 0 || rightover.equals("ε")) {
+    int lBrack = predicate.indexOf('(');
+    int rBrack = predicate.indexOf(')');
+    this.nonterminal = predicate.substring(0, lBrack).trim();
+    String rightOver = predicate.substring(lBrack + 1, rBrack).trim();
+    if (rightOver.length() == 0 || rightOver.equals("ε")) {
       symbols = new String[][] {new String[] {""}};
     } else {
-      String[] subgroups = rightover.split(",");
-      ArrayList<String[]> subgroupcol = new ArrayList<String[]>();
+      String[] subgroups = rightOver.split(",");
+      ArrayList<String[]> subgroupCol = new ArrayList<String[]>();
       for (String subgroup : subgroups) {
         if (subgroup.trim().equals("ε")) {
-          subgroupcol.add(new String[] {""});
+          subgroupCol.add(new String[] {""});
         } else {
-          subgroupcol.add(subgroup.trim().split(" "));
+          subgroupCol.add(subgroup.trim().split(" "));
         }
       }
-      symbols = subgroupcol.toArray(new String[subgroupcol.size()][]);
+      symbols = subgroupCol.toArray(new String[subgroupCol.size()][]);
     }
   }
 
@@ -72,11 +72,11 @@ public class Predicate {
   }
 
   public String[] getSymbolsAsPlainArray() {
-    ArrayList<String> symbolsarray = new ArrayList<String>();
-    for (String[] symset : symbols) {
-      Collections.addAll(symbolsarray, symset);
+    ArrayList<String> symbolsArray = new ArrayList<String>();
+    for (String[] symSet : symbols) {
+      Collections.addAll(symbolsArray, symSet);
     }
-    return symbolsarray.toArray(new String[symbolsarray.size()]);
+    return symbolsArray.toArray(new String[symbolsArray.size()]);
   }
 
   /** Returns a string representation where the dot is at the ith argument at
@@ -120,12 +120,12 @@ public class Predicate {
 
   /** If all elements were a plain list, return the index the specified item
    * would have. */
-  public int getAbsolutePos(int iint, int jint) {
+  public int getAbsolutePos(int iInt, int jInt) {
     int index = 0;
-    for (int i = 1; i < iint; i++) {
+    for (int i = 1; i < iInt; i++) {
       index += symbols[i - 1].length;
     }
-    return index + jint;
+    return index + jInt;
   }
 
   public boolean ifSymExists(int i, int j) {

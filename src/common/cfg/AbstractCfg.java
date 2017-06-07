@@ -2,7 +2,7 @@ package common.cfg;
 
 public abstract class AbstractCfg {
   protected String nonterminals[];
-  protected String startsymbol;
+  protected String startSymbol;
   protected String terminals[];
 
   public String[] getNonterminals() {
@@ -13,12 +13,12 @@ public abstract class AbstractCfg {
     this.nonterminals = nonterminals;
   }
 
-  public String getStartsymbol() {
-    return startsymbol;
+  public String getStartSymbol() {
+    return startSymbol;
   }
 
-  public void setStartsymbol(String startsymbol) {
-    this.startsymbol = startsymbol;
+  public void setStartSymbol(String startSymbol) {
+    this.startSymbol = startSymbol;
   }
 
   public String[] getTerminals() {
@@ -30,18 +30,18 @@ public abstract class AbstractCfg {
   }
 
   /** Returns true if mayvar is one of the nonterminal symbols. */
-  public boolean terminalsContain(String mayt) {
+  public boolean terminalsContain(String mayT) {
     for (String term : terminals) {
-      if (term.equals(mayt))
+      if (term.equals(mayT))
         return true;
     }
     return false;
   }
 
   /** Returns true if there is at least one rule with an empty right side. */
-  public boolean nonterminalsContain(String maynt) {
+  public boolean nonterminalsContain(String mayNt) {
     for (String nt : nonterminals) {
-      if (nt.equals(maynt))
+      if (nt.equals(mayNt))
         return true;
     }
     return false;
@@ -53,7 +53,7 @@ public abstract class AbstractCfg {
     builder.append("N = {").append(String.join(", ", nonterminals))
       .append("}\n");
     builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
-    builder.append("S = ").append(startsymbol).append("\n");
+    builder.append("S = ").append(startSymbol).append("\n");
     builder.append("P = {");
     appendRuleRepresentation(builder);
     builder.append("}\n");

@@ -13,46 +13,46 @@ import common.lcfrs.SrcgEarleyActiveItem;
  * can scan it. */
 public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
 
-  private final String[] wsplit;
+  private final String[] wSplit;
 
   /** Remembers the input string to compare it with the next symbol to scan. */
-  public SrcgEarleyScan(String[] wsplit) {
-    this.wsplit = wsplit;
+  public SrcgEarleyScan(String[] wSplit) {
+    this.wSplit = wSplit;
     this.name = "scan";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String clause = itemform[0];
-      if (itemform[0].contains("->")) {
-        Clause clauseparsed;
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String clause = itemForm[0];
+      if (itemForm[0].contains("->")) {
+        Clause clauseParsed;
         try {
-          clauseparsed = new Clause(clause);
+          clauseParsed = new Clause(clause);
         } catch (ParseException e) {
           e.printStackTrace();
           return this.consequences;
         }
-        String pos = itemform[1];
-        int posint = Integer.parseInt(pos);
-        String i = itemform[2];
-        int iint = Integer.parseInt(i);
-        String j = itemform[3];
-        int jint = Integer.parseInt(j);
-        int place = clauseparsed.getLhs().getAbsolutePos(iint, jint);
+        String pos = itemForm[1];
+        int posInt = Integer.parseInt(pos);
+        String i = itemForm[2];
+        int iInt = Integer.parseInt(i);
+        String j = itemForm[3];
+        int jInt = Integer.parseInt(j);
+        int place = clauseParsed.getLhs().getAbsolutePos(iInt, jInt);
 
-        if (clauseparsed.getLhs().ifSymExists(iint, jint)
-          && clauseparsed.getLhsSymAt(iint, jint).equals(wsplit[posint])) {
-          ArrayList<String> newvector = new ArrayList<String>();
-          for (int k = 0; k * 2 + 5 < itemform.length; k++) {
-            newvector.add(itemform[2 * k + 4]);
-            newvector.add(itemform[2 * k + 5]);
+        if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
+          && clauseParsed.getLhsSymAt(iInt, jInt).equals(wSplit[posInt])) {
+          ArrayList<String> newVector = new ArrayList<String>();
+          for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
+            newVector.add(itemForm[2 * k + 4]);
+            newVector.add(itemForm[2 * k + 5]);
           }
-          newvector.set(place*2, pos);
-          newvector.set(place*2 + 1, String.valueOf(posint + 1));
-          consequences.add(new SrcgEarleyActiveItem(clause, posint + 1, iint,
-            jint + 1, newvector.toArray(new String[newvector.size()])));
+          newVector.set(place*2, pos);
+          newVector.set(place*2 + 1, String.valueOf(posInt + 1));
+          consequences.add(new SrcgEarleyActiveItem(clause, posInt + 1, iInt,
+            jInt + 1, newVector.toArray(new String[newVector.size()])));
         }
       }
     }

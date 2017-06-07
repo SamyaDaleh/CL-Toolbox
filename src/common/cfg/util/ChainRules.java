@@ -12,29 +12,29 @@ public class ChainRules {
   public static Cfg removeChainRules(Cfg cfgold) {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgold.getTerminals());
-    cfg.setStartsymbol(cfgold.getStartsymbol());
+    cfg.setStartSymbol(cfgold.getStartSymbol());
     cfg.setNonterminals(cfgold.getNonterminals());
-    for (CfgProductionRule rule : cfgold.getProductionrules()) {
+    for (CfgProductionRule rule : cfgold.getProductionRules()) {
       if (!(rule.getRhs().length == 1
         && cfgold.nonterminalsContain(rule.getRhs()[0]))) {
-        cfg.getProductionrules().add(rule);
+        cfg.getProductionRules().add(rule);
       }
     }
-    ArrayList<String[]> unitpairs = getUnitPairs(cfgold);
-    doRemoveChainRules(cfg, unitpairs, cfgold);
+    ArrayList<String[]> unitPairs = getUnitPairs(cfgold);
+    doRemoveChainRules(cfg, unitPairs, cfgold);
     return cfg;
   }
 
   /** Removes chain rules and for example S -> A all rhs of rules with A on the
    * left side are added as rules to S. */
-  private static void doRemoveChainRules(Cfg cfg, ArrayList<String[]> unitpairs,
-    Cfg cfgold) {
-    for (String[] unitpair : unitpairs) {
-      for (CfgProductionRule rule : cfgold.getProductionrules()) {
-        if (isChainRuleAndConcernOfUnitPair(unitpair, rule, cfg)) {
-          boolean alreadythere = false;
-          for (CfgProductionRule rule2 : cfg.getProductionrules()) {
-            if (rule.getLhs().equals(unitpair[0])
+  private static void doRemoveChainRules(Cfg cfg, ArrayList<String[]> unitPairs,
+    Cfg cfgOld) {
+    for (String[] unitPair : unitPairs) {
+      for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+        if (isChainRuleAndConcernOfUnitPair(unitPair, rule, cfg)) {
+          boolean alreadyThere = false;
+          for (CfgProductionRule rule2 : cfg.getProductionRules()) {
+            if (rule.getLhs().equals(unitPair[0])
               && rule2.getRhs().length == rule.getRhs().length) {
               boolean alright = false;
               for (int i = 0; i < rule.getRhs().length; i++) {
@@ -43,13 +43,13 @@ public class ChainRules {
                 }
               }
               if (!alright) {
-                alreadythere = true;
+                alreadyThere = true;
               }
             }
           }
-          if (!alreadythere) {
-            cfg.getProductionrules()
-              .add(new CfgProductionRule(unitpair[0], rule.getRhs()));
+          if (!alreadyThere) {
+            cfg.getProductionRules()
+              .add(new CfgProductionRule(unitPair[0], rule.getRhs()));
           }
         }
       }
@@ -58,47 +58,47 @@ public class ChainRules {
 
   /** Returns true if rules is chain rule with a nonterminal as rhs and lhs is
    * second component of unit pair. */
-  private static boolean isChainRuleAndConcernOfUnitPair(String[] unitpair,
+  private static boolean isChainRuleAndConcernOfUnitPair(String[] unitPair,
     CfgProductionRule rule, Cfg cfg) {
     return !(rule.getRhs().length == 1
       && cfg.nonterminalsContain(rule.getRhs()[0]))
-      && rule.getLhs().equals(unitpair[1]);
+      && rule.getLhs().equals(unitPair[1]);
   }
 
   /** Get all unit pairs, that are pairs of nonterminals where the derivation A
    * =>* B is possible. */
   private static ArrayList<String[]> getUnitPairs(Cfg cfg) {
-    ArrayList<String[]> unitpairs = new ArrayList<String[]>();
+    ArrayList<String[]> unitPairs = new ArrayList<String[]>();
     for (String nt : cfg.getNonterminals()) {
-      unitpairs.add(new String[] {nt, nt});
+      unitPairs.add(new String[] {nt, nt});
     }
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : cfg.getProductionrules()) {
+      for (CfgProductionRule rule : cfg.getProductionRules()) {
         if (rule.getRhs().length == 1
           && cfg.nonterminalsContain(rule.getRhs()[0])) {
           boolean found = false;
-          for (String[] unitpair : unitpairs) {
-            if (unitpair[0].equals(rule.getLhs())
-              && unitpair[1].equals(rule.getRhs()[0])) {
+          for (String[] unitPair : unitPairs) {
+            if (unitPair[0].equals(rule.getLhs())
+              && unitPair[1].equals(rule.getRhs()[0])) {
               found = true;
               break;
             }
           }
           if (!found) {
-            unitpairs.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
+            unitPairs.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
             changed = true;
           }
         }
       }
     }
-    return unitpairs;
+    return unitPairs;
   }
 
   /** Returns true if grammar has rules of the form A -> B. */
   public static boolean hasChainRules(Cfg cfg) {
-    for (CfgProductionRule rule : cfg.getProductionrules()) {
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 1
         && cfg.nonterminalsContain(rule.getRhs()[0])) {
         return true;

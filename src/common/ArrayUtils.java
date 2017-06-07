@@ -9,36 +9,36 @@ public class ArrayUtils {
    * (exclusive) index and returns it as string. */
   public static String getSubSequenceAsString(String[] sequence, int from,
     int to) {
-    StringBuilder subseq = new StringBuilder();
+    StringBuilder subSeq = new StringBuilder();
     for (int i = from; i < to && i < sequence.length; i++) {
       if (i > from)
-        subseq.append(" ");
-      subseq.append(sequence[i]);
+        subSeq.append(" ");
+      subSeq.append(sequence[i]);
     }
-    return subseq.toString();
+    return subSeq.toString();
   }
 
   /** Retrieves a subsequence of an array from (inclusive) to (excusive) and
    * returns it as array. */
   public static String[] getSubSequenceAsArray(String[] sequence, int from,
     int to) {
-    ArrayList<String> newsequence = new ArrayList<String>();
+    ArrayList<String> newSequence = new ArrayList<String>();
     for (int i = from; i < to && i < sequence.length; i++) {
-      newsequence.add(sequence[i]);
+      newSequence.add(sequence[i]);
     }
-    return newsequence.toArray(new String[newsequence.size()]);
+    return newSequence.toArray(new String[newSequence.size()]);
   }
 
   /** Returns true if the arrays are equal, that means all strings at the same
    * index has to be equal. Also the special character '?' is equal to
    * everything. */
-  public static boolean match(String[] itemform1, String[] itemform2) {
-    if (itemform1.length != itemform2.length) {
+  public static boolean match(String[] itemForm1, String[] itemForm2) {
+    if (itemForm1.length != itemForm2.length) {
       return false;
     }
-    for (int i = 0; i < itemform1.length; i++) {
-      if (!(itemform1[i].equals("?") || itemform2[i].equals("?")
-        || itemform1[i].equals(itemform2[i]))) {
+    for (int i = 0; i < itemForm1.length; i++) {
+      if (!(itemForm1[i].equals("?") || itemForm2[i].equals("?")
+        || itemForm1[i].equals(itemForm2[i]))) {
         return false;
       }
     }
@@ -65,45 +65,45 @@ public class ArrayUtils {
 
   /** If seqsplit ends with rhs, the first part of seqsplit without rhs is
    * returned, else null. */
-  public static String getStringHeadIfEndsWith(String[] seqsplit,
+  public static String getStringHeadIfEndsWith(String[] seqSplit,
     String[] rhs) {
-    if (seqsplit.length < rhs.length)
+    if (seqSplit.length < rhs.length)
       return null;
     for (int i = 0; i < rhs.length; i++) {
-      if (!(seqsplit[seqsplit.length - rhs.length + i].equals(rhs[i]))) {
+      if (!(seqSplit[seqSplit.length - rhs.length + i].equals(rhs[i]))) {
         return null;
       }
     }
-    return ArrayUtils.getSubSequenceAsString(seqsplit, 0,
-      seqsplit.length - rhs.length);
+    return ArrayUtils.getSubSequenceAsString(seqSplit, 0,
+      seqSplit.length - rhs.length);
   }
 
   /** Returns a new array that is a concatenation of the two input arrays. */
   public static String[] append(String[] split, String[] rhs) {
-    StringBuilder subseq = new StringBuilder();
+    StringBuilder subSeq = new StringBuilder();
     for (int i = 0; i < split.length; i++) {
       if (i > 0)
-        subseq.append(" ");
-      subseq.append(split[i]);
+        subSeq.append(" ");
+      subSeq.append(split[i]);
     }
     for (String sym : rhs) {
-      if (subseq.length() > 0)
-        subseq.append(" ");
-      subseq.append(sym);
+      if (subSeq.length() > 0)
+        subSeq.append(" ");
+      subSeq.append(sym);
     }
-    return subseq.toString().split(" ");
+    return subSeq.toString().split(" ");
   }
 
   /** Returns a new array without the element at index i. */
   public static String[] getSequenceWithoutIAsArray(String[] array, int i) {
-    ArrayList<String> newarray = new ArrayList<String>();
+    ArrayList<String> newArray = new ArrayList<String>();
     for (int j = 0; j < array.length; j++) {
       if (j != i) {
-        newarray.add(array[j]);
+        newArray.add(array[j]);
       }
 
     }
-    return newarray.toArray(new String[newarray.size()]);
+    return newArray.toArray(new String[newArray.size()]);
   }
 
 }

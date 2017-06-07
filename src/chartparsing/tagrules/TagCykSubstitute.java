@@ -12,38 +12,38 @@ import common.tag.TagCykItem;
 public class TagCykSubstitute extends AbstractDynamicDeductionRule {
   
   private final Tag tag;
-  private final String nodegorn;
-  private final String treename;
+  private final String nodeGorn;
+  private final String treeName;
 
   /** Remembers tree and node it can substitute in. */
-  public TagCykSubstitute(String treename, String nodegorn, Tag tag) {
+  public TagCykSubstitute(String treeName, String nodeGorn, Tag tag) {
     this.tag = tag;
-    this.treename = treename;
-    this.nodegorn = nodegorn;
-    this.name = "substitute in " + treename + "(" + nodegorn + ")";
-    this.antneeded = 1;
+    this.treeName = treeName;
+    this.nodeGorn = nodeGorn;
+    this.name = "substitute in " + treeName + "(" + nodeGorn + ")";
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String treename = itemform[0];
-      String node = itemform[1];
-      int i = Integer.parseInt(itemform[2]);
-      int j = Integer.parseInt(itemform[5]);
-      if (tag.getInitialTree(treename) != null && node.equals("⊤")) {
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String treeName = itemForm[0];
+      String node = itemForm[1];
+      int i = Integer.parseInt(itemForm[2]);
+      int j = Integer.parseInt(itemForm[5]);
+      if (tag.getInitialTree(treeName) != null && node.equals("⊤")) {
         consequences.add(
-          new TagCykItem(this.treename, this.nodegorn + "⊤", i, null, null, j));
-        this.name = "substitute " + this.treename + "[" + this.nodegorn + ","+ treename + "]";
+          new TagCykItem(this.treeName, this.nodeGorn + "⊤", i, null, null, j));
+        this.name = "substitute " + this.treeName + "[" + this.nodeGorn + ","+ treeName + "]";
       }
     }
     return consequences;
   }
 
   @Override public String toString() {
-    return "[α,ε⊤,i,-,-,j]" + "\n______ l(α,ε) = l(" + treename + "," + nodegorn
-        + "), " + treename + "(" + nodegorn + ") a substitution node\n"
-        + "[" + treename + "," + nodegorn + "⊤,i,-,-,j]";
+    return "[α,ε⊤,i,-,-,j]" + "\n______ l(α,ε) = l(" + treeName + "," + nodeGorn
+        + "), " + treeName + "(" + nodeGorn + ") a substitution node\n"
+        + "[" + treeName + "," + nodeGorn + "⊤,i,-,-,j]";
   }
 
 }

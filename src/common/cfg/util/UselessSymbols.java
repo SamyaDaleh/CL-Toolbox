@@ -10,30 +10,30 @@ public class UselessSymbols {
 
   /** Returns an equivalent grammar without non-generating symbols. Call this
    * before removing non-reachable symbols. */
-  public static Cfg removeNonGeneratingSymbols(Cfg cfgold) {
+  public static Cfg removeNonGeneratingSymbols(Cfg cfgOld) {
     Cfg cfg = new Cfg();
     ArrayList<String> generating = new ArrayList<String>();
-    Collections.addAll(generating, cfgold.getTerminals());
-    getGeneratingSymbols(generating, cfgold);
-    cfg.setTerminals(cfgold.getTerminals());
-    cfg.setStartsymbol(cfgold.getStartsymbol());
-    ArrayList<String> restnts = new ArrayList<String>();
+    Collections.addAll(generating, cfgOld.getTerminals());
+    getGeneratingSymbols(generating, cfgOld);
+    cfg.setTerminals(cfgOld.getTerminals());
+    cfg.setStartSymbol(cfgOld.getStartSymbol());
+    ArrayList<String> restNts = new ArrayList<String>();
     for (String symbol : generating) {
-      if (cfgold.nonterminalsContain(symbol)) {
-        restnts.add(symbol);
+      if (cfgOld.nonterminalsContain(symbol)) {
+        restNts.add(symbol);
       }
     }
-    cfg.setNonterminals(restnts.toArray(new String[restnts.size()]));
-    for (CfgProductionRule rule : cfgold.getProductionrules()) {
-      boolean notgeneratingseen = false;
+    cfg.setNonterminals(restNts.toArray(new String[restNts.size()]));
+    for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+      boolean notGeneratingSeen = false;
       for (String symbol : rule.getRhs()) {
         if (!generating.contains(symbol)) {
-          notgeneratingseen = true;
+          notGeneratingSeen = true;
           break;
         }
       }
-      if (!notgeneratingseen && generating.contains(rule.getLhs())) {
-        cfg.getProductionrules().add(rule);
+      if (!notGeneratingSeen && generating.contains(rule.getLhs())) {
+        cfg.getProductionRules().add(rule);
       }
     }
     return cfg;
@@ -42,19 +42,19 @@ public class UselessSymbols {
   /** Returns all symbols where strings only containing terinals can be derived
    * from. */
   private static void getGeneratingSymbols(ArrayList<String> generating,
-    Cfg cfgold) {
+    Cfg cfgOld) {
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : cfgold.getProductionrules()) {
-        boolean notgeneratingseen = false;
+      for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+        boolean notGeneratingSeen = false;
         for (String symbol : rule.getRhs()) {
           if (!generating.contains(symbol)) {
-            notgeneratingseen = true;
+            notGeneratingSeen = true;
             break;
           }
         }
-        if (!notgeneratingseen && !generating.contains(rule.getLhs())) {
+        if (!notGeneratingSeen && !generating.contains(rule.getLhs())) {
           changed = true;
           generating.add(rule.getLhs());
         }
@@ -64,14 +64,14 @@ public class UselessSymbols {
 
   /** Returns an equivalent grammar without non-reachable symbols. Before
    * calling this, remove all non-generating symbols. */
-  public static Cfg removeNonReachableSymbols(Cfg cfgold) {
+  public static Cfg removeNonReachableSymbols(Cfg cfgOld) {
     Cfg cfg = new Cfg();
     ArrayList<String> reachable = new ArrayList<String>();
-    reachable.add(cfgold.getStartsymbol());
+    reachable.add(cfgOld.getStartSymbol());
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : cfgold.getProductionrules()) {
+      for (CfgProductionRule rule : cfgOld.getProductionRules()) {
         if (reachable.contains(rule.getLhs())) {
           for (String symbol : rule.getRhs()) {
             if (!reachable.contains(symbol)) {
@@ -82,24 +82,24 @@ public class UselessSymbols {
         }
       }
     }
-    cfg.setStartsymbol(cfgold.getStartsymbol());
-    ArrayList<String> newvars = new ArrayList<String>();
-    for (String nt : cfgold.getNonterminals()) {
+    cfg.setStartSymbol(cfgOld.getStartSymbol());
+    ArrayList<String> newNts = new ArrayList<String>();
+    for (String nt : cfgOld.getNonterminals()) {
       if (reachable.contains(nt)) {
-        newvars.add(nt);
+        newNts.add(nt);
       }
     }
-    ArrayList<String> newterms = new ArrayList<String>();
-    for (String t : cfgold.getTerminals()) {
+    ArrayList<String> newTerms = new ArrayList<String>();
+    for (String t : cfgOld.getTerminals()) {
       if (reachable.contains(t)) {
-        newterms.add(t);
+        newTerms.add(t);
       }
     }
-    cfg.setNonterminals(newvars.toArray(new String[newvars.size()]));
-    cfg.setTerminals(newterms.toArray(new String[newterms.size()]));
-    for (CfgProductionRule rule : cfgold.getProductionrules()) {
+    cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+    cfg.setTerminals(newTerms.toArray(new String[newTerms.size()]));
+    for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       if (reachable.contains(rule.getLhs())) {
-        cfg.getProductionrules().add(rule);
+        cfg.getProductionRules().add(rule);
       }
     }
     return cfg;

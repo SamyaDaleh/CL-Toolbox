@@ -17,27 +17,27 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
   public CfgEarleyPredict(CfgProductionRule rule) {
     this.rule = rule;
     this.name = "predict " + rule.toString();
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
-      int j = Integer.parseInt(itemform[2]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String stack = itemForm[0];
+      String[] stackSplit = stack.split(" ");
+      int j = Integer.parseInt(itemForm[2]);
 
-      for (String stacksymbol : stacksplit) {
-        if (stacksymbol.startsWith("•") && stacksymbol
-          .substring(1, stacksymbol.length()).equals(rule.getLhs())) {
-          String newstack;
+      for (String stackSymbol : stackSplit) {
+        if (stackSymbol.startsWith("•") && stackSymbol
+          .substring(1, stackSymbol.length()).equals(rule.getLhs())) {
+          String newStack;
           if (rule.getRhs()[0].equals("")) {
-            newstack = rule.getLhs() + " -> •";
+            newStack = rule.getLhs() + " -> •";
           } else {
-            newstack =
+            newStack =
               rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
           }
-          consequences.add(new CfgDottedItem(newstack, j, j));
+          consequences.add(new CfgDottedItem(newStack, j, j));
           break;
         }
       }

@@ -8,18 +8,18 @@ import common.Item;
  */
 public abstract class AbstractItem implements Item {
 
-  protected String[] itemform;
+  protected String[] itemForm;
 
   @Override public String[] getItemform() {
-    return this.itemform;
+    return this.itemForm;
   }
 
   @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemform, ((Item) o).getItemform());
+    return ArrayUtils.match(this.itemForm, ((Item) o).getItemform());
   }
 
   @Override public String toString() {
-    return ArrayUtils.toString(this.itemform);
+    return ArrayUtils.toString(this.itemForm);
   }
 
 }

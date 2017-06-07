@@ -16,8 +16,8 @@ public class DisplayTree extends JFrame {
 
   private static final long serialVersionUID = -9123591819196303915L;
   private Tree tree;
-  private Map<String, Integer[]> nodesdrawn;
-  private String[] itemform;
+  private Map<String, Integer[]> nodesDrawn;
+  private String[] itemForm;
 
   /** Called with a tree in bracket format as argument, retrieves the depth by
    * brackets to estimate needed windows size. */
@@ -25,40 +25,40 @@ public class DisplayTree extends JFrame {
     super();
     this.setLocation(100, 500);
 
-    int currentdepth = 0;
-    int maxdepth = 0;
+    int currentDepth = 0;
+    int maxDepth = 0;
     for (int i = 0; i < args[0].length(); i++) {
       if (args[0].charAt(i) == '(') {
-        currentdepth++;
-        if (currentdepth > maxdepth) {
-          maxdepth = currentdepth;
+        currentDepth++;
+        if (currentDepth > maxDepth) {
+          maxDepth = currentDepth;
         }
       } else if (args[0].charAt(i) == ')') {
-        currentdepth--;
+        currentDepth--;
       }
     }
-    this.setSize(80 * maxdepth, 80 * maxdepth);
+    this.setSize(80 * maxDepth, 80 * maxDepth);
     this.setVisible(true);
     
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     this.tree = new Tree(args[0]);
     if (args.length > 1) {
-      this.itemform = args[1].substring(1, args[1].length() - 1).split(",");
+      this.itemForm = args[1].substring(1, args[1].length() - 1).split(",");
     } else {
-      itemform = new String[] {};
+      itemForm = new String[] {};
     }
-    nodesdrawn = new HashMap<String, Integer[]>();
+    nodesDrawn = new HashMap<String, Integer[]>();
   }
 
   /** Initiates the drawing of the tree. */
   public void paint(Graphics g) {
     g.clearRect(0, 0, this.getWidth(), this.getHeight());
-    if (itemform.length == 6) {
-      g.drawString(itemform[2], 30, 60);
-      g.drawString(itemform[5], this.getWidth() - 30, 60);
-    } else if (itemform.length == 8) {
-      g.drawString(itemform[3], 30, 60);
-      g.drawString(itemform[6], this.getWidth() - 30, 60);
+    if (itemForm.length == 6) {
+      g.drawString(itemForm[2], 30, 60);
+      g.drawString(itemForm[5], this.getWidth() - 30, 60);
+    } else if (itemForm.length == 8) {
+      g.drawString(itemForm[3], 30, 60);
+      g.drawString(itemForm[6], this.getWidth() - 30, 60);
     }
     drawSubTree(g, tree.getNodeByGornAdress(""), 60, 0, this.getWidth());
     for (int i = 0; i < tree.getLeafOrder().size(); i++) {
@@ -67,105 +67,105 @@ public class DisplayTree extends JFrame {
       int nodex = (i + 1) * this.getWidth() / (tree.getLeafOrder().size() + 1);
       int height = this.getHeight() - 50;
       g.drawString(p.getLabel(), nodex, height);
-      Integer[] xyparent = nodesdrawn.get(p.getGornAddressOfParent());
-      g.drawLine(nodex, height - 10, xyparent[0], xyparent[1] + 10);
+      Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
+      g.drawLine(nodex, height - 10, xyParent[0], xyParent[1] + 10);
     }
   }
 
   /** Draws the root of a subtree in the middle, divides its space by the number
    * of its children's width, triggers to draw the children. */
-  private void drawSubTree(Graphics g, Vertex p, int height, int widthfrom,
-    int widthdelta) {
-    if (tree.getLeafGorns().contains(p.getGornaddress())) {
+  private void drawSubTree(Graphics g, Vertex p, int height, int widthFrom,
+    int widthDelta) {
+    if (tree.getLeafGorns().contains(p.getGornAddress())) {
       return;
     }
-    int nodex = widthfrom + widthdelta / 2;
+    int nodeX = widthFrom + widthDelta / 2;
     StringBuilder label = new StringBuilder();
     label.append(p.getLabel());
-    if (tree.isInOA(p.getGornaddress())) {
+    if (tree.isInOA(p.getGornAddress())) {
       label.append("_OA");
     }
-    if (tree.isInNA(p.getGornaddress())) {
+    if (tree.isInNA(p.getGornAddress())) {
       label.append("_NA");
     }
     if (tree.getFoot() != null && tree.getFoot().equals(p)) {
       label.append("*");
-      int halflabelwidth = label.length() * 10 / 2;
-      if (itemform.length == 6) {
-        g.drawString(itemform[3], nodex-halflabelwidth-10, height);
-        g.drawString(itemform[4], nodex+halflabelwidth+10, height);
-      } else if (itemform.length == 8) {
-        g.drawString(itemform[4], nodex-halflabelwidth-10, height);
-        g.drawString(itemform[5], nodex+halflabelwidth+10, height);
+      int halfLabelWidth = label.length() * 10 / 2;
+      if (itemForm.length == 6) {
+        g.drawString(itemForm[3], nodeX-halfLabelWidth-10, height);
+        g.drawString(itemForm[4], nodeX+halfLabelWidth+10, height);
+      } else if (itemForm.length == 8) {
+        g.drawString(itemForm[4], nodeX-halfLabelWidth-10, height);
+        g.drawString(itemForm[5], nodeX+halfLabelWidth+10, height);
       }
     }
-    g.drawString(label.toString(), nodex, height);
-    if (itemform.length == 6) {
-      char pos = itemform[1].charAt(itemform[1].length() - 1);
-      String gorn = itemform[1].substring(0, itemform[1].length()-1);
-      if (p.getGornaddress().equals(gorn)
-          || (p.getGornaddress().equals("") && gorn.equals("ε"))) {
+    g.drawString(label.toString(), nodeX, height);
+    if (itemForm.length == 6) {
+      char pos = itemForm[1].charAt(itemForm[1].length() - 1);
+      String gorn = itemForm[1].substring(0, itemForm[1].length()-1);
+      if (p.getGornAddress().equals(gorn)
+          || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
         switch (pos) {
         case '⊤':
-          g.drawString("•", nodex, height - 8);
+          g.drawString("•", nodeX, height - 8);
           break;
         case '⊥':
-          g.drawString("•", nodex, height + 8);
+          g.drawString("•", nodeX, height + 8);
           break;
         }
       }
-    } else if (itemform.length == 8) {
-      if (p.getGornaddress().equals(itemform[1])
-        || (p.getGornaddress().equals("") && itemform[1].equals("ε"))) {
-        int halflabelwidth = label.length() * 8 / 2;
-        switch (itemform[2]) {
+    } else if (itemForm.length == 8) {
+      if (p.getGornAddress().equals(itemForm[1])
+        || (p.getGornAddress().equals("") && itemForm[1].equals("ε"))) {
+        int halfLabelWidth = label.length() * 8 / 2;
+        switch (itemForm[2]) {
         case "la":
-          g.drawString("•", nodex - halflabelwidth, height - 5);
+          g.drawString("•", nodeX - halfLabelWidth, height - 5);
           break;
         case "lb":
-          g.drawString("•", nodex - halflabelwidth, height + 8);
+          g.drawString("•", nodeX - halfLabelWidth, height + 8);
           break;
         case "rb":
-          g.drawString("•", nodex + halflabelwidth, height + 8);
+          g.drawString("•", nodeX + halfLabelWidth, height + 8);
           break;
         case "ra":
-          g.drawString("•", nodex + halflabelwidth, height - 5);
+          g.drawString("•", nodeX + halfLabelWidth, height - 5);
           break;
         }
       }
     }
-    nodesdrawn.put(p.getGornaddress(), new Integer[] {nodex, height});
-    if (!p.getGornaddress().equals("")) {
-      Integer[] xyparent = nodesdrawn.get(p.getGornAddressOfParent());
-      g.drawLine(nodex, height - 10, xyparent[0], xyparent[1] + 10);
+    nodesDrawn.put(p.getGornAddress(), new Integer[] {nodeX, height});
+    if (!p.getGornAddress().equals("")) {
+      Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
+      g.drawLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
     }
     List<Vertex> children = tree.getChildren(p);
-    int widthsum = 0;
+    int widthSum = 0;
     ArrayList<Integer> widths = new ArrayList<Integer>();
     for (Vertex child : children) {
       int width = tree.getWidthBelowNode(child);
       if (width == 0) {
-        widthsum += 1;
+        widthSum += 1;
         widths.add(1);
       } else {
-        widthsum += width;
+        widthSum += width;
         widths.add(width);
       }
     }
 
-    int drawwidth = widthfrom;
+    int drawWidth = widthFrom;
     for (int i = 0; i < children.size(); i++) {
-      if (widthsum > 0) {
-        int newwidthdelta = widthdelta * widths.get(i) / widthsum;
+      if (widthSum > 0) {
+        int newWidthDelta = widthDelta * widths.get(i) / widthSum;
         drawSubTree(g, children.get(i),
-          height + this.getHeight() / tree.getHeight(), drawwidth,
-          newwidthdelta);
-        drawwidth += newwidthdelta;
+          height + this.getHeight() / tree.getHeight(), drawWidth,
+          newWidthDelta);
+        drawWidth += newWidthDelta;
       } else {
         drawSubTree(g, children.get(i),
-          height + this.getHeight() / tree.getHeight(), drawwidth,
-          widthdelta / children.size());
-        drawwidth += widthdelta / children.size();
+          height + this.getHeight() / tree.getHeight(), drawWidth,
+          widthDelta / children.size());
+        drawWidth += widthDelta / children.size();
       }
     }
   }

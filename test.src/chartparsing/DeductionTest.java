@@ -23,7 +23,7 @@ public class DeductionTest {
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
     cfg.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
-    cfg.setStartsymbol("S");
+    cfg.setStartSymbol("S");
 
     return cfg;
   }
@@ -95,7 +95,7 @@ public class DeductionTest {
     cfg.setProductionrules(
         new String[][] {{"S", "A X1"}, {"S", "A B"}, {"A", "a"}, {"B", "b"},
             {"X1", "S B"}});
-    cfg.setStartsymbol("S");
+    cfg.setStartSymbol("S");
 
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter.cfgToCykRules(cfg, w);
@@ -112,7 +112,7 @@ public class DeductionTest {
     cfg.setProductionrules(
         new String[][] {{"S", "A X1"}, {"S", "A B"}, {"C", "a"}, {"B", "b"},
             {"X1", "S B"}, {"A", "C"}});
-    cfg.setStartsymbol("S");
+    cfg.setStartSymbol("S");
 
     String w = "a a b b";
     ParsingSchema schema =
@@ -184,8 +184,8 @@ public class DeductionTest {
     pcfg.setTerminals(
         new String[] {"camping", "car", "nice", "red", "ugly", "green", "house",
             "bike"});
-    pcfg.setStartsymbol("N");
-    pcfg.setProductionrules(new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
+    pcfg.setStartSymbol("N");
+    pcfg.setProductionRules(new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
         {"N", "car", "0.1"}, {"N", "camping", "0.2"}, {"A", "nice", "0.3"},
         {"A", "red", "0.2"}, {"N", "A N", "0.2"}, {"N", "green", "0.1"},
         {"N", "bike", "0.1"}, {"N", "house", "0.1"}, {"A", "ugly", "0.25"},

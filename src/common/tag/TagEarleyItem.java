@@ -10,23 +10,23 @@ public class TagEarleyItem extends AbstractItem implements Item {
    * null. */
   public TagEarleyItem(String tree, String p, String pos, int i, Integer j,
     Integer k, int l, boolean adj) {
-    String footfrom = (j == null) ? "-" : String.valueOf(j);
-    String footto = (k == null) ? "-" : String.valueOf(k);
-    String adjrep = (adj) ? "1" : "0";
-    itemform = new String[] {tree, p, pos, String.valueOf(i), footfrom, footto,
-      String.valueOf(l), adjrep};
+    String footFrom = (j == null) ? "-" : String.valueOf(j);
+    String footTo = (k == null) ? "-" : String.valueOf(k);
+    String adjRep = (adj) ? "1" : "0";
+    itemForm = new String[] {tree, p, pos, String.valueOf(i), footFrom, footTo,
+      String.valueOf(l), adjRep};
   }
 
   /**
    * Constructor that takes Strings instead of Integers, so I can pass in '?'.
    */
-  public TagEarleyItem(String treename, String gornaddress, String pos, int i,
+  public TagEarleyItem(String treeName, String gornAddress, String pos, int i,
     String j, String k, int l, boolean adj) {
-    String footfrom = (j == null) ? "-" : String.valueOf(j);
-    String footto = (k == null) ? "-" : String.valueOf(k);
-    String adjrep = (adj) ? "1" : "0";
-    itemform = new String[] {treename, gornaddress, pos, String.valueOf(i), footfrom, footto,
-      String.valueOf(l), adjrep};
+    String footFrom = (j == null) ? "-" : String.valueOf(j);
+    String footTo = (k == null) ? "-" : String.valueOf(k);
+    String adjRep = (adj) ? "1" : "0";
+    itemForm = new String[] {treeName, gornAddress, pos, String.valueOf(i), footFrom, footTo,
+      String.valueOf(l), adjRep};
   }
 
 }

@@ -17,24 +17,24 @@ public class SrcgDeductionUtils {
    * Suspend: [S(•X1 X2) -> A(X1,X2), 0, <1,0>, (<?,?>)]] [[A(a •,b) -> ε, 1,
    * <1,1>, (<0,1>, <?,?>)] all previously seen arguments in item1 have to match
    * with the ones in item 2. */
-  public static boolean ifRhsVectorMatchesLhsVector(Clause clause1parsed,
-    String[] itemform1, Predicate rhs1, int iint1, Clause clause2parsed,
+  public static boolean ifRhsVectorMatchesLhsVector(Clause clause1Parsed,
+    String[] itemForm1, Predicate rhs1, int iInt1, Clause clause2Parsed,
     String[] itemform2) {
-    boolean vectorsmatch = true;
-    for (int argnum = 0; argnum < iint1 - 1; argnum++) {
-      String[] arg = rhs1.getSymbols()[argnum];
-      String[] lhssym = clause1parsed.getLhs().getSymbolsAsPlainArray();
-      int argfromabspos = clause2parsed.getLhs().getAbsolutePos(argnum + 1, 0);
-      String argfrom = itemform2[argfromabspos * 2 + 4];
-      int argtoabspos = clause2parsed.getLhs().getAbsolutePos(argnum + 1,
-        clause2parsed.getLhs().getSymbols()[argnum].length - 1);
+    boolean vectorsMatch = true;
+    for (int argNum = 0; argNum < iInt1 - 1; argNum++) {
+      String[] arg = rhs1.getSymbols()[argNum];
+      String[] lhsSym = clause1Parsed.getLhs().getSymbolsAsPlainArray();
+      int argFromAbsPos = clause2Parsed.getLhs().getAbsolutePos(argNum + 1, 0);
+      String argFrom = itemform2[argFromAbsPos * 2 + 4];
+      int argToAbsPos = clause2Parsed.getLhs().getAbsolutePos(argNum + 1,
+        clause2Parsed.getLhs().getSymbols()[argNum].length - 1);
       try { // DEBUG
-        String argto = itemform2[argtoabspos * 2 + 5];
-        for (int il = 0; il < lhssym.length; il++) {
-          if (lhssym[il].equals(arg[0])) {
-            if (!itemform1[il * 2 + 4].equals(argfrom)
-              || !itemform1[il * 2 + 5].equals(argto)) {
-              vectorsmatch = false;
+        String argTo = itemform2[argToAbsPos * 2 + 5];
+        for (int il = 0; il < lhsSym.length; il++) {
+          if (lhsSym[il].equals(arg[0])) {
+            if (!itemForm1[il * 2 + 4].equals(argFrom)
+              || !itemForm1[il * 2 + 5].equals(argTo)) {
+              vectorsMatch = false;
             }
           }
         }
@@ -43,27 +43,27 @@ public class SrcgDeductionUtils {
         return false;
       }
     }
-    return vectorsmatch;
+    return vectorsMatch;
   }
 
-  public static boolean ifRhsVectorMatchesLhsVectorResume(Clause clause1parsed,
-    String[] itemform1, Predicate rhs1, int iint1, Clause clause2parsed,
+  public static boolean ifRhsVectorMatchesLhsVectorResume(Clause clause1Parsed,
+    String[] itemForm1, Predicate rhs1, int iInt1, Clause clause2Parsed,
     String[] itemform2) {
-    boolean vectorsmatch = true;
-    for (int argnum = 0; argnum < iint1; argnum++) {
-      String[] arg = rhs1.getSymbols()[argnum];
-      String[] lhssym = clause1parsed.getLhs().getSymbolsAsPlainArray();
-      int argfromabspos = clause2parsed.getLhs().getAbsolutePos(argnum + 1, 0);
-      String argfrom = itemform2[argfromabspos * 2 + 4];
-      int argtoabspos = clause2parsed.getLhs().getAbsolutePos(argnum + 1,
-        clause2parsed.getLhs().getSymbols()[argnum].length - 1);
+    boolean vectorsMatch = true;
+    for (int argNum = 0; argNum < iInt1; argNum++) {
+      String[] arg = rhs1.getSymbols()[argNum];
+      String[] lhsSym = clause1Parsed.getLhs().getSymbolsAsPlainArray();
+      int argFromAbsPos = clause2Parsed.getLhs().getAbsolutePos(argNum + 1, 0);
+      String argFrom = itemform2[argFromAbsPos * 2 + 4];
+      int argToAbsPos = clause2Parsed.getLhs().getAbsolutePos(argNum + 1,
+        clause2Parsed.getLhs().getSymbols()[argNum].length - 1);
       try { // DEBUG
-        String argto = itemform2[argtoabspos * 2 + 5];
-        for (int il = 0; il < lhssym.length; il++) {
-          if (lhssym[il].equals(arg[0])) {
-            if (!itemform1[il * 2 + 4].equals(argfrom)
-              || !itemform1[il * 2 + 5].equals(argto)) {
-              vectorsmatch = false;
+        String argTo = itemform2[argToAbsPos * 2 + 5];
+        for (int il = 0; il < lhsSym.length; il++) {
+          if (lhsSym[il].equals(arg[0])) {
+            if (!itemForm1[il * 2 + 4].equals(argFrom)
+              || !itemForm1[il * 2 + 5].equals(argTo)) {
+              vectorsMatch = false;
             }
           }
         }
@@ -72,41 +72,41 @@ public class SrcgDeductionUtils {
         return false;
       }
     }
-    return vectorsmatch;
+    return vectorsMatch;
   }
 
   /** If you pass it a list of vectors/ranges and the predicate of a rule
    * (mostly a lhs) it returns ranges for the whole arguments. */
-  public static Integer[] getRangesForArguments(Integer[] rangeoverelements,
+  public static Integer[] getRangesForArguments(Integer[] rangeOverElements,
     Predicate lhs) {
-    ArrayList<Integer> rangeoverarguments = new ArrayList<Integer>();
+    ArrayList<Integer> rangeOverArguments = new ArrayList<Integer>();
     for (int i = 0; i < lhs.getDim(); i++) {
-      rangeoverarguments.add(rangeoverelements[lhs.getAbsolutePos(i+1, 0)*2]);
+      rangeOverArguments.add(rangeOverElements[lhs.getAbsolutePos(i+1, 0)*2]);
       if (i == lhs.getDim() - 1) {
-        rangeoverarguments.add(rangeoverelements[rangeoverelements.length - 1]);
+        rangeOverArguments.add(rangeOverElements[rangeOverElements.length - 1]);
       } else {
-        rangeoverarguments
-          .add(rangeoverelements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
+        rangeOverArguments
+          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
       }
     }
-    return rangeoverarguments.toArray(new Integer[rangeoverarguments.size()]);
+    return rangeOverArguments.toArray(new Integer[rangeOverArguments.size()]);
   }
   
   /**
    * The same but for strings. Can I make it for any kind of array?
    */
-  public static String[] getRangesForArguments(String[] rangeoverelements,
+  public static String[] getRangesForArguments(String[] rangeOverElements,
     Predicate lhs) {
-    ArrayList<String> rangeoverarguments = new ArrayList<String>();
+    ArrayList<String> rangeOverArguments = new ArrayList<String>();
     for (int i = 0; i < lhs.getDim(); i++) {
-      rangeoverarguments.add(rangeoverelements[lhs.getAbsolutePos(i+1, 0)*2]);
+      rangeOverArguments.add(rangeOverElements[lhs.getAbsolutePos(i+1, 0)*2]);
       if (i == lhs.getDim() - 1) {
-        rangeoverarguments.add(rangeoverelements[rangeoverelements.length - 1]);
+        rangeOverArguments.add(rangeOverElements[rangeOverElements.length - 1]);
       } else {
-        rangeoverarguments
-          .add(rangeoverelements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
+        rangeOverArguments
+          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
       }
     }
-    return rangeoverarguments.toArray(new String[rangeoverarguments.size()]);
+    return rangeOverArguments.toArray(new String[rangeOverArguments.size()]);
   }
 }

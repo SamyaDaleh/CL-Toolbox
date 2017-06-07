@@ -17,39 +17,38 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
 
   public SrcgEarleyConvert() {
     this.name = "convert";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String clause = itemform[0];
-      if (itemform[0].contains("->")) {
-        Clause clauseparsed;
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String clause = itemForm[0];
+      if (itemForm[0].contains("->")) {
+        Clause clauseParsed;
         try {
-          clauseparsed = new Clause(clause);
+          clauseParsed = new Clause(clause);
         } catch (ParseException e) {
           e.printStackTrace();
           return this.consequences;
         }
-        String i = itemform[2];
-        int iint = Integer.parseInt(i);
-        String j = itemform[3];
-        int jint = Integer.parseInt(j);
-        if (clauseparsed.getLhs().getDim() == iint
-          && clauseparsed.getLhs().getArgumentByIndex(iint).length == jint) {
+        String i = itemForm[2];
+        int iInt = Integer.parseInt(i);
+        String j = itemForm[3];
+        int jInt = Integer.parseInt(j);
+        if (clauseParsed.getLhs().getDim() == iInt
+          && clauseParsed.getLhs().getArgumentByIndex(iInt).length == jInt) {
 
-          ArrayList<String> rangesforelements = new ArrayList<String>();
-          rangesforelements
-              .addAll(Arrays.asList(itemform).subList(4, itemform.length));
-
-          Predicate lhs = clauseparsed.getLhs();
-          String[] newvector = SrcgDeductionUtils.getRangesForArguments(
-            rangesforelements.toArray(new String[rangesforelements.size()]),
+          ArrayList<String> rangesForElements = new ArrayList<String>();
+          rangesForElements
+              .addAll(Arrays.asList(itemForm).subList(4, itemForm.length));
+          Predicate lhs = clauseParsed.getLhs();
+          String[] newVector = SrcgDeductionUtils.getRangesForArguments(
+            rangesForElements.toArray(new String[rangesForElements.size()]),
             lhs);
 
           consequences.add(new SrcgEarleyPassiveItem(
-            clauseparsed.getLhs().getNonterminal(), newvector));
+            clauseParsed.getLhs().getNonterminal(), newVector));
         }
       }
     }

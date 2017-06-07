@@ -16,16 +16,16 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
   public CfgCykCompleteUnary(CfgProductionRule rule) {
     this.rule = rule;
     this.name = "complete " + rule.toString();
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform1 = antecedences.get(0).getItemform();
-      String nt1 = itemform1[0];
-      String i1 = itemform1[1];
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm1 = antecedences.get(0).getItemform();
+      String nt1 = itemForm1[0];
+      String i1 = itemForm1[1];
       int i1int = Integer.parseInt(i1);
-      String j1 = itemform1[2];
+      String j1 = itemForm1[2];
       int j1int = Integer.parseInt(j1);
 
       if (nt1.equals(rule.getRhs()[0])) {

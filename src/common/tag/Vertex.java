@@ -5,7 +5,7 @@ import common.ArrayUtils;
 /** A node in a tree, also called vertex. */
 public class Vertex implements Cloneable {
   private final String label;
-  private String gornaddress;
+  private String gornAddress;
 
   /** Constructs a node with the given label. */
   Vertex(String label) {
@@ -16,25 +16,25 @@ public class Vertex implements Cloneable {
     return this.label;
   }
 
-  public String getGornaddress() {
-    return this.gornaddress;
+  public String getGornAddress() {
+    return this.gornAddress;
   }
 
   void setGornaddress(String gornaddress) {
-    this.gornaddress = gornaddress;
+    this.gornAddress = gornaddress;
   }
 
   /** If this node is not a root node (with empty gorn address) the gorn address
    * of a possible right sibling is returned, that has gorn address +1. It is
    * not checked if a sibling exists at all. */
   public String getGornAddressOfPotentialRightSibling() {
-    if (gornaddress == null || gornaddress.length() == 0)
+    if (gornAddress == null || gornAddress.length() == 0)
       return null;
-    String[] gornsplit = gornaddress.split("[.]");
+    String[] gornsplit = gornAddress.split("[.]");
     // node is child of root
     if (gornsplit.length == 0) {
       int nthchild =
-        Integer.parseInt(gornaddress.substring(1, gornaddress.length()));
+        Integer.parseInt(gornAddress.substring(1, gornAddress.length()));
       return "." + String.valueOf(nthchild + 1);
     } // */
     int nthchild = Integer.parseInt(gornsplit[gornsplit.length - 1]);
@@ -46,9 +46,9 @@ public class Vertex implements Cloneable {
   /** If this node is not a root node the gorn address of the parent is
    * returned. */
   public String getGornAddressOfParent() {
-    if (gornaddress == null || gornaddress.length() == 0)
+    if (gornAddress == null || gornAddress.length() == 0)
       return null;
-    String[] gornsplit = gornaddress.split("[.]");
+    String[] gornsplit = gornAddress.split("[.]");
     // node is child of root
     if (gornsplit.length == 0) {
       return "";
@@ -62,13 +62,13 @@ public class Vertex implements Cloneable {
    * parent or an ancestor. The root domintes all other nodes.
    */
   public boolean dominates(String gornaddress) {
-    if (gornaddress.equals("") || gornaddress.equals(this.gornaddress)) {
+    if (gornaddress.equals("") || gornaddress.equals(this.gornAddress)) {
       return false;
     }
-    if (this.gornaddress.equals("")) {
+    if (this.gornAddress.equals("")) {
       return true;
     }
-    String[] gorn1split = this.gornaddress.split("[.]");
+    String[] gorn1split = this.gornAddress.split("[.]");
     String[] gorn2split = gornaddress.split("[.]");
     
     int l1 = gorn1split.length;
@@ -88,7 +88,7 @@ public class Vertex implements Cloneable {
   
   @Override protected Vertex clone() {
     Vertex p = new Vertex(this.label);
-    p.gornaddress = this.gornaddress;
+    p.gornAddress = this.gornAddress;
     return p;
   }
 }

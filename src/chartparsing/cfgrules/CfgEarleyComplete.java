@@ -14,45 +14,45 @@ public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
 
   public CfgEarleyComplete() {
     this.name = "complete";
-    this.antneeded = 2;
+    this.antNeeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform1 = antecedences.get(0).getItemform();
-      String[] itemform2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemform1, itemform2);
-      calculateConsequences(itemform2, itemform1);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm1 = antecedences.get(0).getItemform();
+      String[] itemForm2 = antecedences.get(1).getItemform();
+      calculateConsequences(itemForm1, itemForm2);
+      calculateConsequences(itemForm2, itemForm1);
     }
     return consequences;
   }
 
-  private void calculateConsequences(String[] itemform1, String[] itemform2) {
+  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
 
-    String stack1 = itemform1[0];
-    String[] stacksplit1 = stack1.split(" ");
-    int i1 = Integer.parseInt(itemform1[1]);
-    int j1 = Integer.parseInt(itemform1[2]);
-    String stack2 = itemform2[0];
-    String[] stacksplit2 = stack2.split(" ");
-    int j2 = Integer.parseInt(itemform2[1]);
-    int k2 = Integer.parseInt(itemform2[2]);
+    String stack1 = itemForm1[0];
+    String[] stackSplit1 = stack1.split(" ");
+    int i1 = Integer.parseInt(itemForm1[1]);
+    int j1 = Integer.parseInt(itemForm1[2]);
+    String stack2 = itemForm2[0];
+    String[] stackSplit2 = stack2.split(" ");
+    int j2 = Integer.parseInt(itemForm2[1]);
+    int k2 = Integer.parseInt(itemForm2[2]);
 
     if (j1 == j2 && stack2.endsWith("•")) {
-      for (int l = 0; l < stacksplit1.length; l++) {
-        if (stacksplit1[l].startsWith("•") && stacksplit1[l]
-          .substring(1, stacksplit1[l].length()).equals(stacksplit2[0])) {
-          String newstack;
+      for (int l = 0; l < stackSplit1.length; l++) {
+        if (stackSplit1[l].startsWith("•") && stackSplit1[l]
+          .substring(1, stackSplit1[l].length()).equals(stackSplit2[0])) {
+          String newStack;
 
-          if (l == stacksplit1.length - 1) {
-            newstack = ArrayUtils.getSubSequenceAsString(stacksplit1, 0, l)
-              + " " + stacksplit2[0] + " •";
+          if (l == stackSplit1.length - 1) {
+            newStack = ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l)
+              + " " + stackSplit2[0] + " •";
           } else {
-            newstack = ArrayUtils.getSubSequenceAsString(stacksplit1, 0, l)
-              + " " + stacksplit2[0] + " •" + ArrayUtils
-                .getSubSequenceAsString(stacksplit1, l + 1, stacksplit1.length);
+            newStack = ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l)
+              + " " + stackSplit2[0] + " •" + ArrayUtils
+                .getSubSequenceAsString(stackSplit1, l + 1, stackSplit1.length);
           }
-          consequences.add(new CfgDottedItem(newstack, i1, k2));
+          consequences.add(new CfgDottedItem(newStack, i1, k2));
           break;
         }
       }

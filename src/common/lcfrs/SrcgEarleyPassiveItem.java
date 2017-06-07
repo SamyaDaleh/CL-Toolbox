@@ -8,19 +8,19 @@ import common.Item;
 public class SrcgEarleyPassiveItem extends AbstractItem implements Item {
 
   public SrcgEarleyPassiveItem(String nt,
-    String[] newvector) {
-    this.itemform = new String[newvector.length + 1];
-    this.itemform[0] = nt;
-    System.arraycopy(newvector, 0, this.itemform, 1, newvector.length);
+    String[] newVector) {
+    this.itemForm = new String[newVector.length + 1];
+    this.itemForm[0] = nt;
+    System.arraycopy(newVector, 0, this.itemForm, 1, newVector.length);
   }
 
   @Override public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("[").append(itemform[0]);
-    for (int i = 0; i*2+2 <itemform.length; i++){
+    builder.append("[").append(itemForm[0]);
+    for (int i = 0; i*2+2 <itemForm.length; i++){
         builder.append(", ");
-      builder.append("<").append(itemform[i * 2 + 1]).append(",")
-          .append(itemform[i * 2 + 2]).append(">");
+      builder.append("<").append(itemForm[i * 2 + 1]).append(",")
+          .append(itemForm[i * 2 + 2]).append(">");
     }
     builder.append("]");
     return builder.toString();

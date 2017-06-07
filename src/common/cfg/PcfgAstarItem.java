@@ -8,23 +8,23 @@ import common.PItem;
  * worse). */
 public class PcfgAstarItem extends AbstractItem implements PItem {
 
-  private final Double rulew;
-  private final Double outw;
+  private final Double ruleW;
+  private final Double outW;
 
   /** Constructor takes the weight, a nonterminal, the beginning and length of
    * its span. */
-  public PcfgAstarItem(double rulew, double outw, String lhs, int i, int j) {
-    this.rulew = rulew;
-    this.outw = outw;
-    this.itemform = new String[] {lhs, String.valueOf(i), String.valueOf(j)};
+  public PcfgAstarItem(double ruleW, double outW, String lhs, int i, int j) {
+    this.ruleW = ruleW;
+    this.outW = outW;
+    this.itemForm = new String[] {lhs, String.valueOf(i), String.valueOf(j)};
   }
 
   @Override public String toString() {
-    return String.valueOf(rulew) + " + " + String.valueOf(outw) + " : "
-      + ArrayUtils.toString(this.itemform);
+    return String.valueOf(ruleW) + " + " + String.valueOf(outW) + " : "
+      + ArrayUtils.toString(this.itemForm);
   }
 
   @Override public Double getProbability() {
-    return rulew + outw;
+    return ruleW + outW;
   }
 }

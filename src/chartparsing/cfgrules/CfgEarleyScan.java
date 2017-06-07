@@ -16,30 +16,30 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
   public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
     this.name = "scan";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
-      int i = Integer.parseInt(itemform[1]);
-      int j = Integer.parseInt(itemform[2]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String stack = itemForm[0];
+      String[] stackSplit = stack.split(" ");
+      int i = Integer.parseInt(itemForm[1]);
+      int j = Integer.parseInt(itemForm[2]);
 
-      for (int k = 0; k < stacksplit.length; k++) {
-        if (stacksplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
-          .equals(stacksplit[k].substring(1, stacksplit[k].length()))) {
-          StringBuilder newstack = new StringBuilder();
-          newstack.append(ArrayUtils.getSubSequenceAsString(stacksplit, 0, k));
-          if (k == stacksplit.length - 1) {
-            newstack.append(" ").append(wsplit[j]).append(" •");
+      for (int k = 0; k < stackSplit.length; k++) {
+        if (stackSplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
+          .equals(stackSplit[k].substring(1, stackSplit[k].length()))) {
+          StringBuilder newStack = new StringBuilder();
+          newStack.append(ArrayUtils.getSubSequenceAsString(stackSplit, 0, k));
+          if (k == stackSplit.length - 1) {
+            newStack.append(" ").append(wsplit[j]).append(" •");
           } else {
-            newstack.append(" ").append(wsplit[j]).append(" •")
-              .append(ArrayUtils.getSubSequenceAsString(stacksplit, k + 1,
-                stacksplit.length));
+            newStack.append(" ").append(wsplit[j]).append(" •")
+              .append(ArrayUtils.getSubSequenceAsString(stackSplit, k + 1,
+                stackSplit.length));
           }
-          consequences.add(new CfgDottedItem(newstack.toString(), i, j + 1));
+          consequences.add(new CfgDottedItem(newStack.toString(), i, j + 1));
         }
       }
     }

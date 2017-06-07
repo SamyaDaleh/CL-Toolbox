@@ -19,23 +19,23 @@ public class Deduction {
   /** List of the same length of chart, elements at same indexes belong to each
    * other. Contains lists of lists of backpointers. One item can be derived in
    * different ways from different antecedence items. */
-  private ArrayList<ArrayList<ArrayList<Integer>>> deductedfrom;
+  private ArrayList<ArrayList<ArrayList<Integer>>> deductedFrom;
   /** Indexes correspond to entries of chart and deductedfrom. Collects the
    * names of the rules that were applied to retrieve new items. */
   private ArrayList<ArrayList<String>> appliedRule;
   /** When true print only items that lead to a goal. */
-  private boolean successfultrace = false;
+  private boolean successfulTrace = false;
   /** Markers if items lead to goal */
-  private boolean[] usefulitem;
+  private boolean[] usefulItem;
 
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
    * derived. */
   public boolean doParse(ParsingSchema schema, boolean success) {
-    successfultrace = success;
+    successfulTrace = success;
     chart = new LinkedList<Item>();
     agenda = new LinkedList<Item>();
-    deductedfrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    deductedFrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
     appliedRule = new ArrayList<ArrayList<String>>();
     if (schema == null)
       return false;
@@ -50,7 +50,7 @@ public class Deduction {
       }
     }
     boolean goalfound = false;
-    usefulitem = new boolean[chart.size()];
+    usefulItem = new boolean[chart.size()];
     for (Item goal : schema.getGoals()) {
       if (checkForGoal(goal) >= 0)
         goalfound = true;
@@ -62,17 +62,17 @@ public class Deduction {
    * retrieved, it checks all items if they lead to a goal. Returns the printed
    * chart data as string array with columns: Id, Item, Rules, Backpointers. */
   public String[][] printTrace() {
-    if (successfultrace) {
+    if (successfulTrace) {
       boolean changed = true;
       while (changed) {
         changed = false;
         for (int i = chart.size() - 1; i >= 0; i--) {
-          if (usefulitem[i]) {
+          if (usefulItem[i]) {
             ArrayList<Integer> pointers =
-              getPointersAsArray(deductedfrom.get(i));
+              getPointersAsArray(deductedFrom.get(i));
             for (int pointer : pointers) {
-              if (!usefulitem[pointer]) {
-                usefulitem[pointer] = true;
+              if (!usefulItem[pointer]) {
+                usefulItem[pointer] = true;
                 changed = true;
               }
             }
@@ -80,34 +80,34 @@ public class Deduction {
         }
       }
     }
-    ArrayList<String[]> chartdata = new ArrayList<String[]>();
-    if (successfultrace) {
+    ArrayList<String[]> chartData = new ArrayList<String[]>();
+    if (successfulTrace) {
       for (int i = 0; i < chart.size(); i++) {
-        if (usefulitem[i]) {
-          String[] line = prettyprint(i, chart.get(i).toString(),
-            appliedRule.get(i), deductedfrom.get(i));
-          chartdata.add(line);
+        if (usefulItem[i]) {
+          String[] line = prettyPrint(i, chart.get(i).toString(),
+            appliedRule.get(i), deductedFrom.get(i));
+          chartData.add(line);
         }
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
-        String[] line = prettyprint(i, chart.get(i).toString(),
-          appliedRule.get(i), deductedfrom.get(i));
-        chartdata.add(line);
+        String[] line = prettyPrint(i, chart.get(i).toString(),
+          appliedRule.get(i), deductedFrom.get(i));
+        chartData.add(line);
       }
     }
 
-    return chartdata.toArray(new String[chartdata.size()][]);
+    return chartData.toArray(new String[chartData.size()][]);
   }
 
   /** Returns the backpointers in this list of lists as plain list. */
   private static ArrayList<Integer>
     getPointersAsArray(ArrayList<ArrayList<Integer>> backpointers) {
-    ArrayList<Integer> pointerlist = new ArrayList<Integer>();
-    for (ArrayList<Integer> pointertuple : backpointers) {
-      pointerlist.addAll(pointertuple);
+    ArrayList<Integer> pointerList = new ArrayList<Integer>();
+    for (ArrayList<Integer> pointerTuple : backpointers) {
+      pointerList.addAll(pointerTuple);
     }
-    return pointerlist;
+    return pointerList;
   }
 
   /** Takes a goal item and compares it with all items in the chart. Returns its
@@ -115,7 +115,7 @@ public class Deduction {
   private int checkForGoal(Item goal) {
     for (int i = 0; i < chart.size(); i++) {
       if (chart.get(i).equals(goal)) {
-        usefulitem[i] = true;
+        usefulItem[i] = true;
         return i;
       }
     }
@@ -130,7 +130,7 @@ public class Deduction {
       if (!chart.contains(item)) {
         chart.add(item);
         agenda.add(item);
-        deductedfrom.add(new ArrayList<ArrayList<Integer>>() {
+        deductedFrom.add(new ArrayList<ArrayList<Integer>>() {
           {
             add(new ArrayList<Integer>());
           }
@@ -149,66 +149,64 @@ public class Deduction {
    * and adds new consequence items to chart and agenda if all antecedences were
    * found. */
   private void applyRule(Item item, DynamicDeductionRule rule) {
-    int itemsneeded = rule.getAntecedencesNeeded();
+    int itemsNeeded = rule.getAntecedencesNeeded();
     rule.clearItems();
     // TODO how can I make the depth dynamic?
     // By a recursive call to a function that counts down the number of items
     // it shall append to a list
-    List<Item> newitems;
-    if (itemsneeded == 1) {
+    List<Item> newItems;
+    if (itemsNeeded == 1) {
       rule.addAntecedence(item);
-      newitems = rule.getConsequences();
-      if (newitems.size() > 0) {
-        processNewItems(newitems, rule);
+      newItems = rule.getConsequences();
+      if (newItems.size() > 0) {
+        processNewItems(newItems, rule);
       }
-    } else if (itemsneeded == 2) {
+    } else if (itemsNeeded == 2) {
       for (int i = 0; i < chart.size(); i++) {
         rule.clearItems();
         rule.addAntecedence(item);
         rule.addAntecedence(chart.get(i));
-        newitems = rule.getConsequences();
-        if (newitems.size() > 0) {
-          processNewItems(newitems, rule);
+        newItems = rule.getConsequences();
+        if (newItems.size() > 0) {
+          processNewItems(newItems, rule);
         }
       }
-    } else if (itemsneeded == 3) {
+    } else if (itemsNeeded == 3) {
       for (int i = 0; i < chart.size(); i++) {
         for (int j = 0; j < chart.size(); j++) {
           rule.clearItems();
           rule.addAntecedence(item);
           rule.addAntecedence(chart.get(i));
           rule.addAntecedence(chart.get(j));
-          newitems = rule.getConsequences();
-          if (newitems.size() > 0) {
-            processNewItems(newitems, rule);
+          newItems = rule.getConsequences();
+          if (newItems.size() > 0) {
+            processNewItems(newItems, rule);
           }
         }
       }
     }
   }
 
-  private void processNewItems(List<Item> newitems, DynamicDeductionRule rule) {
+  private void processNewItems(List<Item> newItems, DynamicDeductionRule rule) {
 
-    ArrayList<Integer> newitemsdeductedfrom = new ArrayList<Integer>();
-    for (Item itemtocheck : rule.getAntecedences()) {
-      newitemsdeductedfrom.add(chart.indexOf(itemtocheck));
+    ArrayList<Integer> newItemsDeductedFrom = new ArrayList<Integer>();
+    for (Item itemToCheck : rule.getAntecedences()) {
+      newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
     }
-    Collections.sort(newitemsdeductedfrom);
-    for (Item newitem : newitems) {
-      if (!chart.contains(newitem)) {
-        chart.add(newitem);
-        agenda.add(newitem);
+    Collections.sort(newItemsDeductedFrom);
+    for (Item newItem : newItems) {
+      if (!chart.contains(newItem)) {
+        chart.add(newItem);
+        agenda.add(newItem);
         appliedRule.add(new ArrayList<String>());
         appliedRule.get(appliedRule.size() - 1).add(rule.getName());
-        deductedfrom.add(new ArrayList<ArrayList<Integer>>());
-        deductedfrom.get(deductedfrom.size() - 1).add(newitemsdeductedfrom);
+        deductedFrom.add(new ArrayList<ArrayList<Integer>>());
+        deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
       } else {
-        // same set of backpointers must not exist yet.
-        // backpointers are always in the same order, that's why this works.
-        int oldid = chart.indexOf(newitem);
-        if (!deductedfrom.get(oldid).contains(newitemsdeductedfrom)) {
+        int oldid = chart.indexOf(newItem);
+        if (!deductedFrom.get(oldid).contains(newItemsDeductedFrom)) {
           appliedRule.get(oldid).add(rule.getName());
-          deductedfrom.get(oldid).add(newitemsdeductedfrom);
+          deductedFrom.get(oldid).add(newItemsDeductedFrom);
         }
       }
     }
@@ -221,7 +219,7 @@ public class Deduction {
   /** Pretty-prints rows of the parsing process by filling up all columns up to
    * a specific length with spaces. Returns the data it prints as string
    * array. */
-  private static String[] prettyprint(int i, String item,
+  private static String[] prettyPrint(int i, String item,
     ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers) {
     StringBuilder line = new StringBuilder();
     line.append(String.valueOf(i + 1));
@@ -232,16 +230,16 @@ public class Deduction {
     for (int i1 = 0; i1 < column2 - String.valueOf(item).length(); i1++) {
       line.append(" ");
     }
-    String rulesrep = rulesToString(rules);
-    line.append(rulesrep);
-    for (int i1 = 0; i1 < column3 - String.valueOf(rulesrep).length(); i1++) {
+    String rulesRep = rulesToString(rules);
+    line.append(rulesRep);
+    for (int i1 = 0; i1 < column3 - String.valueOf(rulesRep).length(); i1++) {
       line.append(" ");
     }
-    String backpointersrep = backpointersToString(backpointers);
-    line.append(backpointersrep);
+    String backpointersRep = backpointersToString(backpointers);
+    line.append(backpointersRep);
     System.out.println(line.toString());
-    return new String[] {String.valueOf(i + 1), item, rulesrep,
-      backpointersrep};
+    return new String[] {String.valueOf(i + 1), item, rulesRep,
+      backpointersRep};
   }
 
   /** Returns a string representation of a list of rules in a human friendly
@@ -284,7 +282,7 @@ public class Deduction {
   }
 
   public ArrayList<ArrayList<ArrayList<Integer>>> getBackpointers() {
-    return this.deductedfrom;
+    return this.deductedFrom;
   }
 
   public ArrayList<ArrayList<String>> getAppliedRules() {

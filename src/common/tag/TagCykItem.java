@@ -10,16 +10,16 @@ public class TagCykItem extends AbstractItem implements Item {
    * null. */
   public TagCykItem(String tree, String p, int i, Integer f1, Integer f2,
     int j) {
-    String footfrom = (f1 == null) ? "-" : String.valueOf(f1);
-    String footto = (f2 == null) ? "-" : String.valueOf(f2);
-    itemform = new String[] {tree, p, String.valueOf(i), footfrom, footto,
+    String footFrom = (f1 == null) ? "-" : String.valueOf(f1);
+    String footTo = (f2 == null) ? "-" : String.valueOf(f2);
+    itemForm = new String[] {tree, p, String.valueOf(i), footFrom, footTo,
       String.valueOf(j)};
   }
 
   @Override public String toString(){
     StringBuilder representation = new StringBuilder();
     representation.append("[");
-    for (String element : itemform) {
+    for (String element : itemForm) {
       if (representation.length() > 1) {
         representation.append(",");
       }

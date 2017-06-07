@@ -13,7 +13,7 @@ public class Srcg {
   private String[] nonterminals;
   private String[] terminals;
   private String[] variables;
-  private String startsymbol;
+  private String startSymbol;
   private final List<Clause> clauses = new LinkedList<Clause>();
 
   /**
@@ -22,29 +22,29 @@ public class Srcg {
   public Srcg(Cfg cfg) throws ParseException {
     this.nonterminals = cfg.getNonterminals();
     this.terminals = cfg.getTerminals();
-    this.startsymbol = cfg.getStartsymbol();
-    ArrayList<String> newvariables = new ArrayList<String>();
-    for (CfgProductionRule rule : cfg.getProductionrules()) {
+    this.startSymbol = cfg.getStartSymbol();
+    ArrayList<String> newVariables = new ArrayList<String>();
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
       StringBuilder lhs = new StringBuilder();
       StringBuilder rhs = new StringBuilder();
       int i = 0;
       lhs.append(rule.getLhs()).append("(");
-      for (String rhssym : rule.getRhs()) {
-        if (rhssym.length() > 0) {
-          if (cfg.terminalsContain(rhssym)) {
-            lhs.append(" ").append(rhssym);
+      for (String rhsSym : rule.getRhs()) {
+        if (rhsSym.length() > 0) {
+          if (cfg.terminalsContain(rhsSym)) {
+            lhs.append(" ").append(rhsSym);
           } else {
             i++;
-            String newvar = "X" + String.valueOf(i);
-            while (cfg.nonterminalsContain(newvar)) {
+            String newVar = "X" + String.valueOf(i);
+            while (cfg.nonterminalsContain(newVar)) {
               i++;
-              newvar = "X" + String.valueOf(i);
+              newVar = "X" + String.valueOf(i);
             }
-            if (!newvariables.contains(newvar)) {
-              newvariables.add(newvar);
+            if (!newVariables.contains(newVar)) {
+              newVariables.add(newVar);
             }
-            lhs.append(" ").append(newvar);
-            rhs.append(rhssym).append("(").append(newvar).append(")");
+            lhs.append(" ").append(newVar);
+            rhs.append(rhsSym).append("(").append(newVar).append(")");
           }
         } else {
           rhs.append("ε");
@@ -54,7 +54,7 @@ public class Srcg {
       lhs.append(")");
       this.addClause(lhs.toString(), rhs.toString());
     }
-    this.variables = newvariables.toArray(new String[newvariables.size()]);
+    this.variables = newVariables.toArray(new String[newVariables.size()]);
   }
 
   public Srcg() {
@@ -73,8 +73,8 @@ public class Srcg {
     this.variables = variables;
   }
 
-  public void setStartSymbol(String startsymbol) {
-    this.startsymbol = startsymbol;
+  public void setStartSymbol(String startSymbol) {
+    this.startSymbol = startSymbol;
   }
 
   public void addClause(String lhs, String rhs) throws ParseException {
@@ -95,7 +95,7 @@ public class Srcg {
       repr.append(clauses.get(i).toString());
     }
     repr.append("}\n");
-    repr.append("S = ").append(startsymbol).append("\n");
+    repr.append("S = ").append(startSymbol).append("\n");
     return repr.toString();
   }
 
@@ -104,7 +104,7 @@ public class Srcg {
   }
 
   public String getStartSymbol() {
-    return this.startsymbol;
+    return this.startSymbol;
   }
 
   public String[] getVariables() {
@@ -133,30 +133,30 @@ public class Srcg {
   /** Returns true if there is some rhs predicate that contains the empty string
    * in one of its lhs arguments. */
   public boolean hasEpsilonProductions() {
-    boolean hasepsilon = false;
+    boolean hasEpsilon = false;
     for (Clause clause : this.clauses) {
       for (String[] argument : clause.getLhs().getSymbols()) {
         if (argument.length == 1 && argument[0].equals("")) {
-          hasepsilon = true;
+          hasEpsilon = true;
         }
       }
     }
-    return hasepsilon;
+    return hasEpsilon;
   }
 
   /** Returns true if all variables in rhs predicates appear in the same order
    * as in the lhs predicate. */
   public boolean isOrdered() {
     for (Clause clause : this.clauses) {
-      for (Predicate rhspred : clause.getRhs()) {
-        ArrayList<Integer> posinlhs = new ArrayList<Integer>();
-        for (String symbol : rhspred.getSymbolsAsPlainArray()) {
+      for (Predicate rhsPred : clause.getRhs()) {
+        ArrayList<Integer> posInLhs = new ArrayList<Integer>();
+        for (String symbol : rhsPred.getSymbolsAsPlainArray()) {
           int[] indices = clause.getLhs().find(symbol);
           int abspos = clause.getLhs().getAbsolutePos(indices[0], indices[1]);
-          posinlhs.add(abspos);
+          posInLhs.add(abspos);
         }
-        for (int i = 1; i < posinlhs.size(); i++) {
-          if (!(posinlhs.get(i - 1) < posinlhs.get(i))) {
+        for (int i = 1; i < posInLhs.size(); i++) {
+          if (!(posInLhs.get(i - 1) < posInLhs.get(i))) {
             return false;
           }
         }

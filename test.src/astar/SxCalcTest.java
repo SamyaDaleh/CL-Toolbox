@@ -14,9 +14,9 @@ public class SxCalcTest {
 
     pcfg.setTerminals(new String[] {"a", "b"});
     pcfg.setNonterminals(new String[] {"S", "A", "B"});
-    pcfg.setProductionrules(new String[][] {{"S", "A B", "1"}, {"A", "b", "0.7"},
+    pcfg.setProductionRules(new String[][] {{"S", "A B", "1"}, {"A", "b", "0.7"},
       {"A", "a", "0.3"}, {"B", "B B", "0.6"}, {"B", "a", "0.4"}});
-    pcfg.setStartsymbol("S");
+    pcfg.setStartSymbol("S");
 
     return pcfg;
   }

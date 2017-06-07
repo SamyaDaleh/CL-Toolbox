@@ -7,21 +7,21 @@ import common.Item;
 import common.cfg.CfgItem;
 
 /** Moves the next input symbol onto the stack */
-public class CfgBottomupShift extends AbstractDynamicDeductionRule {
+public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
 
   private final String[] wsplit;
 
-  public CfgBottomupShift(String[] wsplit) {
+  public CfgBottomUpShift(String[] wsplit) {
     this.wsplit = wsplit;
     this.name = "shift";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      int i = Integer.parseInt(itemform[1]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String stack = itemForm[0];
+      int i = Integer.parseInt(itemForm[1]);
       if (i < wsplit.length) {
         if (stack.length() == 0) {
           consequences.add(new CfgItem(wsplit[i], i + 1));

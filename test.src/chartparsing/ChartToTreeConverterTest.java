@@ -33,7 +33,7 @@ public class ChartToTreeConverterTest {
     cfg.setNonterminals(new String[] {"A", "B", "S"});
     cfg.setProductionrules(new String[][] {{"S", "A S B"}, {"S", "a b"},
       {"S", "c"}, {"A", "a"}, {"B", "b"}});
-    cfg.setStartsymbol("S");
+    cfg.setStartSymbol("S");
     return cfg;
   }
 
@@ -43,7 +43,7 @@ public class ChartToTreeConverterTest {
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
     cfg.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
-    cfg.setStartsymbol("S");
+    cfg.setStartSymbol("S");
 
     return cfg;
   }

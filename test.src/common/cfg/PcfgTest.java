@@ -11,7 +11,7 @@ public class PcfgTest {
     cfg.setNonterminals(new String[] {"S"});
     cfg.setProductionrules(new String[][] {{"S", "S"}, {"S", "S a"},
       {"S", "S b"}, {"S", "c"}, {"S", "d"}});
-    cfg.setStartsymbol("S");
+    cfg.setStartSymbol("S");
     Pcfg pcfg = new Pcfg(cfg);
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b, c, d}\n" + "S = S\n"

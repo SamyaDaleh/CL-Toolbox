@@ -16,24 +16,24 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
   public TagCykAdjoin(Tag tag) {
     this.tag = tag;
     this.name = "adjoin";
-    this.antneeded = 2;
+    this.antNeeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform1 = antecedences.get(0).getItemform();
-      String[] itemform2 = antecedences.get(1).getItemform();
-      String treename1 = itemform1[0];
-      String treename2 = itemform2[0];
-      String node1 = itemform1[1];
-      String node2 = itemform2[1];
-      int i = Integer.parseInt(itemform1[2]);
-      int f12 = Integer.parseInt(itemform2[2]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm1 = antecedences.get(0).getItemform();
+      String[] itemForm2 = antecedences.get(1).getItemform();
+      String treeName1 = itemForm1[0];
+      String treeName2 = itemForm2[0];
+      String node1 = itemForm1[1];
+      String node2 = itemForm2[1];
+      int i = Integer.parseInt(itemForm1[2]);
+      int f12 = Integer.parseInt(itemForm2[2]);
       Integer f11;
       Integer f21;
       try {
-        f11 = Integer.parseInt(itemform1[3]);
-        f21 = Integer.parseInt(itemform1[4]);
+        f11 = Integer.parseInt(itemForm1[3]);
+        f21 = Integer.parseInt(itemForm1[4]);
       } catch (NumberFormatException e) {
         f11 = null;
         f21 = null;
@@ -41,34 +41,34 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
       Integer f1b;
       Integer f2b;
       try {
-        f1b = Integer.parseInt(itemform2[3]);
-        f2b = Integer.parseInt(itemform2[4]);
+        f1b = Integer.parseInt(itemForm2[3]);
+        f2b = Integer.parseInt(itemForm2[4]);
       } catch (NumberFormatException e) {
         f1b = null;
         f2b = null;
       }
-      int j = Integer.parseInt(itemform1[5]);
-      int f22 = Integer.parseInt(itemform2[5]);
+      int j = Integer.parseInt(itemForm1[5]);
+      int f22 = Integer.parseInt(itemForm2[5]);
       if (f11 != null && f11 == f12 && f21 != null && f21 == f22
-        && tag.isAdjoinable(treename1, treename2,
+        && tag.isAdjoinable(treeName1, treeName2,
           node2.substring(0, node2.length() - 1))
         && node1.equals("⊤") && node2.endsWith("⊥")) {
-        consequences.add(new TagCykItem(treename2,
+        consequences.add(new TagCykItem(treeName2,
           node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j));
-        String node2name =
+        String node2Name =
           (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
         this.name =
-          "adjoin " + treename2 + "[" + node2name + "," + treename1 + "]";
+          "adjoin " + treeName2 + "[" + node2Name + "," + treeName1 + "]";
       } else if (f1b != null && f1b == i && f2b != null && f2b == j
-        && tag.isAdjoinable(treename2, treename1,
+        && tag.isAdjoinable(treeName2, treeName1,
           node1.substring(0, node1.length() - 1))
         && node2.equals("⊤") && node1.endsWith("⊥")) {
         // the other way around
-        String node1name =
+        String node1Name =
           (node1.length() > 1) ? node1.substring(0, node1.length() - 1) : "ε";
         this.name =
-          "adjoin " + treename1 + "[" + node1name + "," + treename2 + "]";
-        consequences.add(new TagCykItem(treename1,
+          "adjoin " + treeName1 + "[" + node1Name + "," + treeName2 + "]";
+        consequences.add(new TagCykItem(treeName1,
           node1.substring(0, node1.length() - 1) + "⊤", f12, f11, f21, f22));
       }
 

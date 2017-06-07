@@ -10,24 +10,24 @@ import common.cfg.CfgProductionRule;
 
 /** If the top o the stack matches the rhs of a rule, replace it with the
  * lhs. */
-public class CfgBottomupReduce extends AbstractDynamicDeductionRule {
+public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
 
   private final CfgProductionRule rule;
 
-  public CfgBottomupReduce(CfgProductionRule rule) {
+  public CfgBottomUpReduce(CfgProductionRule rule) {
     this.rule = rule;
-    this.antneeded = 1;
+    this.antNeeded = 1;
     this.name = "reduce " + rule.toString();
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == this.antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
-      int i = Integer.parseInt(itemform[1]);
+    if (antecedences.size() == this.antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String stack = itemForm[0];
+      String[] stackSplit = stack.split(" ");
+      int i = Integer.parseInt(itemForm[1]);
       String gamma =
-        ArrayUtils.getStringHeadIfEndsWith(stacksplit, rule.getRhs());
+        ArrayUtils.getStringHeadIfEndsWith(stackSplit, rule.getRhs());
       if (gamma != null) {
         if (gamma.length() == 0) {
           consequences.add(new CfgItem(rule.getLhs(), i));

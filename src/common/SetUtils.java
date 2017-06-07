@@ -17,14 +17,14 @@ class SetUtils {
 
   /** Returns all arbitrary concatenations of the set elements up to a length of
    * maxlength, including the empty string. */
-  public static Set<String> star(Set<String> a, int maxlength) {
+  public static Set<String> star(Set<String> a, int maxLength) {
     Set<String> c = new HashSet<String>();
     c.add("");
-    if (maxlength == 0)
+    if (maxLength == 0)
       return c;
     else {
-      return union(concatenation(a, star(a, maxlength - 1)),
-        star(a, maxlength - 1));
+      return union(concatenation(a, star(a, maxLength - 1)),
+        star(a, maxLength - 1));
     }
   }
 

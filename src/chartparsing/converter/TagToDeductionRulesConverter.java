@@ -6,22 +6,22 @@ import chartparsing.DynamicDeductionRule;
 import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
 import chartparsing.tagrules.TagCykAdjoin;
-import chartparsing.tagrules.TagCykMovebinary;
-import chartparsing.tagrules.TagCykMoveunary;
-import chartparsing.tagrules.TagCykNulladjoin;
+import chartparsing.tagrules.TagCykMoveBinary;
+import chartparsing.tagrules.TagCykMoveUnary;
+import chartparsing.tagrules.TagCykNullAdjoin;
 import chartparsing.tagrules.TagCykSubstitute;
 import chartparsing.tagrules.TagEarleyAdjoin;
-import chartparsing.tagrules.TagEarleyCompletefoot;
-import chartparsing.tagrules.TagEarleyCompletenode;
-import chartparsing.tagrules.TagEarleyMovedown;
-import chartparsing.tagrules.TagEarleyMoveright;
-import chartparsing.tagrules.TagEarleyMoveup;
-import chartparsing.tagrules.TagEarleyPredictadjoinable;
-import chartparsing.tagrules.TagEarleyPredictadjoined;
-import chartparsing.tagrules.TagEarleyPredictnoadj;
-import chartparsing.tagrules.TagEarleyPredictsubst;
-import chartparsing.tagrules.TagEarleyScaneps;
-import chartparsing.tagrules.TagEarleyScanterm;
+import chartparsing.tagrules.TagEarleyCompleteFoot;
+import chartparsing.tagrules.TagEarleyCompleteNode;
+import chartparsing.tagrules.TagEarleyMoveDown;
+import chartparsing.tagrules.TagEarleyMoveRight;
+import chartparsing.tagrules.TagEarleyMoveUp;
+import chartparsing.tagrules.TagEarleyPredictAdjoinable;
+import chartparsing.tagrules.TagEarleyPredictAdjoined;
+import chartparsing.tagrules.TagEarleyPredictNoAdj;
+import chartparsing.tagrules.TagEarleyPredictSubst;
+import chartparsing.tagrules.TagEarleyScanEps;
+import chartparsing.tagrules.TagEarleyScanTerm;
 import chartparsing.tagrules.TagEarleySubstitute;
 import common.tag.Tag;
 import common.tag.TagCykItem;
@@ -54,71 +54,68 @@ public class TagToDeductionRulesConverter {
       System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
       return null;
     }
-    String[] wsplit = w.split(" ");
+    String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    Set<String> initreesnameset = tag.getInitialTreeNames();
-    String[] initreenames =
-      initreesnameset.toArray(new String[initreesnameset.size()]);
-    Set<String> auxtreesnameset = tag.getAuxiliaryTreeNames();
-    String[] auxtreenames =
-      auxtreesnameset.toArray(new String[auxtreesnameset.size()]);
-    Set<String> treesnameset = tag.getTreeNames();
-    String[] treenames = treesnameset.toArray(new String[treesnameset.size()]);
+    Set<String> iniTreesNameSet = tag.getInitialTreeNames();
+    String[] iniTreeNames =
+      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
+    Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
+    String[] auxTreeNames =
+      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
+    Set<String> treesNameSet = tag.getTreeNames();
+    String[] treeNames = treesNameSet.toArray(new String[treesNameSet.size()]);
 
-    DynamicDeductionRule moveunary = new TagCykMoveunary(tag);
-    schema.addRule(moveunary);
-    DynamicDeductionRule movebinary = new TagCykMovebinary();
-    schema.addRule(movebinary);
-    DynamicDeductionRule nulladjoin = new TagCykNulladjoin(tag);
-    schema.addRule(nulladjoin);
+    DynamicDeductionRule moveUnary = new TagCykMoveUnary(tag);
+    schema.addRule(moveUnary);
+    DynamicDeductionRule moveBinary = new TagCykMoveBinary();
+    schema.addRule(moveBinary);
+    DynamicDeductionRule nullAdjoin = new TagCykNullAdjoin(tag);
+    schema.addRule(nullAdjoin);
     DynamicDeductionRule adjoin = new TagCykAdjoin(tag);
     schema.addRule(adjoin);
 
-    for (int i = 0; i < wsplit.length; i++) {
-      for (String treename : treenames) {
-        for (Vertex p : tag.getTree(treename).getVertexes()) {
-          if (p.getLabel().equals(wsplit[i])) {
-            StaticDeductionRule lexscan = new StaticDeductionRule();
-            lexscan.addConsequence(new TagCykItem(treename,
-              p.getGornaddress() + "⊤", i, null, null, i + 1));
-            lexscan.setName("lex-scan " + wsplit[i]);
-            schema.addAxiom(lexscan);
-            // System.out.println(lexscan.toString()); // DEBUG
+    for (int i = 0; i < wSplit.length; i++) {
+      for (String treeName : treeNames) {
+        for (Vertex p : tag.getTree(treeName).getVertexes()) {
+          if (p.getLabel().equals(wSplit[i])) {
+            StaticDeductionRule lexScan = new StaticDeductionRule();
+            lexScan.addConsequence(new TagCykItem(treeName,
+              p.getGornAddress() + "⊤", i, null, null, i + 1));
+            lexScan.setName("lex-scan " + wSplit[i]);
+            schema.addAxiom(lexScan);
           }
           if (p.getLabel().equals("")) {
-            StaticDeductionRule epsscan = new StaticDeductionRule();
-            epsscan.addConsequence(new TagCykItem(treename,
-              p.getGornaddress() + "⊤", i, null, null, i));
-            epsscan.setName("eps-scan");
-            schema.addAxiom(epsscan);
-            // System.out.println(epsscan.toString()); // DEBUG
+            StaticDeductionRule epsScan = new StaticDeductionRule();
+            epsScan.addConsequence(new TagCykItem(treeName,
+              p.getGornAddress() + "⊤", i, null, null, i));
+            epsScan.setName("eps-scan");
+            schema.addAxiom(epsScan);
           }
-          if (tag.isSubstitutionNode(p, treename)) {
+          if (tag.isSubstitutionNode(p, treeName)) {
             DynamicDeductionRule substitute =
-              new TagCykSubstitute(treename, p.getGornaddress(), tag);
+              new TagCykSubstitute(treeName, p.getGornAddress(), tag);
             schema.addRule(substitute);
           }
         }
       }
 
-      for (String initreename : initreenames) {
-        Tree initree = tag.getInitialTree(initreename);
-        if (initree.getRoot().getLabel().equals(tag.getStartSymbol())) {
+      for (String iniTreeName : iniTreeNames) {
+        Tree iniTree = tag.getInitialTree(iniTreeName);
+        if (iniTree.getRoot().getLabel().equals(tag.getStartSymbol())) {
           schema.addGoal(
-            new TagCykItem(initreename, "⊤", 0, null, null, wsplit.length));
+            new TagCykItem(iniTreeName, "⊤", 0, null, null, wSplit.length));
         }
       }
 
-      for (int j = i; j <= wsplit.length; j++) {
-        for (String auxtree : auxtreenames) {
-          StaticDeductionRule footpredict = new StaticDeductionRule();
-          String footgorn =
-            tag.getAuxiliaryTree(auxtree).getFoot().getGornaddress();
-          footpredict.addConsequence(
-            new TagCykItem(auxtree, footgorn + "⊤", i, i, j, j));
-          footpredict.setName("foot-predict");
-          schema.addAxiom(footpredict);
-          // System.out.println(footpredict.toString()); // DEBUG
+      for (int j = i; j <= wSplit.length; j++) {
+        for (String auxTree : auxTreeNames) {
+          StaticDeductionRule footPredict = new StaticDeductionRule();
+          String footGorn =
+            tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
+          footPredict.addConsequence(
+            new TagCykItem(auxTree, footGorn + "⊤", i, i, j, j));
+          footPredict.setName("foot-predict");
+          schema.addAxiom(footPredict);
         }
       }
     }
@@ -129,71 +126,70 @@ public class TagToDeductionRulesConverter {
   /** Returns a parsing schema for Earley parsing of the given input w with
    * tag. */
   public static ParsingSchema tagToEarleyRules(Tag tag, String w) {
-    String[] wsplit = w.split(" ");
+    String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    Set<String> initreesnameset = tag.getInitialTreeNames();
-    String[] initreenames =
-      initreesnameset.toArray(new String[initreesnameset.size()]);
-    Set<String> auxtreesnameset = tag.getAuxiliaryTreeNames();
-    String[] auxtreenames =
-      auxtreesnameset.toArray(new String[auxtreesnameset.size()]);
-    Set<String> treesnameset = tag.getTreeNames();
-    String[] treenames = treesnameset.toArray(new String[treesnameset.size()]);
+    Set<String> iniTreesNameSet = tag.getInitialTreeNames();
+    String[] iniTreeNames =
+      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
+    Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
+    String[] auxTreeNames =
+      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
+    Set<String> treesNameSet = tag.getTreeNames();
+    String[] treeNames = treesNameSet.toArray(new String[treesNameSet.size()]);
 
-    DynamicDeductionRule scanterm = new TagEarleyScanterm(wsplit, tag);
-    schema.addRule(scanterm);
-    DynamicDeductionRule scaneps = new TagEarleyScaneps(tag);
-    schema.addRule(scaneps);
-    DynamicDeductionRule predictnoadj = new TagEarleyPredictnoadj(tag);
-    schema.addRule(predictnoadj);
-    DynamicDeductionRule completefoot = new TagEarleyCompletefoot(tag);
-    schema.addRule(completefoot);
-    DynamicDeductionRule completenode = new TagEarleyCompletenode(tag);
-    schema.addRule(completenode);
+    DynamicDeductionRule scanTerm = new TagEarleyScanTerm(wSplit, tag);
+    schema.addRule(scanTerm);
+    DynamicDeductionRule scanEps = new TagEarleyScanEps(tag);
+    schema.addRule(scanEps);
+    DynamicDeductionRule predictNoAdj = new TagEarleyPredictNoAdj(tag);
+    schema.addRule(predictNoAdj);
+    DynamicDeductionRule completeFoot = new TagEarleyCompleteFoot(tag);
+    schema.addRule(completeFoot);
+    DynamicDeductionRule completeNode = new TagEarleyCompleteNode(tag);
+    schema.addRule(completeNode);
     DynamicDeductionRule adjoin = new TagEarleyAdjoin(tag);
     schema.addRule(adjoin);
-    DynamicDeductionRule movedown = new TagEarleyMovedown(tag);
-    schema.addRule(movedown);
-    DynamicDeductionRule moveright = new TagEarleyMoveright(tag);
-    schema.addRule(moveright);
-    DynamicDeductionRule moveup = new TagEarleyMoveup(tag);
-    schema.addRule(moveup);
+    DynamicDeductionRule moveDown = new TagEarleyMoveDown(tag);
+    schema.addRule(moveDown);
+    DynamicDeductionRule moveRight = new TagEarleyMoveRight(tag);
+    schema.addRule(moveRight);
+    DynamicDeductionRule moveUp = new TagEarleyMoveUp(tag);
+    schema.addRule(moveUp);
 
-    for (String auxtreename : auxtreenames) {
-      DynamicDeductionRule predictadjoinable =
-        new TagEarleyPredictadjoinable(auxtreename, tag);
-      schema.addRule(predictadjoinable);
+    for (String auxTreeName : auxTreeNames) {
+      DynamicDeductionRule predictAdjoinable =
+        new TagEarleyPredictAdjoinable(auxTreeName, tag);
+      schema.addRule(predictAdjoinable);
     }
 
-    for (String treename : treenames) {
-      for (Vertex p : tag.getTree(treename).getVertexes()) {
-        DynamicDeductionRule predictadjoined =
-          new TagEarleyPredictadjoined(treename, p.getGornaddress(), tag);
-        schema.addRule(predictadjoined);
-        if (tag.isSubstitutionNode(p, treename)) {
+    for (String treeName : treeNames) {
+      for (Vertex p : tag.getTree(treeName).getVertexes()) {
+        DynamicDeductionRule predictAdjoined =
+          new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
+        schema.addRule(predictAdjoined);
+        if (tag.isSubstitutionNode(p, treeName)) {
           DynamicDeductionRule substitute =
-            new TagEarleySubstitute(treename, p.getGornaddress(), tag);
+            new TagEarleySubstitute(treeName, p.getGornAddress(), tag);
           schema.addRule(substitute);
         }
       }
     }
 
-    for (String initreename : initreenames) {
-      if (tag.getInitialTree(initreename).getRoot().getLabel()
+    for (String iniTreeName : iniTreeNames) {
+      if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
         .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        initialize.addConsequence(new TagEarleyItem(initreename, "", "la", 0,
+        initialize.addConsequence(new TagEarleyItem(iniTreeName, "", "la", 0,
           (Integer) null, null, 0, false));
         initialize.setName("initialize");
         schema.addAxiom(initialize);
-        // System.out.println(initialize.toString()); // DEBUG
-        schema.addGoal(new TagEarleyItem(initreename, "", "ra", 0,
-          (Integer) null, null, wsplit.length, false));
+        schema.addGoal(new TagEarleyItem(iniTreeName, "", "ra", 0,
+          (Integer) null, null, wSplit.length, false));
       }
 
-      DynamicDeductionRule predictsubst =
-        new TagEarleyPredictsubst(initreename, tag);
-      schema.addRule(predictsubst);
+      DynamicDeductionRule predictSubst =
+        new TagEarleyPredictSubst(iniTreeName, tag);
+      schema.addRule(predictSubst);
     }
     return schema;
   }

@@ -8,42 +8,42 @@ import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
 /** If the node's label is the next input symbol, consume it. */
-public class TagEarleyScanterm extends AbstractDynamicDeductionRule {
+public class TagEarleyScanTerm extends AbstractDynamicDeductionRule {
 
-  private final String[] wsplit;
+  private final String[] wSplit;
   private final Tag tag;
 
   /** Constructor takes the input string to compare with the tree labels, also
    * needs the grammar to retrieve information about the antecedence. */
-  public TagEarleyScanterm(String[] wsplit, Tag tag) {
-    this.wsplit = wsplit;
+  public TagEarleyScanTerm(String[] wSplit, Tag tag) {
+    this.wSplit = wSplit;
     this.tag = tag;
     this.name = "scan term";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String treename = itemform[0];
-      String node = itemform[1];
-      String pos = itemform[2];
-      int i = Integer.parseInt(itemform[3]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String treeName = itemForm[0];
+      String node = itemForm[1];
+      String pos = itemForm[2];
+      int i = Integer.parseInt(itemForm[3]);
       Integer j;
       Integer k;
       try {
-        j = Integer.parseInt(itemform[4]);
-        k = Integer.parseInt(itemform[5]);
+        j = Integer.parseInt(itemForm[4]);
+        k = Integer.parseInt(itemForm[5]);
       } catch (NumberFormatException e) {
         j = null;
         k = null;
       }
-      int l = Integer.parseInt(itemform[6]);
-      String adj = itemform[7];
-      if (l < wsplit.length && pos.equals("la") && adj.equals("0")
-        && tag.getTree(treename).getNodeByGornAdress(node).getLabel()
-          .equals(wsplit[l])) {
-        consequences.add(new TagEarleyItem(treename, node, "ra", i, j,
+      int l = Integer.parseInt(itemForm[6]);
+      String adj = itemForm[7];
+      if (l < wSplit.length && pos.equals("la") && adj.equals("0")
+        && tag.getTree(treeName).getNodeByGornAdress(node).getLabel()
+          .equals(wSplit[l])) {
+        consequences.add(new TagEarleyItem(treeName, node, "ra", i, j,
           k, l + 1, false));
       }
     }

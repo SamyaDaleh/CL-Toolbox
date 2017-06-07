@@ -33,35 +33,35 @@ public class PcfgToDeductionRulesConverter {
       System.out.println(
         "PCFG must be in Chomsky Normal Form to apply this kind of astar parsing.");
     }
-    String[] wsplit = w.split(" ");
+    String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
-    Map<String, Double> insides = SxCalc.getInsides(pcfg, wsplit.length);
+    Map<String, Double> insides = SxCalc.getInsides(pcfg, wSplit.length);
     Map<String, Double> outsides =
-      SxCalc.getOutsides(insides, wsplit.length, pcfg);
+      SxCalc.getOutsides(insides, wSplit.length, pcfg);
 
-    for (PcfgProductionRule prule : pcfg.getProductionrules()) {
-      if (prule.getRhs().length == 1) {
-        for (int i = 0; i < wsplit.length; i++) {
-          if (prule.getRhs()[0].equals(wsplit[i])) {
+    for (PcfgProductionRule pRule : pcfg.getProductionRules()) {
+      if (pRule.getRhs().length == 1) {
+        for (int i = 0; i < wSplit.length; i++) {
+          if (pRule.getRhs()[0].equals(wSplit[i])) {
             StaticDeductionRule scan = new StaticDeductionRule();
-            Double rulew = -Math.log(prule.getP());
-            Double outw = outsides.get(SxCalc.getOutsideKey(prule.getLhs(), i,
-              1, wsplit.length - 1 - i));
+            Double rulew = -Math.log(pRule.getP());
+            Double outw = outsides.get(SxCalc.getOutsideKey(pRule.getLhs(), i,
+              1, wSplit.length - 1 - i));
             scan.addConsequence(
-              new PcfgAstarItem(rulew, outw, prule.getLhs(), i, i + 1));
+              new PcfgAstarItem(rulew, outw, pRule.getLhs(), i, i + 1));
             scan.setName("Scan");
             schema.addAxiom(scan);
           }
         }
       } else {
         DynamicDeductionRule complete =
-          new PcfgAstarComplete(prule, outsides, wsplit.length);
+          new PcfgAstarComplete(pRule, outsides, wSplit.length);
         schema.addRule(complete);
       }
     }
     schema
-      .addGoal(new PcfgAstarItem(0, 0, pcfg.getStartsymbol(), 0, wsplit.length));
+      .addGoal(new PcfgAstarItem(0, 0, pcfg.getStartSymbol(), 0, wSplit.length));
 
     return schema;
   }

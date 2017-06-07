@@ -8,41 +8,41 @@ import common.tag.Tag;
 import common.tag.TagCykItem;
 
 /** From a single-child node move up to the parent node. */
-public class TagCykMoveunary extends AbstractDynamicDeductionRule {
+public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedences. */
-  public TagCykMoveunary(Tag tag) {
+  public TagCykMoveUnary(Tag tag) {
     this.tag = tag;
     this.name = "move-unary";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String treename = itemform[0];
-      String node = itemform[1];
-      int i = Integer.parseInt(itemform[2]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String treeName = itemForm[0];
+      String node = itemForm[1];
+      int i = Integer.parseInt(itemForm[2]);
       Integer f1;
       Integer f2;
       try {
-        f1 = Integer.parseInt(itemform[3]);
-        f2 = Integer.parseInt(itemform[4]);
+        f1 = Integer.parseInt(itemForm[3]);
+        f2 = Integer.parseInt(itemForm[4]);
       } catch (NumberFormatException e) {
         f1 = null;
         f2 = null;
       }
-      int j = Integer.parseInt(itemform[5]);
+      int j = Integer.parseInt(itemForm[5]);
       if (node.endsWith(".1⊤")) {
-        String nodesib = tag.getTree(treename)
+        String nodeSib = tag.getTree(treeName)
           .getNodeByGornAdress(node.substring(0, node.length() - 1))
           .getGornAddressOfPotentialRightSibling();
-        if (tag.getTree(treename).getNodeByGornAdress(nodesib) == null) {
-          String parentnode = node.substring(0, node.length() - 3) + "⊥";
-          consequences.add(new TagCykItem(treename, parentnode, i, f1, f2, j));
+        if (tag.getTree(treeName).getNodeByGornAdress(nodeSib) == null) {
+          String parentNode = node.substring(0, node.length() - 3) + "⊥";
+          consequences.add(new TagCykItem(treeName, parentNode, i, f1, f2, j));
         }
       }
     }

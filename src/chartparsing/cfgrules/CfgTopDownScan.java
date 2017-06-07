@@ -9,25 +9,25 @@ import common.cfg.CfgItem;
 
 /** The scan rule for topdown removes a terminal if it is the next input
  * symbol. */
-public class CfgTopdownScan extends AbstractDynamicDeductionRule {
+public class CfgTopDownScan extends AbstractDynamicDeductionRule {
 
   private final String[] wsplit;
 
-  public CfgTopdownScan(String[] wsplit) {
+  public CfgTopDownScan(String[] wsplit) {
     this.wsplit = wsplit;
     this.name = "scan";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String stack = itemform[0];
-      String[] stacksplit = stack.split(" ");
-      int i = Integer.parseInt(itemform[1]);
-      if (i < wsplit.length && stacksplit[0].equals(wsplit[i])) {
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String stack = itemForm[0];
+      String[] stackSplit = stack.split(" ");
+      int i = Integer.parseInt(itemForm[1]);
+      if (i < wsplit.length && stackSplit[0].equals(wsplit[i])) {
         consequences.add(new CfgItem(
-          ArrayUtils.getSubSequenceAsString(stacksplit, 1, stacksplit.length),
+          ArrayUtils.getSubSequenceAsString(stackSplit, 1, stackSplit.length),
           i + 1));
       }
     }

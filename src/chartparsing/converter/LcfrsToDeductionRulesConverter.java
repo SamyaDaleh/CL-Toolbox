@@ -119,48 +119,48 @@ public class LcfrsToDeductionRulesConverter {
    * string this returns a list of all possible (non overlapping) ranges the
    * arguments could have over parts of the input. All symbols in the Predictae
    * have to be terminals. */
-  private static List<Integer[]> getAllRanges(Predicate lhs, String[] wsplit) {
+  private static List<Integer[]> getAllRanges(Predicate lhs, String[] wSplit) {
     List<Integer[]> ranges = new LinkedList<Integer[]>();
-    ArrayList<Integer> tryoutrange = new ArrayList<Integer>();
-    tryoutrange.add(0);
-    tryoutrange.add(1);
+    ArrayList<Integer> tryOutRange = new ArrayList<Integer>();
+    tryOutRange.add(0);
+    tryOutRange.add(1);
 
     String[] lhsSymbolsAsPlainArray = lhs.getSymbolsAsPlainArray();
 
-    while (tryoutrange.size() > 0) {
-      while (tryoutrange.size() < lhsSymbolsAsPlainArray.length * 2) {
-        int end = tryoutrange.get(tryoutrange.size() - 1);
-        tryoutrange.add(end);
-        tryoutrange.add(end + 1);
+    while (tryOutRange.size() > 0) {
+      while (tryOutRange.size() < lhsSymbolsAsPlainArray.length * 2) {
+        int end = tryOutRange.get(tryOutRange.size() - 1);
+        tryOutRange.add(end);
+        tryOutRange.add(end + 1);
       }
-      if (tryoutrange.get(tryoutrange.size() - 2) < wsplit.length) {
+      if (tryOutRange.get(tryOutRange.size() - 2) < wSplit.length) {
 
         boolean match = true;
-        for (int i = 0; i * 2 < tryoutrange.size(); i++) {
+        for (int i = 0; i * 2 < tryOutRange.size(); i++) {
           if (!lhsSymbolsAsPlainArray[i]
-            .equals(wsplit[tryoutrange.get(i * 2)])) {
+            .equals(wSplit[tryOutRange.get(i * 2)])) {
             match = false;
           }
         }
         if (match) {
           ranges.add(SrcgDeductionUtils.getRangesForArguments(
-            tryoutrange.toArray(new Integer[tryoutrange.size()]), lhs));
+            tryOutRange.toArray(new Integer[tryOutRange.size()]), lhs));
         }
       }
-      tryoutrange.set(tryoutrange.size() - 2,
-        tryoutrange.get(tryoutrange.size() - 2) + 1);
-      tryoutrange.set(tryoutrange.size() - 1,
-        tryoutrange.get(tryoutrange.size() - 1) + 1);
-      while (tryoutrange.get(tryoutrange.size() - 1) > wsplit.length) {
-        tryoutrange.remove(tryoutrange.size() - 1);
-        tryoutrange.remove(tryoutrange.size() - 1);
-        if (tryoutrange.size() == 0) {
+      tryOutRange.set(tryOutRange.size() - 2,
+        tryOutRange.get(tryOutRange.size() - 2) + 1);
+      tryOutRange.set(tryOutRange.size() - 1,
+        tryOutRange.get(tryOutRange.size() - 1) + 1);
+      while (tryOutRange.get(tryOutRange.size() - 1) > wSplit.length) {
+        tryOutRange.remove(tryOutRange.size() - 1);
+        tryOutRange.remove(tryOutRange.size() - 1);
+        if (tryOutRange.size() == 0) {
           break;
         }
-        tryoutrange.set(tryoutrange.size() - 2,
-          tryoutrange.get(tryoutrange.size() - 2) + 1);
-        tryoutrange.set(tryoutrange.size() - 1,
-          tryoutrange.get(tryoutrange.size() - 1) + 1);
+        tryOutRange.set(tryOutRange.size() - 2,
+          tryOutRange.get(tryOutRange.size() - 2) + 1);
+        tryOutRange.set(tryOutRange.size() - 1,
+          tryOutRange.get(tryOutRange.size() - 1) + 1);
       }
     }
     return ranges;

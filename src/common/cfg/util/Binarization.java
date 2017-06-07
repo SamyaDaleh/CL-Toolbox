@@ -13,54 +13,54 @@ public class Binarization {
   public static Cfg binarize(Cfg cfg) {
     Cfg newCfg = new Cfg();
     newCfg.setTerminals(cfg.getTerminals());
-    newCfg.setStartsymbol(cfg.getStartsymbol());
-    ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, cfg.getNonterminals());
-    ArrayList<String[]> newp = new ArrayList<String[]>();
-    doBinarize(newnt, newp, cfg);
-    newCfg.setNonterminals(newnt.toArray(new String[newnt.size()]));
-    newCfg.setProductionrules(newp.toArray(new String[newp.size()][]));
+    newCfg.setStartSymbol(cfg.getStartSymbol());
+    ArrayList<String> newNt = new ArrayList<String>();
+    Collections.addAll(newNt, cfg.getNonterminals());
+    ArrayList<String[]> newP = new ArrayList<String[]>();
+    doBinarize(newNt, newP, cfg);
+    newCfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
+    newCfg.setProductionrules(newP.toArray(new String[newP.size()][]));
     return newCfg;
   }
 
   /** Splits production rules with rhs length > 2 and replaces overlong part by
    * new nonterminals. */
-  private static void doBinarize(ArrayList<String> newnt,
-    ArrayList<String[]> newp, Cfg cfg) {
+  private static void doBinarize(ArrayList<String> newNt,
+    ArrayList<String[]> newP, Cfg cfg) {
     int i = 1;
-    for (CfgProductionRule rule : cfg.getProductionrules()) {
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length > 2) {
-        CfgProductionRule rulerest = rule;
-        while (rulerest.getRhs().length > 2) {
-          String newn = "X" + String.valueOf(i);
-          while (cfg.nonterminalsContain(newn)) {
+        CfgProductionRule ruleRest = rule;
+        while (ruleRest.getRhs().length > 2) {
+          String newN = "X" + String.valueOf(i);
+          while (cfg.nonterminalsContain(newN)) {
             i++;
-            newn = "X" + String.valueOf(i);
+            newN = "X" + String.valueOf(i);
           }
-          newnt.add(newn);
-          String newrhs = rulerest.getRhs()[0] + " " + newn;
-          String[] newrule = new String[] {rulerest.getLhs(), newrhs};
-          newp.add(newrule);
+          newNt.add(newN);
+          String newRhs = ruleRest.getRhs()[0] + " " + newN;
+          String[] newRule = new String[] {ruleRest.getLhs(), newRhs};
+          newP.add(newRule);
           i++;
-          rulerest =
-            new CfgProductionRule(newn, ArrayUtils.getSubSequenceAsArray(
-              rulerest.getRhs(), 1, rulerest.getRhs().length));
+          ruleRest =
+            new CfgProductionRule(newN, ArrayUtils.getSubSequenceAsArray(
+              ruleRest.getRhs(), 1, ruleRest.getRhs().length));
         }
-        newp.add(new String[] {rulerest.getLhs(),
-          rulerest.getRhs()[0] + " " + rulerest.getRhs()[1]});
+        newP.add(new String[] {ruleRest.getLhs(),
+          ruleRest.getRhs()[0] + " " + ruleRest.getRhs()[1]});
       } else if (rule.getRhs().length == 2) {
-        newp.add(new String[] {rule.getLhs(),
+        newP.add(new String[] {rule.getLhs(),
           rule.getRhs()[0] + " " + rule.getRhs()[1]});
       }
       if (rule.getRhs().length == 1) {
-        newp.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
+        newP.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
       }
     }
   }
 
   /** Returns true if all rhs' have at most length 2. */
   public static boolean isBinarized(Cfg cfg) {
-    for (CfgProductionRule rule : cfg.getProductionrules()) {
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length > 2) {
         return false;
       }

@@ -28,9 +28,9 @@ public class Clause {
    * Does the split at "->" for you. 
    */
   public Clause(String clause) throws ParseException {
-    String[] clausesplit = clause.split("->");
-    this.lhs = new Predicate(clausesplit[0]);
-    String rhs = clausesplit[1];
+    String[] clauseSplit = clause.split("->");
+    this.lhs = new Predicate(clauseSplit[0]);
+    String rhs = clauseSplit[1];
     int start = 0;
     for (int i = 1; i < rhs.length(); i++) {
       if (rhs.charAt(i) == ')') {

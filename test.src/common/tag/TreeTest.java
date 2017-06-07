@@ -14,7 +14,7 @@ public class TreeTest {
     Tree tree = new Tree("(T_NA (B (T a ε) ) (B_OA T*))");
     assertTrue(tree.getRoot().getLabel().equals("T"));
     assertTrue(tree.getFoot().getLabel().equals("T"));
-    assertTrue(tree.getFoot().getGornaddress().equals(".2.1"));
+    assertTrue(tree.getFoot().getGornAddress().equals(".2.1"));
     assertTrue(tree.getHeight() == 4);
     assertTrue(tree.getWidth() == 2);
   }

@@ -9,9 +9,9 @@ public class CfgDollarItem extends AbstractItem implements Item {
   /**
    * Item is constructed by three stack strings.
    */
-  public CfgDollarItem(String stackcompleted, String stackpredicted,
-    String stacklhs) {
-    itemform = new String[] {stackcompleted, stackpredicted, stacklhs};
+  public CfgDollarItem(String stackCompleted, String stackPredicted,
+    String stackLhs) {
+    itemForm = new String[] {stackCompleted, stackPredicted, stackLhs};
   }
 
 }

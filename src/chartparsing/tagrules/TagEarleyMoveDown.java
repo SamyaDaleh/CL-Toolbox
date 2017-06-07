@@ -8,39 +8,39 @@ import common.tag.Tag;
 import common.tag.TagEarleyItem;
 
 /** If a node has a child, move to the fist child. */
-public class TagEarleyMovedown extends AbstractDynamicDeductionRule {
+public class TagEarleyMoveDown extends AbstractDynamicDeductionRule {
   
   private final Tag tag;
 
   /** Constructor needs the grammar to retrieve information about the
    * antecedence. */
-  public TagEarleyMovedown(Tag tag) {
+  public TagEarleyMoveDown(Tag tag) {
     this.tag = tag;
     this.name = "move down";
-    this.antneeded = 1;
+    this.antNeeded = 1;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform = antecedences.get(0).getItemform();
-      String treename = itemform[0];
-      String node = itemform[1];
-      String pos = itemform[2];
-      int i = Integer.parseInt(itemform[3]);
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm = antecedences.get(0).getItemform();
+      String treeName = itemForm[0];
+      String node = itemForm[1];
+      String pos = itemForm[2];
+      int i = Integer.parseInt(itemForm[3]);
       Integer j;
       Integer k;
       try {
-        j = Integer.parseInt(itemform[4]);
-        k = Integer.parseInt(itemform[5]);
+        j = Integer.parseInt(itemForm[4]);
+        k = Integer.parseInt(itemForm[5]);
       } catch (NumberFormatException e) {
         j = null;
         k = null;
       }
-      int l = Integer.parseInt(itemform[6]);
-      String adj = itemform[7];
+      int l = Integer.parseInt(itemForm[6]);
+      String adj = itemForm[7];
       if (pos.equals("lb") && adj.equals("0")
-        && tag.getTree(treename).getNodeByGornAdress(node + ".1") != null) {
-        consequences.add(new TagEarleyItem(treename, node + ".1", "la", i, j, k, l, false));
+        && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
+        consequences.add(new TagEarleyItem(treeName, node + ".1", "la", i, j, k, l, false));
       }
     }
     return consequences;

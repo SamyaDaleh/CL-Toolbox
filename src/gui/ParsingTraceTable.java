@@ -82,10 +82,10 @@ public class ParsingTraceTable {
     }
     String value = (String) table.getValueAt(hintCell.y, hintCell.x);
     if (value.charAt(0) == '[') {
-      String treename = value.substring(1, value.indexOf(','));
+      String treeName = value.substring(1, value.indexOf(','));
       try {
         popup = new DisplayTree(
-          new String[] {tag.getTree(treename).toString(), value});
+          new String[] {tag.getTree(treeName).toString(), value});
       } catch (ParseException e) {
         e.printStackTrace();
       }
@@ -100,9 +100,7 @@ public class ParsingTraceTable {
     @Override public void actionPerformed(ActionEvent e) {
 
       if (hintCell != null) {
-
         disposeTimer.stop();
-
         DisplayTree popup = getTreePopup();
         if (popup != null) {
           popup.setVisible(false);

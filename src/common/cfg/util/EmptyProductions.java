@@ -13,14 +13,14 @@ public class EmptyProductions {
    * except it's a start symbol rule and the start symbol never occurs on any
    * rhs. */
   public static boolean hasEpsilonProductions(Cfg cfg) {
-    for (CfgProductionRule rule : cfg.getProductionrules()) {
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
-        if (rule.getLhs().equals(cfg.getStartsymbol())) {
+        if (rule.getLhs().equals(cfg.getStartSymbol())) {
 
-          for (CfgProductionRule rule2 : cfg.getProductionrules()) {
+          for (CfgProductionRule rule2 : cfg.getProductionRules()) {
             String[] rhs = rule2.getRhs();
             for (String symbol : rhs) {
-              if (symbol.equals(cfg.getStartsymbol())) {
+              if (symbol.equals(cfg.getStartSymbol())) {
                 return true;
               }
             }
@@ -36,62 +36,62 @@ public class EmptyProductions {
   /** Returns an equivalent CFG without empty productions, only S -> ε is
    * allowed in which case it is removed from all rhs'. May leaves non
    * generating symbols behind. */
-  public static Cfg removeEmptyProductions(Cfg cfgold) {
+  public static Cfg removeEmptyProductions(Cfg cfgOld) {
     Cfg cfg = new Cfg();
-    cfg.setTerminals(cfgold.getTerminals());
-    cfg.setStartsymbol(cfgold.getStartsymbol());
+    cfg.setTerminals(cfgOld.getTerminals());
+    cfg.setStartSymbol(cfgOld.getStartSymbol());
 
-    ArrayList<String> newnt = new ArrayList<String>();
-    Collections.addAll(newnt, cfgold.getNonterminals());
-    cfg.getProductionrules().addAll(cfgold.getProductionrules());
-    ArrayList<String> eliminateable = getEliminateable(cfgold);
-    doEliminateEmptyProductions(cfg, newnt, eliminateable, cfgold);
-    for (int i = cfg.getProductionrules().size() - 1; i >= 0; i--) {
+    ArrayList<String> newNt = new ArrayList<String>();
+    Collections.addAll(newNt, cfgOld.getNonterminals());
+    cfg.getProductionRules().addAll(cfgOld.getProductionRules());
+    ArrayList<String> eliminateable = getEliminateable(cfgOld);
+    doEliminateEmptyProductions(cfg, newNt, eliminateable, cfgOld);
+    for (int i = cfg.getProductionRules().size() - 1; i >= 0; i--) {
       if (ifEmptyProductionShouldBeRemoved(cfg, i)) {
-        cfg.getProductionrules().remove(i);
+        cfg.getProductionRules().remove(i);
       }
     }
 
-    cfg.setNonterminals(newnt.toArray(new String[newnt.size()]));
+    cfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
     return cfg;
   }
 
   /** Returns true if production derives to the empty string and doesn't have
    * the start symbol as lhs. */
   private static boolean ifEmptyProductionShouldBeRemoved(Cfg cfg, int i) {
-    return cfg.getProductionrules().get(i).getRhs().length == 1
-      && cfg.getProductionrules().get(i).getRhs()[0].equals("")
-      && !cfg.getProductionrules().get(i).getLhs().equals(cfg.getStartsymbol());
+    return cfg.getProductionRules().get(i).getRhs().length == 1
+      && cfg.getProductionRules().get(i).getRhs()[0].equals("")
+      && !cfg.getProductionRules().get(i).getLhs().equals(cfg.getStartSymbol());
   }
 
   /** Removes all empty productions except if epsilon can be derived from the
    * start symbol, in which case if the start symbol appears in a rhs, a new
    * start symbol is added. */
-  private static void doEliminateEmptyProductions(Cfg cfg, ArrayList<String> newnt,
-    ArrayList<String> eliminateable, Cfg cfgold) {
+  private static void doEliminateEmptyProductions(Cfg cfg, ArrayList<String> newNt,
+    ArrayList<String> eliminateable, Cfg cfgOld) {
     for (String nt : eliminateable) {
-      for (int j = 0; j < cfg.getProductionrules().size(); j++) {
-        CfgProductionRule rule = cfg.getProductionrules().get(j);
+      for (int j = 0; j < cfg.getProductionRules().size(); j++) {
+        CfgProductionRule rule = cfg.getProductionRules().get(j);
         for (int i = 0; i < rule.getRhs().length; i++) {
           if (rule.getRhs()[i].equals(nt)) {
-            cfg.getProductionrules().add(new CfgProductionRule(rule.getLhs(),
+            cfg.getProductionRules().add(new CfgProductionRule(rule.getLhs(),
               ArrayUtils.getSequenceWithoutIAsArray(rule.getRhs(), i)));
           }
         }
       }
-      if (nt.equals(cfgold.getStartsymbol())) {
+      if (nt.equals(cfgOld.getStartSymbol())) {
         int i = 1;
-        String newstart = "S" + String.valueOf(i);
-        while (newnt.contains(newstart)) {
+        String newStart = "S" + String.valueOf(i);
+        while (newNt.contains(newStart)) {
           i++;
-          newstart = "S" + String.valueOf(i);
+          newStart = "S" + String.valueOf(i);
         }
-        cfg.getProductionrules().add(new CfgProductionRule(
-          new String[] {newstart, cfgold.getStartsymbol()}));
-        cfg.getProductionrules()
-          .add(new CfgProductionRule(new String[] {newstart, ""}));
-        newnt.add(newstart);
-        cfg.setStartsymbol(newstart);
+        cfg.getProductionRules().add(new CfgProductionRule(
+          new String[] {newStart, cfgOld.getStartSymbol()}));
+        cfg.getProductionRules()
+          .add(new CfgProductionRule(new String[] {newStart, ""}));
+        newNt.add(newStart);
+        cfg.setStartSymbol(newStart);
       }
     }
   }
@@ -102,7 +102,7 @@ public class EmptyProductions {
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : cfg.getProductionrules()) {
+      for (CfgProductionRule rule : cfg.getProductionRules()) {
         if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")
           && !eliminateable.contains(rule.getLhs())) {
           eliminateable.add(rule.getLhs());

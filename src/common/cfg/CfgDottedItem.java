@@ -8,8 +8,8 @@ public class CfgDottedItem extends AbstractItem implements Item {
 
   /** Item is constructed by a dotted item (not checked) and indices
    * representing its range. */
-  public CfgDottedItem(String ntdot, int from, int to) {
-    itemform = new String[] {ntdot, String.valueOf(from), String.valueOf(to)};
+  public CfgDottedItem(String ntDot, int from, int to) {
+    itemForm = new String[] {ntDot, String.valueOf(from), String.valueOf(to)};
   }
 
 }

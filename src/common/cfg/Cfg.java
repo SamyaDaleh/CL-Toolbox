@@ -13,7 +13,7 @@ import common.cfg.util.UselessSymbols;
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
 public class Cfg extends AbstractCfg {
-  private final List<CfgProductionRule> productionrules =
+  private final List<CfgProductionRule> productionRules =
     new LinkedList<CfgProductionRule>();
 
   public Cfg() {
@@ -24,21 +24,21 @@ public class Cfg extends AbstractCfg {
   public Cfg(Pcfg pcfg) {
     this.nonterminals = pcfg.getNonterminals();
     this.terminals = pcfg.getTerminals();
-    this.startsymbol = pcfg.getStartsymbol();
-    for (PcfgProductionRule rule : pcfg.getProductionrules()) {
-      CfgProductionRule newrule =
+    this.startSymbol = pcfg.getStartSymbol();
+    for (PcfgProductionRule rule : pcfg.getProductionRules()) {
+      CfgProductionRule newRule =
         new CfgProductionRule(rule.getLhs(), rule.getRhs());
-      this.productionrules.add(newrule);
+      this.productionRules.add(newRule);
     }
   }
 
-  public List<CfgProductionRule> getProductionrules() {
-    return productionrules;
+  public List<CfgProductionRule> getProductionRules() {
+    return productionRules;
   }
 
   public void setProductionrules(String[][] rules) {
     for (String[] rule : rules) {
-      this.productionrules.add(new CfgProductionRule(rule));
+      this.productionRules.add(new CfgProductionRule(rule));
     }
   }
 
@@ -52,12 +52,12 @@ public class Cfg extends AbstractCfg {
   /** Returns true if grammar is in Canonical Two Form. C2F is like Chomsky
    * Normal form, but chain rules are also allowed. */
   public boolean isInCanonicalTwoForm() {
-    for (CfgProductionRule rule : this.productionrules) {
+    for (CfgProductionRule rule : this.productionRules) {
       if (rule.getRhs().length == 1) {
-        if (rule.getLhs().equals(startsymbol) && rule.getRhs()[0].equals("")) {
-          for (CfgProductionRule rule2 : this.productionrules) {
-            if (rule2.getRhs()[0].equals(startsymbol)
-              || rule2.getRhs()[1].equals(startsymbol)) {
+        if (rule.getLhs().equals(startSymbol) && rule.getRhs()[0].equals("")) {
+          for (CfgProductionRule rule2 : this.productionRules) {
+            if (rule2.getRhs()[0].equals(startSymbol)
+              || rule2.getRhs()[1].equals(startSymbol)) {
               return false;
             }
           }
@@ -77,7 +77,7 @@ public class Cfg extends AbstractCfg {
     if (!isInCanonicalTwoForm()) {
       return false;
     }
-    for (CfgProductionRule rule : this.productionrules) {
+    for (CfgProductionRule rule : this.productionRules) {
       if (rule.getRhs().length == 1) {
         if (!terminalsContain(rule.getRhs()[0])) {
           return false;
@@ -91,7 +91,7 @@ public class Cfg extends AbstractCfg {
    * must start with a terminal, followed by arbitrary many nonterminals
    * including none. */
   public boolean isInGreibachNormalForm() {
-    for (CfgProductionRule rule : this.productionrules) {
+    for (CfgProductionRule rule : this.productionRules) {
       if (rule.getRhs()[0].equals("")) {
         return false;
       }
@@ -153,11 +153,11 @@ public class Cfg extends AbstractCfg {
   }
   
   protected void appendRuleRepresentation(StringBuilder builder) {
-    for (int i = 0; i < productionrules.size(); i++) {
+    for (int i = 0; i < productionRules.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append(productionrules.get(i).toString());
+      builder.append(productionRules.get(i).toString());
     }
   }
 

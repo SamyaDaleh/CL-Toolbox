@@ -43,7 +43,7 @@ public class SrcgTest {
     cfgeps.setNonterminals(new String[] {"S", "A", "B", "C"});
     cfgeps.setProductionrules(new String[][] {{"A", "ε"}, {"S", ""}, {"C", ""},
       {"S", "b A a S b C"}, {"A", "a"}, {"A", "b B"}, {"B", "b"}});
-    cfgeps.setStartsymbol("S");
+    cfgeps.setStartSymbol("S");
 
     Srcg srcg = new Srcg(cfgeps);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C}\n"
@@ -61,7 +61,7 @@ public class SrcgTest {
     cfgeps.setNonterminals(new String[] {"S", "X1", "Y1", "Y2"});
     cfgeps.setProductionrules(new String[][] {{"Y1", "a"}, {"S", "Y1 X1"}, {"Y2", "b"},
       {"X1", "S Y2"}, {"S", "Y1 Y2"}});
-    cfgeps.setStartsymbol("S");
+    cfgeps.setStartSymbol("S");
 
     Srcg srcg = new Srcg(cfgeps);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, X1, Y1, Y2}\n"

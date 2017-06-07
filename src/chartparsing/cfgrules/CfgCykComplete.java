@@ -16,23 +16,23 @@ public class CfgCykComplete extends AbstractDynamicDeductionRule {
   public CfgCykComplete(CfgProductionRule rule) {
     this.rule = rule;
     this.name = "complete " + rule.toString();
-    this.antneeded = 2;
+    this.antNeeded = 2;
   }
 
   @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemform1 = antecedences.get(0).getItemform();
-      String nt1 = itemform1[0];
-      String i1 = itemform1[1];
+    if (antecedences.size() == antNeeded) {
+      String[] itemForm1 = antecedences.get(0).getItemform();
+      String nt1 = itemForm1[0];
+      String i1 = itemForm1[1];
       int i1int = Integer.parseInt(i1);
-      String j1 = itemform1[2];
+      String j1 = itemForm1[2];
       int j1int = Integer.parseInt(j1);
 
-      String[] itemform2 = antecedences.get(1).getItemform();
-      String nt2 = itemform2[0];
-      String i2 = itemform2[1];
+      String[] itemForm2 = antecedences.get(1).getItemform();
+      String nt2 = itemForm2[0];
+      String i2 = itemForm2[1];
       int i2int = Integer.parseInt(i2);
-      String j2 = itemform2[2];
+      String j2 = itemForm2[2];
       int j2int = Integer.parseInt(j2);
 
       if (nt1.equals(rule.getRhs()[0]) && nt2.equals(rule.getRhs()[1])
