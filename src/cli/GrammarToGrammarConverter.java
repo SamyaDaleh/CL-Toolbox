@@ -1,4 +1,4 @@
-package chartparsing.converter;
+package cli;
 
 import java.text.ParseException;
 

@@ -1,7 +1,10 @@
+package cli;
 import java.io.IOException;
 import java.text.ParseException;
 
 import org.junit.Test;
+
+import cli.Main;
 
 public class MainTest {
 

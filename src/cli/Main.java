@@ -1,3 +1,4 @@
+package cli;
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -5,7 +6,6 @@ import chartparsing.Deduction;
 import chartparsing.ParsingSchema;
 import chartparsing.converter.ChartToTreeConverter;
 import chartparsing.converter.GrammarToDeductionRulesConverter;
-import chartparsing.converter.GrammarToGrammarConverter;
 import common.GrammarParser;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
