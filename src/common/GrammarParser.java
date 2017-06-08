@@ -106,22 +106,16 @@ public class GrammarParser {
    * each entry represents a rule and each sub array consists of lhs and rhs */
   private static String[][] parseRules(String lineTrim, String delimiter) {
     Matcher m = p.matcher(lineTrim);
-    m.find();
-    String rawRule = m.group();
     ArrayList<String[]> ruleList = new ArrayList<String[]>();
-    try {
-      while (true) {
-        String lhs = rawRule.substring(0, rawRule.indexOf(delimiter)).trim();
-        String rhs = rawRule
-          .substring(rawRule.indexOf(delimiter) + delimiter.length()).trim();
-        ruleList.add(
-          new String[] {lhs.substring(1), rhs.substring(0, rhs.length() - 1)});
-        m.find();
-        rawRule = m.group();
-      }
-    } catch (IllegalStateException e) {
-      //
+    while (m.find()) {
+      String rawRule = m.group();
+      String lhs = rawRule.substring(0, rawRule.indexOf(delimiter)).trim();
+      String rhs = rawRule
+        .substring(rawRule.indexOf(delimiter) + delimiter.length()).trim();
+      ruleList.add(
+        new String[] {lhs.substring(1), rhs.substring(0, rhs.length() - 1)});
     }
+
     return ruleList.toArray(new String[ruleList.size()][]);
   }
 
@@ -132,26 +126,19 @@ public class GrammarParser {
   private static String[][] parseProbabilisticRules(String lineTrim,
     String leftDelimiter, String rightDelimiter) {
     Matcher m = p.matcher(lineTrim);
-    m.find();
-    String rawRule = m.group();
     ArrayList<String[]> ruleList = new ArrayList<String[]>();
-    try {
-      while (true) {
-        String p = rawRule.substring(0, rawRule.indexOf(leftDelimiter)).trim();
-        String lhs = rawRule
-          .substring(rawRule.indexOf(leftDelimiter) + leftDelimiter.length(),
-            rawRule.indexOf(rightDelimiter))
-          .trim();
-        String rhs = rawRule
-          .substring(rawRule.indexOf(rightDelimiter) + rightDelimiter.length())
-          .trim();
-        ruleList.add(new String[] {lhs, rhs.substring(0, rhs.length() - 1),
-          p.substring(1)});
-        m.find();
-        rawRule = m.group();
-      }
-    } catch (IllegalStateException e) {
-      //
+    while (m.find()) {
+      String rawRule = m.group();
+      String p = rawRule.substring(0, rawRule.indexOf(leftDelimiter)).trim();
+      String lhs = rawRule
+        .substring(rawRule.indexOf(leftDelimiter) + leftDelimiter.length(),
+          rawRule.indexOf(rightDelimiter))
+        .trim();
+      String rhs = rawRule
+        .substring(rawRule.indexOf(rightDelimiter) + rightDelimiter.length())
+        .trim();
+      ruleList.add(
+        new String[] {lhs, rhs.substring(0, rhs.length() - 1), p.substring(1)});
     }
     return ruleList.toArray(new String[ruleList.size()][]);
   }
@@ -214,17 +201,10 @@ public class GrammarParser {
    * an element of the returned array. */
   private static String[] parseNT(String lineTrim) {
     Matcher m = p.matcher(lineTrim);
-    m.find();
-    String n = m.group();
     ArrayList<String> nList = new ArrayList<String>();
-    try {
-      while (true) {
-        nList.add(n.substring(1, n.length() - 1));
-        m.find();
-        n = m.group();
-      }
-    } catch (IllegalStateException e) {
-      //
+    while (m.find()) {
+      String n = m.group();
+      nList.add(n.substring(1, n.length() - 1));
     }
     return nList.toArray(new String[nList.size()]);
   }
