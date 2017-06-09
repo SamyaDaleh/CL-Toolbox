@@ -9,8 +9,11 @@ public class PcfgTest {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c", "d"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.setProductionrules(new String[][] {{"S", "S"}, {"S", "S a"},
-      {"S", "S b"}, {"S", "c"}, {"S", "d"}});
+    cfg.addProductionRule("S -> S");
+    cfg.addProductionRule("S -> S a");
+    cfg.addProductionRule("S -> S b");
+    cfg.addProductionRule("S -> c");
+    cfg.addProductionRule("S -> d");
     cfg.setStartSymbol("S");
     Pcfg pcfg = new Pcfg(cfg);
     assertEquals(

@@ -81,7 +81,7 @@ public class Predicate {
 
   /** Returns a string representation where the dot is at the ith argument at
    * the jth element. */
-  public String setDotAt(int i, int j) {
+  String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
     repr.append(nonterminal);
     repr.append('(');

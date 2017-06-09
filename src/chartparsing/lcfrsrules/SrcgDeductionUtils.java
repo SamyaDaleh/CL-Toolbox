@@ -17,7 +17,7 @@ public class SrcgDeductionUtils {
    * Suspend: [S(•X1 X2) -> A(X1,X2), 0, <1,0>, (<?,?>)]] [[A(a •,b) -> ε, 1,
    * <1,1>, (<0,1>, <?,?>)] all previously seen arguments in item1 have to match
    * with the ones in item 2. */
-  public static boolean ifRhsVectorMatchesLhsVector(Clause clause1Parsed,
+  static boolean ifRhsVectorMatchesLhsVector(Clause clause1Parsed,
     String[] itemForm1, Predicate rhs1, int iInt1, Clause clause2Parsed,
     String[] itemform2) {
     boolean vectorsMatch = true;
@@ -46,7 +46,7 @@ public class SrcgDeductionUtils {
     return vectorsMatch;
   }
 
-  public static boolean ifRhsVectorMatchesLhsVectorResume(Clause clause1Parsed,
+  static boolean ifRhsVectorMatchesLhsVectorResume(Clause clause1Parsed,
     String[] itemForm1, Predicate rhs1, int iInt1, Clause clause2Parsed,
     String[] itemform2) {
     boolean vectorsMatch = true;
@@ -95,7 +95,7 @@ public class SrcgDeductionUtils {
   /**
    * The same but for strings. Can I make it for any kind of array?
    */
-  public static String[] getRangesForArguments(String[] rangeOverElements,
+  static String[] getRangesForArguments(String[] rangeOverElements,
     Predicate lhs) {
     ArrayList<String> rangeOverArguments = new ArrayList<String>();
     for (int i = 0; i < lhs.getDim(); i++) {

@@ -27,24 +27,6 @@ import common.lcfrs.SrcgEarleyActiveItem;
  * Kallmeyer about Parsing as Deduction. */
 public class LcfrsToDeductionRulesConverter {
 
-  /** Instead of calling the respective function this method works as entry
-   * point for all of them. Takes a srcg, an input string w and a string
-   * specifying which parsing algorithm shall be applied. Returns the respective
-   * parsing scheme. */
-  public static ParsingSchema srcgToParsingSchema(Srcg srcg, String w,
-    String schema) {
-    switch (schema) {
-    case "earley":
-      return srcgToEarleyRules(srcg, w);
-    case "cyk":
-      return srcgToCykRules(srcg, w);
-    case "cyk-extended":
-      return srcgToCykExtendedRules(srcg, w);
-    default:
-      return null;
-    }
-  }
-
   static ParsingSchema srcgToCykRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
@@ -81,7 +63,7 @@ public class LcfrsToDeductionRulesConverter {
     return schema;
   }
 
-  static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w) {
+  public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
@@ -166,7 +148,7 @@ public class LcfrsToDeductionRulesConverter {
     return ranges;
   }
 
-  static ParsingSchema srcgToEarleyRules(Srcg srcg, String w) {
+  public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this Earley algorithm.");

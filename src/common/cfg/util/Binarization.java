@@ -19,7 +19,10 @@ public class Binarization {
     ArrayList<String[]> newP = new ArrayList<String[]>();
     doBinarize(newNt, newP, cfg);
     newCfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
-    newCfg.setProductionrules(newP.toArray(new String[newP.size()][]));
+    for (String[] newRule : newP) {
+      newCfg.getProductionRules()
+        .add(new CfgProductionRule(newRule[0], newRule[1].split(" ")));
+    }
     return newCfg;
   }
 

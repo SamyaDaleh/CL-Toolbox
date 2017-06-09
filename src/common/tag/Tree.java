@@ -12,10 +12,10 @@ import common.cfg.CfgProductionRule;
  * node. */
 public class Tree {
 
-  protected final List<Vertex> vertexes = new LinkedList<Vertex>();
+  private final List<Vertex> vertexes = new LinkedList<Vertex>();
   private final List<Edge> edges = new LinkedList<Edge>();
-  protected Vertex root = null;
-  protected Vertex foot = null;
+  private Vertex root = null;
+  private Vertex foot = null;
   private final List<Vertex> nA = new LinkedList<Vertex>();
   private final List<Vertex> oA = new LinkedList<Vertex>();
 
@@ -66,7 +66,7 @@ public class Tree {
     }
   }
 
-  protected int handleSubscript(String[] tokens, int i) throws ParseException {
+  private int handleSubscript(String[] tokens, int i) throws ParseException {
     i++;
     switch (tokens[i]) {
     case "NA":
@@ -81,7 +81,7 @@ public class Tree {
     return i;
   }
 
-  protected void handleChildNode(String[] tokens, List<Vertex> vertexPath,
+  private void handleChildNode(String[] tokens, List<Vertex> vertexPath,
     List<Integer> children, int i) {
     Vertex vertex;
     if (tokens[i].equals("ε")) {
@@ -98,7 +98,7 @@ public class Tree {
     this.vertexes.add(vertex);
   }
 
-  protected int openSubTree(String[] tokens, List<Vertex> vertexPath,
+  private int openSubTree(String[] tokens, List<Vertex> vertexPath,
     List<Integer> children, int i) throws ParseException {
     i++;
     if (tokens[i].equals("(") || tokens[i].equals(")")

@@ -41,8 +41,13 @@ public class SrcgTest {
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
     cfgeps.setNonterminals(new String[] {"S", "A", "B", "C"});
-    cfgeps.setProductionrules(new String[][] {{"A", "ε"}, {"S", ""}, {"C", ""},
-      {"S", "b A a S b C"}, {"A", "a"}, {"A", "b B"}, {"B", "b"}});
+    cfgeps.addProductionRule("A -> ε");
+    cfgeps.addProductionRule("S -> ");
+    cfgeps.addProductionRule("C -> ");
+    cfgeps.addProductionRule("S -> b A a S b C");
+    cfgeps.addProductionRule("A -> a");
+    cfgeps.addProductionRule("A -> b B");
+    cfgeps.addProductionRule("B -> b");
     cfgeps.setStartSymbol("S");
 
     Srcg srcg = new Srcg(cfgeps);
@@ -55,12 +60,14 @@ public class SrcgTest {
   }
 
   @Test public void testCfgToSrcgConversion2() throws ParseException {
-
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
     cfgeps.setNonterminals(new String[] {"S", "X1", "Y1", "Y2"});
-    cfgeps.setProductionrules(new String[][] {{"Y1", "a"}, {"S", "Y1 X1"}, {"Y2", "b"},
-      {"X1", "S Y2"}, {"S", "Y1 Y2"}});
+    cfgeps.addProductionRule("Y1 -> a");
+    cfgeps.addProductionRule("S -> Y1 X1");
+    cfgeps.addProductionRule("Y2 -> b");
+    cfgeps.addProductionRule("X1 -> S Y2");
+    cfgeps.addProductionRule("S -> Y1 Y2");
     cfgeps.setStartSymbol("S");
 
     Srcg srcg = new Srcg(cfgeps);

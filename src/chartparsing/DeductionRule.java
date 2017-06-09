@@ -5,7 +5,7 @@ import java.util.List;
 import common.Item;
 
 /** Interface that defines any kind of rule used for deduction. */
-public interface DeductionRule {
+interface DeductionRule {
 
   void addAntecedence(Item item);
 

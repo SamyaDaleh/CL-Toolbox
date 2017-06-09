@@ -61,7 +61,7 @@ public class Vertex implements Cloneable {
    * Returns true if this node dominates the given node, that means if it is a 
    * parent or an ancestor. The root domintes all other nodes.
    */
-  public boolean dominates(String gornaddress) {
+  boolean dominates(String gornaddress) {
     if (gornaddress.equals("") || gornaddress.equals(this.gornAddress)) {
       return false;
     }

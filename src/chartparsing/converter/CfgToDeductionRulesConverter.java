@@ -25,30 +25,6 @@ import common.cfg.CfgProductionRule;
  * Kallmeyer about Parsing as Deduction. */
 public class CfgToDeductionRulesConverter {
 
-  /** Instead of calling the respective function this method works as entry
-   * point for all of them. Takes a cfg, an input string w and a string
-   * specifying which parsing algorithm shall be applied. Returns the respective
-   * parsing scheme. */
-  public static ParsingSchema cfgToParsingSchema(Cfg cfg, String w,
-    String schema) {
-    switch (schema) {
-    case "topdown":
-      return cfgToTopDownRules(cfg, w);
-    case "shiftreduce":
-      return cfgToShiftReduceRules(cfg, w);
-    case "earley":
-      return cfgToEarleyRules(cfg, w);
-    case "leftcorner":
-      return cfgToLeftCornerRules(cfg, w);
-    case "cyk":
-      return cfgToCykRules(cfg, w);
-    case "cyk-extended":
-      return cfgToCykExtendedRules(cfg, w);
-    default:
-      return null;
-    }
-  }
-
   /** Converts a cfg to a parsing scheme for Topdown parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
   public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w) {

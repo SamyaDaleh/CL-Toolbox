@@ -7,13 +7,13 @@ import org.junit.Test;
 
 public class CfgTest {
   private static Cfg gen_cfgbintest() {
-    Cfg G = new Cfg();
-    G.setTerminals(new String[] {"a", "b"});
-    G.setNonterminals(new String[] {"S"});
-    G.setProductionrules(
-      new String[][] {{"S", "a S b S S a S b a b"}, {"S", "a b"}});
-    G.setStartSymbol("S");
-    return G;
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.addProductionRule("S -> a S b S S a S b a b");
+    cfg.addProductionRule("S -> a b");
+    cfg.setStartSymbol("S");
+    return cfg;
   }
 
   @Test public void testBinarization() {
@@ -26,8 +26,13 @@ public class CfgTest {
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
     cfgeps.setNonterminals(new String[] {"S", "A", "B", "C"});
-    cfgeps.setProductionrules(new String[][] {{"A", "ε"}, {"S", ""}, {"C", ""},
-      {"S", "b A a S b C"}, {"A", "a"}, {"A", "b B"}, {"B", "b"}});
+    cfgeps.addProductionRule("A -> ε");
+    cfgeps.addProductionRule("S -> ");
+    cfgeps.addProductionRule("C -> ");
+    cfgeps.addProductionRule("S -> b A a S b C");
+    cfgeps.addProductionRule("A -> a");
+    cfgeps.addProductionRule("A -> b B");
+    cfgeps.addProductionRule("B -> b");
     cfgeps.setStartSymbol("S");
     assertTrue(cfgeps.hasEpsilonProductions());
     Cfg epsfree = cfgeps.removeEmptyProductions();
@@ -38,9 +43,18 @@ public class CfgTest {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
     cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.setProductionrules(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"},
-      {"I", "I b"}, {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"},
-      {"T", "F"}, {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.addProductionRule("I -> a");
+    cfg.addProductionRule("I -> b");
+    cfg.addProductionRule("I -> I a");
+    cfg.addProductionRule("I -> I b");
+    cfg.addProductionRule("I -> I 0");
+    cfg.addProductionRule("I -> I 1");
+    cfg.addProductionRule("F -> I");
+    cfg.addProductionRule("F -> ( E )");
+    cfg.addProductionRule("T -> F");
+    cfg.addProductionRule("T -> T * F");
+    cfg.addProductionRule("E -> T");
+    cfg.addProductionRule("E -> E + T");
     cfg.setStartSymbol("E");
     assertTrue(cfg.hasChainRules());
     Cfg chainfree = cfg.removeChainRules();
@@ -51,9 +65,18 @@ public class CfgTest {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
     cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.setProductionrules(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"},
-      {"I", "I b"}, {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"},
-      {"T", "F"}, {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.addProductionRule("I -> a");
+    cfg.addProductionRule("I -> b");
+    cfg.addProductionRule("I -> I a");
+    cfg.addProductionRule("I -> I b");
+    cfg.addProductionRule("I -> I 0");
+    cfg.addProductionRule("I -> I 1");
+    cfg.addProductionRule("F -> I");
+    cfg.addProductionRule("F -> ( E )");
+    cfg.addProductionRule("T -> F");
+    cfg.addProductionRule("T -> T * F");
+    cfg.addProductionRule("E -> T");
+    cfg.addProductionRule("E -> E + T");
     cfg.setStartSymbol("E");
     Cfg treplaced = cfg.replaceTerminals();
     assertEquals("G = <N, T, S, P>\n"
@@ -69,9 +92,18 @@ public class CfgTest {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
     cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.setProductionrules(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"},
-      {"I", "I b"}, {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"},
-      {"T", "F"}, {"T", "T"}, {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.addProductionRule("I -> a");
+    cfg.addProductionRule("I -> b");
+    cfg.addProductionRule("I -> I a");
+    cfg.addProductionRule("I -> I b");
+    cfg.addProductionRule("I -> I 0");
+    cfg.addProductionRule("I -> I 1");
+    cfg.addProductionRule("F -> I");
+    cfg.addProductionRule("F -> ( E )");
+    cfg.addProductionRule("T -> F");
+    cfg.addProductionRule("T -> T * F");
+    cfg.addProductionRule("E -> T");
+    cfg.addProductionRule("E -> E + T");
     cfg.setStartSymbol("E");
     Cfg cfgcnf = cfg.removeEmptyProductions().removeNonGeneratingSymbols()
       .removeNonReachableSymbols().binarize().replaceTerminals()
@@ -91,9 +123,18 @@ public class CfgTest {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
     cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.setProductionrules(new String[][] {{"I", "a"}, {"I", "b"}, {"I", "I a"},
-      {"I", "I b"}, {"I", "I 0"}, {"I", "I 1"}, {"F", "I"}, {"F", "( E )"},
-      {"T", "F"}, {"T", "T * F"}, {"E", "T"}, {"E", "E + T"}});
+    cfg.addProductionRule("I -> a");
+    cfg.addProductionRule("I -> b");
+    cfg.addProductionRule("I -> I a");
+    cfg.addProductionRule("I -> I b");
+    cfg.addProductionRule("I -> I 0");
+    cfg.addProductionRule("I -> I 1");
+    cfg.addProductionRule("F -> I");
+    cfg.addProductionRule("F -> ( E )");
+    cfg.addProductionRule("T -> F");
+    cfg.addProductionRule("T -> T * F");
+    cfg.addProductionRule("E -> T");
+    cfg.addProductionRule("E -> E + T");
     cfg.setStartSymbol("E");
     assertTrue(cfg.removeEmptyProductions().removeNonGeneratingSymbols()
       .removeNonReachableSymbols().binarize().replaceTerminals()
@@ -104,8 +145,11 @@ public class CfgTest {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c", "d"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.setProductionrules(new String[][] {{"S", "S"}, {"S", "S a"},
-      {"S", "S b"}, {"S", "c"}, {"S", "d"}});
+    cfg.addProductionRule("S -> S");
+    cfg.addProductionRule("S -> S a");
+    cfg.addProductionRule("S -> S b");
+    cfg.addProductionRule("S -> c");
+    cfg.addProductionRule("S -> d");
     cfg.setStartSymbol("S");
     Cfg cfgwlr = cfg.removeLeftRecursion();
     assertEquals(
@@ -119,7 +163,8 @@ public class CfgTest {
     cfg.setTerminals(new String[] {"a"});
     cfg.setNonterminals(new String[] {"S", "G"});
     cfg.setStartSymbol("S");
-    cfg.setProductionrules(new String[][] {{"S", "a"}, {"G", "b"}});
+    cfg.addProductionRule("S -> a");
+    cfg.addProductionRule("G -> b");
     Cfg after = cfg.removeNonReachableSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
@@ -130,8 +175,9 @@ public class CfgTest {
     cfg.setTerminals(new String[] {"a"});
     cfg.setNonterminals(new String[] {"S", "G"});
     cfg.setStartSymbol("S");
-    cfg
-      .setProductionrules(new String[][] {{"S", "a"}, {"S", "G"}, {"G", "Gb"}});
+    cfg.addProductionRule("S -> a");
+    cfg.addProductionRule("S -> G");
+    cfg.addProductionRule("G -> G b");
     Cfg after = cfg.removeNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());

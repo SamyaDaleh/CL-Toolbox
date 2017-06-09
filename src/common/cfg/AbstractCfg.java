@@ -1,6 +1,6 @@
 package common.cfg;
 
-public abstract class AbstractCfg {
+abstract class AbstractCfg {
   protected String nonterminals[];
   protected String startSymbol;
   protected String terminals[];

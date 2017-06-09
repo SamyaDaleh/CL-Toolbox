@@ -7,14 +7,14 @@ import common.cfg.Pcfg;
 import common.lcfrs.Srcg;
 import common.tag.Tag;
 
-public class GrammarToGrammarConverter {
+class GrammarToGrammarConverter {
   private boolean please;
 
-  public GrammarToGrammarConverter(boolean please) {
+  GrammarToGrammarConverter(boolean please) {
     this.please = please;
   }
 
-  public Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm) {
+  Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm) {
     switch (algorithm) {
     case "cfg-topdown":
       return getCfgForTopdown(cfg);
@@ -112,7 +112,7 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Tag checkAndMayConvertToTag(Cfg cfg, String algorithm)
+  Tag checkAndMayConvertToTag(Cfg cfg, String algorithm)
     throws ParseException {
     switch (algorithm) {
     case "tag-cyk":
@@ -136,7 +136,7 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm) {
+  Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm) {
     switch (algorithm) {
     case "pcfg-astar":
       if (!cfg.isInChomskyNormalForm()) {
@@ -159,7 +159,7 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm)
+  Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm)
     throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
@@ -217,7 +217,7 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm) {
+  Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm) {
     switch (algorithm) {
     case "srcg-earley":
       return getSrcgForEarley(srcg);
@@ -286,7 +286,7 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Tag checkAndMayConvertToTag(Tag tag, String algorithm) {
+  Tag checkAndMayConvertToTag(Tag tag, String algorithm) {
     switch (algorithm) {
     case "tag-cyk":
       if (!tag.isBinarized()) {
@@ -312,7 +312,7 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm) {
+  Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm) {
     switch (algorithm) {
     case "pcfg-astar":
       Cfg cfg = new Cfg(pcfg);
@@ -335,20 +335,19 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm)
+  Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm)
     throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToTag(cfg, algorithm);
-
   }
 
-  public Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm)
+  Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm)
     throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToSrcg(cfg, algorithm);
   }
 
-  public Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm) {
+  Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm) {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToCfg(cfg, algorithm);
   }

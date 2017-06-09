@@ -51,7 +51,9 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        cfg.setProductionrules(parseRules(lineTrim, "->"));
+        for (String rule : parseNT(lineTrim)) {
+          cfg.addProductionRule(rule);
+        }
       }
       line = in.readLine();
     }

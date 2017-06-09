@@ -31,8 +31,11 @@ public class ChartToTreeConverterTest {
 
     cfg.setTerminals(new String[] {"a", "b", "c"});
     cfg.setNonterminals(new String[] {"A", "B", "S"});
-    cfg.setProductionrules(new String[][] {{"S", "A S B"}, {"S", "a b"},
-      {"S", "c"}, {"A", "a"}, {"B", "b"}});
+    cfg.addProductionRule("S -> A S B");
+    cfg.addProductionRule("S -> a b");
+    cfg.addProductionRule("S -> c");
+    cfg.addProductionRule("A -> a");
+    cfg.addProductionRule("B -> b");
     cfg.setStartSymbol("S");
     return cfg;
   }
@@ -42,7 +45,8 @@ public class ChartToTreeConverterTest {
 
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
+    cfg.addProductionRule("S -> a S b");
+    cfg.addProductionRule("S -> a b");
     cfg.setStartSymbol("S");
 
     return cfg;
@@ -51,7 +55,7 @@ public class ChartToTreeConverterTest {
   @Test public void testTagCykToDerivatedTree() throws ParseException {
     String w2 = "a a c b";
     ParsingSchema schema =
-      TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "cyk");
+      TagToDeductionRulesConverter.tagToCykRules(gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
@@ -62,7 +66,7 @@ public class ChartToTreeConverterTest {
   @Test public void testTagEarleyToDerivatedTree() throws ParseException {
     String w2 = "a a c b";
     ParsingSchema schema =
-      TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "earley");
+      TagToDeductionRulesConverter.tagToEarleyRules(gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,

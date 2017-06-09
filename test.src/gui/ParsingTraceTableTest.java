@@ -26,7 +26,7 @@ public class ParsingTraceTableTest {
   @Test public void testParsingTraceTable() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "earley");
+        TagToDeductionRulesConverter.tagToEarleyRules(gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     String[][] data = deduction.printTrace();

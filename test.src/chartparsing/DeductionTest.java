@@ -22,7 +22,8 @@ public class DeductionTest {
 
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.setProductionrules(new String[][] {{"S", "a S b"}, {"S", "a b"}});
+    cfg.addProductionRule("S -> a S b");
+    cfg.addProductionRule("S -> a b");
     cfg.setStartSymbol("S");
 
     return cfg;
@@ -92,9 +93,11 @@ public class DeductionTest {
 
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S", "A", "B", "X1"});
-    cfg.setProductionrules(
-        new String[][] {{"S", "A X1"}, {"S", "A B"}, {"A", "a"}, {"B", "b"},
-            {"X1", "S B"}});
+    cfg.addProductionRule("S -> A X1");
+    cfg.addProductionRule("S -> A B");
+    cfg.addProductionRule("A -> a");
+    cfg.addProductionRule("B -> b");
+    cfg.addProductionRule("X1 -> S B");
     cfg.setStartSymbol("S");
 
     String w = "a a b b";
@@ -109,9 +112,12 @@ public class DeductionTest {
 
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S", "A", "B", "C", "X1"});
-    cfg.setProductionrules(
-        new String[][] {{"S", "A X1"}, {"S", "A B"}, {"C", "a"}, {"B", "b"},
-            {"X1", "S B"}, {"A", "C"}});
+    cfg.addProductionRule("S -> A X1");
+    cfg.addProductionRule("S -> A B");
+    cfg.addProductionRule("C -> a");
+    cfg.addProductionRule("B -> b");
+    cfg.addProductionRule("X1 -> S B");
+    cfg.addProductionRule("A -> C");
     cfg.setStartSymbol("S");
 
     String w = "a a b b";
@@ -125,7 +131,7 @@ public class DeductionTest {
   @Test public void testTagCyk() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "cyk");
+        TagToDeductionRulesConverter.tagToCykRules(gentag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -134,7 +140,7 @@ public class DeductionTest {
   @Test public void testTagEarley() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToDeductionRulesConverter.tagToParsingSchema(gentag(), w2, "earley");
+        TagToDeductionRulesConverter.tagToEarleyRules(gentag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -143,7 +149,7 @@ public class DeductionTest {
   @Test public void testSrcgCykUnary() throws ParseException {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .srcgToParsingSchema(gensrcg(), w3, "cyk-extended");
+        .srcgToCykExtendedRules(gensrcg(), w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -163,7 +169,7 @@ public class DeductionTest {
     srcg.addClause("C(a,c,c)", "ε");
     String w = "a a b b a c b b a c";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .srcgToParsingSchema(srcg, w, "cyk-extended");
+        .srcgToCykExtendedRules(srcg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -172,7 +178,7 @@ public class DeductionTest {
   @Test public void testSrcgEarley() throws ParseException {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .srcgToParsingSchema(gensrcg(), w3, "earley");
+        .srcgToEarleyRules(gensrcg(), w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -193,7 +199,7 @@ public class DeductionTest {
 
     String w = "red nice ugly car";
     ParsingSchema schema =
-        PcfgToDeductionRulesConverter.pcfgToParsingSchema(pcfg, w, "astar");
+        PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg,w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();

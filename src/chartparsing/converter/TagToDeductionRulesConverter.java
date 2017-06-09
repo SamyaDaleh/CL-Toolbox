@@ -35,19 +35,6 @@ import common.tag.Vertex;
  * https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf */
 public class TagToDeductionRulesConverter {
 
-  /** Common entry point to comfortably call the different functions. */
-  public static ParsingSchema tagToParsingSchema(Tag tag, String w,
-    String schema) {
-    switch (schema) {
-    case "cyk":
-      return tagToCykRules(tag, w);
-    case "earley":
-      return tagToEarleyRules(tag, w);
-    default:
-      return null;
-    }
-  }
-
   /** Returns a parsing schema for CYK parsing of the given input w with tag. */
   public static ParsingSchema tagToCykRules(Tag tag, String w) {
     if (!tag.isBinarized()) {

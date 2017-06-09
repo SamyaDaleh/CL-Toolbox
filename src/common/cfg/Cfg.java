@@ -36,12 +36,6 @@ public class Cfg extends AbstractCfg {
     return productionRules;
   }
 
-  public void setProductionrules(String[][] rules) {
-    for (String[] rule : rules) {
-      this.productionRules.add(new CfgProductionRule(rule));
-    }
-  }
-
   /** Returns true if there is at least one rule with an empty right side,
    * except it's a start symbol rule and the start symbol never occurs on any
    * rhs. */
@@ -180,5 +174,13 @@ public class Cfg extends AbstractCfg {
    * terminals and nonterminals as rhs symbols. */
   public boolean hasMixedRhs() {
     return MixedRhs.hasMixedRhs(this);
+  }
+
+  /**
+   * Creates a CfgProductionRule from the string representation and adds it
+   * to its set of rules.
+   */
+  public void addProductionRule(String rule) {
+    this.productionRules.add(new CfgProductionRule(rule));
   }
 }

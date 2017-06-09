@@ -32,7 +32,7 @@ public class ArrayUtils {
   /** Returns true if the arrays are equal, that means all strings at the same
    * index has to be equal. Also the special character '?' is equal to
    * everything. */
-  public static boolean match(String[] itemForm1, String[] itemForm2) {
+  static boolean match(String[] itemForm1, String[] itemForm2) {
     if (itemForm1.length != itemForm2.length) {
       return false;
     }
@@ -76,22 +76,6 @@ public class ArrayUtils {
     }
     return ArrayUtils.getSubSequenceAsString(seqSplit, 0,
       seqSplit.length - rhs.length);
-  }
-
-  /** Returns a new array that is a concatenation of the two input arrays. */
-  public static String[] append(String[] split, String[] rhs) {
-    StringBuilder subSeq = new StringBuilder();
-    for (int i = 0; i < split.length; i++) {
-      if (i > 0)
-        subSeq.append(" ");
-      subSeq.append(split[i]);
-    }
-    for (String sym : rhs) {
-      if (subSeq.length() > 0)
-        subSeq.append(" ");
-      subSeq.append(sym);
-    }
-    return subSeq.toString().split(" ");
   }
 
   /** Returns a new array without the element at index i. */

@@ -58,7 +58,7 @@ public class Clause {
 
   /** Returns a string representation where the dot is at the ith argument at
    * the jth element of the lhs. */
-  public String setDotAt(int i, int j) {
+  String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
     repr.append(lhs.setDotAt(i,j));
     repr.append(" -> ");
