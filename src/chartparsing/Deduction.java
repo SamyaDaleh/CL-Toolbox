@@ -81,18 +81,37 @@ public class Deduction {
       }
     }
     ArrayList<String[]> chartData = new ArrayList<String[]>();
+    int iMaxWidth = 0;
+    int chartMaxWidth = 0;
+    int appliedRuleMaxWidth = 0;
+    for (int i = 0; i < chart.size(); i++) {
+      int iWidth = String.valueOf(i).length();
+      int chartWidth = chart.get(i).toString().length();
+      int appliedRuleWidth = rulesToString(appliedRule.get(i)).length();
+      if (iWidth > iMaxWidth) {
+        iMaxWidth = iWidth;
+      }
+      if (chartWidth > chartMaxWidth) {
+        chartMaxWidth = chartWidth;
+      }
+      if (appliedRuleWidth > appliedRuleMaxWidth) {
+        appliedRuleMaxWidth = appliedRuleWidth;
+      }
+    }
     if (successfulTrace) {
       for (int i = 0; i < chart.size(); i++) {
         if (usefulItem[i]) {
           String[] line = prettyPrint(i, chart.get(i).toString(),
-            appliedRule.get(i), deductedFrom.get(i));
+            appliedRule.get(i), deductedFrom.get(i), iMaxWidth + 3,
+            chartMaxWidth + 3, appliedRuleMaxWidth + 3);
           chartData.add(line);
         }
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
         String[] line = prettyPrint(i, chart.get(i).toString(),
-          appliedRule.get(i), deductedFrom.get(i));
+          appliedRule.get(i), deductedFrom.get(i), iMaxWidth + 3,
+          chartMaxWidth + 3, appliedRuleMaxWidth + 3);
         chartData.add(line);
       }
     }
@@ -212,15 +231,12 @@ public class Deduction {
     }
   }
 
-  private static final int column1 = 5;
-  private static final int column2 = 25;
-  private static final int column3 = 20;
-
   /** Pretty-prints rows of the parsing process by filling up all columns up to
    * a specific length with spaces. Returns the data it prints as string
    * array. */
   private static String[] prettyPrint(int i, String item,
-    ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers) {
+    ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers,
+    int column1, int column2, int column3) {
     StringBuilder line = new StringBuilder();
     line.append(String.valueOf(i + 1));
     for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
