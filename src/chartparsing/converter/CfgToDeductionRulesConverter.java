@@ -10,6 +10,9 @@ import chartparsing.cfgrules.CfgCykCompleteUnary;
 import chartparsing.cfgrules.CfgEarleyComplete;
 import chartparsing.cfgrules.CfgEarleyPredict;
 import chartparsing.cfgrules.CfgEarleyScan;
+import chartparsing.cfgrules.CfgLeftCornerChartMove;
+import chartparsing.cfgrules.CfgLeftCornerChartReduce;
+import chartparsing.cfgrules.CfgLeftCornerChartRemove;
 import chartparsing.cfgrules.CfgLeftCornerMove;
 import chartparsing.cfgrules.CfgLeftCornerReduce;
 import chartparsing.cfgrules.CfgLeftCornerRemove;
@@ -147,6 +150,39 @@ public class CfgToDeductionRulesConverter {
     schema.addRule(move);
 
     schema.addGoal(new CfgDollarItem("", "", ""));
+    return schema;
+  }
+
+  /** Converts a cfg to a parsing scheme for LeftCorner parsing, chart version. Based on
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
+   * to be used. */
+  public static ParsingSchema cfgToLeftCornerChartRules(Cfg cfg, String w) {
+    ParsingSchema schema = new ParsingSchema();
+    String[] wSplit = w.split(" ");
+    
+    for (int i = 0; i < wSplit.length; i++){
+      StaticDeductionRule axiom = new StaticDeductionRule();
+      axiom.addConsequence(new CfgItem(wSplit[i], i, 1));
+      axiom.setName("scan " + wSplit[i]);
+      schema.addAxiom(axiom);
+      axiom = new StaticDeductionRule();
+      axiom.addConsequence(new CfgItem("", i, 0));
+      axiom.setName("scan-ε ");
+      //schema.addAxiom(axiom); deactivate for DEBUG
+    }
+
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
+      DynamicDeductionRule reduce = new CfgLeftCornerChartReduce(rule);
+      schema.addRule(reduce);
+    }
+
+    DynamicDeductionRule remove = new CfgLeftCornerChartRemove();
+    schema.addRule(remove);
+
+    DynamicDeductionRule move = new CfgLeftCornerChartMove();
+    schema.addRule(move);
+
+    schema.addGoal(new CfgItem(cfg.getStartSymbol(), 0, wSplit.length));
     return schema;
   }
 

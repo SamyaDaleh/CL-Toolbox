@@ -28,7 +28,6 @@ public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
   }
 
   private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
-
     String stack1 = itemForm1[0];
     String[] stackSplit1 = stack1.split(" ");
     int i1 = Integer.parseInt(itemForm1[1]);

@@ -28,6 +28,19 @@ public class DeductionTest {
 
     return cfg;
   }
+  
+  private static Cfg gen_cfglcharttest() {
+    Cfg cfg = new Cfg();
+
+    cfg.setTerminals(new String[] {"a", "b", "c"});
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.addProductionRule("S -> a S a");
+    cfg.addProductionRule("S -> b S b");
+    cfg.addProductionRule("S -> c");
+    cfg.setStartSymbol("S");
+
+    return cfg;
+  }
 
   private static Tag gentag() throws ParseException {
     Tag g = new Tag();
@@ -55,7 +68,7 @@ public class DeductionTest {
   @Test public void testCfgTopdown() {
     String w = "a a b b";
     ParsingSchema schema =
-        CfgToDeductionRulesConverter.cfgToTopDownRules(gen_cfgdedtest(), w);
+      CfgToDeductionRulesConverter.cfgToTopDownRules(gen_cfgdedtest(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -64,7 +77,7 @@ public class DeductionTest {
   @Test public void testCfgShiftreduce() {
     String w = "a a b b";
     ParsingSchema schema =
-        CfgToDeductionRulesConverter.cfgToShiftReduceRules(gen_cfgdedtest(), w);
+      CfgToDeductionRulesConverter.cfgToShiftReduceRules(gen_cfgdedtest(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -73,7 +86,7 @@ public class DeductionTest {
   @Test public void testCfgEarley() {
     String w = "a a b b";
     ParsingSchema schema =
-        CfgToDeductionRulesConverter.cfgToEarleyRules(gen_cfgdedtest(), w);
+      CfgToDeductionRulesConverter.cfgToEarleyRules(gen_cfgdedtest(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -82,7 +95,16 @@ public class DeductionTest {
   @Test public void testCfgLeftcorner() {
     String w = "a a b b";
     ParsingSchema schema =
-        CfgToDeductionRulesConverter.cfgToLeftCornerRules(gen_cfgdedtest(), w);
+      CfgToDeductionRulesConverter.cfgToLeftCornerRules(gen_cfgdedtest(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
+  @Test public void testCfgLeftcornerChart() {
+    String w = "a b c b a";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToLeftCornerChartRules(gen_cfglcharttest(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -122,7 +144,7 @@ public class DeductionTest {
 
     String w = "a a b b";
     ParsingSchema schema =
-        CfgToDeductionRulesConverter.cfgToCykExtendedRules(cfg, w);
+      CfgToDeductionRulesConverter.cfgToCykExtendedRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -131,7 +153,7 @@ public class DeductionTest {
   @Test public void testTagCyk() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToDeductionRulesConverter.tagToCykRules(gentag(), w2);
+      TagToDeductionRulesConverter.tagToCykRules(gentag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -140,7 +162,7 @@ public class DeductionTest {
   @Test public void testTagEarley() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToDeductionRulesConverter.tagToEarleyRules(gentag(), w2);
+      TagToDeductionRulesConverter.tagToEarleyRules(gentag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -148,18 +170,18 @@ public class DeductionTest {
 
   @Test public void testSrcgCykUnary() throws ParseException {
     String w3 = "a a b b";
-    ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .srcgToCykExtendedRules(gensrcg(), w3);
+    ParsingSchema schema =
+      LcfrsToDeductionRulesConverter.srcgToCykExtendedRules(gensrcg(), w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
   }
-  
-  @Test public void testSrcgCykBinary() throws ParseException{
+
+  @Test public void testSrcgCykBinary() throws ParseException {
     Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
-    srcg.setTerminals(new String[]{"a", "b", "c"});
-    srcg.setVariables(new String[]{"U", "V", "W", "X", "Y", "Z"});
+    srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
+    srcg.setTerminals(new String[] {"a", "b", "c"});
+    srcg.setVariables(new String[] {"U", "V", "W", "X", "Y", "Z"});
     srcg.setStartSymbol("S");
     srcg.addClause("S(V Y W Z X )", "A(V,W,X) B(Y,Z)");
     srcg.addClause("A(a,a,a)", "ε");
@@ -168,8 +190,8 @@ public class DeductionTest {
     srcg.addClause("B(X V,W Y)", "B(X,Y) B(V,W)");
     srcg.addClause("C(a,c,c)", "ε");
     String w = "a a b b a c b b a c";
-    ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .srcgToCykExtendedRules(srcg, w);
+    ParsingSchema schema =
+      LcfrsToDeductionRulesConverter.srcgToCykExtendedRules(srcg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -177,8 +199,8 @@ public class DeductionTest {
 
   @Test public void testSrcgEarley() throws ParseException {
     String w3 = "a a b b";
-    ParsingSchema schema = LcfrsToDeductionRulesConverter
-        .srcgToEarleyRules(gensrcg(), w3);
+    ParsingSchema schema =
+      LcfrsToDeductionRulesConverter.srcgToEarleyRules(gensrcg(), w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -187,19 +209,18 @@ public class DeductionTest {
   @Test public void testPcfgAstar() throws ParseException {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});
-    pcfg.setTerminals(
-        new String[] {"camping", "car", "nice", "red", "ugly", "green", "house",
-            "bike"});
+    pcfg.setTerminals(new String[] {"camping", "car", "nice", "red", "ugly",
+      "green", "house", "bike"});
     pcfg.setStartSymbol("N");
-    pcfg.setProductionRules(new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
-        {"N", "car", "0.1"}, {"N", "camping", "0.2"}, {"A", "nice", "0.3"},
-        {"A", "red", "0.2"}, {"N", "A N", "0.2"}, {"N", "green", "0.1"},
-        {"N", "bike", "0.1"}, {"N", "house", "0.1"}, {"A", "ugly", "0.25"},
-        {"A", "green", "0.25"}});
+    pcfg.setProductionRules(new String[][] {{"N", "N N", "0.1"},
+      {"N", "red", "0.1"}, {"N", "car", "0.1"}, {"N", "camping", "0.2"},
+      {"A", "nice", "0.3"}, {"A", "red", "0.2"}, {"N", "A N", "0.2"},
+      {"N", "green", "0.1"}, {"N", "bike", "0.1"}, {"N", "house", "0.1"},
+      {"A", "ugly", "0.25"}, {"A", "green", "0.25"}});
 
     String w = "red nice ugly car";
     ParsingSchema schema =
-        PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg,w);
+      PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();

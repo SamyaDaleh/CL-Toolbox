@@ -17,4 +17,9 @@ public class CfgItem extends AbstractItem implements Item {
     itemForm = new String[] {lhs, String.valueOf(i), String.valueOf(j)};
   }
 
+  /** Like syntactic sugar, spares me some conversions. */
+  public CfgItem(String string, String i, String l) {
+    itemForm = new String[] {string, i, l};
+  }
+
 }
