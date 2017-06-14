@@ -167,45 +167,49 @@ public class Deduction {
    * found. */
   private void applyRule(Item item, DynamicDeductionRule rule) {
     int itemsNeeded = rule.getAntecedencesNeeded();
-    rule.clearItems();
-    // TODO how can I make the depth dynamic?
-    // By a recursive call to a function that counts down the number of items
-    // it shall append to a list
-    List<Item> newItems;
-    if (itemsNeeded == 1) {
-      rule.addAntecedence(item);
-      newItems = rule.getConsequences();
-      if (newItems.size() > 0) {
-        processNewItems(newItems, rule);
-      }
-    } else if (itemsNeeded == 2) {
-      for (int i = 0; i < chart.size(); i++) {
+    if (chart.size() >= itemsNeeded) {
+      List<List<Item>> startList = new LinkedList<List<Item>>();
+      startList.add(new LinkedList<Item>());
+      startList.get(0).add(item);
+      for (List<Item> tryAntecedences : antecedenceListGenerator(startList, 0,
+        itemsNeeded - 1)) {
         rule.clearItems();
-        rule.addAntecedence(item);
-        rule.addAntecedence(chart.get(i));
-        newItems = rule.getConsequences();
+        rule.setAntecedences(tryAntecedences);
+        List<Item> newItems = rule.getConsequences();
         if (newItems.size() > 0) {
           processNewItems(newItems, rule);
-        }
-      }
-    } else if (itemsNeeded == 3) {
-      for (int i = 0; i < chart.size(); i++) {
-        for (int j = 0; j < chart.size(); j++) {
-          rule.clearItems();
-          rule.addAntecedence(item);
-          rule.addAntecedence(chart.get(i));
-          rule.addAntecedence(chart.get(j));
-          newItems = rule.getConsequences();
-          if (newItems.size() > 0) {
-            processNewItems(newItems, rule);
-          }
         }
       }
     }
   }
 
-  private void processNewItems(List<Item> newItems, DynamicDeductionRule rule) {
+  /** Returns itmsNeeded items from the chart. All items appear only once per
+   * list, no list is the permutation of another one. */
+  List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList, int i,
+    int itemsNeeded) {
+    if (itemsNeeded == 0) {
+      return oldList;
+    } else {
+      List<List<Item>> finalList = new LinkedList<List<Item>>();
+      for (int j = i; j < chart.size() - itemsNeeded; j++) {
+        if (!chart.get(j).equals(oldList.get(0).get(0))) {
+          List<List<Item>> newList = new LinkedList<List<Item>>();
+          for (List<Item> subList : oldList) {
+            newList.add(new ArrayList<Item>(subList));
+            newList.get(newList.size() - 1).add(chart.get(j));
+          }
+          finalList
+            .addAll(antecedenceListGenerator(newList, j, itemsNeeded - 1));
+        }
+      }
+      return finalList;
+    }
+  }
 
+  /**
+   * Adds new items to chart and agenda if they are not in the chart yet.
+   */
+  private void processNewItems(List<Item> newItems, DynamicDeductionRule rule) {
     ArrayList<Integer> newItemsDeductedFrom = new ArrayList<Integer>();
     for (Item itemToCheck : rule.getAntecedences()) {
       newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
