@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.Deduction;
-import common.Item;
+import chartparsing.Item;
 import common.cfg.CfgProductionRule;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;

@@ -2,14 +2,14 @@ package chartparsing.converter;
 
 import java.util.Map;
 
-import astar.SxCalc;
 import chartparsing.DynamicDeductionRule;
 import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
-import chartparsing.cfgrules.PcfgAstarComplete;
+import chartparsing.cfg.PcfgAstarComplete;
+import chartparsing.cfg.PcfgAstarItem;
+import chartparsing.cfg.SxCalc;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
-import common.cfg.PcfgAstarItem;
 import common.cfg.PcfgProductionRule;
 
 /** Creates parsing schemes for probabilistic parsing of CFGs. */

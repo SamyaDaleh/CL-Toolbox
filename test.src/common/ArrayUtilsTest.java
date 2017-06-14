@@ -7,7 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import common.tag.TagEarleyItem;
+import chartparsing.Item;
+import chartparsing.tag.TagEarleyItem;
 
 public class ArrayUtilsTest {
   

@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import common.Item;
-
 /** A deduction system that derives consequences from antecendence items and
  * tries to generate a goal item. Based on the slides from Laura Kallmeyer about
  * Parsing as Deduction

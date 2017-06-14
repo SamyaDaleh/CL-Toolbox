@@ -3,8 +3,6 @@ package chartparsing;
 import java.util.LinkedList;
 import java.util.List;
 
-import common.Item;
-
 /** Static deduction rule that stores a set of antecedences and consequences.
  * Used as axiom. */
 public class StaticDeductionRule implements DeductionRule{

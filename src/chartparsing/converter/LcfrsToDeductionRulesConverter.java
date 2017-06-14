@@ -7,21 +7,21 @@ import java.util.List;
 import chartparsing.DynamicDeductionRule;
 import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
-import chartparsing.lcfrsrules.SrcgCykBinary;
-import chartparsing.lcfrsrules.SrcgCykUnary;
-import chartparsing.lcfrsrules.SrcgDeductionUtils;
-import chartparsing.lcfrsrules.SrcgEarleyComplete;
-import chartparsing.lcfrsrules.SrcgEarleyConvert;
-import chartparsing.lcfrsrules.SrcgEarleyPredict;
-import chartparsing.lcfrsrules.SrcgEarleyResume;
-import chartparsing.lcfrsrules.SrcgEarleyScan;
-import chartparsing.lcfrsrules.SrcgEarleySuspend;
+import chartparsing.lcfrs.SrcgCykBinary;
+import chartparsing.lcfrs.SrcgCykItem;
+import chartparsing.lcfrs.SrcgCykUnary;
+import chartparsing.lcfrs.SrcgDeductionUtils;
+import chartparsing.lcfrs.SrcgEarleyActiveItem;
+import chartparsing.lcfrs.SrcgEarleyComplete;
+import chartparsing.lcfrs.SrcgEarleyConvert;
+import chartparsing.lcfrs.SrcgEarleyPredict;
+import chartparsing.lcfrs.SrcgEarleyResume;
+import chartparsing.lcfrs.SrcgEarleyScan;
+import chartparsing.lcfrs.SrcgEarleySuspend;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 import common.lcfrs.RangeVector;
 import common.lcfrs.Srcg;
-import common.lcfrs.SrcgCykItem;
-import common.lcfrs.SrcgEarleyActiveItem;
 
 /** Generates different parsing schemes. Based on the slides from Laura
  * Kallmeyer about Parsing as Deduction. */

@@ -13,7 +13,7 @@ public class Clause {
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
    * every part a Predicate  */
-  Clause(String lhs, String rhs) throws ParseException {
+  public Clause(String lhs, String rhs) throws ParseException {
     this.lhs = new Predicate(lhs);
     int start = 0;
     for (int i = 1; i < rhs.length(); i++) {
@@ -58,7 +58,7 @@ public class Clause {
 
   /** Returns a string representation where the dot is at the ith argument at
    * the jth element of the lhs. */
-  String setDotAt(int i, int j) {
+  public String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
     repr.append(lhs.setDotAt(i,j));
     repr.append(" -> ");

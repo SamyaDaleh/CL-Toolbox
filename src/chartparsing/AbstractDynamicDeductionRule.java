@@ -3,8 +3,6 @@ package chartparsing;
 import java.util.LinkedList;
 import java.util.List;
 
-import common.Item;
-
 /** Class to hold the methods commonly used by all DeductionRules. */
 public abstract class AbstractDynamicDeductionRule
   implements DynamicDeductionRule {

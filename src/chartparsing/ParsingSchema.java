@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import common.Item;
-
 /** Representation of a parsing schema, based on slides from Laura Kallmeyer.
  * Consists of a set of deduction rules and goal items that have to be derived
  * with help of the rules. */
