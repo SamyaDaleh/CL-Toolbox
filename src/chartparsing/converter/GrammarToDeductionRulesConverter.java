@@ -27,6 +27,8 @@ public class GrammarToDeductionRulesConverter {
       return CfgToDeductionRulesConverter.cfgToEarleyRules(cfg, w);
     case "cfg-leftcorner":
       return CfgToDeductionRulesConverter.cfgToLeftCornerRules(cfg, w);
+    case "cfg-leftcorner-chart":
+      return CfgToDeductionRulesConverter.cfgToLeftCornerChartRules(cfg, w);
     case "cfg-cyk":
       return CfgToDeductionRulesConverter.cfgToCykRules(cfg, w);
     case "cfg-cyk-extended":

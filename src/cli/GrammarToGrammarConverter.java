@@ -17,13 +17,15 @@ class GrammarToGrammarConverter {
   Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm) {
     switch (algorithm) {
     case "cfg-topdown":
-      return getCfgForTopdown(cfg);
+      return getCfgForTopDown(cfg);
     case "cfg-shiftreduce":
-      return getCfgForShiftreduce(cfg);
+      return getCfgForShiftReduce(cfg);
     case "cfg-earley":
       return cfg;
     case "cfg-leftcorner":
-      return getCfgForLeftcorner(cfg);
+      return getCfgForLeftCorner(cfg);
+    case "cfg-leftcorner-chart":
+      return cfg;
     case "cfg-cyk":
       return getCfgForCyk(cfg);
     case "cfg-cyk-extended":
@@ -66,7 +68,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForLeftcorner(Cfg cfg) {
+  private Cfg getCfgForLeftCorner(Cfg cfg) {
     if (cfg.hasEpsilonProductions() || cfg.hasDirectLeftRecursion()) {
       if (please) {
         return cfg.removeEmptyProductions().removeLeftRecursion()
@@ -82,7 +84,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForShiftreduce(Cfg cfg) {
+  private Cfg getCfgForShiftReduce(Cfg cfg) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
         return cfg.removeEmptyProductions().removeNonGeneratingSymbols()
@@ -97,7 +99,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForTopdown(Cfg cfg) {
+  private Cfg getCfgForTopDown(Cfg cfg) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
         return cfg.removeEmptyProductions().removeNonGeneratingSymbols()

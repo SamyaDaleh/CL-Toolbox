@@ -168,8 +168,12 @@ public class CfgToDeductionRulesConverter {
       axiom = new StaticDeductionRule();
       axiom.addConsequence(new CfgItem("", i, 0));
       axiom.setName("scan-ε ");
-      //schema.addAxiom(axiom); deactivate for DEBUG
+      schema.addAxiom(axiom);
     }
+    StaticDeductionRule axiom = new StaticDeductionRule();
+    axiom.addConsequence(new CfgItem("", wSplit.length, 0));
+    axiom.setName("scan-ε ");
+    schema.addAxiom(axiom);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       DynamicDeductionRule reduce = new CfgLeftCornerChartReduce(rule);

@@ -1,4 +1,5 @@
 package cli;
+
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -33,9 +34,9 @@ public class MainTest {
   private void callWithGrammar(String grammarfile, String w)
     throws ParseException, IOException {
     String[] algorithms = new String[] {"cfg-neverheardofthis", "cfg-topdown",
-      "cfg-shiftreduce", "cfg-earley", "cfg-leftcorner", "cfg-cyk",
-      "cfg-cyk-extended", "pcfg-astar", "tag-earley", "tag-cyk", "srcg-cyk",
-      "srcg-cyk-extended", "srcg-earley"};
+      "cfg-shiftreduce", "cfg-earley", "cfg-leftcorner", "cfg-leftcorner-chart",
+      "cfg-cyk", "cfg-cyk-extended", "pcfg-astar", "tag-earley", "tag-cyk",
+      "srcg-cyk", "srcg-cyk-extended", "srcg-earley"};
     for (String algorithm : algorithms) {
       Main.main(new String[] {grammarfile, w, algorithm});
       Main.main(new String[] {grammarfile, w, algorithm, "--success"});
