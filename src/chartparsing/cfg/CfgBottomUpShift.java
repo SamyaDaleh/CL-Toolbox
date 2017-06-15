@@ -8,10 +8,10 @@ import chartparsing.Item;
 /** Moves the next input symbol onto the stack */
 public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
 
-  private final String[] wsplit;
+  private final String[] wSplit;
 
-  public CfgBottomUpShift(String[] wsplit) {
-    this.wsplit = wsplit;
+  public CfgBottomUpShift(String[] wSplit) {
+    this.wSplit = wSplit;
     this.name = "shift";
     this.antNeeded = 1;
   }
@@ -21,11 +21,11 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       String stack = itemForm[0];
       int i = Integer.parseInt(itemForm[1]);
-      if (i < wsplit.length) {
+      if (i < wSplit.length) {
         if (stack.length() == 0) {
-          consequences.add(new CfgItem(wsplit[i], i + 1));
+          consequences.add(new CfgItem(wSplit[i], i + 1));
         } else {
-          consequences.add(new CfgItem(stack + " " + wsplit[i], i + 1));
+          consequences.add(new CfgItem(stack + " " + wSplit[i], i + 1));
         }
       }
     }

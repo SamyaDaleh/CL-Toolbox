@@ -21,6 +21,9 @@ import chartparsing.cfg.CfgLeftCornerReduce;
 import chartparsing.cfg.CfgLeftCornerRemove;
 import chartparsing.cfg.CfgTopDownPredict;
 import chartparsing.cfg.CfgTopDownScan;
+import chartparsing.cfg.CfgUngerComplete;
+import chartparsing.cfg.CfgUngerPredict;
+import chartparsing.cfg.CfgUngerScan;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
 
@@ -123,8 +126,8 @@ public class CfgToDeductionRulesConverter {
    * to be used. */
   public static ParsingSchema cfgToLeftCornerRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
-      System.out
-        .println("CFG must not contain empty productions for Leftcorner parsing.");
+      System.out.println(
+        "CFG must not contain empty productions for Leftcorner parsing.");
       return null;
     }
     if (cfg.hasDirectLeftRecursion()) {
@@ -153,14 +156,14 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Converts a cfg to a parsing scheme for LeftCorner parsing, chart version. Based on
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
-   * to be used. */
+  /** Converts a cfg to a parsing scheme for LeftCorner parsing, chart version.
+   * Based on https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the
+   * moment to be used. */
   public static ParsingSchema cfgToLeftCornerChartRules(Cfg cfg, String w) {
     ParsingSchema schema = new ParsingSchema();
     String[] wSplit = w.split(" ");
-    
-    for (int i = 0; i < wSplit.length; i++){
+
+    for (int i = 0; i < wSplit.length; i++) {
       StaticDeductionRule axiom = new StaticDeductionRule();
       axiom.addConsequence(new CfgItem(wSplit[i], i, 1));
       axiom.setName("scan " + wSplit[i]);
@@ -219,8 +222,8 @@ public class CfgToDeductionRulesConverter {
   }
 
   /** Like CYK parsing, but with an additional deduction rule for chain rules,
-   * hence grammar needs only to be in Canonical Two Form. 
-   * Source: Giogio Satta, ESSLLI 2013*/
+   * hence grammar needs only to be in Canonical Two Form. Source: Giogio Satta,
+   * ESSLLI 2013 */
   public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w) {
     if (!cfg.isInCanonicalTwoForm()) {
       System.out.println("Grammar has to be in Canonical Two Form.");
@@ -250,6 +253,42 @@ public class CfgToDeductionRulesConverter {
       }
     }
     schema.addGoal(new CfgItem(cfg.getStartSymbol(), 0, wSplit.length));
+    return schema;
+  }
+
+  /** Unger parsing tries out all possible separations, factorial runtime. */
+  public static ParsingSchema cfgToUngerRules(Cfg cfg, String w) {
+    if (cfg.hasEpsilonProductions()) {
+      System.out
+        .println("CFG must not contain empty productions for Unger parsing.");
+      return null;
+    }
+    if (cfg.hasDirectLeftRecursion()) {
+      System.out
+        .println("CFG must not contain left recursion for Unger parsing.");
+      return null;
+    }
+    String[] wSplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+
+    StaticDeductionRule axiom = new StaticDeductionRule();
+    axiom.setName("axiom");
+    axiom.addConsequence(
+      new CfgItem("•" + cfg.getStartSymbol(), 0, wSplit.length));
+    schema.addAxiom(axiom);
+
+    schema.addGoal(new CfgItem(cfg.getStartSymbol() + "•", 0, wSplit.length));
+
+    DynamicDeductionRule scan = new CfgUngerScan(wSplit);
+    schema.addRule(scan);
+
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
+      DynamicDeductionRule predict =
+        new CfgUngerPredict(rule, cfg);
+      schema.addRule(predict);
+      DynamicDeductionRule complete = new CfgUngerComplete(rule);
+      schema.addRule(complete);
+    }
     return schema;
   }
 }

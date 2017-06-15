@@ -183,7 +183,7 @@ public class Deduction {
     }
   }
 
-  /** Returns itmsNeeded items from the chart. All items appear only once per
+  /** Returns itemsNeeded items from the chart. All items appear only once per
    * list, no list is the permutation of another one. */
   List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList, int i,
     int itemsNeeded) {
@@ -191,24 +191,25 @@ public class Deduction {
       return oldList;
     } else {
       List<List<Item>> finalList = new LinkedList<List<Item>>();
-      for (int j = i; j < chart.size() - itemsNeeded; j++) {
+      for (int j = i; j <= chart.size() - itemsNeeded; j++) {
         if (!chart.get(j).equals(oldList.get(0).get(0))) {
           List<List<Item>> newList = new LinkedList<List<Item>>();
           for (List<Item> subList : oldList) {
-            newList.add(new ArrayList<Item>(subList));
+            newList.add(new ArrayList<Item>());
+            newList.get(newList.size() - 1).addAll(subList);
             newList.get(newList.size() - 1).add(chart.get(j));
           }
-          finalList
-            .addAll(antecedenceListGenerator(newList, j, itemsNeeded - 1));
+          for (List<Item> subList : antecedenceListGenerator(newList, j + 1,
+            itemsNeeded - 1)) {
+            finalList.add(subList);
+          }
         }
       }
       return finalList;
     }
   }
 
-  /**
-   * Adds new items to chart and agenda if they are not in the chart yet.
-   */
+  /** Adds new items to chart and agenda if they are not in the chart yet. */
   private void processNewItems(List<Item> newItems, DynamicDeductionRule rule) {
     ArrayList<Integer> newItemsDeductedFrom = new ArrayList<Integer>();
     for (Item itemToCheck : rule.getAntecedences()) {

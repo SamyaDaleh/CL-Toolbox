@@ -28,7 +28,7 @@ public class DeductionTest {
 
     return cfg;
   }
-  
+
   private static Cfg gen_cfglcharttest() {
     Cfg cfg = new Cfg();
 
@@ -221,6 +221,15 @@ public class DeductionTest {
     String w = "red nice ugly car";
     ParsingSchema schema =
       PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
+  @Test public void testCfgUnger() {
+    String w = "a a b b";
+    ParsingSchema schema =
+      CfgToDeductionRulesConverter.cfgToUngerRules(gen_cfgdedtest(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
