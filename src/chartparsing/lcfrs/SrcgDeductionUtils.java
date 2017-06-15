@@ -28,19 +28,14 @@ public class SrcgDeductionUtils {
       String argFrom = itemform2[argFromAbsPos * 2 + 4];
       int argToAbsPos = clause2Parsed.getLhs().getAbsolutePos(argNum + 1,
         clause2Parsed.getLhs().getSymbols()[argNum].length - 1);
-      try { // DEBUG
-        String argTo = itemform2[argToAbsPos * 2 + 5];
-        for (int il = 0; il < lhsSym.length; il++) {
-          if (lhsSym[il].equals(arg[0])) {
-            if (!itemForm1[il * 2 + 4].equals(argFrom)
-              || !itemForm1[il * 2 + 5].equals(argTo)) {
-              vectorsMatch = false;
-            }
+      String argTo = itemform2[argToAbsPos * 2 + 5];
+      for (int il = 0; il < lhsSym.length; il++) {
+        if (lhsSym[il].equals(arg[0])) {
+          if (!itemForm1[il * 2 + 4].equals(argFrom)
+            || !itemForm1[il * 2 + 5].equals(argTo)) {
+            vectorsMatch = false;
           }
         }
-      } catch (ArrayIndexOutOfBoundsException e) { // DEBUG
-        System.out.println(e.getLocalizedMessage());
-        return false;
       }
     }
     return vectorsMatch;
@@ -57,19 +52,14 @@ public class SrcgDeductionUtils {
       String argFrom = itemform2[argFromAbsPos * 2 + 4];
       int argToAbsPos = clause2Parsed.getLhs().getAbsolutePos(argNum + 1,
         clause2Parsed.getLhs().getSymbols()[argNum].length - 1);
-      try { // DEBUG
-        String argTo = itemform2[argToAbsPos * 2 + 5];
-        for (int il = 0; il < lhsSym.length; il++) {
-          if (lhsSym[il].equals(arg[0])) {
-            if (!itemForm1[il * 2 + 4].equals(argFrom)
-              || !itemForm1[il * 2 + 5].equals(argTo)) {
-              vectorsMatch = false;
-            }
+      String argTo = itemform2[argToAbsPos * 2 + 5];
+      for (int il = 0; il < lhsSym.length; il++) {
+        if (lhsSym[il].equals(arg[0])) {
+          if (!itemForm1[il * 2 + 4].equals(argFrom)
+            || !itemForm1[il * 2 + 5].equals(argTo)) {
+            vectorsMatch = false;
           }
         }
-      } catch (ArrayIndexOutOfBoundsException e) { // DEBUG
-        System.out.println(e.getLocalizedMessage());
-        return false;
       }
     }
     return vectorsMatch;
@@ -81,30 +71,30 @@ public class SrcgDeductionUtils {
     Predicate lhs) {
     ArrayList<Integer> rangeOverArguments = new ArrayList<Integer>();
     for (int i = 0; i < lhs.getDim(); i++) {
-      rangeOverArguments.add(rangeOverElements[lhs.getAbsolutePos(i+1, 0)*2]);
+      rangeOverArguments
+        .add(rangeOverElements[lhs.getAbsolutePos(i + 1, 0) * 2]);
       if (i == lhs.getDim() - 1) {
         rangeOverArguments.add(rangeOverElements[rangeOverElements.length - 1]);
       } else {
         rangeOverArguments
-          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
+          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0) * 2 - 1]);
       }
     }
     return rangeOverArguments.toArray(new Integer[rangeOverArguments.size()]);
   }
-  
-  /**
-   * The same but for strings. Can I make it for any kind of array?
-   */
+
+  /** The same but for strings. Can I make it for any kind of array? */
   static String[] getRangesForArguments(String[] rangeOverElements,
     Predicate lhs) {
     ArrayList<String> rangeOverArguments = new ArrayList<String>();
     for (int i = 0; i < lhs.getDim(); i++) {
-      rangeOverArguments.add(rangeOverElements[lhs.getAbsolutePos(i+1, 0)*2]);
+      rangeOverArguments
+        .add(rangeOverElements[lhs.getAbsolutePos(i + 1, 0) * 2]);
       if (i == lhs.getDim() - 1) {
         rangeOverArguments.add(rangeOverElements[rangeOverElements.length - 1]);
       } else {
         rangeOverArguments
-          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0)*2 - 1]);
+          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0) * 2 - 1]);
       }
     }
     return rangeOverArguments.toArray(new String[rangeOverArguments.size()]);

@@ -34,7 +34,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
     }
     return this.consequences;
   }
-  
+
   private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
 
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
@@ -78,7 +78,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
 
         for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
           Predicate rhsPred = clause2Parsed.getRhs().get(n);
-          if (rhsPred.getSymAt(iInt1, 0).equals(mayV2) &&  isVar2
+          if (rhsPred.getSymAt(iInt1, 0).equals(mayV2) && isVar2
             && rhsPred.getNonterminal()
               .equals(clause1Parsed.getLhs().getNonterminal())
             && itemForm1.length > (iInt1 - 1) * 2 + 5
@@ -96,15 +96,11 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
                   .getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
                 int indabspos =
                   clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
-                try { // DEBUG
                 newVector.set(indabspos * 2, pos2);
                 newVector.set(indabspos * 2 + 1, pos1);
                 consequences.add(
                   new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1,
                     newVector.toArray(new String[newVector.size()])));
-                } catch (IndexOutOfBoundsException e) {
-                  System.out.println(e.getLocalizedMessage());
-                }
               }
             }
           }
@@ -116,7 +112,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[B(ψ) -> Ψ,pos',<i,j>,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]"
-        + "\n______ \n" + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
+      + "\n______ \n" + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
   }
 
 }
