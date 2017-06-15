@@ -184,7 +184,7 @@ public class Deduction {
 
   /** Returns itemsNeeded items from the chart. All items appear only once per
    * list, no list is the permutation of another one. */
-  List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList, int i,
+  private List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList, int i,
     int itemsNeeded) {
     if (itemsNeeded == 0) {
       return oldList;

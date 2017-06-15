@@ -15,6 +15,26 @@ public class CfgTest {
     cfg.setStartSymbol("S");
     return cfg;
   }
+  
+  private static Cfg gen_cfgEFT() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
+    cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
+    cfg.addProductionRule("I -> a");
+    cfg.addProductionRule("I -> b");
+    cfg.addProductionRule("I -> I a");
+    cfg.addProductionRule("I -> I b");
+    cfg.addProductionRule("I -> I 0");
+    cfg.addProductionRule("I -> I 1");
+    cfg.addProductionRule("F -> I");
+    cfg.addProductionRule("F -> ( E )");
+    cfg.addProductionRule("T -> F");
+    cfg.addProductionRule("T -> T * F");
+    cfg.addProductionRule("E -> T");
+    cfg.addProductionRule("E -> E + T");
+    cfg.setStartSymbol("E");
+    return cfg;
+  }
 
   @Test public void testBinarization() {
     assertTrue(!gen_cfgbintest().isBinarized());
@@ -40,45 +60,13 @@ public class CfgTest {
   }
 
   @Test public void testRemoveChainRules() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
-    cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.addProductionRule("I -> a");
-    cfg.addProductionRule("I -> b");
-    cfg.addProductionRule("I -> I a");
-    cfg.addProductionRule("I -> I b");
-    cfg.addProductionRule("I -> I 0");
-    cfg.addProductionRule("I -> I 1");
-    cfg.addProductionRule("F -> I");
-    cfg.addProductionRule("F -> ( E )");
-    cfg.addProductionRule("T -> F");
-    cfg.addProductionRule("T -> T * F");
-    cfg.addProductionRule("E -> T");
-    cfg.addProductionRule("E -> E + T");
-    cfg.setStartSymbol("E");
-    assertTrue(cfg.hasChainRules());
-    Cfg chainfree = cfg.removeChainRules();
+    assertTrue(gen_cfgEFT().hasChainRules());
+    Cfg chainfree = gen_cfgEFT().removeChainRules();
     assertTrue(!chainfree.hasChainRules());
   }
 
   @Test public void testReplaceTerminals() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
-    cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.addProductionRule("I -> a");
-    cfg.addProductionRule("I -> b");
-    cfg.addProductionRule("I -> I a");
-    cfg.addProductionRule("I -> I b");
-    cfg.addProductionRule("I -> I 0");
-    cfg.addProductionRule("I -> I 1");
-    cfg.addProductionRule("F -> I");
-    cfg.addProductionRule("F -> ( E )");
-    cfg.addProductionRule("T -> F");
-    cfg.addProductionRule("T -> T * F");
-    cfg.addProductionRule("E -> T");
-    cfg.addProductionRule("E -> E + T");
-    cfg.setStartSymbol("E");
-    Cfg treplaced = cfg.replaceTerminals();
+    Cfg treplaced = gen_cfgEFT().replaceTerminals();
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
       + "T = {a, b, 0, 1, (, ), *, +}\n" + "S = E\n"
@@ -89,23 +77,7 @@ public class CfgTest {
   }
 
   @Test public void testToCnf() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
-    cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.addProductionRule("I -> a");
-    cfg.addProductionRule("I -> b");
-    cfg.addProductionRule("I -> I a");
-    cfg.addProductionRule("I -> I b");
-    cfg.addProductionRule("I -> I 0");
-    cfg.addProductionRule("I -> I 1");
-    cfg.addProductionRule("F -> I");
-    cfg.addProductionRule("F -> ( E )");
-    cfg.addProductionRule("T -> F");
-    cfg.addProductionRule("T -> T * F");
-    cfg.addProductionRule("E -> T");
-    cfg.addProductionRule("E -> E + T");
-    cfg.setStartSymbol("E");
-    Cfg cfgcnf = cfg.removeEmptyProductions().removeNonGeneratingSymbols()
+    Cfg cfgcnf = gen_cfgEFT().removeEmptyProductions().removeNonGeneratingSymbols()
       .removeNonReachableSymbols().binarize().replaceTerminals()
       .removeChainRules();
     assertTrue(cfgcnf.isInChomskyNormalForm());
@@ -120,23 +92,7 @@ public class CfgTest {
   }
 
   @Test public void testToC2f() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
-    cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.addProductionRule("I -> a");
-    cfg.addProductionRule("I -> b");
-    cfg.addProductionRule("I -> I a");
-    cfg.addProductionRule("I -> I b");
-    cfg.addProductionRule("I -> I 0");
-    cfg.addProductionRule("I -> I 1");
-    cfg.addProductionRule("F -> I");
-    cfg.addProductionRule("F -> ( E )");
-    cfg.addProductionRule("T -> F");
-    cfg.addProductionRule("T -> T * F");
-    cfg.addProductionRule("E -> T");
-    cfg.addProductionRule("E -> E + T");
-    cfg.setStartSymbol("E");
-    assertTrue(cfg.removeEmptyProductions().removeNonGeneratingSymbols()
+    assertTrue(gen_cfgEFT().removeEmptyProductions().removeNonGeneratingSymbols()
       .removeNonReachableSymbols().binarize().replaceTerminals()
       .isInCanonicalTwoForm());
   }

@@ -5,9 +5,9 @@ import chartparsing.Item;
 
 /** An item we get if we have fully seen an active item. It is used to move the
  * dot further in active items. */
-public class SrcgEarleyPassiveItem extends AbstractItem implements Item {
+class SrcgEarleyPassiveItem extends AbstractItem implements Item {
 
-  public SrcgEarleyPassiveItem(String nt,
+  SrcgEarleyPassiveItem(String nt,
     String[] newVector) {
     this.itemForm = new String[newVector.length + 1];
     this.itemForm[0] = nt;

@@ -31,7 +31,7 @@ public class SrcgEarleyActiveItem extends AbstractItem implements Item {
 
   /** Constructor with string array instead of a range vector to spare me a lot
    * of conversions. */
-  public SrcgEarleyActiveItem(String clause, int pos, int i, int j,
+  SrcgEarleyActiveItem(String clause, int pos, int i, int j,
     String[] rangeVector) {
     this.itemForm = new String[rangeVector.length + 4];
     this.itemForm[0] = clause;
