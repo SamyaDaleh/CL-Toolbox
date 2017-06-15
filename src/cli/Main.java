@@ -28,8 +28,8 @@ class Main {
       System.out.println(
         "Parsing algorithm can be: cfg-cyk, cfg-cyk-extended, cfg-earley, " 
           + "cfg-topdown, cfg-shiftreduce, cfg-leftcorner, cfg-leftcorner-chart, " 
-          + "pcfg-astar, tag-cyk, tag-earley, srcg-cyk, srcg-cyk-extended, " 
-          + "srcg-earley");
+          + "cfg-unger, pcfg-astar, tag-cyk, tag-earley, srcg-cyk, "
+          + "srcg-cyk-extended, srcg-earley");
       System.out.println(
         "Optional parameters can be: --success : prints a trace only of items "
           + "that lead to a goal item.");

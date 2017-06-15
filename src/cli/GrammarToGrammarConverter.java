@@ -30,6 +30,8 @@ class GrammarToGrammarConverter {
       return getCfgForCyk(cfg);
     case "cfg-cyk-extended":
       return getCfgForCykExtended(cfg);
+    case "cfg-unger":
+      return getCfgForLeftCorner(cfg);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -76,7 +78,7 @@ class GrammarToGrammarConverter {
           .removeNonReachableSymbols();
       } else {
         System.out.println(
-          "CFG must not contain empty productions or left recursion for left corner parsing.");
+          "CFG must not contain empty productions or left recursion for this parsing algorithm.");
         return null;
       }
     } else {

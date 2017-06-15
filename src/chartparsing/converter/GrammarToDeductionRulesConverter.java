@@ -33,6 +33,8 @@ public class GrammarToDeductionRulesConverter {
       return CfgToDeductionRulesConverter.cfgToCykRules(cfg, w);
     case "cfg-cyk-extended":
       return CfgToDeductionRulesConverter.cfgToCykExtendedRules(cfg, w);
+    case "cfg-unger":
+      return CfgToDeductionRulesConverter.cfgToUngerRules(cfg, w);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");

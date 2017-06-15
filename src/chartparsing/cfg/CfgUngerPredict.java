@@ -27,36 +27,40 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
       int from = Integer.parseInt(itemForm[1]);
       int to = Integer.parseInt(itemForm[2]);
       if (itemForm[0].substring(1).equals(rule.getLhs())) {
-        for (ArrayList<Integer> sequence : getAllSeparations(from, to,
-          rule.getRhs().length - 1)) {
-          boolean skipSequence = false;
-          if (cfg.terminalsContain(rule.getRhs()[0])
-            && sequence.get(0) - from > 1) {
-            continue;
-          }
-          for (int i = 1; i < sequence.size() - 1; i++) {
-            if (cfg.terminalsContain(rule.getRhs()[i])
-              && sequence.get(i) - sequence.get(i - 1) > 1) {
-              skipSequence = true;
-              break;
+        if (rule.getRhs().length == 1) {
+          consequences.add(new CfgItem("•" + rule.getRhs()[0],from,to));
+        } else {
+          for (ArrayList<Integer> sequence : getAllSeparations(from, to,
+            rule.getRhs().length - 1)) {
+            boolean skipSequence = false;
+            if (cfg.terminalsContain(rule.getRhs()[0])
+              && sequence.get(0) - from > 1) {
+              continue;
             }
+            for (int i = 1; i < sequence.size() - 1; i++) {
+              if (cfg.terminalsContain(rule.getRhs()[i])
+                && sequence.get(i) - sequence.get(i - 1) > 1) {
+                skipSequence = true;
+                break;
+              }
+            }
+            if (skipSequence) {
+              continue;
+            }
+            if (cfg.terminalsContain(rule.getRhs()[rule.getRhs().length - 1])
+              && to - sequence.get(sequence.size() - 1) > 1) {
+              continue;
+            }
+            consequences
+              .add(new CfgItem("•" + rule.getRhs()[0], from, sequence.get(0)));
+            for (int i = 1; i < sequence.size(); i++) {
+              consequences.add(new CfgItem("•" + rule.getRhs()[i],
+                sequence.get(i - 1), sequence.get(i)));
+            }
+            consequences
+              .add(new CfgItem("•" + rule.getRhs()[rule.getRhs().length - 1],
+                sequence.get(sequence.size() - 1), to));
           }
-          if (skipSequence) {
-            continue;
-          }
-          if (cfg.terminalsContain(rule.getRhs()[rule.getRhs().length - 1])
-            && to - sequence.get(sequence.size() - 1) > 1) {
-            continue;
-          }
-          consequences
-            .add(new CfgItem("•" + rule.getRhs()[0], from, sequence.get(0)));
-          for (int i = 1; i < sequence.size(); i++) {
-            consequences.add(new CfgItem("•" + rule.getRhs()[i],
-              sequence.get(i - 1), sequence.get(i)));
-          }
-          consequences
-            .add(new CfgItem("•" + rule.getRhs()[rule.getRhs().length - 1],
-              sequence.get(sequence.size() - 1), to));
         }
       }
     }
