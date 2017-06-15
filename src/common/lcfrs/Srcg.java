@@ -2,7 +2,6 @@ package common.lcfrs;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import common.cfg.Cfg;
@@ -14,7 +13,7 @@ public class Srcg {
   private String[] terminals;
   private String[] variables;
   private String startSymbol;
-  private final List<Clause> clauses = new LinkedList<Clause>();
+  private final List<Clause> clauses = new ArrayList<Clause>();
 
   /**
    * Converts a CFG to a sRCG with dimension = 1.

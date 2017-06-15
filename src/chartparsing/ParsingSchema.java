@@ -1,7 +1,7 @@
 package chartparsing;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +11,7 @@ import java.util.Set;
 public class ParsingSchema {
   private final Set<StaticDeductionRule> axioms = new HashSet<StaticDeductionRule>();
   private final Set<DynamicDeductionRule> rules = new HashSet<DynamicDeductionRule>();
-  private final List<Item> goal = new LinkedList<Item>();
+  private final List<Item> goal = new ArrayList<Item>();
   
   public void addAxiom(StaticDeductionRule rule) {
     axioms.add(rule);

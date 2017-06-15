@@ -2,7 +2,6 @@ package common.tag;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import common.cfg.CfgProductionRule;
@@ -12,12 +11,12 @@ import common.cfg.CfgProductionRule;
  * node. */
 public class Tree {
 
-  private final List<Vertex> vertexes = new LinkedList<Vertex>();
-  private final List<Edge> edges = new LinkedList<Edge>();
+  private final List<Vertex> vertexes = new ArrayList<Vertex>();
+  private final List<Edge> edges = new ArrayList<Edge>();
   private Vertex root = null;
   private Vertex foot = null;
-  private final List<Vertex> nA = new LinkedList<Vertex>();
-  private final List<Vertex> oA = new LinkedList<Vertex>();
+  private final List<Vertex> nA = new ArrayList<Vertex>();
+  private final List<Vertex> oA = new ArrayList<Vertex>();
 
   private ArrayList<String> leafOrder = new ArrayList<String>();
   private ArrayList<String> leafGorns = new ArrayList<String>();
@@ -26,8 +25,8 @@ public class Tree {
    * from it. */
   public Tree(String tree) throws ParseException {
     String[] tokens = tokenize(tree);
-    List<Vertex> vertexPath = new LinkedList<Vertex>();
-    List<Integer> children = new LinkedList<Integer>();
+    List<Vertex> vertexPath = new ArrayList<Vertex>();
+    List<Integer> children = new ArrayList<Integer>();
     for (int i = 0; i < tokens.length; i++) {
       switch (tokens[i]) {
       case "(": {
@@ -203,7 +202,7 @@ public class Tree {
 
   /** Returns a list of all child nodes of the given node. */
   public List<Vertex> getChildren(Vertex node) {
-    List<Vertex> children = new LinkedList<Vertex>();
+    List<Vertex> children = new ArrayList<Vertex>();
     for (Edge edge : this.edges) {
       if (edge.getFrom().equals(node)) {
         children.add(edge.getTo());

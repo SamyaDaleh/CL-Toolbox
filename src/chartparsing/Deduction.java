@@ -2,7 +2,6 @@ package chartparsing;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /** A deduction system that derives consequences from antecendence items and
@@ -31,8 +30,8 @@ public class Deduction {
    * derived. */
   public boolean doParse(ParsingSchema schema, boolean success) {
     successfulTrace = success;
-    chart = new LinkedList<Item>();
-    agenda = new LinkedList<Item>();
+    chart = new ArrayList<Item>();
+    agenda = new ArrayList<Item>();
     deductedFrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
     appliedRule = new ArrayList<ArrayList<String>>();
     if (schema == null)
@@ -168,8 +167,8 @@ public class Deduction {
   private void applyRule(Item item, DynamicDeductionRule rule) {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() >= itemsNeeded) {
-      List<List<Item>> startList = new LinkedList<List<Item>>();
-      startList.add(new LinkedList<Item>());
+      List<List<Item>> startList = new ArrayList<List<Item>>();
+      startList.add(new ArrayList<Item>());
       startList.get(0).add(item);
       for (List<Item> tryAntecedences : antecedenceListGenerator(startList, 0,
         itemsNeeded - 1)) {
@@ -190,10 +189,10 @@ public class Deduction {
     if (itemsNeeded == 0) {
       return oldList;
     } else {
-      List<List<Item>> finalList = new LinkedList<List<Item>>();
+      List<List<Item>> finalList = new ArrayList<List<Item>>();
       for (int j = i; j <= chart.size() - itemsNeeded; j++) {
         if (!chart.get(j).equals(oldList.get(0).get(0))) {
-          List<List<Item>> newList = new LinkedList<List<Item>>();
+          List<List<Item>> newList = new ArrayList<List<Item>>();
           for (List<Item> subList : oldList) {
             newList.add(new ArrayList<Item>());
             newList.get(newList.size() - 1).addAll(subList);

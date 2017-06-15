@@ -1,6 +1,6 @@
 package chartparsing.cfg;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +13,8 @@ import common.cfg.PcfgProductionRule;
  * for astar parsing. */
 public class PcfgAstarComplete implements DynamicDeductionRule {
 
-  private List<PItem> antecedences = new LinkedList<PItem>();
-  private List<PItem> consequences = new LinkedList<PItem>();
+  private List<PItem> antecedences = new ArrayList<PItem>();
+  private List<PItem> consequences = new ArrayList<PItem>();
   private String name = null;
 
   private final PcfgProductionRule pRule;
@@ -37,13 +37,13 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
   }
 
   @Override public List<Item> getAntecedences() {
-    List<Item> outantecedences = new LinkedList<Item>();
+    List<Item> outantecedences = new ArrayList<Item>();
     outantecedences.addAll(this.antecedences);
     return outantecedences;
   }
 
   @Override public void setAntecedences(List<Item> antecedences) {
-    List<PItem> inAntecedences = new LinkedList<PItem>();
+    List<PItem> inAntecedences = new ArrayList<PItem>();
     for (Item item : antecedences) {
       inAntecedences.add((PItem) item);
     }
@@ -58,7 +58,7 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
       calculateConsequences(itemForm2, itemForm1);
 
     }
-    List<Item> outcon = new LinkedList<Item>();
+    List<Item> outcon = new ArrayList<Item>();
     outcon.addAll(this.consequences);
     return outcon;
   }
@@ -122,8 +122,8 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
   }
 
   @Override public void clearItems() {
-    antecedences = new LinkedList<PItem>();
-    consequences = new LinkedList<PItem>();
+    antecedences = new ArrayList<PItem>();
+    consequences = new ArrayList<PItem>();
   }
 
 }

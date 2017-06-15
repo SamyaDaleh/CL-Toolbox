@@ -1,6 +1,6 @@
 package chartparsing;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Class to hold the methods commonly used by all DeductionRules. */
@@ -34,8 +34,8 @@ public abstract class AbstractDynamicDeductionRule
   }
 
   @Override public void clearItems() {
-    antecedences = new LinkedList<Item>();
-    consequences = new LinkedList<Item>();
+    antecedences = new ArrayList<Item>();
+    consequences = new ArrayList<Item>();
   }
 
 }

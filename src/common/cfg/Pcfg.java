@@ -1,13 +1,13 @@
 package common.cfg;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Representation of a context free grammar where the rules have
  * probabilities. */
 public class Pcfg extends AbstractCfg{
   private final List<PcfgProductionRule> productionRules =
-    new LinkedList<PcfgProductionRule>();
+    new ArrayList<PcfgProductionRule>();
 
   public Pcfg() {
     super();

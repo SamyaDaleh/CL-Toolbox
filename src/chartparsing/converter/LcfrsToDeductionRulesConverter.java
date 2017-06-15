@@ -1,7 +1,6 @@
 package chartparsing.converter;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import chartparsing.DynamicDeductionRule;
@@ -102,7 +101,7 @@ public class LcfrsToDeductionRulesConverter {
    * arguments could have over parts of the input. All symbols in the Predictae
    * have to be terminals. */
   private static List<Integer[]> getAllRanges(Predicate lhs, String[] wSplit) {
-    List<Integer[]> ranges = new LinkedList<Integer[]>();
+    List<Integer[]> ranges = new ArrayList<Integer[]>();
     ArrayList<Integer> tryOutRange = new ArrayList<Integer>();
     tryOutRange.add(0);
     tryOutRange.add(1);

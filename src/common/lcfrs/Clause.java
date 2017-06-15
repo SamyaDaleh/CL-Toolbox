@@ -1,7 +1,7 @@
 package common.lcfrs;
 
 import java.text.ParseException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Representation of a clause of the form A(ɑ1,...,ɑ_dim(A)) ->
@@ -9,7 +9,7 @@ import java.util.List;
 public class Clause {
 
   private final Predicate lhs;
-  private final List<Predicate> rhs = new LinkedList<Predicate>();
+  private final List<Predicate> rhs = new ArrayList<Predicate>();
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
    * every part a Predicate  */

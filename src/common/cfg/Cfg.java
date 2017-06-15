@@ -1,6 +1,6 @@
 package common.cfg;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import common.cfg.util.Binarization;
@@ -14,7 +14,7 @@ import common.cfg.util.UselessSymbols;
  * terminals, production rules and a start symbol. */
 public class Cfg extends AbstractCfg {
   private final List<CfgProductionRule> productionRules =
-    new LinkedList<CfgProductionRule>();
+    new ArrayList<CfgProductionRule>();
 
   public Cfg() {
     super();

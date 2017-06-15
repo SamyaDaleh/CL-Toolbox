@@ -1,7 +1,6 @@
 package common.lcfrs;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -10,7 +9,7 @@ import java.util.List;
  */
 public class RangeVector {
   
-  private final List<Range> ranges = new LinkedList<Range>();
+  private final List<Range> ranges = new ArrayList<Range>();
 
   /**
    * Creates a new vector of numranges ranges filled with placeholders. 
