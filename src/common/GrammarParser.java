@@ -261,8 +261,8 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        for (String[] clauseDec : parseRules(lineTrim, "->")) {
-          srcg.addClause(clauseDec[0], clauseDec[1]);
+        for (String clauseDec : parseNT(lineTrim)) {
+          srcg.addClause(clauseDec);
         }
       }
       line = in.readLine();

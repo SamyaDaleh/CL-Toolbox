@@ -79,6 +79,10 @@ public class Srcg {
   public void addClause(String lhs, String rhs) throws ParseException {
     this.clauses.add(new Clause(lhs, rhs));
   }
+  
+  public void addClause(String string) throws ParseException {
+    this.clauses.add(new Clause(string));
+  }
 
   @Override public String toString() {
     StringBuilder repr = new StringBuilder();
