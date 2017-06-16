@@ -126,4 +126,16 @@ public class ChartToTreeConverterTest {
       schema.getGoals(), "shiftreduce");
     assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
   }
+
+  @Test public void testCfgUngerToDerivationTree() throws ParseException {
+    String w = "a a a b b b";
+    ParsingSchema schema =
+      CfgToDeductionRulesConverter.cfgToUngerRules(gen_cfgdedtest(), w);
+    Deduction deduction = new Deduction();
+    deduction.doParse(schema, false);
+    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      schema.getGoals(), "unger");
+    assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
+      derivationTree.toString());
+  }
 }
