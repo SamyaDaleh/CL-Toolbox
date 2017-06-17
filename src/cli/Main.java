@@ -26,10 +26,10 @@ class Main {
         "Please pass at least 3 parameters: [grammar file] [input string] "
           + "[parsing algorithm] [<optional parameters>]");
       System.out.println(
-        "Parsing algorithm can be: cfg-cyk, cfg-cyk-extended, cfg-earley, " 
-          + "cfg-topdown, cfg-shiftreduce, cfg-leftcorner, cfg-leftcorner-chart, " 
-          + "cfg-unger, pcfg-astar, tag-cyk, tag-earley, srcg-cyk, "
-          + "srcg-cyk-extended, srcg-earley");
+        "Parsing algorithm can be: cfg-cyk, " + "cfg-cyk-extended, " + "cfg-cyk-general, " + "cfg-earley, " 
+          + "cfg-topdown, " + "cfg-shiftreduce, " + "cfg-leftcorner, " + "cfg-leftcorner-chart, " 
+          + "cfg-unger, " + "pcfg-astar, " + "tag-cyk, " + "tag-earley, " + "srcg-cyk, "
+          + "srcg-cyk-extended, " + "srcg-earley");
       System.out.println(
         "Optional parameters can be: --success : prints a trace only of items "
           + "that lead to a goal item.");

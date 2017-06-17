@@ -30,6 +30,8 @@ class GrammarToGrammarConverter {
       return getCfgForCyk(cfg);
     case "cfg-cyk-extended":
       return getCfgForCykExtended(cfg);
+    case "cfg-cyk-general":
+      return cfg;
     case "cfg-unger":
       return getCfgForLeftCorner(cfg);
     default:
