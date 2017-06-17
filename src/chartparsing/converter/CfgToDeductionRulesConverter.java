@@ -6,6 +6,7 @@ import chartparsing.StaticDeductionRule;
 import chartparsing.cfg.CfgBottomUpReduce;
 import chartparsing.cfg.CfgBottomUpShift;
 import chartparsing.cfg.CfgCykComplete;
+import chartparsing.cfg.CfgCykCompleteGeneral;
 import chartparsing.cfg.CfgCykCompleteUnary;
 import chartparsing.cfg.CfgDollarItem;
 import chartparsing.cfg.CfgDottedItem;
@@ -251,6 +252,33 @@ public class CfgToDeductionRulesConverter {
         DynamicDeductionRule complete = new CfgCykComplete(rule);
         schema.addRule(complete);
       }
+    }
+    schema.addGoal(new CfgItem(cfg.getStartSymbol(), 0, wSplit.length));
+    return schema;
+  }
+  
+  public static ParsingSchema cfgToCykGeneralRules(Cfg cfg, String w) {
+    String[] wSplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+    
+    for (int i = 0; i < wSplit.length; i++) {
+      StaticDeductionRule scan = new StaticDeductionRule();
+      scan.addConsequence(new CfgItem(wSplit[i],i,1));
+      scan.setName("scan " + wSplit[i]);
+      schema.addAxiom(scan);
+      StaticDeductionRule scanEps = new StaticDeductionRule();
+      scanEps.addConsequence(new CfgItem("",i,0));
+      scanEps.setName("scan ε");
+      schema.addAxiom(scanEps);
+    }
+    StaticDeductionRule scanEps = new StaticDeductionRule();
+    scanEps.addConsequence(new CfgItem("",wSplit.length,0));
+    scanEps.setName("scan ε");
+    schema.addAxiom(scanEps);
+
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
+        DynamicDeductionRule complete = new CfgCykCompleteGeneral(rule);
+        schema.addRule(complete);
     }
     schema.addGoal(new CfgItem(cfg.getStartSymbol(), 0, wSplit.length));
     return schema;

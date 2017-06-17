@@ -141,4 +141,13 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
+  @Test public void testCfgCykGeneral() {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToCykGeneralRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
 }
