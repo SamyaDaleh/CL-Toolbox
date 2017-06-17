@@ -87,48 +87,19 @@ public class DisplayTree extends JFrame {
     int nodeX = widthFrom + widthDelta / 2;
     String label = createTreeLabel(p);
     if (tree.getFoot() != null && tree.getFoot().equals(p)) {
-      int halfLabelWidth = label.length() * 10 / 2;
-      if (itemForm.length == 6) {
-        g.drawString(itemForm[3], nodeX-halfLabelWidth-10, height);
-        g.drawString(itemForm[4], nodeX+halfLabelWidth+10, height);
-      } else if (itemForm.length == 8) {
-        g.drawString(itemForm[4], nodeX-halfLabelWidth-10, height);
-        g.drawString(itemForm[5], nodeX+halfLabelWidth+10, height);
-      }
+      drawFootIndices(g, height, nodeX, label);
     }
     g.drawString(label, nodeX, height);
     if (itemForm.length == 6) {
-      char pos = itemForm[1].charAt(itemForm[1].length() - 1);
       String gorn = itemForm[1].substring(0, itemForm[1].length()-1);
       if (p.getGornAddress().equals(gorn)
           || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
-        switch (pos) {
-        case '⊤':
-          g.drawString("•", nodeX, height - 8);
-          break;
-        case '⊥':
-          g.drawString("•", nodeX, height + 8);
-          break;
-        }
+        drawTagCykDot(g, height, nodeX);
       }
     } else if (itemForm.length == 8) {
       if (p.getGornAddress().equals(itemForm[1])
         || (p.getGornAddress().equals("") && itemForm[1].equals("ε"))) {
-        int halfLabelWidth = label.length() * 8 / 2;
-        switch (itemForm[2]) {
-        case "la":
-          g.drawString("•", nodeX - halfLabelWidth, height - 5);
-          break;
-        case "lb":
-          g.drawString("•", nodeX - halfLabelWidth, height + 8);
-          break;
-        case "rb":
-          g.drawString("•", nodeX + halfLabelWidth, height + 8);
-          break;
-        case "ra":
-          g.drawString("•", nodeX + halfLabelWidth, height - 5);
-          break;
-        }
+        drawTagEarleyDot(g, height, nodeX, label);
       }
     }
     nodesDrawn.put(p.getGornAddress(), new Integer[] {nodeX, height});
@@ -136,8 +107,8 @@ public class DisplayTree extends JFrame {
       Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
       g.drawLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
     }
-    List<Vertex> children = tree.getChildren(p);
     int widthSum = 0;
+    List<Vertex> children = tree.getChildren(p);
     ArrayList<Integer> widths = new ArrayList<Integer>();
     for (Vertex child : children) {
       int width = tree.getWidthBelowNode(child);
@@ -164,6 +135,49 @@ public class DisplayTree extends JFrame {
           widthDelta / children.size());
         drawWidth += widthDelta / children.size();
       }
+    }
+  }
+
+  private void drawTagCykDot(Graphics g, int height, int nodeX) {
+    char pos = itemForm[1].charAt(itemForm[1].length() - 1);
+    switch (pos) {
+    case '⊤':
+      g.drawString("•", nodeX, height - 8);
+      break;
+    case '⊥':
+      g.drawString("•", nodeX, height + 8);
+      break;
+    }
+  }
+
+  private void drawTagEarleyDot(Graphics g, int height, int nodeX,
+    String label) {
+    int halfLabelWidth = label.length() * 8 / 2;
+    switch (itemForm[2]) {
+    case "la":
+      g.drawString("•", nodeX - halfLabelWidth, height - 5);
+      break;
+    case "lb":
+      g.drawString("•", nodeX - halfLabelWidth, height + 8);
+      break;
+    case "rb":
+      g.drawString("•", nodeX + halfLabelWidth, height + 8);
+      break;
+    case "ra":
+      g.drawString("•", nodeX + halfLabelWidth, height - 5);
+      break;
+    }
+  }
+
+  private void drawFootIndices(Graphics g, int height, int nodeX,
+    String label) {
+    int halfLabelWidth = label.length() * 10 / 2;
+    if (itemForm.length == 6) {
+      g.drawString(itemForm[3], nodeX-halfLabelWidth-10, height);
+      g.drawString(itemForm[4], nodeX+halfLabelWidth+10, height);
+    } else if (itemForm.length == 8) {
+      g.drawString(itemForm[4], nodeX-halfLabelWidth-10, height);
+      g.drawString(itemForm[5], nodeX+halfLabelWidth+10, height);
     }
   }
 
