@@ -59,24 +59,7 @@ public class Deduction {
    * retrieved, it checks all items if they lead to a goal. Returns the printed
    * chart data as string array with columns: Id, Item, Rules, Backpointers. */
   public String[][] printTrace() {
-    if (successfulTrace) {
-      boolean changed = true;
-      while (changed) {
-        changed = false;
-        for (int i = chart.size() - 1; i >= 0; i--) {
-          if (usefulItem[i]) {
-            ArrayList<Integer> pointers =
-              getPointersAsArray(deductedFrom.get(i));
-            for (int pointer : pointers) {
-              if (!usefulItem[pointer]) {
-                usefulItem[pointer] = true;
-                changed = true;
-              }
-            }
-          }
-        }
-      }
-    }
+    markUsefulItems();
     ArrayList<String[]> chartData = new ArrayList<String[]>();
     int iMaxWidth = 0;
     int chartMaxWidth = 0;
@@ -114,6 +97,27 @@ public class Deduction {
     }
 
     return chartData.toArray(new String[chartData.size()][]);
+  }
+
+  private void markUsefulItems() {
+    if (successfulTrace) {
+      boolean changed = true;
+      while (changed) {
+        changed = false;
+        for (int i = chart.size() - 1; i >= 0; i--) {
+          if (usefulItem[i]) {
+            ArrayList<Integer> pointers =
+              getPointersAsArray(deductedFrom.get(i));
+            for (int pointer : pointers) {
+              if (!usefulItem[pointer]) {
+                usefulItem[pointer] = true;
+                changed = true;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   /** Returns the backpointers in this list of lists as plain list. */
