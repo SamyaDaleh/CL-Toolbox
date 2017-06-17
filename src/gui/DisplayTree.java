@@ -25,18 +25,7 @@ public class DisplayTree extends JFrame {
     super();
     this.setLocation(100, 500);
 
-    int currentDepth = 0;
-    int maxDepth = 0;
-    for (int i = 0; i < args[0].length(); i++) {
-      if (args[0].charAt(i) == '(') {
-        currentDepth++;
-        if (currentDepth > maxDepth) {
-          maxDepth = currentDepth;
-        }
-      } else if (args[0].charAt(i) == ')') {
-        currentDepth--;
-      }
-    }
+    int maxDepth = getMaxDepth(args[0]);
     this.setSize(80 * maxDepth, 80 * maxDepth);
     this.setVisible(true);
     
@@ -48,6 +37,22 @@ public class DisplayTree extends JFrame {
       itemForm = new String[] {};
     }
     nodesDrawn = new HashMap<String, Integer[]>();
+  }
+
+  private int getMaxDepth(String treeString) {
+    int maxDepth = 0;
+    int currentDepth = 0;
+    for (int i = 0; i < treeString.length(); i++) {
+      if (treeString.charAt(i) == '(') {
+        currentDepth++;
+        if (currentDepth > maxDepth) {
+          maxDepth = currentDepth;
+        }
+      } else if (treeString.charAt(i) == ')') {
+        currentDepth--;
+      }
+    }
+    return maxDepth;
   }
 
   /** Initiates the drawing of the tree. */
@@ -80,16 +85,8 @@ public class DisplayTree extends JFrame {
       return;
     }
     int nodeX = widthFrom + widthDelta / 2;
-    StringBuilder label = new StringBuilder();
-    label.append(p.getLabel());
-    if (tree.isInOA(p.getGornAddress())) {
-      label.append("_OA");
-    }
-    if (tree.isInNA(p.getGornAddress())) {
-      label.append("_NA");
-    }
+    String label = createTreeLabel(p);
     if (tree.getFoot() != null && tree.getFoot().equals(p)) {
-      label.append("*");
       int halfLabelWidth = label.length() * 10 / 2;
       if (itemForm.length == 6) {
         g.drawString(itemForm[3], nodeX-halfLabelWidth-10, height);
@@ -99,7 +96,7 @@ public class DisplayTree extends JFrame {
         g.drawString(itemForm[5], nodeX+halfLabelWidth+10, height);
       }
     }
-    g.drawString(label.toString(), nodeX, height);
+    g.drawString(label, nodeX, height);
     if (itemForm.length == 6) {
       char pos = itemForm[1].charAt(itemForm[1].length() - 1);
       String gorn = itemForm[1].substring(0, itemForm[1].length()-1);
@@ -168,5 +165,20 @@ public class DisplayTree extends JFrame {
         drawWidth += widthDelta / children.size();
       }
     }
+  }
+
+  private String createTreeLabel(Vertex p) {
+    StringBuilder label = new StringBuilder();
+    label.append(p.getLabel());
+    if (tree.isInOA(p.getGornAddress())) {
+      label.append("_OA");
+    }
+    if (tree.isInNA(p.getGornAddress())) {
+      label.append("_NA");
+    }
+    if (tree.getFoot() != null && tree.getFoot().equals(p)) {
+      label.append("*");
+    }
+    return label.toString();
   }
 }
