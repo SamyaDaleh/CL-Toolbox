@@ -36,7 +36,17 @@ public class SrcgTest {
         + "P = {Y1(a) -> ε, S(X2 X3) -> Y1(X2) X1(X3), Y2(b) -> ε, "
         + "X1(X2 X3) -> S(X2) Y2(X3), S(X2 X3) -> Y1(X2) Y2(X3)}\n" + "S = S\n",
       srcg.toString());
+  }
 
+  @Test public void testSrcgOrdering() throws ParseException {
+    assertTrue(!TestGrammarLibrary.unorderedSrcg().isOrdered());
+    Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrdered();
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, A^<2,1>}\n"
+      + "T = {a, b}\n" + "V = {X, Y}\n"
+      + "P = {S(X Y) -> A(X,Y), A(X,Y) -> A^<2,1>(X,Y), A(a X,b Y) -> A(X,Y), " 
+      + "A(a,b) -> ε, A^<2,1>(X,Y) -> A^<2,1>(X,Y), " 
+      + "A^<2,1>(a X,b Y) -> A(X,Y), A^<2,1>(a,b) -> ε}\n"
+      + "S = S\n", srcgOrd.toString());
   }
 
 }

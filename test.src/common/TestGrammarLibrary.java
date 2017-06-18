@@ -227,4 +227,17 @@ public class TestGrammarLibrary {
     cfgeps.setStartSymbol("S");
     return cfgeps;
   }
+  
+  public static Srcg unorderedSrcg() throws ParseException {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[]{"S", "A"});
+    srcg.setTerminals(new String[]{"a", "b"});
+    srcg.setVariables(new String[]{"X", "Y"});
+    srcg.addClause("S(X Y) -> A(X,Y)");
+    srcg.addClause("A(X, Y) -> A(Y,X)");
+    srcg.addClause("A(a X,b Y) -> A(X,Y)");
+    srcg.addClause("A(a,b) -> ε");
+    srcg.setStartSymbol("S");
+    return srcg;
+  }
 }
