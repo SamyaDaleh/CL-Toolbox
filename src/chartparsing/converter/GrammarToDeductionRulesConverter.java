@@ -17,12 +17,12 @@ public class GrammarToDeductionRulesConverter {
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToDeductionRulesConverter
-        .cfgToTopDownRules(cfg.removeEmptyProductions()
-          .removeNonGeneratingSymbols().removeNonReachableSymbols(), w);
+        .cfgToTopDownRules(cfg.getCfgWithoutEmptyProductions()
+          .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols(), w);
     case "cfg-shiftreduce":
       return CfgToDeductionRulesConverter
-        .cfgToShiftReduceRules(cfg.removeEmptyProductions()
-          .removeNonGeneratingSymbols().removeNonReachableSymbols(), w);
+        .cfgToShiftReduceRules(cfg.getCfgWithoutEmptyProductions()
+          .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols(), w);
     case "cfg-earley":
       return CfgToDeductionRulesConverter.cfgToEarleyRules(cfg, w);
     case "cfg-leftcorner":

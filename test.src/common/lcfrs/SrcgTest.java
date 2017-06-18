@@ -40,7 +40,7 @@ public class SrcgTest {
 
   @Test public void testSrcgOrdering() throws ParseException {
     assertTrue(!TestGrammarLibrary.unorderedSrcg().isOrdered());
-    Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrdered();
+    Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrderedSrcg();
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, A^<2,1>}\n"
       + "T = {a, b}\n" + "V = {X, Y}\n"
       + "P = {S(X Y) -> A(X,Y), A(X,Y) -> A^<2,1>(X,Y), A(a X,b Y) -> A(X,Y), " 

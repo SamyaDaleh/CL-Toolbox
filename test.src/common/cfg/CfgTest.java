@@ -11,24 +11,24 @@ public class CfgTest {
 
   @Test public void testBinarization() {
     assertTrue(!TestGrammarLibrary.longRhsCfg().isBinarized());
-    Cfg cfgbin = TestGrammarLibrary.longRhsCfg().binarize();
+    Cfg cfgbin = TestGrammarLibrary.longRhsCfg().getBinarizedCfg();
     assertTrue(cfgbin.isBinarized());
   }
 
   @Test public void testRemoveEpsilon() {
     assertTrue(TestGrammarLibrary.epsCfg().hasEpsilonProductions());
-    Cfg epsfree = TestGrammarLibrary.epsCfg().removeEmptyProductions();
+    Cfg epsfree = TestGrammarLibrary.epsCfg().getCfgWithoutEmptyProductions();
     assertTrue(!epsfree.hasEpsilonProductions());
   }
 
   @Test public void testRemoveChainRules() {
     assertTrue(TestGrammarLibrary.eftCfg().hasChainRules());
-    Cfg chainfree = TestGrammarLibrary.eftCfg().removeChainRules();
+    Cfg chainfree = TestGrammarLibrary.eftCfg().getCfgWithoutChainRules();
     assertTrue(!chainfree.hasChainRules());
   }
 
   @Test public void testReplaceTerminals() {
-    Cfg treplaced = TestGrammarLibrary.eftCfg().replaceTerminals();
+    Cfg treplaced = TestGrammarLibrary.eftCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
       + "T = {a, b, 0, 1, (, ), *, +}\n" + "S = E\n"
@@ -39,9 +39,9 @@ public class CfgTest {
   }
 
   @Test public void testToCnf() {
-    Cfg cfgcnf = TestGrammarLibrary.eftCfg().removeEmptyProductions()
-      .removeNonGeneratingSymbols().removeNonReachableSymbols().binarize()
-      .replaceTerminals().removeChainRules();
+    Cfg cfgcnf = TestGrammarLibrary.eftCfg().getCfgWithoutEmptyProductions()
+      .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+      .getCfgWithEitherOneTerminalOrNonterminalsOnRhs().getCfgWithoutChainRules();
     assertTrue(cfgcnf.isInChomskyNormalForm());
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, X1, X2, X3, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
@@ -54,13 +54,13 @@ public class CfgTest {
   }
 
   @Test public void testToC2f() {
-    assertTrue(TestGrammarLibrary.eftCfg().removeEmptyProductions()
-      .removeNonGeneratingSymbols().removeNonReachableSymbols().binarize()
-      .replaceTerminals().isInCanonicalTwoForm());
+    assertTrue(TestGrammarLibrary.eftCfg().getCfgWithoutEmptyProductions()
+      .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+      .getCfgWithEitherOneTerminalOrNonterminalsOnRhs().isInCanonicalTwoForm());
   }
 
   @Test public void testRemoveLeftRecursion() {
-    Cfg cfgwlr = TestGrammarLibrary.leftRecursionCfg().removeLeftRecursion();
+    Cfg cfgwlr = TestGrammarLibrary.leftRecursionCfg().getCfgWithoutLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
         + "P = {S1 -> ε, S -> a S1, S -> b S1, S -> c S1, S -> d S1}\n",
@@ -69,14 +69,14 @@ public class CfgTest {
 
   @Test public void testRemoveNotReachableSymbols() {
     Cfg after =
-      TestGrammarLibrary.nonReachableSymbolsCfg().removeNonReachableSymbols();
+      TestGrammarLibrary.nonReachableSymbolsCfg().getCfgWithoutNonReachableSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
   }
 
   @Test public void testRemoveNonGeneratingSymbols() {
     Cfg after =
-      TestGrammarLibrary.nonGeneratingSymbolsCfg().removeNonGeneratingSymbols();
+      TestGrammarLibrary.nonGeneratingSymbolsCfg().getCfgWithoutNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
   }

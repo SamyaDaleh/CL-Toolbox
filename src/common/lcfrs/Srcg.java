@@ -214,8 +214,8 @@ public class Srcg {
   }
 
   /** Returns an equivalent sRCG where the variables are ordered in each rule
-   * for each predicate. */
-  public Srcg getOrdered() throws ParseException {
+   * for each predicate. Might leave useless nonterminals behind.*/
+  public Srcg getOrderedSrcg() throws ParseException {
     Srcg newSrcg = new Srcg();
     newSrcg.setTerminals(this.getTerminals());
     newSrcg.setVariables(this.getVariables());

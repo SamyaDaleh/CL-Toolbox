@@ -44,8 +44,8 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForCykExtended(Cfg cfg) {
     if (!cfg.isInCanonicalTwoForm()) {
       if (please) {
-        return cfg.removeEmptyProductions().removeNonGeneratingSymbols()
-          .removeNonReachableSymbols().binarize().replaceTerminals();
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols().getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
       } else {
         System.out.println(
           "CFG must be in Canonical 2 Form for extended CYK parsing.");
@@ -59,9 +59,9 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForCyk(Cfg cfg) {
     if (!cfg.isInChomskyNormalForm()) {
       if (please) {
-        return cfg.removeEmptyProductions().removeNonGeneratingSymbols()
-          .removeNonReachableSymbols().binarize().replaceTerminals()
-          .removeChainRules();
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols().getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
+          .getCfgWithoutChainRules();
       } else {
         System.out
           .println("CFG must be in Chomsky Normal Form for CYK parsing.");
@@ -75,9 +75,9 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForLeftCorner(Cfg cfg) {
     if (cfg.hasEpsilonProductions() || cfg.hasDirectLeftRecursion()) {
       if (please) {
-        return cfg.removeEmptyProductions().removeLeftRecursion()
-          .removeEmptyProductions().removeNonGeneratingSymbols()
-          .removeNonReachableSymbols();
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutLeftRecursion()
+          .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols();
       } else {
         System.out.println(
           "CFG must not contain empty productions or left recursion for this parsing algorithm.");
@@ -91,8 +91,8 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForShiftReduce(Cfg cfg) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
-        return cfg.removeEmptyProductions().removeNonGeneratingSymbols()
-          .removeNonReachableSymbols();
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols();
       } else {
         System.out.println(
           "CFG must not contain empty productions for ShiftReduce parsing.");
@@ -106,8 +106,8 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForTopDown(Cfg cfg) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
-        return cfg.removeEmptyProductions().removeNonGeneratingSymbols()
-          .removeNonReachableSymbols();
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols();
       } else {
         System.out.println(
           "CFG must not contain empty productions for TopDown parsing.");
@@ -124,7 +124,7 @@ class GrammarToGrammarConverter {
     case "tag-cyk":
       if (!cfg.isBinarized()) {
         if (please) {
-          return new Tag(cfg.binarize());
+          return new Tag(cfg.getBinarizedCfg());
         } else {
           System.out.println(
             "CFG must be binarized to convert it into a TAG where CYK parsing is possible.");
@@ -147,9 +147,9 @@ class GrammarToGrammarConverter {
     case "pcfg-astar":
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
-          return new Pcfg(cfg.removeEmptyProductions()
-            .removeNonGeneratingSymbols().removeNonReachableSymbols().binarize()
-            .replaceTerminals().removeChainRules());
+          return new Pcfg(cfg.getCfgWithoutEmptyProductions()
+            .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+            .getCfgWithEitherOneTerminalOrNonterminalsOnRhs().getCfgWithoutChainRules());
         } else {
           System.out.println(
             "CFG must be in Chomsky Normal Form to convert it into a PCFG where A* parsing is possible.");
@@ -184,7 +184,7 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCykExtended(Cfg cfg) throws ParseException {
     if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
       if (please) {
-        return new Srcg(cfg.binarize().replaceTerminals());
+        return new Srcg(cfg.getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
       } else {
         System.out.println(
           "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
@@ -198,7 +198,7 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCyk(Cfg cfg) throws ParseException {
     if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
       if (please) {
-        return new Srcg(cfg.binarize().removeChainRules().replaceTerminals());
+        return new Srcg(cfg.getBinarizedCfg().getCfgWithoutChainRules().getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
       } else {
         System.out.println(
           "CFG must be binarized, not contain chain rules and not contain rules with mixed rhs sides to convert it into a sRCG where CYK parsing is possible.");
@@ -212,7 +212,7 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForEarley(Cfg cfg) throws ParseException {
     if (!cfg.isBinarized()) {
       if (please) {
-        return new Srcg(cfg.binarize());
+        return new Srcg(cfg.getBinarizedCfg());
       } else {
         System.out.println(
           "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");

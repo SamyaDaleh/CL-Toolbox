@@ -101,8 +101,8 @@ public class Cfg extends AbstractCfg {
     return true;
   }
 
-  /** Returns an equivalent CFG where all rhs' have at most length 2. */
-  public Cfg binarize() {
+  /** Returns an equivalent CFG where all rhs have at most length 2. */
+  public Cfg getBinarizedCfg() {
     return Binarization.binarize(this);
   }
 
@@ -113,25 +113,25 @@ public class Cfg extends AbstractCfg {
 
   /** Returns an equivalent grammar without non-generating symbols. Call this
    * before removing non-reachable symbols. */
-  public Cfg removeNonGeneratingSymbols() {
+  public Cfg getCfgWithoutNonGeneratingSymbols() {
     return UselessSymbols.removeNonGeneratingSymbols(this);
   }
   /** Returns an equivalent grammar without non-reachable symbols. Before
    * calling this, remove all non-generating symbols. */
-  public Cfg removeNonReachableSymbols() {
+  public Cfg getCfgWithoutNonReachableSymbols() {
     return UselessSymbols.removeNonReachableSymbols(this);
   }
 
   /** Returns an equivalent CFG without empty productions, only S -> ε is
    * allowed in which case it is removed from all rhs'. May leaves non
    * generating symbols behind. */
-  public Cfg removeEmptyProductions() {
+  public Cfg getCfgWithoutEmptyProductions() {
     return EmptyProductions.removeEmptyProductions(this);
   }
 
   /** Returns an equivalent grammar without chain rules, that are rules of the
    * form A -> B. Remove epsilon productions beforehand. */
-  public Cfg removeChainRules() {
+  public Cfg getCfgWithoutChainRules() {
     return ChainRules.removeChainRules(this);
   }
 
@@ -142,7 +142,7 @@ public class Cfg extends AbstractCfg {
 
   /** Returns a new grammar where in all rhs > 1 terminals are replaced by
    * nonterminals and new rules A -> a are added. */
-  public Cfg replaceTerminals() {
+  public Cfg getCfgWithEitherOneTerminalOrNonterminalsOnRhs() {
     return MixedRhs.replaceTerminals(this);
   }
   
@@ -166,7 +166,7 @@ public class Cfg extends AbstractCfg {
    * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
    * and maybe chain rules. Remove empty productions first to make sure grammar
    * does not contain indirect left recursion. */
-  public Cfg removeLeftRecursion() {
+  public Cfg getCfgWithoutLeftRecursion() {
     return LeftRecursion.removeLeftRecursion(this);
   }
 
