@@ -131,14 +131,25 @@ public class Srcg {
     return binarized;
   }
 
-  /** Returns true if there is some rhs predicate that contains the empty string
-   * in one of its lhs arguments. */
+  /** Returns true if there is at least one clause that contains the empty
+   * string in one of its lhs arguments, except if it is the start symbol in
+   * which case it must not occur on any rhs. */
   public boolean hasEpsilonProductions() {
     boolean hasEpsilon = false;
     for (Clause clause : this.clauses) {
       for (String[] argument : clause.getLhs().getSymbols()) {
         if (argument.length == 1 && argument[0].equals("")) {
-          hasEpsilon = true;
+          if (clause.getLhs().getNonterminal().equals(this.startSymbol)) {
+            for (Clause clause2 : this.clauses) {
+              for (Predicate rhsPred : clause2.getRhs()) {
+                if (rhsPred.getNonterminal().equals(this.startSymbol)) {
+                  return true;
+                }
+              }
+            }
+          } else {
+            return true;
+          }
         }
       }
     }
@@ -157,6 +168,8 @@ public class Srcg {
     return true;
   }
 
+  /** Returns true if all predicates in rhs of clause are ordered regarding the
+   * lhs predicate. */
   private boolean isOrdered(Clause clause) {
     for (Predicate rhsPred : clause.getRhs()) {
       boolean predicateIsOrdered = isOrdered(clause, rhsPred);
@@ -200,10 +213,8 @@ public class Srcg {
     return false;
   }
 
-  /**
-   * Returns an equivalent sRCG where the variables are ordered in each rule for
-   * each predicate.
-   */
+  /** Returns an equivalent sRCG where the variables are ordered in each rule
+   * for each predicate. */
   public Srcg getOrdered() throws ParseException {
     Srcg newSrcg = new Srcg();
     newSrcg.setTerminals(this.getTerminals());
@@ -263,10 +274,8 @@ public class Srcg {
     return newSrcg;
   }
 
-  /**
-   * Returns a Predicate where the nonterminal is replaced by newNt and the 
-   * arguments swapped places according to orderVector.
-   */
+  /** Returns a Predicate where the nonterminal is replaced by newNt and the
+   * arguments swapped places according to orderVector. */
   private Predicate orderedPredicate(Predicate rhsPred, String newNt,
     ArrayList<Integer> orderVector) throws ParseException {
     StringBuilder newPred = new StringBuilder();
@@ -278,7 +287,7 @@ public class Srcg {
           if (i > 1) {
             newPred.append(',');
           }
-          newPred.append(rhsPred.getArgumentByIndex(j+1)[0]);
+          newPred.append(rhsPred.getArgumentByIndex(j + 1)[0]);
         }
       }
     }
@@ -286,15 +295,11 @@ public class Srcg {
     return new Predicate(newPred.toString());
   }
 
-  /**
-   * Normalizes the position vector to consecutive numbers starting with 1.
-   * Example:
-   * 5,0,6
-   * becomes
-   * 2,1,3
-   */
+  /** Normalizes the position vector to consecutive numbers starting with 1.
+   * Example: 5,0,6 becomes 2,1,3 */
   private ArrayList<Integer> getNormalizedPos(ArrayList<Integer> posInLhs) {
-    @SuppressWarnings("unchecked") ArrayList<Integer> posNormalized = (ArrayList<Integer>) posInLhs.clone();
+    @SuppressWarnings("unchecked") ArrayList<Integer> posNormalized =
+      (ArrayList<Integer>) posInLhs.clone();
     int searchInt = 0;
     int argInt = 1;
     while (argInt <= posInLhs.size()) {
@@ -310,9 +315,7 @@ public class Srcg {
     return posNormalized;
   }
 
-  /**
-   * Returns true if mayNt is in set of nonterminals.
-   */
+  /** Returns true if mayNt is in set of nonterminals. */
   private boolean nonTerminalsContain(String mayNt) {
     for (String nt : this.nonterminals) {
       if (mayNt.equals(nt)) {
