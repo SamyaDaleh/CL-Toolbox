@@ -214,7 +214,7 @@ public class Srcg {
   }
 
   /** Returns an equivalent sRCG where the variables are ordered in each rule
-   * for each predicate. Might leave useless nonterminals behind.*/
+   * for each predicate. Might leave useless nonterminals behind. */
   public Srcg getOrderedSrcg() throws ParseException {
     Srcg newSrcg = new Srcg();
     newSrcg.setTerminals(this.getTerminals());
@@ -319,6 +319,132 @@ public class Srcg {
   private boolean nonTerminalsContain(String mayNt) {
     for (String nt : this.nonterminals) {
       if (mayNt.equals(nt)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public Srcg getSrcgWithoutEmptyProductions() throws ParseException {
+    ArrayList<String[]> epsilonCandidates = getEpsilonCandidates();
+    Srcg newSrcg = new Srcg();
+    newSrcg.setVariables(this.variables);
+    newSrcg.setTerminals(this.terminals);
+    newSrcg.setStartSymbol(this.startSymbol);
+    ArrayList<String> newNts = new ArrayList<String>();
+    for (String oldNt : this.getNonterminals()) {
+      newNts.add(oldNt);
+    }
+    for (String[] candidate : epsilonCandidates) {
+      if (candidate[0].equals(this.startSymbol)) {
+        StringBuilder newS = new StringBuilder("S'");
+        while (this.nonTerminalsContain(newS.toString())) {
+          newS.append('\'');
+        }
+        newSrcg.setStartSymbol(newS.toString());
+        newNts.add(newS.toString());
+        newSrcg.addClause(newS + "(ε) -> ε");
+        newSrcg.addClause(newS + "(" + this.getVariables()[0] + ") -> "
+          + this.startSymbol + "(" + this.getVariables()[0] + ")");
+      }
+    }
+    // for every clause in this.clauses add all ε-reductions of this rule to
+    // clauses:
+    // for all combinations of candidates that apply to rhs
+    // y'know like S -> A B and there are 2 possibilities how A can have epsilon
+    // and 3 possibilities
+    // how B can have epsilon, consider 6 combinations
+    // replace (in new clause) rhs by new nt name. if a place in jota is 0,
+    // remove respective component in rhs and delete variable in lhs.
+    // if jota consists of only 0, remove whole predicate from rhs.
+
+    // if the new rule just obtained has epsilon in lhs:
+    // if jota for lhs nt contains at least one 1, remove epsilon components
+    // in lhs and replace nt with name from list of epsilon candidates
+    // add new rule to set of rules in newSrcg
+    return newSrcg;
+  }
+
+  private ArrayList<String[]> getEpsilonCandidates() {
+    ArrayList<String[]> epsilonCandidates = new ArrayList<String[]>();
+    for (Clause clause : this.clauses) {
+      if (clause.getRhs().isEmpty()) {
+        for (int i = 1; i <= clause.getLhs().getDim(); i++) {
+          StringBuilder jota = new StringBuilder();
+          if (clause.getLhsSymAt(i, 0).equals("")) {
+            jota.append('0');
+          } else {
+            jota.append('1');
+          }
+          String[] newPair =
+            new String[] {clause.getLhs().getNonterminal(), jota.toString()};
+          boolean found = false;
+          for (String[] oldPair : epsilonCandidates) {
+            if (oldPair[0].equals(newPair[0])) {
+              if (oldPair[1].equals(newPair[1])) {
+                found = true;
+                break;
+              }
+            }
+          }
+          if (!found) {
+            epsilonCandidates.add(newPair);
+          }
+        }
+      }
+    }
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (Clause clause : this.clauses) {
+        for (int i = 0; i < epsilonCandidates.size(); i++) {
+          String[] candidate = epsilonCandidates.get(i);
+          ArrayList<String> lhsVector = new ArrayList<String>();
+          Predicate clauseLhs = clause.getLhs();
+          for (int j = 0; j < clauseLhs.getDim(); j++) {
+            String[] argument = clauseLhs.getArgumentByIndex(j);
+            StringBuilder newArgument = new StringBuilder();
+            for (int k = 0; k < argument.length; k++) {
+              String element = argument[k];
+              if (this.terminalsContain(element)) {
+                newArgument.append(element);
+              } else {
+                for (Predicate rhsPred : clause.getRhs()) {
+                  int[] indices = rhsPred.find(element);
+                  if (indices[0] >= 0) {
+                    if (rhsPred.getNonterminal().equals(candidate[0])
+                      && candidate[1].charAt(indices[0] - 1) == '0') {
+                      newArgument.append("");
+                    } else {
+                      newArgument.append(element);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          StringBuilder jota = new StringBuilder();
+          for (int j = 0; j < lhsVector.size(); j++) {
+            if (lhsVector.get(j).equals("")) {
+              jota.append('0');
+              changed = true;
+            } else {
+              jota.append('1');
+            }
+          }
+          if (changed) {
+            epsilonCandidates.add(
+              new String[] {clause.getLhs().getNonterminal(), jota.toString()});
+          }
+        }
+      }
+    }
+    return epsilonCandidates;
+  }
+
+  private boolean terminalsContain(String mayT) {
+    for (int i = 0; i < this.terminals.length; i++) {
+      if (this.terminals[i].equals(mayT)) {
         return true;
       }
     }

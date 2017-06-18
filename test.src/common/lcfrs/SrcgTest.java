@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import common.TestGrammarLibrary;
@@ -41,12 +42,26 @@ public class SrcgTest {
   @Test public void testSrcgOrdering() throws ParseException {
     assertTrue(!TestGrammarLibrary.unorderedSrcg().isOrdered());
     Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrderedSrcg();
-    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, A^<2,1>}\n"
-      + "T = {a, b}\n" + "V = {X, Y}\n"
-      + "P = {S(X Y) -> A(X,Y), A(X,Y) -> A^<2,1>(X,Y), A(a X,b Y) -> A(X,Y), " 
-      + "A(a,b) -> ε, A^<2,1>(X,Y) -> A^<2,1>(X,Y), " 
-      + "A^<2,1>(a X,b Y) -> A(X,Y), A^<2,1>(a,b) -> ε}\n"
-      + "S = S\n", srcgOrd.toString());
+    assertTrue(srcgOrd.isOrdered());
+    assertEquals(
+      "G = <N, T, V, P, S>\n" + "N = {S, A, A^<2,1>}\n" + "T = {a, b}\n"
+        + "V = {X, Y}\n"
+        + "P = {S(X Y) -> A(X,Y), A(X,Y) -> A^<2,1>(X,Y), A(a X,b Y) -> A(X,Y), "
+        + "A(a,b) -> ε, A^<2,1>(X,Y) -> A^<2,1>(X,Y), "
+        + "A^<2,1>(a X,b Y) -> A(X,Y), A^<2,1>(a,b) -> ε}\n" + "S = S\n",
+      srcgOrd.toString());
+  }
+
+  @Ignore("under construction") public void testSrcgRemoveEmptyProductions() throws ParseException {
+    assertTrue(
+      TestGrammarLibrary.withEmptyProductionsSrcg().hasEpsilonProductions());
+    Srcg srcgWithoutEmptyProductions = TestGrammarLibrary
+      .withEmptyProductionsSrcg().getSrcgWithoutEmptyProductions();
+    assertTrue(!srcgWithoutEmptyProductions.hasEpsilonProductions());
+    assertEquals(
+      "G = <N, T, V, P, S>\n" + "N = {S, A, A^(10), A^(01)}\n" + "T = {a, b}\n"
+        + "V = {X, Y}\n" + "P = {}\n" + "S = S\n",
+      srcgWithoutEmptyProductions.toString());
   }
 
 }

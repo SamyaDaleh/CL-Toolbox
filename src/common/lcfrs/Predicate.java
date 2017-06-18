@@ -132,7 +132,8 @@ public class Predicate {
     return symbols.length >= i && symbols[i - 1].length > j;
   }
 
-  /** Looks for a symbol and returns its indices. */
+  /** Looks for a symbol and returns its indices. Returns [-1, -1] if not
+   * found. */
   public int[] find(String symbol) {
     for (int i = 0; i < symbols.length; i++) {
       for (int j = 0; j < symbols[i].length; j++) {
