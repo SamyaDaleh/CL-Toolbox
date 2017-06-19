@@ -8,7 +8,7 @@ import java.util.List;
  * A1(X1,...,X_dim(A1)) ... */
 public class Clause {
 
-  private final Predicate lhs;
+  private Predicate lhs;
   private final List<Predicate> rhs = new ArrayList<Predicate>();
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
@@ -87,5 +87,9 @@ public class Clause {
 
   public Predicate getLhs() {
     return this.lhs;
+  }
+
+  public void setLhs(Predicate predicate) {
+    this.lhs = predicate;
   }
 }

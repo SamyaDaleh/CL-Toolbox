@@ -352,17 +352,53 @@ public class Srcg {
       for (ArrayList<String[]> combination : getCombinationsForRhs(
         epsilonCandidates, clause)) {
         Clause newClause = new Clause(clause.toString());
+        int predDeleted = 0;
         for (int i = 0; i < newClause.getRhs().size(); i++) {
-          StringBuilder newPredString = new StringBuilder();
-          newPredString.append(combination.get(i)[0]).append('^')
+          StringBuilder newRhsPred = new StringBuilder();
+          newRhsPred.append(combination.get(i)[0]).append('^')
             .append(combination.get(i)[1]).append('(');
-          // replace (in new clause) rhs by new nt name. if a place in jota is 0,
-          // remove respective component in rhs and delete variable in lhs.
-          // if jota consists of only 0, remove whole predicate from rhs.
-          newPredString.append(") -> ");
-          // rhs
-          Predicate newPred = new Predicate(newPredString.toString());
+          String jota = combination.get(i)[1];
+          boolean oneEncountered = false;
+          for (int j = 0; j < jota.length(); j++) {
+            if (jota.charAt(j) == '0') {
+              int[] indices = newClause.getLhs()
+                .find(newClause.getRhs().get(i).getSymAt(j + 1, 0));
+              StringBuilder newLhsPred = new StringBuilder();
+              newLhsPred.append(newClause.getLhs().getNonterminal())
+                .append('(');
+              for (int k = 0; k < newClause.getLhs().getDim(); k++) {
+                if (k > 0) {
+                  newLhsPred.append(',');
+                }
+                for (int l = 0; l < newClause.getLhs()
+                  .getArgumentByIndex(k + 1).length; l++) {
+                  if (k + 1 != indices[0] && l != indices[1]) {
+                    if (l > 0) {
+                      newLhsPred.append(' ');
+                    }
+                    newLhsPred.append(newClause.getLhs().getSymAt(k + 1, l));
+                  }
+                }
+              }
+              newLhsPred.append(')');
+              newClause.setLhs(new Predicate(newLhsPred.toString()));
+            } else {
+              if (oneEncountered) {
+                newRhsPred.append(',');
+              }
+              newRhsPred
+                .append(newClause.getRhs().get(i).getArgumentByIndex(j + 1));
+              oneEncountered = true;
+            }
+          }
+          if (oneEncountered) {
+            newClause.getRhs().set(i, new Predicate(newRhsPred.toString()));
+          } else {
+            newClause.getRhs().remove(i - predDeleted);
+            predDeleted++;
+          }
         }
+
         StringBuilder jotaLhs = new StringBuilder();
         for (int i = 0; i < newClause.getLhs().getDim(); i++) {
           if (newClause.getLhs().getArgumentByIndex(i)[0].equals("")) {
