@@ -348,21 +348,49 @@ public class Srcg {
           + this.startSymbol + "(" + this.getVariables()[0] + ")");
       }
     }
-    // for every clause in this.clauses add all ε-reductions of this rule to
-    // clauses:
-    // for all combinations of candidates that apply to rhs
+    for (Clause clause : this.clauses) {
+      for (ArrayList<String[]> combination : getCombinationsForRhs(
+        epsilonCandidates, clause)) {
+        Clause newClause = new Clause(clause.toString());
+        for (int i = 0; i < newClause.getRhs().size(); i++) {
+          StringBuilder newPredString = new StringBuilder();
+          newPredString.append(combination.get(i)[0]).append('^')
+            .append(combination.get(i)[1]).append('(');
+          // replace (in new clause) rhs by new nt name. if a place in jota is 0,
+          // remove respective component in rhs and delete variable in lhs.
+          // if jota consists of only 0, remove whole predicate from rhs.
+          newPredString.append(") -> ");
+          // rhs
+          Predicate newPred = new Predicate(newPredString.toString());
+        }
+        StringBuilder jotaLhs = new StringBuilder();
+        for (int i = 0; i < newClause.getLhs().getDim(); i++) {
+          if (newClause.getLhs().getArgumentByIndex(i)[0].equals("")) {
+            jotaLhs.append('0');
+          } else {
+            jotaLhs.append('1');
+          }
+        }
+        if (jotaLhs.toString().contains("1")) {
+          // remove epsilon components
+          // in lhs and replace nt with name from list of epsilon candidates
+          // add new rule to set of rules in newSrcg
+        }
+      }
+    }
+    newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+    return newSrcg;
+  }
+
+  private ArrayList<ArrayList<String[]>> getCombinationsForRhs(
+    ArrayList<String[]> epsilonCandidates, Clause clause) {
+    ArrayList<ArrayList<String[]>> combinations =
+      new ArrayList<ArrayList<String[]>>();
+    // TODO Auto-generated method stub
     // y'know like S -> A B and there are 2 possibilities how A can have epsilon
     // and 3 possibilities
     // how B can have epsilon, consider 6 combinations
-    // replace (in new clause) rhs by new nt name. if a place in jota is 0,
-    // remove respective component in rhs and delete variable in lhs.
-    // if jota consists of only 0, remove whole predicate from rhs.
-
-    // if the new rule just obtained has epsilon in lhs:
-    // if jota for lhs nt contains at least one 1, remove epsilon components
-    // in lhs and replace nt with name from list of epsilon candidates
-    // add new rule to set of rules in newSrcg
-    return newSrcg;
+    return combinations;
   }
 
   private ArrayList<String[]> getEpsilonCandidates() {
