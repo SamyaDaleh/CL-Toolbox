@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import common.TestGrammarLibrary;
@@ -52,16 +51,17 @@ public class SrcgTest {
       srcgOrd.toString());
   }
 
-  @Ignore("under construction") public void testSrcgRemoveEmptyProductions() throws ParseException {
+  @Test public void testSrcgRemoveEmptyProductions() throws ParseException {
     assertTrue(
       TestGrammarLibrary.withEmptyProductionsSrcg().hasEpsilonProductions());
     Srcg srcgWithoutEmptyProductions = TestGrammarLibrary
       .withEmptyProductionsSrcg().getSrcgWithoutEmptyProductions();
     assertTrue(!srcgWithoutEmptyProductions.hasEpsilonProductions());
-    assertEquals(
-      "G = <N, T, V, P, S>\n" + "N = {S, A, A^(10), A^(01)}\n" + "T = {a, b}\n"
-        + "V = {X, Y}\n" + "P = {}\n" + "S = S\n",
-      srcgWithoutEmptyProductions.toString());
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {A^10, A^01, A^11, S^1, S'}\n"
+      + "T = {a, b}\n" + "V = {X, Y}\n"
+      + "P = {S'(X) -> S^1(X), S^1(X) -> A^10(X), S^1(Y) -> A^01(Y), "
+      + "S^1(X Y) -> A^11(X,Y), A^10(a) -> ε, A^01(b) -> ε, A^11(a,b) -> ε}\n"
+      + "S = S'\n", srcgWithoutEmptyProductions.toString());
   }
 
 }
