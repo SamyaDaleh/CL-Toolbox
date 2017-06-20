@@ -408,9 +408,31 @@ public class Srcg {
           }
         }
         if (jotaLhs.toString().contains("1")) {
-          // remove epsilon components
-          // in lhs and replace nt with name from list of epsilon candidates
-          // add new rule to set of rules in newSrcg
+          if (jotaLhs.toString().contains("0")) {
+            StringBuilder newLhsPred = new StringBuilder();
+            newLhsPred.append(newClause.getLhs().getNonterminal()).append('^')
+              .append(jotaLhs.toString()).append('(');
+            // go through arguments, add them if not empty
+            boolean argAdded = false;
+            for (int i = 0; i < newClause.getLhs().getDim(); i++) {
+              if (argAdded) {
+                newLhsPred.append(',');
+              }
+              argAdded = true;
+              if (newClause.getLhs().getArgumentByIndex(i + 1)[0] != "") {
+                for (int j = 0; j < newClause.getLhs()
+                  .getArgumentByIndex(i + 1).length; j++) {
+                  if (j > 0) {
+                    newLhsPred.append(' ');
+                  }
+                  newLhsPred.append(newClause.getLhs().getSymAt(i + 1, j));
+                }
+              }
+            }
+            newLhsPred.append(')');
+            newClause.setLhs(new Predicate(newLhsPred.toString()));
+          }
+          newSrcg.addClause(newClause);
         }
       }
     }
@@ -418,14 +440,53 @@ public class Srcg {
     return newSrcg;
   }
 
-  private ArrayList<ArrayList<String[]>> getCombinationsForRhs(
+  private void addClause(Clause newClause) {
+    this.clauses.add(newClause);
+  }
+
+  @SuppressWarnings({"serial", "unchecked"}) private ArrayList<ArrayList<String[]>> getCombinationsForRhs(
     ArrayList<String[]> epsilonCandidates, Clause clause) {
     ArrayList<ArrayList<String[]>> combinations =
       new ArrayList<ArrayList<String[]>>();
-    // TODO Auto-generated method stub
-    // y'know like S -> A B and there are 2 possibilities how A can have epsilon
-    // and 3 possibilities
-    // how B can have epsilon, consider 6 combinations
+    for (int i = 0; i < clause.getRhs().size(); i++) {
+      if (i == 0) {
+        boolean somethingAppended = false;
+        for (String[] candidate : epsilonCandidates) {
+          if (candidate[0].equals(clause.getRhs().get(i).getNonterminal())) {
+            somethingAppended = true;
+            combinations.add(new ArrayList<String[]>() {{
+              add(candidate);
+            }});
+          }
+        }
+        if (!somethingAppended){
+          combinations.add(new ArrayList<String[]>() {{
+            add(new String[]{});
+          }});
+        }
+      } else {
+        boolean somethingAppended = false;
+        ArrayList<ArrayList<String[]>> newCombinations =
+            new ArrayList<ArrayList<String[]>>();
+        for (String[] candidate : epsilonCandidates) {
+          if (candidate[0].equals(clause.getRhs().get(i).getNonterminal())) {
+            somethingAppended = true;
+            for (ArrayList<String[]> combination : combinations) {
+              newCombinations.add((ArrayList<String[]>) combination.clone());
+              newCombinations.get(newCombinations.size()-1).add(candidate);
+            }
+          }
+        }
+
+        if (!somethingAppended){
+          for (ArrayList<String[]> combination : combinations) {
+            combination.add(new String[]{});
+          }
+        } else {
+          combinations = newCombinations;
+        }
+      }
+    }
     return combinations;
   }
 
