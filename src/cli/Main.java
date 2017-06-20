@@ -38,7 +38,7 @@ class Main {
           + "\n   --please : if a grammar doesn't fit an "
           + "algorithm, ask me to convert it. No promises.");
       System.out.println(
-        "example: ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
+        "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
       return;
     }
     String grammarFile = args[0];
