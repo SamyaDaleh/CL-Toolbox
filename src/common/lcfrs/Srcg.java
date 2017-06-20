@@ -345,7 +345,9 @@ public class Srcg {
           newS.append('\'');
         }
         newSrcg.setStartSymbol(newS.toString());
-        newNts.add(newS.toString());
+        if (!newNts.contains(newS)) {
+          newNts.add(newS.toString());
+        }
         if (candidate[1].equals("0")) {
           newSrcg.addClause(newS + "(ε) -> ε");
         } else {
