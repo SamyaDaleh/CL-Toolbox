@@ -362,6 +362,7 @@ public class Srcg {
         Clause newClause = new Clause(clause.toString());
         int predDeleted = 0;
         for (int i = 0; i < newClause.getRhs().size(); i++) {
+          Predicate oldRhs = newClause.getRhs().get(i);
           StringBuilder newRhsPred = new StringBuilder();
           newRhsPred.append(combination.get(i)[0]).append('^')
             .append(combination.get(i)[1]).append('(');
@@ -370,57 +371,36 @@ public class Srcg {
           for (int j = 0; j < jota.length(); j++) {
             if (jota.charAt(j) == '0') {
               String epsilonVariable =
-                newClause.getRhs().get(i).getSymAt(j + 1, 0);
-              int[] indices = newClause.getLhs().find(epsilonVariable);
-              StringBuilder newLhsPred = new StringBuilder();
-              newLhsPred.append(newClause.getLhs().getNonterminal())
-                .append('(');
-              for (int k = 0; k < newClause.getLhs().getDim(); k++) {
-                if (k > 0) {
-                  newLhsPred.append(',');
-                }
-                for (int l = 0; l < newClause.getLhs()
-                  .getArgumentByIndex(k + 1).length; l++) {
-                  if (k + 1 != indices[0] || l != indices[1]) {
-                    if (l > 0) {
-                      newLhsPred.append(' ');
-                    }
-                    newLhsPred.append(newClause.getLhs().getSymAt(k + 1, l));
-                  }
-                }
-              }
-              newLhsPred.append(')');
-              newClause.setLhs(new Predicate(newLhsPred.toString()));
+                oldRhs.getSymAt(j + 1, 0);
+              Predicate oldLhs = newClause.getLhs();
+              Predicate newLhs =
+                removeVariableFromPredicate(epsilonVariable, oldLhs);
+              newClause.setLhs(newLhs);
             } else {
               if (oneEncountered) {
                 newRhsPred.append(',');
               }
               newRhsPred
-                .append(newClause.getRhs().get(i).getArgumentByIndex(j + 1)[0]);
+                .append(oldRhs.getArgumentByIndex(j + 1)[0]);
               oneEncountered = true;
             }
           }
           newRhsPred.append(')');
+          Predicate newRhs = new Predicate(newRhsPred.toString());
           if (oneEncountered) {
-            newClause.getRhs().set(i, new Predicate(newRhsPred.toString()));
+            newClause.getRhs().set(i, newRhs);
           } else {
             newClause.getRhs().remove(i - predDeleted);
             predDeleted++;
           }
         }
 
-        StringBuilder jotaLhs = new StringBuilder();
-        for (int i = 0; i < newClause.getLhs().getDim(); i++) {
-          if (newClause.getLhs().getArgumentByIndex(i + 1)[0].equals("")) {
-            jotaLhs.append('0');
-          } else {
-            jotaLhs.append('1');
-          }
-        }
-        if (jotaLhs.toString().contains("1")) {
+        Predicate oldLhs = newClause.getLhs();
+        String jotaLhs = getJotaForPredicate(oldLhs);
+        if (jotaLhs.contains("1")) {
           StringBuilder newLhsPred = new StringBuilder();
           newLhsPred.append(newClause.getLhs().getNonterminal()).append('^')
-            .append(jotaLhs.toString()).append('(');
+            .append(jotaLhs).append('(');
           boolean argAdded = false;
           for (int i = 0; i < newClause.getLhs().getDim(); i++) {
             if (newClause.getLhs().getArgumentByIndex(i + 1)[0] != "") {
@@ -444,18 +424,11 @@ public class Srcg {
       }
       if (clause.getRhs().isEmpty()) {
         Clause newClause = new Clause(clause.toString());
-        StringBuilder jotaLhs = new StringBuilder();
-        for (int i = 0; i < newClause.getLhs().getDim(); i++) {
-          if (newClause.getLhs().getArgumentByIndex(i + 1)[0].equals("")) {
-            jotaLhs.append('0');
-          } else {
-            jotaLhs.append('1');
-          }
-        }
-        if (jotaLhs.toString().contains("1")) {
+        String jotaLhs = getJotaForPredicate(newClause.getLhs());
+        if (jotaLhs.contains("1")) {
           StringBuilder newLhsPred = new StringBuilder();
           newLhsPred.append(newClause.getLhs().getNonterminal()).append('^')
-            .append(jotaLhs.toString()).append('(');
+            .append(jotaLhs).append('(');
           boolean argAdded = false;
           for (int i = 0; i < newClause.getLhs().getDim(); i++) {
             if (newClause.getLhs().getArgumentByIndex(i + 1)[0] != "") {
@@ -480,6 +453,43 @@ public class Srcg {
     }
     newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
     return newSrcg;
+  }
+
+  private String getJotaForPredicate(Predicate oldLhs) {
+    StringBuilder jotaLhs = new StringBuilder();
+    for (int i = 0; i < oldLhs.getDim(); i++) {
+      if (oldLhs.getArgumentByIndex(i + 1)[0].equals("")) {
+        jotaLhs.append('0');
+      } else {
+        jotaLhs.append('1');
+      }
+    }
+    String jotaLhsString = jotaLhs.toString();
+    return jotaLhsString;
+  }
+
+  private Predicate removeVariableFromPredicate(String epsilonVariable,
+    Predicate oldLhs) throws ParseException {
+    StringBuilder newLhsPred = new StringBuilder();
+    int[] indices = oldLhs.find(epsilonVariable);
+    newLhsPred.append(oldLhs.getNonterminal())
+      .append('(');
+    for (int k = 0; k < oldLhs.getDim(); k++) {
+      if (k > 0) {
+        newLhsPred.append(',');
+      }
+      for (int l = 0; l < oldLhs
+        .getArgumentByIndex(k + 1).length; l++) {
+        if (k + 1 != indices[0] || l != indices[1]) {
+          if (l > 0) {
+            newLhsPred.append(' ');
+          }
+          newLhsPred.append(oldLhs.getSymAt(k + 1, l));
+        }
+      }
+    }
+    newLhsPred.append(')');
+    return new Predicate(newLhsPred.toString());
   }
 
   private void addClause(Clause newClause) {
@@ -550,79 +560,16 @@ public class Srcg {
    * respective nonterminal. The second entry contains a vector (String) of 0
    * and 1 that specifies which arguments can become empty. */
   private ArrayList<String[]> getEpsilonCandidates() {
-    ArrayList<String[]> epsilonCandidates = new ArrayList<String[]>();
-    for (Clause clause : this.clauses) {
-      if (clause.getRhs().isEmpty()) {
-        StringBuilder jota = new StringBuilder();
-        for (int i = 1; i <= clause.getLhs().getDim(); i++) {
-          if (clause.getLhsSymAt(i, 0).equals("")) {
-            jota.append('0');
-          } else {
-            jota.append('1');
-          }
-        }
-
-        String[] newPair =
-          new String[] {clause.getLhs().getNonterminal(), jota.toString()};
-        boolean found = false;
-        for (String[] oldPair : epsilonCandidates) {
-          if (oldPair[0].equals(newPair[0])) {
-            if (oldPair[1].equals(newPair[1])) {
-              found = true;
-              break;
-            }
-          }
-        }
-        if (!found) {
-          epsilonCandidates.add(newPair);
-        }
-      }
-    }
+    ArrayList<String[]> epsilonCandidates = getDirectEpsilonCandidates();
     boolean changed = true;
     while (changed) {
       changed = false;
       for (Clause clause : this.clauses) {
         for (int i = 0; i < epsilonCandidates.size(); i++) {
           String[] candidate = epsilonCandidates.get(i);
-          ArrayList<String> lhsVector = new ArrayList<String>();
           Predicate clauseLhs = clause.getLhs();
-          for (int j = 0; j < clauseLhs.getDim(); j++) {
-            String[] argument = clauseLhs.getArgumentByIndex(j + 1);
-            StringBuilder newArgument = new StringBuilder();
-            for (int k = 0; k < argument.length; k++) {
-              if (k > 0) {
-                newArgument.append(' ');
-              }
-              String element = argument[k];
-              if (this.terminalsContain(element)) {
-                newArgument.append(element);
-              } else {
-                for (Predicate rhsPred : clause.getRhs()) {
-                  int[] indices = rhsPred.find(element);
-                  if (indices[0] >= 0) {
-                    if (rhsPred.getNonterminal().equals(candidate[0])
-                      && candidate[1].length() == rhsPred.getDim()
-                      && candidate[1].charAt(indices[0] - 1) == '0') {
-                      newArgument.append("");
-                    } else {
-                      newArgument.append(element);
-                    }
-                  }
-                }
-              }
-            }
-            lhsVector.add(newArgument.toString());
-          }
-          StringBuilder jota = new StringBuilder();
-          for (int j = 0; j < lhsVector.size(); j++) {
-            if (lhsVector.get(j).equals("")) {
-              jota.append('0');
-            } else {
-              jota.append('1');
-            }
-          }
-          String[] newCandidate =
-            new String[] {clause.getLhs().getNonterminal(), jota.toString()};
+          String[] newCandidate = getEpsilonCandidateForLhsWithoutCandidate(
+            clause, candidate, clauseLhs);
           boolean found = false;
           for (String[] oldCandidate : epsilonCandidates) {
             if (oldCandidate[0].equals(newCandidate[0])
@@ -635,6 +582,74 @@ public class Srcg {
             epsilonCandidates.add(newCandidate);
             changed = true;
           }
+        }
+      }
+    }
+    return epsilonCandidates;
+  }
+
+  private String[] getEpsilonCandidateForLhsWithoutCandidate(Clause clause,
+    String[] candidate, Predicate clauseLhs) {
+    ArrayList<String> lhsVector = new ArrayList<String>();
+    for (int j = 0; j < clauseLhs.getDim(); j++) {
+      String[] argument = clauseLhs.getArgumentByIndex(j + 1);
+      StringBuilder newArgument = new StringBuilder();
+      for (int k = 0; k < argument.length; k++) {
+        if (k > 0) {
+          newArgument.append(' ');
+        }
+        String element = argument[k];
+        if (this.terminalsContain(element)) {
+          newArgument.append(element);
+        } else {
+          for (Predicate rhsPred : clause.getRhs()) {
+            int[] indices = rhsPred.find(element);
+            if (indices[0] >= 0) {
+              if (rhsPred.getNonterminal().equals(candidate[0])
+                && candidate[1].length() == rhsPred.getDim()
+                && candidate[1].charAt(indices[0] - 1) == '0') {
+                newArgument.append("");
+              } else {
+                newArgument.append(element);
+              }
+            }
+          }
+        }
+      }
+      lhsVector.add(newArgument.toString());
+    }
+    StringBuilder jota = new StringBuilder();
+    for (int j = 0; j < lhsVector.size(); j++) {
+      if (lhsVector.get(j).equals("")) {
+        jota.append('0');
+      } else {
+        jota.append('1');
+      }
+    }
+    String[] newCandidate =
+      new String[] {clause.getLhs().getNonterminal(), jota.toString()};
+    return newCandidate;
+  }
+
+  private ArrayList<String[]> getDirectEpsilonCandidates() {
+    ArrayList<String[]> epsilonCandidates = new ArrayList<String[]>();
+    for (Clause clause : this.clauses) {
+      if (clause.getRhs().isEmpty()) {
+        String jota = getJotaForPredicate(clause.getLhs());
+
+        String[] newPair =
+          new String[] {clause.getLhs().getNonterminal(), jota};
+        boolean found = false;
+        for (String[] oldPair : epsilonCandidates) {
+          if (oldPair[0].equals(newPair[0])) {
+            if (oldPair[1].equals(newPair[1])) {
+              found = true;
+              break;
+            }
+          }
+        }
+        if (!found) {
+          epsilonCandidates.add(newPair);
         }
       }
     }
