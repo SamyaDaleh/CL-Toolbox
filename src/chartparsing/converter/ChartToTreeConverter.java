@@ -97,44 +97,51 @@ public class ChartToTreeConverter {
               new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
                 goal.getItemform()[0].length() - 2)));
           }
-          if (algorithm.equals("topdown")) {
-            for (int j = steps.size() - 1; j >= 0; j--) {
-              String step = steps.get(j);
-              if (j == steps.size() - 1) {
-                derivatedTree = new Tree(
-                  new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
-              } else {
-                derivatedTree = applyStep(derivatedTree, step, false);
-              }
-            }
-          } else if (algorithm.equals("earley")
-            || algorithm.equals("shiftreduce") || algorithm.equals("unger")) {
-            for (int j = 0; j < steps.size(); j++) {
-              String step = steps.get(j);
-              if (algorithm.equals("earley") ) {
-                derivatedTree = applyStep(derivatedTree, step, false);
-              } else if (algorithm.equals("unger")) {
-                if (j == 0) {
-                  derivatedTree = new Tree(new CfgProductionRule(
-                    step.substring(step.indexOf(" ") + 1)));
-                } else {
-                  derivatedTree = applyStep(derivatedTree, step, false);
-                }
-              } else if (algorithm.equals("shiftreduce")) {
-                if (j == 0) {
-                  derivatedTree = new Tree(new CfgProductionRule(
-                    step.substring(step.indexOf(" ") + 1)));
-                } else {
-                  derivatedTree = applyStep(derivatedTree, step, true);
-                }
-              }
-            }
-          }
+          derivatedTree =
+            getTreeDerivedFromCfgSteps(algorithm, derivatedTree, steps);
           return derivatedTree;
         }
       }
     }
     return null;
+  }
+
+  private static Tree getTreeDerivedFromCfgSteps(String algorithm,
+    Tree derivatedTree, ArrayList<String> steps) throws ParseException {
+    if (algorithm.equals("topdown")) {
+      for (int j = steps.size() - 1; j >= 0; j--) {
+        String step = steps.get(j);
+        if (j == steps.size() - 1) {
+          derivatedTree = new Tree(
+            new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
+        } else {
+          derivatedTree = applyStep(derivatedTree, step, false);
+        }
+      }
+    } else if (algorithm.equals("earley")
+      || algorithm.equals("shiftreduce") || algorithm.equals("unger")) {
+      for (int j = 0; j < steps.size(); j++) {
+        String step = steps.get(j);
+        if (algorithm.equals("earley")) {
+          derivatedTree = applyStep(derivatedTree, step, false);
+        } else if (algorithm.equals("unger")) {
+          if (j == 0) {
+            derivatedTree = new Tree(new CfgProductionRule(
+              step.substring(step.indexOf(" ") + 1)));
+          } else {
+            derivatedTree = applyStep(derivatedTree, step, false);
+          }
+        } else if (algorithm.equals("shiftreduce")) {
+          if (j == 0) {
+            derivatedTree = new Tree(new CfgProductionRule(
+              step.substring(step.indexOf(" ") + 1)));
+          } else {
+            derivatedTree = applyStep(derivatedTree, step, true);
+          }
+        }
+      }
+    }
+    return derivatedTree;
   }
 
   /** Applies one derivation step in a CFG parsing process. */
