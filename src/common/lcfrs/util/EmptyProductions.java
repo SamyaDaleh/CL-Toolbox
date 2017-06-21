@@ -69,64 +69,14 @@ public class EmptyProductions {
     for (Clause clause : oldSrcg.getClauses()) {
       for (ArrayList<String[]> combination : getCombinationsForRhs(
         epsilonCandidates, clause)) {
-        Clause newClause = new Clause(clause.toString());
-        int predDeleted = 0;
-        for (int i = 0; i < newClause.getRhs().size(); i++) {
-          Predicate oldRhs = newClause.getRhs().get(i);
-          StringBuilder newRhsPred = new StringBuilder();
-          newRhsPred.append(combination.get(i)[0]).append('^')
-            .append(combination.get(i)[1]).append('(');
-          String jota = combination.get(i)[1];
-          boolean oneEncountered = false;
-          for (int j = 0; j < jota.length(); j++) {
-            if (jota.charAt(j) == '0') {
-              String epsilonVariable = oldRhs.getSymAt(j + 1, 0);
-              Predicate oldLhs = newClause.getLhs();
-              Predicate newLhs =
-                removeVariableFromPredicate(epsilonVariable, oldLhs);
-              newClause.setLhs(newLhs);
-            } else {
-              if (oneEncountered) {
-                newRhsPred.append(',');
-              }
-              newRhsPred.append(oldRhs.getArgumentByIndex(j + 1)[0]);
-              oneEncountered = true;
-            }
-          }
-          newRhsPred.append(')');
-          Predicate newRhs = new Predicate(newRhsPred.toString());
-          if (oneEncountered) {
-            newClause.getRhs().set(i, newRhs);
-          } else {
-            newClause.getRhs().remove(i - predDeleted);
-            predDeleted++;
-          }
-        }
+        Clause newClause = getClauseForEpsilonCombination(clause, combination);
 
         Predicate oldLhs = newClause.getLhs();
         String jotaLhs = getJotaForPredicate(oldLhs);
         if (jotaLhs.contains("1")) {
-          StringBuilder newLhsPred = new StringBuilder();
-          newLhsPred.append(newClause.getLhs().getNonterminal()).append('^')
-            .append(jotaLhs).append('(');
-          boolean argAdded = false;
-          for (int i = 0; i < newClause.getLhs().getDim(); i++) {
-            if (newClause.getLhs().getArgumentByIndex(i + 1)[0] != "") {
-              if (argAdded) {
-                newLhsPred.append(',');
-              }
-              argAdded = true;
-              for (int j = 0; j < newClause.getLhs()
-                .getArgumentByIndex(i + 1).length; j++) {
-                if (j > 0) {
-                  newLhsPred.append(' ');
-                }
-                newLhsPred.append(newClause.getLhs().getSymAt(i + 1, j));
-              }
-            }
-          }
-          newLhsPred.append(')');
-          newClause.setLhs(new Predicate(newLhsPred.toString()));
+          Predicate newLhs =
+            getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
+          newClause.setLhs(newLhs);
           newSrcg.addClause(newClause);
         }
       }
@@ -134,28 +84,10 @@ public class EmptyProductions {
         Clause newClause = new Clause(clause.toString());
         String jotaLhs = getJotaForPredicate(newClause.getLhs());
         if (jotaLhs.contains("1")) {
-          StringBuilder newLhsPred = new StringBuilder();
-          newLhsPred.append(newClause.getLhs().getNonterminal()).append('^')
-            .append(jotaLhs).append('(');
-          boolean argAdded = false;
-          for (int i = 0; i < newClause.getLhs().getDim(); i++) {
-            if (newClause.getLhs().getArgumentByIndex(i + 1)[0] != "") {
-              if (argAdded) {
-                newLhsPred.append(',');
-              }
-              argAdded = true;
-              for (int j = 0; j < newClause.getLhs()
-                .getArgumentByIndex(i + 1).length; j++) {
-                if (j > 0) {
-                  newLhsPred.append(' ');
-                }
-                newLhsPred.append(newClause.getLhs().getSymAt(i + 1, j));
-              }
-            }
-          }
-          newLhsPred.append(')');
-          newClause.setLhs(new Predicate(newLhsPred.toString()));
-          newSrcg.addClause(newClause);
+          Predicate newLhs =
+              getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
+            newClause.setLhs(newLhs);
+            newSrcg.addClause(newClause);
         }
       }
     }
@@ -163,17 +95,67 @@ public class EmptyProductions {
     return newSrcg;
   }
 
-  private static String getJotaForPredicate(Predicate oldLhs) {
-    StringBuilder jotaLhs = new StringBuilder();
-    for (int i = 0; i < oldLhs.getDim(); i++) {
-      if (oldLhs.getArgumentByIndex(i + 1)[0].equals("")) {
-        jotaLhs.append('0');
+  private static Clause getClauseForEpsilonCombination(Clause clause,
+    ArrayList<String[]> combination) throws ParseException {
+    Clause newClause = new Clause(clause.toString());
+    int predDeleted = 0;
+    for (int i = 0; i < newClause.getRhs().size(); i++) {
+      Predicate oldRhs = newClause.getRhs().get(i);
+      StringBuilder newRhsPred = new StringBuilder();
+      newRhsPred.append(combination.get(i)[0]).append('^')
+        .append(combination.get(i)[1]).append('(');
+      String jota = combination.get(i)[1];
+      boolean oneEncountered = false;
+      for (int j = 0; j < jota.length(); j++) {
+        if (jota.charAt(j) == '0') {
+          String epsilonVariable = oldRhs.getSymAt(j + 1, 0);
+          Predicate oldLhs = newClause.getLhs();
+          Predicate newLhs =
+            removeVariableFromPredicate(epsilonVariable, oldLhs);
+          newClause.setLhs(newLhs);
+        } else {
+          if (oneEncountered) {
+            newRhsPred.append(',');
+          }
+          newRhsPred.append(oldRhs.getArgumentByIndex(j + 1)[0]);
+          oneEncountered = true;
+        }
+      }
+      newRhsPred.append(')');
+      Predicate newRhs = new Predicate(newRhsPred.toString());
+      if (oneEncountered) {
+        newClause.getRhs().set(i, newRhs);
       } else {
-        jotaLhs.append('1');
+        newClause.getRhs().remove(i - predDeleted);
+        predDeleted++;
       }
     }
-    String jotaLhsString = jotaLhs.toString();
-    return jotaLhsString;
+    return newClause;
+  }
+
+  private static Predicate getPredicateWithoutEmptyArguments(
+    String jotaLhs, Predicate oldLhs) throws ParseException {
+    StringBuilder newLhsPred = new StringBuilder();
+    newLhsPred.append(oldLhs.getNonterminal()).append('^')
+      .append(jotaLhs).append('(');
+    boolean argAdded = false;
+    for (int i = 0; i < oldLhs.getDim(); i++) {
+      if (oldLhs.getArgumentByIndex(i + 1)[0] != "") {
+        if (argAdded) {
+          newLhsPred.append(',');
+        }
+        argAdded = true;
+        for (int j = 0; j < oldLhs
+          .getArgumentByIndex(i + 1).length; j++) {
+          if (j > 0) {
+            newLhsPred.append(' ');
+          }
+          newLhsPred.append(oldLhs.getSymAt(i + 1, j));
+        }
+      }
+    }
+    newLhsPred.append(')');
+    return new Predicate(newLhsPred.toString());
   }
 
   private static Predicate removeVariableFromPredicate(String epsilonVariable,
@@ -196,6 +178,19 @@ public class EmptyProductions {
     }
     newLhsPred.append(')');
     return new Predicate(newLhsPred.toString());
+  }
+
+  private static String getJotaForPredicate(Predicate oldLhs) {
+    StringBuilder jotaLhs = new StringBuilder();
+    for (int i = 0; i < oldLhs.getDim(); i++) {
+      if (oldLhs.getArgumentByIndex(i + 1)[0].equals("")) {
+        jotaLhs.append('0');
+      } else {
+        jotaLhs.append('1');
+      }
+    }
+    String jotaLhsString = jotaLhs.toString();
+    return jotaLhsString;
   }
 
   /** Take a list of epsilonCandidates and a clause, returns a list of
