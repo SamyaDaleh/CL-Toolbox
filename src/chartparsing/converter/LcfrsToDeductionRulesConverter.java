@@ -49,17 +49,22 @@ public class LcfrsToDeductionRulesConverter {
         DynamicDeductionRule binary = new SrcgCykBinary(clause, wsplit);
         schema.addRule(binary);
       } else if (clause.getRhs().size() == 0) {
-        for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
-          StaticDeductionRule scan = new StaticDeductionRule();
-          scan.addConsequence(
-            new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
-          scan.setName("scan " + clause.toString());
-          schema.addAxiom(scan);
-        }
+        addSrcgCykScanRules(wsplit, schema, clause);
       }
     }
     schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
     return schema;
+  }
+
+  private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
+    Clause clause) {
+    for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
+      StaticDeductionRule scan = new StaticDeductionRule();
+      scan.addConsequence(
+        new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
+      scan.setName("scan " + clause.toString());
+      schema.addAxiom(scan);
+    }
   }
 
   public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w) {
@@ -80,13 +85,7 @@ public class LcfrsToDeductionRulesConverter {
         DynamicDeductionRule binary = new SrcgCykBinary(clause, wsplit);
         schema.addRule(binary);
       } else if (clause.getRhs().size() == 0) {
-        for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
-          StaticDeductionRule scan = new StaticDeductionRule();
-          scan.addConsequence(
-            new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
-          scan.setName("scan " + clause.toString());
-          schema.addAxiom(scan);
-        }
+        addSrcgCykScanRules(wsplit, schema, clause);
       } else if (clause.getRhs().size() == 1) {
         DynamicDeductionRule unary = new SrcgCykUnary(clause, wsplit);
         schema.addRule(unary);
