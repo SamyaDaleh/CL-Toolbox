@@ -1,9 +1,9 @@
 package common.cfg;
 
 abstract class AbstractCfg {
-  protected String nonterminals[];
-  protected String startSymbol;
-  protected String terminals[];
+  String[] nonterminals;
+  String startSymbol;
+  String[] terminals;
 
   public String[] getNonterminals() {
     return nonterminals;

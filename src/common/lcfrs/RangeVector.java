@@ -16,7 +16,7 @@ public class RangeVector {
    */
   public RangeVector(int numRanges) {
     for (int i = 0; i < numRanges; i++) {
-      ranges.add(new Range("?","?"));
+      ranges.add(new Range());
     }
   }
 

@@ -2,6 +2,7 @@ package common.lcfrs.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
@@ -93,9 +94,7 @@ public class Order {
               orderedPredicate(rhsPred, newNt.toString(), orderVector));
             if (!newSrcg.nonTerminalsContain(newNt.toString())) {
               ArrayList<String> newNts = new ArrayList<String>();
-              for (String copyNt : newSrcg.getNonterminals()) {
-                newNts.add(copyNt);
-              }
+              Collections.addAll(newNts, newSrcg.getNonterminals());
               newNts.add(newNt.toString());
               newSrcg
                 .setNonterminals(newNts.toArray(new String[newNts.size()]));

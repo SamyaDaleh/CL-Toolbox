@@ -13,14 +13,14 @@ import chartparsing.tag.TagEarleyItem;
 public class ArrayUtilsTest {
 
   @Test public void testItemEquals() {
-    Item item1 = new TagEarleyItem("a", ".1", "la", 1, "?", "?", 3, false);
+    Item item1 = new TagEarleyItem("a", ".1", "la", 1, "?", "?", 3);
     Item item2 =
       new TagEarleyItem("a", ".1", "la", 1, (Integer) null, null, 3, false);
     assertTrue(item1.equals(item2));
   }
 
   @Test public void testListContainsItem() {
-    Item item1 = new TagEarleyItem("a", ".1", "la", 1, "?", "?", 3, false);
+    Item item1 = new TagEarleyItem("a", ".1", "la", 1, "?", "?", 3);
     Item item2 =
       new TagEarleyItem("a", ".1", "la", 1, (Integer) null, null, 3, false);
 

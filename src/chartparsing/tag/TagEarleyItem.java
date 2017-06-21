@@ -21,10 +21,10 @@ public class TagEarleyItem extends AbstractItem implements Item {
    * Constructor that takes Strings instead of Integers, so I can pass in '?'.
    */
   public TagEarleyItem(String treeName, String gornAddress, String pos, int i,
-    String j, String k, int l, boolean adj) {
+      String j, String k, int l) {
     String footFrom = (j == null) ? "-" : String.valueOf(j);
     String footTo = (k == null) ? "-" : String.valueOf(k);
-    String adjRep = (adj) ? "1" : "0";
+    String adjRep = "0";
     itemForm = new String[] {treeName, gornAddress, pos, String.valueOf(i), footFrom, footTo,
       String.valueOf(l), adjRep};
   }

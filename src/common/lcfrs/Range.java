@@ -10,10 +10,11 @@ class Range {
   /**
    * Constructor with the indices of start and end of the substring. As string
    * so they can contain '?' needed for parsing while I don't know the spans.
+   * Initializes it with unknown indices as that is the only use case for now.
    */
-  Range(String l, String r) {
-    this.l = l;
-    this.r = r;
+  Range() {
+    this.l = "?";
+    this.r = "?";
   }
 
   @Override public String toString() {

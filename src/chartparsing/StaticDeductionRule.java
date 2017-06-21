@@ -30,10 +30,6 @@ public class StaticDeductionRule implements DeductionRule{
     return consequences;
   }
 
-  public void setConsequences(List<Item> consequences) {
-    this.consequences = consequences;
-  }
-
   public void setName(String name) {
     this.name = name;
   }

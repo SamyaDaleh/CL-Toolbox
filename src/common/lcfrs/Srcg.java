@@ -76,7 +76,7 @@ public class Srcg {
     this.startSymbol = startSymbol;
   }
 
-  public void addClause(String lhs, String rhs) throws ParseException {
+  private void addClause(String lhs, String rhs) throws ParseException {
     this.clauses.add(new Clause(lhs, rhs));
   }
 
@@ -184,8 +184,8 @@ public class Srcg {
 
   /** Returns true if mayT is one of the terminals. */
   public boolean terminalsContain(String mayT) {
-    for (int i = 0; i < this.terminals.length; i++) {
-      if (this.terminals[i].equals(mayT)) {
+    for (String terminal : this.terminals) {
+      if (terminal.equals(mayT)) {
         return true;
       }
     }

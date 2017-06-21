@@ -2,6 +2,7 @@ package common.lcfrs.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
@@ -13,7 +14,6 @@ public class EmptyProductions {
    * string in one of its lhs arguments, except if it is the start symbol in
    * which case it must not occur on any rhs. */
   public static boolean hasEpsilonProductions(Srcg srcg) {
-    boolean hasEpsilon = false;
     for (Clause clause : srcg.getClauses()) {
       for (String[] argument : clause.getLhs().getSymbols()) {
         if (argument.length == 1 && argument[0].equals("")) {
@@ -31,7 +31,7 @@ public class EmptyProductions {
         }
       }
     }
-    return hasEpsilon;
+    return false;
   }
 
   /** Return an equivalent sRCG without epsilon as any lhs argument. */
@@ -54,7 +54,7 @@ public class EmptyProductions {
           newS.append('\'');
         }
         newSrcg.setStartSymbol(newS.toString());
-        if (!newNts.contains(newS)) {
+        if (!newNts.contains(newS.toString())) {
           newNts.add(newS.toString());
         }
         if (candidate[1].equals("0")) {
@@ -140,7 +140,7 @@ public class EmptyProductions {
       .append(jotaLhs).append('(');
     boolean argAdded = false;
     for (int i = 0; i < oldLhs.getDim(); i++) {
-      if (oldLhs.getArgumentByIndex(i + 1)[0] != "") {
+      if (!Objects.equals(oldLhs.getArgumentByIndex(i + 1)[0], "")) {
         if (argAdded) {
           newLhsPred.append(',');
         }
@@ -189,8 +189,7 @@ public class EmptyProductions {
         jotaLhs.append('1');
       }
     }
-    String jotaLhsString = jotaLhs.toString();
-    return jotaLhsString;
+    return jotaLhs.toString();
   }
 
   /** Take a list of epsilonCandidates and a clause, returns a list of
@@ -314,16 +313,14 @@ public class EmptyProductions {
       lhsVector.add(newArgument.toString());
     }
     StringBuilder jota = new StringBuilder();
-    for (int j = 0; j < lhsVector.size(); j++) {
-      if (lhsVector.get(j).equals("")) {
+    for (String aLhsVector : lhsVector) {
+      if (aLhsVector.equals("")) {
         jota.append('0');
       } else {
         jota.append('1');
       }
     }
-    String[] newCandidate =
-      new String[] {clause.getLhs().getNonterminal(), jota.toString()};
-    return newCandidate;
+    return new String[] {clause.getLhs().getNonterminal(), jota.toString()};
   }
 
   private static ArrayList<String[]> getDirectEpsilonCandidates(Srcg srcg) {

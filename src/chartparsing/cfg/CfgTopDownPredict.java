@@ -26,22 +26,15 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       String[] stackSplit = stack.split(" ");
       int i = Integer.parseInt(itemForm[1]);
       if (stackSplit[0].equals(rule.getLhs())) {
-        // TODO why is there a handle for epsilon productions if TopDown can't
-        // be called if CFG has one? Recheck
-        if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
-          consequences.add(new CfgItem(
-            ArrayUtils.getSubSequenceAsString(stackSplit, 1, stackSplit.length),
-            i));
+        if (stackSplit.length == 1) {
+          consequences.add(new CfgItem(String.join(" ", rule.getRhs()), i));
         } else {
-          if (stackSplit.length == 1) {
-            consequences.add(new CfgItem(String.join(" ", rule.getRhs()), i));
-          } else {
-            consequences
-              .add(new CfgItem(
+          consequences
+            .add(
+              new CfgItem(
                 String.join(" ", rule.getRhs()) + " " + ArrayUtils
                   .getSubSequenceAsString(stackSplit, 1, stackSplit.length),
                 i));
-          }
         }
       }
     }

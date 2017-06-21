@@ -85,12 +85,17 @@ public class ChartToTreeConverter {
       for (int i = 0; i < deduction.getChart().size(); i++) {
         if (deduction.getChart().get(i).equals(goal)) {
           ArrayList<String> steps = null;
-          if (algorithm.equals("topdown") || algorithm.equals("earley")) {
+          switch (algorithm) {
+          case "topdown":
+          case "earley":
             steps = retrieveSteps(i, deduction, new String[] {"predict"});
-          } else if (algorithm.equals("shiftreduce")) {
+            break;
+          case "shiftreduce":
             steps = retrieveSteps(i, deduction, new String[] {"reduce"});
-          } else if (algorithm.equals("unger")) {
+            break;
+          case "unger":
             steps = retrieveSteps(i, deduction, new String[] {"complete"});
+            break;
           }
           if (algorithm.equals("earley")) {
             derivatedTree =
@@ -122,22 +127,26 @@ public class ChartToTreeConverter {
       || algorithm.equals("shiftreduce") || algorithm.equals("unger")) {
       for (int j = 0; j < steps.size(); j++) {
         String step = steps.get(j);
-        if (algorithm.equals("earley")) {
+        switch (algorithm) {
+        case "earley":
           derivatedTree = applyStep(derivatedTree, step, false);
-        } else if (algorithm.equals("unger")) {
+          break;
+        case "unger":
           if (j == 0) {
-            derivatedTree = new Tree(new CfgProductionRule(
-              step.substring(step.indexOf(" ") + 1)));
+            derivatedTree = new Tree(
+                new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
           } else {
             derivatedTree = applyStep(derivatedTree, step, false);
           }
-        } else if (algorithm.equals("shiftreduce")) {
+          break;
+        case "shiftreduce":
           if (j == 0) {
-            derivatedTree = new Tree(new CfgProductionRule(
-              step.substring(step.indexOf(" ") + 1)));
+            derivatedTree = new Tree(
+                new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
           } else {
             derivatedTree = applyStep(derivatedTree, step, true);
           }
+          break;
         }
       }
     }

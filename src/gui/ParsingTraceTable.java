@@ -23,12 +23,12 @@ public class ParsingTraceTable {
     f.setVisible(true);
   }
 
-  private Timer showTimer;
-  private Timer disposeTimer;
-  private JTable table;
+  private final Timer showTimer;
+  private final Timer disposeTimer;
+  private final JTable table;
   private Point hintCell;
   private DisplayTree popup;
-  private Tag tag;
+  private final Tag tag;
 
   public ParsingTraceTable(String[][] rowData, String[] columnNames, Tag tag) {
     JFrame f = new JFrame();

@@ -129,7 +129,7 @@ public class Tree {
     this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
   }
 
-  protected Tree() {
+  private Tree() {
     super();
   }
 

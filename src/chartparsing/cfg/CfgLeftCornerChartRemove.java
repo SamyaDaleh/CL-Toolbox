@@ -35,7 +35,7 @@ public class CfgLeftCornerChartRemove extends AbstractDynamicDeductionRule {
         int l2 = Integer.parseInt(itemForm2[2]);
         if (mayDottedRuleSplit[k].substring(1).equals(itemForm2[0])
           && i + l1 == j && mayDottedRuleSplit[k].length() > 1) {
-          if (k == mayDottedRuleSplit.length) {
+          if (k == mayDottedRuleSplit.length-1) {
             consequences
               .add(new CfgItem(
                 ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k)

@@ -8,7 +8,7 @@ import common.lcfrs.Srcg;
 import common.tag.Tag;
 
 class GrammarToGrammarConverter {
-  private boolean please;
+  private final boolean please;
 
   GrammarToGrammarConverter(boolean please) {
     this.please = please;

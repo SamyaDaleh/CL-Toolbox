@@ -49,14 +49,14 @@ public class TagEarleyCompleteNode extends AbstractDynamicDeductionRule {
           String f1 = (g.equals("-")) ? j : g;
           String f2 = (h.equals("-")) ? k : h;
           consequences.add(
-            new TagEarleyItem(treeName1, node1, "ra", f, f1, f2, l, false));
+            new TagEarleyItem(treeName1, node1, "ra", f, f1, f2, l));
         } else if (pos2.equals("la") && pos1.equals("rb") && l == f
           && adj2.equals("0")) {
           // the other way around
           String f1 = (g.equals("-")) ? j : g;
           String f2 = (h.equals("-")) ? k : h;
           consequences.add(
-            new TagEarleyItem(treeName2, node2, "ra", i2, f1, f2, i1, false));
+            new TagEarleyItem(treeName2, node2, "ra", i2, f1, f2, i1));
         }
       }
     }

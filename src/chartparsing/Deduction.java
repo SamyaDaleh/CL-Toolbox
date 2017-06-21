@@ -202,10 +202,8 @@ public class Deduction {
             newList.get(newList.size() - 1).addAll(subList);
             newList.get(newList.size() - 1).add(chart.get(j));
           }
-          for (List<Item> subList : antecedenceListGenerator(newList, j + 1,
-            itemsNeeded - 1)) {
-            finalList.add(subList);
-          }
+          finalList.addAll(
+              antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
         }
       }
       return finalList;

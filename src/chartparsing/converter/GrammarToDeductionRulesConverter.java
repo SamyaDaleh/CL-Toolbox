@@ -12,8 +12,7 @@ public class GrammarToDeductionRulesConverter {
 
   /** Call with appropriate grammar. Better call the convert-to function
    * first. */
-  public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm)
-    throws ParseException {
+  public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm) {
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToDeductionRulesConverter
