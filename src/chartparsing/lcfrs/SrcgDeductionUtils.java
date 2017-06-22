@@ -66,37 +66,22 @@ public class SrcgDeductionUtils {
   }
 
   /** If you pass it a list of vectors/ranges and the predicate of a rule
-   * (mostly a lhs) it returns ranges for the whole arguments. */
-  public static Integer[] getRangesForArguments(Integer[] rangeOverElements,
+   * (mostly a lhs) it returns ranges for the whole arguments.
+   * @param <T> */
+  public static <T> ArrayList<?> getRangesForArguments(ArrayList<T> rangeOverElements,
     Predicate lhs) {
-    ArrayList<Integer> rangeOverArguments = new ArrayList<Integer>();
+    ArrayList<T> rangeOverArguments = new ArrayList<T>();
     for (int i = 0; i < lhs.getDim(); i++) {
       rangeOverArguments
-        .add(rangeOverElements[lhs.getAbsolutePos(i + 1, 0) * 2]);
+        .add(rangeOverElements.get(lhs.getAbsolutePos(i + 1, 0) * 2));
       if (i == lhs.getDim() - 1) {
-        rangeOverArguments.add(rangeOverElements[rangeOverElements.length - 1]);
+        rangeOverArguments
+          .add(rangeOverElements.get(rangeOverElements.size() - 1));
       } else {
         rangeOverArguments
-          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0) * 2 - 1]);
+          .add(rangeOverElements.get(lhs.getAbsolutePos(i + 2, 0) * 2 - 1));
       }
     }
-    return rangeOverArguments.toArray(new Integer[rangeOverArguments.size()]);
-  }
-
-  /** The same but for strings. Can I make it for any kind of array? */
-  static String[] getRangesForArguments(String[] rangeOverElements,
-    Predicate lhs) {
-    ArrayList<String> rangeOverArguments = new ArrayList<String>();
-    for (int i = 0; i < lhs.getDim(); i++) {
-      rangeOverArguments
-        .add(rangeOverElements[lhs.getAbsolutePos(i + 1, 0) * 2]);
-      if (i == lhs.getDim() - 1) {
-        rangeOverArguments.add(rangeOverElements[rangeOverElements.length - 1]);
-      } else {
-        rangeOverArguments
-          .add(rangeOverElements[lhs.getAbsolutePos(i + 2, 0) * 2 - 1]);
-      }
-    }
-    return rangeOverArguments.toArray(new String[rangeOverArguments.size()]);
+    return rangeOverArguments;
   }
 }

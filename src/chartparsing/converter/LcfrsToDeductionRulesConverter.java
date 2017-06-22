@@ -58,10 +58,11 @@ public class LcfrsToDeductionRulesConverter {
 
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
     Clause clause) {
-    for (Integer[] ranges : getAllRanges(clause.getLhs(), wsplit)) {
+    for (List<Integer> ranges : getAllRanges(clause.getLhs(), wsplit)) {
+      Integer[] rangesArr = ranges.toArray(new Integer[ranges.size()]);
       StaticDeductionRule scan = new StaticDeductionRule();
       scan.addConsequence(
-        new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
+        new SrcgCykItem(clause.getLhs().getNonterminal(), rangesArr));
       scan.setName("scan " + clause.toString());
       schema.addAxiom(scan);
     }
@@ -99,8 +100,9 @@ public class LcfrsToDeductionRulesConverter {
    * string this returns a list of all possible (non overlapping) ranges the
    * arguments could have over parts of the input. All symbols in the Predictae
    * have to be terminals. */
-  private static List<Integer[]> getAllRanges(Predicate lhs, String[] wSplit) {
-    List<Integer[]> ranges = new ArrayList<Integer[]>();
+  @SuppressWarnings("unchecked") private static List<List<Integer>>
+    getAllRanges(Predicate lhs, String[] wSplit) {
+    ArrayList<List<Integer>> ranges = new ArrayList<List<Integer>>();
     ArrayList<Integer> tryOutRange = new ArrayList<Integer>();
     tryOutRange.add(0);
     tryOutRange.add(1);
@@ -123,8 +125,8 @@ public class LcfrsToDeductionRulesConverter {
           }
         }
         if (match) {
-          ranges.add(SrcgDeductionUtils.getRangesForArguments(
-            tryOutRange.toArray(new Integer[tryOutRange.size()]), lhs));
+          ranges.add((List<Integer>) SrcgDeductionUtils
+            .getRangesForArguments(tryOutRange, lhs));
         }
       }
       tryOutRange.set(tryOutRange.size() - 2,

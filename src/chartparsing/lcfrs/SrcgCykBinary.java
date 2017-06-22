@@ -32,7 +32,8 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
     return this.consequences;
   }
 
-  private void calculateConsequences(String[] itemForm2, String[] itemForm1) {
+  @SuppressWarnings("unchecked") private void
+    calculateConsequences(String[] itemForm2, String[] itemForm1) {
     String nt1 = itemForm1[0];
     String nt2 = itemForm2[0];
     if (nt2.equals(clause.getRhs().get(0).getNonterminal())
@@ -93,11 +94,12 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
 
       }
       if (looksGood && overallRanges.size() > 0) {
-        Integer[] newvector = SrcgDeductionUtils.getRangesForArguments(
-          overallRanges.toArray(new Integer[overallRanges.size()]),
-          clause.getLhs());
+        List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
+          .getRangesForArguments(overallRanges, clause.getLhs());
+        Integer[] newVectorArr =
+          newVector.toArray(new Integer[newVector.size()]);
         consequences
-          .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newvector));
+          .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVectorArr));
         this.name = "complete " + clause.toString();
       }
     }

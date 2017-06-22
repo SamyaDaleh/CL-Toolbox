@@ -21,7 +21,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     this.wSplit = wSplit;
   }
 
-  @Override public List<Item> getConsequences() {
+  @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String nt = itemForm[0];
@@ -79,11 +79,12 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
           // you want it.
         }
         if (overallRanges.size() > 0) {
-          Integer[] newVector = SrcgDeductionUtils.getRangesForArguments(
-            overallRanges.toArray(new Integer[overallRanges.size()]),
+          List<Integer> newVector = (List<Integer>) SrcgDeductionUtils.getRangesForArguments(
+            overallRanges,
             clause.getLhs());
+          Integer[] newVectorArr = newVector.toArray(new Integer[newVector.size()]);
           consequences
-            .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVector));
+            .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVectorArr));
           this.name = "complete " + clause.toString();
         }
       }

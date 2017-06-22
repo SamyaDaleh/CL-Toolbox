@@ -19,7 +19,7 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String clause = itemForm[0];
@@ -40,14 +40,14 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
 
           ArrayList<String> rangesForElements = new ArrayList<String>();
           rangesForElements
-              .addAll(Arrays.asList(itemForm).subList(4, itemForm.length));
+            .addAll(Arrays.asList(itemForm).subList(4, itemForm.length));
           Predicate lhs = clauseParsed.getLhs();
-          String[] newVector = SrcgDeductionUtils.getRangesForArguments(
-            rangesForElements.toArray(new String[rangesForElements.size()]),
-            lhs);
-
+          List<String> newVector = (List<String>) SrcgDeductionUtils
+            .getRangesForArguments(rangesForElements, lhs);
+          String[] newVectorArr =
+            newVector.toArray(new String[newVector.size()]);
           consequences.add(new SrcgEarleyPassiveItem(
-            clauseParsed.getLhs().getNonterminal(), newVector));
+            clauseParsed.getLhs().getNonterminal(), newVectorArr));
         }
       }
     }

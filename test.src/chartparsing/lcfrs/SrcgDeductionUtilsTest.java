@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -59,17 +61,25 @@ public class SrcgDeductionUtilsTest {
 
   }
 
-  @Test public void testgetRangesForArguments() throws ParseException {
+  @SuppressWarnings({"serial", "unchecked"}) @Test public void
+    testgetRangesForArguments() throws ParseException {
     Predicate lhs = new Predicate("A ( a b c, d, e f )");
     String[] ranges =
       new String[] {"0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6"};
-    String[] rangesoverarguments =
-      SrcgDeductionUtils.getRangesForArguments(ranges, lhs);
-    assertEquals("0", rangesoverarguments[0]);
-    assertEquals("3", rangesoverarguments[1]);
-    assertEquals("3", rangesoverarguments[2]);
-    assertEquals("4", rangesoverarguments[3]);
-    assertEquals("4", rangesoverarguments[4]);
-    assertEquals("6", rangesoverarguments[5]);
+    ArrayList<String> rangesList = new ArrayList<String>() {
+      {
+        for (String range : ranges) {
+          this.add(range);
+        }
+      }
+    };
+    List<String> rangesoverarguments =
+      (List<String>) SrcgDeductionUtils.getRangesForArguments(rangesList, lhs);
+    assertEquals("0", rangesoverarguments.get(0));
+    assertEquals("3", rangesoverarguments.get(1));
+    assertEquals("3", rangesoverarguments.get(2));
+    assertEquals("4", rangesoverarguments.get(3));
+    assertEquals("4", rangesoverarguments.get(4));
+    assertEquals("6", rangesoverarguments.get(5));
   }
 }

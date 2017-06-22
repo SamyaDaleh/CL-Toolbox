@@ -1,7 +1,5 @@
 package chartparsing.converter;
 
-import java.text.ParseException;
-
 import chartparsing.ParsingSchema;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
