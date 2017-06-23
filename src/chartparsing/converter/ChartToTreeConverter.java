@@ -84,19 +84,8 @@ public class ChartToTreeConverter {
     for (Item goal : goals) {
       for (int i = 0; i < deduction.getChart().size(); i++) {
         if (deduction.getChart().get(i).equals(goal)) {
-          ArrayList<String> steps = null;
-          switch (algorithm) {
-          case "topdown":
-          case "earley":
-            steps = retrieveSteps(i, deduction, new String[] {"predict"});
-            break;
-          case "shiftreduce":
-            steps = retrieveSteps(i, deduction, new String[] {"reduce"});
-            break;
-          case "unger":
-            steps = retrieveSteps(i, deduction, new String[] {"complete"});
-            break;
-          }
+          ArrayList<String> steps =
+            getDerivationStepsForAlgorithm(deduction, algorithm, i);
           if (algorithm.equals("earley")) {
             derivatedTree =
               new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
@@ -109,6 +98,24 @@ public class ChartToTreeConverter {
       }
     }
     return null;
+  }
+
+  private static ArrayList<String> getDerivationStepsForAlgorithm(
+    Deduction deduction, String algorithm, int i) {
+    ArrayList<String> steps = null;
+    switch (algorithm) {
+    case "topdown":
+    case "earley":
+      steps = retrieveSteps(i, deduction, new String[] {"predict"});
+      break;
+    case "shiftreduce":
+      steps = retrieveSteps(i, deduction, new String[] {"reduce"});
+      break;
+    case "unger":
+      steps = retrieveSteps(i, deduction, new String[] {"complete"});
+      break;
+    }
+    return steps;
   }
 
   private static Tree getTreeDerivedFromCfgSteps(String algorithm,
