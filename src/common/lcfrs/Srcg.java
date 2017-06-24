@@ -6,6 +6,7 @@ import java.util.List;
 
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
+import common.lcfrs.util.Binarization;
 import common.lcfrs.util.EmptyProductions;
 import common.lcfrs.util.Order;
 
@@ -124,13 +125,7 @@ public class Srcg {
 
   /** Returns true if each rhs contains at most two predicates. */
   public boolean isBinarized() {
-    boolean binarized = true;
-    for (Clause clause : this.clauses) {
-      if (clause.getRhs().size() > 2) {
-        binarized = false;
-      }
-    }
-    return binarized;
+    return Binarization.isBinarized(this);
   }
 
   /** Returns true if there is at least one clause that contains the empty
@@ -190,5 +185,9 @@ public class Srcg {
       }
     }
     return false;
+  }
+
+  public Srcg getBinarizedSrcg() throws ParseException {
+    return Binarization.getBinarizedSrcg(this);
   }
 }

@@ -42,14 +42,15 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
         int place = clauseParsed.getLhs().getAbsolutePos(iInt, jInt);
 
         if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
+          && posInt < wSplit.length
           && clauseParsed.getLhsSymAt(iInt, jInt).equals(wSplit[posInt])) {
           ArrayList<String> newVector = new ArrayList<String>();
           for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
             newVector.add(itemForm[2 * k + 4]);
             newVector.add(itemForm[2 * k + 5]);
           }
-          newVector.set(place*2, pos);
-          newVector.set(place*2 + 1, String.valueOf(posInt + 1));
+          newVector.set(place * 2, pos);
+          newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
           consequences.add(new SrcgEarleyActiveItem(clause, posInt + 1, iInt,
             jInt + 1, newVector.toArray(new String[newVector.size()])));
         }
@@ -60,6 +61,6 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[A(φ) -> Φ,pos,<i,j>,ρ]" + "\n______ φ(i,j) = w_pos\n"
-        + "[A(φ) -> Φ,pos,<i,j+1>,ρ']";
+      + "[A(φ) -> Φ,pos,<i,j+1>,ρ']";
   }
 }

@@ -44,7 +44,9 @@ public class EmptyProductions {
     newSrcg.setStartSymbol(oldSrcg.getStartSymbol());
     ArrayList<String> newNts = new ArrayList<String>();
     for (String[] candidate : epsilonCandidates) {
+      if (candidate[1].contains("1")) {
       newNts.add(candidate[0] + "^" + candidate[1]);
+      }
     }
     for (String[] candidate : epsilonCandidates) {
       if (candidate[0].equals(oldSrcg.getStartSymbol())

@@ -44,11 +44,13 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForCykExtended(Cfg cfg) {
     if (!cfg.isInCanonicalTwoForm()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
-          .getCfgWithoutNonReachableSymbols().getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
+        return cfg.getCfgWithoutEmptyProductions()
+          .getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
       } else {
-        System.out.println(
-          "CFG must be in Canonical 2 Form for extended CYK parsing.");
+        System.out
+          .println("CFG must be in Canonical 2 Form for extended CYK parsing.");
         return null;
       }
     } else {
@@ -59,8 +61,10 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForCyk(Cfg cfg) {
     if (!cfg.isInChomskyNormalForm()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
-          .getCfgWithoutNonReachableSymbols().getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
+        return cfg.getCfgWithoutEmptyProductions()
+          .getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
           .getCfgWithoutChainRules();
       } else {
         System.out
@@ -91,7 +95,8 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForShiftReduce(Cfg cfg) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+        return cfg.getCfgWithoutEmptyProductions()
+          .getCfgWithoutNonGeneratingSymbols()
           .getCfgWithoutNonReachableSymbols();
       } else {
         System.out.println(
@@ -106,7 +111,8 @@ class GrammarToGrammarConverter {
   private Cfg getCfgForTopDown(Cfg cfg) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+        return cfg.getCfgWithoutEmptyProductions()
+          .getCfgWithoutNonGeneratingSymbols()
           .getCfgWithoutNonReachableSymbols();
       } else {
         System.out.println(
@@ -118,8 +124,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Tag checkAndMayConvertToTag(Cfg cfg, String algorithm)
-    throws ParseException {
+  Tag checkAndMayConvertToTag(Cfg cfg, String algorithm) throws ParseException {
     switch (algorithm) {
     case "tag-cyk":
       if (!cfg.isBinarized()) {
@@ -148,8 +153,10 @@ class GrammarToGrammarConverter {
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
           return new Pcfg(cfg.getCfgWithoutEmptyProductions()
-            .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols().getBinarizedCfg()
-            .getCfgWithEitherOneTerminalOrNonterminalsOnRhs().getCfgWithoutChainRules());
+            .getCfgWithoutNonGeneratingSymbols()
+            .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+            .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
+            .getCfgWithoutChainRules());
         } else {
           System.out.println(
             "CFG must be in Chomsky Normal Form to convert it into a PCFG where A* parsing is possible.");
@@ -184,7 +191,8 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCykExtended(Cfg cfg) throws ParseException {
     if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
       if (please) {
-        return new Srcg(cfg.getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
+        return new Srcg(cfg.getBinarizedCfg()
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
       } else {
         System.out.println(
           "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
@@ -198,7 +206,8 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCyk(Cfg cfg) throws ParseException {
     if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
       if (please) {
-        return new Srcg(cfg.getBinarizedCfg().getCfgWithoutChainRules().getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
+        return new Srcg(cfg.getBinarizedCfg().getCfgWithoutChainRules()
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
       } else {
         System.out.println(
           "CFG must be binarized, not contain chain rules and not contain rules with mixed rhs sides to convert it into a sRCG where CYK parsing is possible.");
@@ -223,7 +232,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm) {
+  Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm)
+    throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
       return getSrcgForEarley(srcg);
@@ -238,14 +248,10 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForCykExtended(Srcg srcg) {
+  private Srcg getSrcgForCykExtended(Srcg srcg) throws ParseException {
     if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
       if (please) {
-        System.out.println("Not implemented yet.");
-        return null;
-        // TODO
-        // Srcg srcg = new Srcg(cfg.binarize());
-        // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+        return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions();
       } else {
         System.out.println(
           "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
@@ -275,16 +281,12 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForEarley(Srcg srcg) {
-    if (!srcg.isBinarized()) {
+  private Srcg getSrcgForEarley(Srcg srcg) throws ParseException {
+    if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
       if (please) {
-        System.out.println("Not implemented yet.");
-        return null;
-        // TODO
-        // Srcg srcg = new Srcg(cfg.binarize());
-        // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+        return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions();
       } else {
-        System.out.println("sRCG must be binarized to apply Earley parsing");
+        System.out.println("sRCG must be ordered and not contain epsilon productions for this Earley algorithm");
         return null;
       }
     } else {

@@ -3,10 +3,15 @@ package common.lcfrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.text.ParseException;
 
 import org.junit.Test;
 
+import chartparsing.Deduction;
+import chartparsing.ParsingSchema;
+import chartparsing.converter.LcfrsToDeductionRulesConverter;
+import common.GrammarParser;
 import common.TestGrammarLibrary;
 
 public class SrcgTest {
@@ -62,6 +67,31 @@ public class SrcgTest {
       + "P = {S'(X) -> S^1(X), S^1(X) -> A^10(X), S^1(Y) -> A^01(Y), "
       + "S^1(X Y) -> A^11(X,Y), A^10(a) -> ε, A^01(b) -> ε, A^11(a,b) -> ε}\n"
       + "S = S'\n", srcgWithoutEmptyProductions.toString());
+  }
+
+  @Test public void testSrcgBinarize() throws ParseException {
+    assertTrue(!TestGrammarLibrary.testBinarizationSrcg().isBinarized());
+    Srcg binarizedSrcg =
+      TestGrammarLibrary.testBinarizationSrcg().getBinarizedSrcg();
+    assertTrue(binarizedSrcg.isBinarized());
+    assertEquals(
+      "G = <N, T, V, P, S>\n" + "N = {S, A, B, C, C1}\n" + "T = {a, b, c}\n"
+        + "V = {X, Y, Z, U, V, W}\n"
+        + "P = {S(X Y U V) -> A(X,U) C1(Y,V), C1(Y Z,V W) -> B(Y,V) C(Z,W), "
+        + "A(a X,a Y) -> A(X,Y), B(b X,b Y) -> B(X,Y), C(c X,c Y) -> C(X,Y), "
+        + "A(a,a) -> ε, B(b,b) -> ε, C(c,c) -> ε}\n" + "S = S\n",
+      binarizedSrcg.toString());
+  }
+
+  @Test public void testRemoveEmptyProductionsForEarley()
+    throws IOException, ParseException {
+    Srcg srcg =
+      GrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
+    Srcg srcgEpsFree = srcg.getSrcgWithoutEmptyProductions();
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .srcgToEarleyRules(srcgEpsFree, "a c");
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
   }
 
 }

@@ -253,4 +253,20 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
+  
+  public static Srcg testBinarizationSrcg() throws ParseException {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
+    srcg.setTerminals(new String[]{"a", "b", "c"});
+    srcg.setVariables(new String[]{"X", "Y", "Z", "U", "V", "W"});
+    srcg.addClause("S(X Y Z U V W) -> A(X,U) B(Y,V) C(Z,W)");
+    srcg.addClause("A(a X, a Y) -> A(X, Y)");
+    srcg.addClause("B(b X, b Y) -> B(X, Y)");
+    srcg.addClause("C(c X, c Y) -> C(X, Y)");
+    srcg.addClause("A(a, a) -> ε");
+    srcg.addClause("B(b, b) -> ε");
+    srcg.addClause("C(c, c) -> ε");
+    srcg.setStartSymbol("S");
+    return srcg;
+  }
 }
