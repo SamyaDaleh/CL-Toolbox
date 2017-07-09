@@ -11,6 +11,7 @@ Parsing as Deduction:
 - Top Down for CFG
 - Shift Reduce for CFG
 - Left Corner for CFG
+- Unger for CFG
 - A* for PCFG
 - CYK for TAG
 - Earley for TAG
@@ -36,11 +37,9 @@ Or if you want to tinker with the code, for me it worked like this:
 
 Run it in your IDE. Or download the jar from folder releases and run it from the command line. Run it without parameters to get a help about how to use it.
 
-Example:
-
-(Output is pretty-printed similar to this, but without the fancy borders and coloring.)
-
 Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters. Or call CL-Toolbox.bat (Windows) or CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have to type in the encoding.
+
+Examples:
 
 java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
 
@@ -100,5 +99,5 @@ A = {"β : (T a T*)"}
 - prints full traces or only successful traces
 - automatically transforms grammars into more expressive formalisms
 - can convert grammars to fit the algorithm
-- displays derivated trees for CFG Topdown, Shiftreduce, Earley and TAG CYK and Earley
+- displays derivated trees for CFG Topdown, Shiftreduce, Earley and TAG CYK and Earley, sRCG Earley
 - for TAG displays item trees on mouseover

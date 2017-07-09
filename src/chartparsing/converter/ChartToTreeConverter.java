@@ -44,38 +44,113 @@ public class ChartToTreeConverter {
         if (deduction.getChart().get(i).equals(goal)) {
           ArrayList<Item> items = null;
           if (algorithm.equals("earley")) {
-            // no, better retrieve all Items with a dot at the end of the rule
-            // boolean dotIsAtArgEnd = clause2Parsed.getLhs().ifSymExists(iInt2, 0)
-            items = retrieveItems(i, deduction, new String[] {"complete", "convert"});
-          }
-          if (algorithm.equals("earley")) {
-            Clause clause = new Clause(goal.getItemform()[0]);
-            StringBuilder extractedRule = new StringBuilder();
-            extractedRule.append(clause.getLhs().getNonterminal()).append(" ->")
-              .append(clause.getRhs());
-            for (Predicate rhs : clause.getRhs()) {
-              extractedRule.append(" ").append(rhs.getNonterminal());
-            }
-            derivatedTree =
-              new Tree(new CfgProductionRule(extractedRule.toString()));
+            items = retrieveItems(i, deduction,
+              new String[] {"complete", "scan"}, true);
+          } else if (algorithm.equals("cyk")
+            || algorithm.equals("cyk-extended")) {
+            items = retrieveItems(i, deduction,
+              new String[] {"complete", "scan"}, false);
           }
           if (algorithm.equals("earley")) {
             for (int j = 0; j < items.size(); j++) {
               Item item = items.get(j);
-              if (algorithm.equals("earley")) {
-                // it's rotationally an active item from complete
-                // or a passive item from convert
-                // create initial derivation tree from first active item like above (or not, read on)
-                // if there are terminals in the lhs, add terminals as child nodes with pointers
-                // to tree/rule. pointer is at position 4+2*i in itemform
-                // if there's a passive item with an argument span length = 1
+              String clauseString = item.getItemform()[0];
+              if (j == 0) {
+                derivatedTree =
+                  new Tree(getCfgRuleRepresentationOfSrcgClauseString(item));
+              } else {
+                String derivatedTreeString = derivatedTree.toString();
+                String itemTreeString;
+                if (item.getItemform()[0].endsWith("ε")) {
+                  itemTreeString = new Tree(
+                    getCfgRuleRepresentationOfSrcgEpsilonClauseString(item))
+                      .toString();
+                } else {
+                  itemTreeString =
+                    new Tree(getCfgRuleRepresentationOfSrcgClauseString(item))
+                      .toString();
+                }
+                String lhsNt =
+                  clauseString.substring(0, clauseString.indexOf('('));
+                derivatedTree = new Tree(derivatedTreeString.substring(0,
+                  derivatedTreeString.lastIndexOf("(" + lhsNt + " )"))
+                  + itemTreeString.toString()
+                  + derivatedTreeString.substring(
+                    derivatedTreeString.lastIndexOf("(" + lhsNt + " )")
+                      + lhsNt.length() + 3));
               }
             }
+            return derivatedTree;
           }
         }
       }
     }
     return null;
+  }
+
+  private static CfgProductionRule
+    getCfgRuleRepresentationOfSrcgEpsilonClauseString(Item item)
+      throws ParseException {
+    Clause clause = new Clause(item.getItemform()[0]);
+    StringBuilder extractedRule = new StringBuilder();
+    extractedRule.append(clause.getLhs().getNonterminal()).append(" ->");
+    for (int i = 0; i < clause.getLhs().getDim(); i++) {
+      extractedRule.append(' ')
+        .append(clause.getLhs().getArgumentByIndex(i + 1)[0]).append('<');
+      extractedRule.append(item.getItemform()[i * 2 + 4]);
+      extractedRule.append('>');
+    }
+    return new CfgProductionRule(extractedRule.toString());
+  }
+
+  private static CfgProductionRule getCfgRuleRepresentationOfSrcgClauseString(
+    Item item) throws ParseException {
+    String srcgClauseString = item.getItemform()[0];
+    Clause clause = new Clause(srcgClauseString);
+    StringBuilder extractedRule = new StringBuilder();
+    extractedRule.append(clause.getLhs().getNonterminal()).append(" ->");
+    int terminalsInLhs = 0;
+    for (String symbol : clause.getLhs().getSymbolsAsPlainArray()) {
+      if (!symbolIsVariable(clause, symbol)) {
+        terminalsInLhs++;
+      }
+    }
+    String[] lhsSymbols = clause.getLhs().getSymbolsAsPlainArray();
+    int i = 0;
+    for (int terminalsProcessed = 0; terminalsProcessed < terminalsInLhs
+      / 2; i++) {
+      String symbol = lhsSymbols[i];
+      boolean found = symbolIsVariable(clause, symbol);
+      if (!found) {
+        terminalsProcessed++;
+        extractedRule.append(" ").append(symbol).append('<')
+          .append(item.getItemform()[i * 2 + 4]).append('>');
+      }
+    }
+    for (Predicate rhs : clause.getRhs()) {
+      extractedRule.append(" ").append(rhs.getNonterminal());
+    }
+    for (; i < lhsSymbols.length; i++) {
+      String symbol = lhsSymbols[i];
+      boolean found = symbolIsVariable(clause, symbol);
+      if (!found) {
+        extractedRule.append(" ").append(symbol).append('<')
+          .append(item.getItemform()[i * 2 + 4]).append('>');
+      }
+    }
+    return new CfgProductionRule(extractedRule.toString());
+  }
+
+  private static boolean symbolIsVariable(Clause clause, String symbol) {
+    boolean found = false;
+    for (Predicate rhsPred : clause.getRhs()) {
+      int[] indices = rhsPred.find(symbol);
+      if (indices[0] >= 0) {
+        found = true;
+        break;
+      }
+    }
+    return found;
   }
 
   public static Tree cfgToDerivatedTree(Deduction deduction, List<Item> goals,
@@ -87,9 +162,8 @@ public class ChartToTreeConverter {
           ArrayList<String> steps =
             getDerivationStepsForAlgorithm(deduction, algorithm, i);
           if (algorithm.equals("earley")) {
-            derivatedTree =
-              new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
-                goal.getItemform()[0].length() - 2)));
+            derivatedTree = new Tree(new CfgProductionRule(goal.getItemform()[0]
+              .substring(0, goal.getItemform()[0].length() - 2)));
           }
           derivatedTree =
             getTreeDerivedFromCfgSteps(algorithm, derivatedTree, steps);
@@ -130,8 +204,8 @@ public class ChartToTreeConverter {
           derivatedTree = applyStep(derivatedTree, step, false);
         }
       }
-    } else if (algorithm.equals("earley")
-      || algorithm.equals("shiftreduce") || algorithm.equals("unger")) {
+    } else if (algorithm.equals("earley") || algorithm.equals("shiftreduce")
+      || algorithm.equals("unger")) {
       for (int j = 0; j < steps.size(); j++) {
         String step = steps.get(j);
         switch (algorithm) {
@@ -141,7 +215,7 @@ public class ChartToTreeConverter {
         case "unger":
           if (j == 0) {
             derivatedTree = new Tree(
-                new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
+              new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
           } else {
             derivatedTree = applyStep(derivatedTree, step, false);
           }
@@ -149,7 +223,7 @@ public class ChartToTreeConverter {
         case "shiftreduce":
           if (j == 0) {
             derivatedTree = new Tree(
-                new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
+              new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));
           } else {
             derivatedTree = applyStep(derivatedTree, step, true);
           }
@@ -206,8 +280,7 @@ public class ChartToTreeConverter {
         derivatedTree = tag.getTree(treeName1).substitute(node1,
           tag.getInitialTree(treeName2));
       } else {
-        derivatedTree =
-          tag.getTree(treeName1).substitute(node1, derivatedTree);
+        derivatedTree = tag.getTree(treeName1).substitute(node1, derivatedTree);
       }
     }
     return derivatedTree;
@@ -215,8 +288,8 @@ public class ChartToTreeConverter {
 
   /** Retrieves a list of steps starting with one of the given prefixes that
    * lead to the goal item. */
-  private static ArrayList<String> retrieveSteps(int i,
-    Deduction deduction, String[] prefixes) {
+  private static ArrayList<String> retrieveSteps(int i, Deduction deduction,
+    String[] prefixes) {
     ArrayList<String> steps = new ArrayList<String>();
     ArrayList<Integer> idAgenda = new ArrayList<Integer>();
     ArrayList<Integer> allIds = new ArrayList<Integer>();
@@ -225,11 +298,13 @@ public class ChartToTreeConverter {
       int currentId = idAgenda.get(0);
       idAgenda.remove(0);
       for (String prefix : prefixes) {
-        if (deduction.getAppliedRules().get(currentId).get(0).startsWith(prefix)) {
+        if (deduction.getAppliedRules().get(currentId).get(0)
+          .startsWith(prefix)) {
           steps.add(deduction.getAppliedRules().get(currentId).get(0));
         }
       }
-      for (Integer pointer : deduction.getBackpointers().get(currentId).get(0)) {
+      for (Integer pointer : deduction.getBackpointers().get(currentId)
+        .get(0)) {
         if (!allIds.contains(pointer)) {
           idAgenda.add(pointer);
           allIds.add(pointer);
@@ -239,9 +314,10 @@ public class ChartToTreeConverter {
     return steps;
   }
 
-  /** Retrieves a list of items that lead to the goal
-   * item and where the rules start with the given prefix. */
-  private static ArrayList<Item> retrieveItems(int i, Deduction deduction, String[] prefixes) {
+  /** Retrieves a list of items that lead to the goal item and where the rules
+   * start with the given prefix. */
+  private static ArrayList<Item> retrieveItems(int i, Deduction deduction,
+    String[] prefixes, boolean dotEnd) {
     ArrayList<Item> items = new ArrayList<Item>();
     ArrayList<Integer> idAgenda = new ArrayList<Integer>();
     ArrayList<Integer> allIds = new ArrayList<Integer>();
@@ -250,11 +326,21 @@ public class ChartToTreeConverter {
       int currentid = idAgenda.get(0);
       idAgenda.remove(0);
       for (String prefix : prefixes) {
-        if (deduction.getAppliedRules().get(currentid).get(0).startsWith(prefix)) {
-          items.add(deduction.getChart().get(currentid));
+        if (deduction.getAppliedRules().get(currentid).get(0)
+          .startsWith(prefix)) {
+          if (dotEnd) {
+            String itemRepresentation =
+              deduction.getChart().get(currentid).toString();
+            if (itemRepresentation.contains(" •)")) {
+              items.add(deduction.getChart().get(currentid));
+            }
+          } else {
+            items.add(deduction.getChart().get(currentid));
+          }
         }
       }
-      for (Integer pointer : deduction.getBackpointers().get(currentid).get(0)) {
+      for (Integer pointer : deduction.getBackpointers().get(currentid)
+        .get(0)) {
         if (!allIds.contains(pointer)) {
           idAgenda.add(pointer);
           allIds.add(pointer);

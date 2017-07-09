@@ -269,4 +269,18 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
+  
+  public static Srcg snbmcndmSrcg() throws ParseException {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[]{"S", "A", "B"});
+    srcg.setTerminals(new String[]{"a", "b", "c", "d"});
+    srcg.setVariables(new String[]{"X", "Y", "V", "W"});
+    srcg.addClause("S( X V Y W ) -> A(X,Y) B(V,W)");
+    srcg.addClause("B(b,d) -> ε");
+    srcg.addClause("B(b X,d Y) -> B(X,Y)");
+    srcg.addClause("A(a,c) -> ε");
+    srcg.addClause("A(a X,c Y) -> A(X,Y)");
+    srcg.setStartSymbol("S");
+    return srcg;
+  }
 }

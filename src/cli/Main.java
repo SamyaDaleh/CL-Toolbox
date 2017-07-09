@@ -181,6 +181,13 @@ class Main {
           new DisplayTree(new String[] {derivedTree.toString()});
         }
       }
+      if (algorithm.startsWith("srcg")) {
+        Tree derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
+          schema.getGoals(), algorithm.substring(5));
+        if (derivedTree != null) {
+          new DisplayTree(new String[] {derivedTree.toString()});
+        }
+      }
     }
   }
 

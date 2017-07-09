@@ -269,8 +269,7 @@ class GrammarToGrammarConverter {
         System.out.println("Not implemented yet.");
         return null;
         // TODO
-        // Srcg srcg = new Srcg(cfg.binarize());
-        // return LcfrsToDeductionRulesConverter.LcfrsToEarleyRules(srcg, w);
+        // return srcg.getBinarizedSrcg().getSrcgWithoutChainRules();
       } else {
         System.out.println(
           "sRCG must be binarized not contain chain rules and not contain empty productions to apply CYK parsing");
@@ -302,8 +301,7 @@ class GrammarToGrammarConverter {
           System.out.println("Not implemented yet.");
           return null;
           // TODO
-          // Tag tag = new Tag(cfg.binarize());
-          // return TagToDeductionRulesConverter.TagToCykRules(tag, w);
+          // return tag.getBinarizedTag();
         } else {
           System.out.println("TAG must be binarized to apply CYK parsing.");
           return null;

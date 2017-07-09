@@ -47,7 +47,7 @@ public class LeftRecursion {
     return cfg;
   }
 
-  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 where nt is the
+  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 | ε where nt is the
    * old nonterminal and newnt is S1 in this example. */
   private static void doRemoveLeftRecursion(Cfg cfg, String nt, String newNt,
     Cfg cfgOld) {
