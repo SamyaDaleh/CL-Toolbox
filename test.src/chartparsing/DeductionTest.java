@@ -96,6 +96,18 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
+  @Test public void testTagEarleyPrefixValid() throws ParseException {
+    String w2 = "a c b";
+    ParsingSchema schema = TagToDeductionRulesConverter
+      .tagToEarleyPrefixValidRules(TestGrammarLibrary.anCBTag(), w2);
+    Deduction deduction = new Deduction();
+    try {
+      assertTrue(deduction.doParse(schema, false));
+    } finally {
+      deduction.printTrace();
+    }
+  }
+
   @Test public void testSrcgCykUnary() throws ParseException {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToDeductionRulesConverter

@@ -30,7 +30,7 @@ public class ArrayUtils {
   }
 
   /** Returns true if the arrays are equal, that means all strings at the same
-   * index has to be equal. Also the special character '?' is equal to
+   * index have to be equal. Also the special character '?' is equal to
    * everything. */
   public static boolean match(String[] itemForm1, String[] itemForm2) {
     if (itemForm1.length != itemForm2.length) {

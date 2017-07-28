@@ -2,12 +2,32 @@ package cli;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import cli.Main;
 
-public class MainTest {
+@RunWith(Parameterized.class) public class MainTest {
+
+  private String algorithm;
+
+  @Parameters public static Collection<String[]> browsers() {
+    return Arrays.asList(new String[][] {{"cfg-neverheardofthis"},
+      {"cfg-topdown"}, {"cfg-shiftreduce"}, {"cfg-earley"}, {"cfg-leftcorner"},
+      {"cfg-leftcorner-chart"}, {"cfg-cyk"},
+      {"cfg-cyk-extended"},{"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"},
+      {"tag-earley"}, {"tag-cyk"}, {"tag-earley-prefixvalid"}, {"srcg-cyk"},
+      {"srcg-cyk-extended"}, {"srcg-earley"}});
+  }
+
+  public MainTest(String algorithm) {
+    this.algorithm = algorithm;
+  }
 
   @Test public void testEmptyCall() throws ParseException, IOException {
     Main.main(new String[] {});
@@ -33,15 +53,8 @@ public class MainTest {
 
   private void callWithGrammar(String grammarfile, String w)
     throws ParseException, IOException {
-    String[] algorithms = new String[] {"cfg-neverheardofthis", "cfg-topdown",
-      "cfg-shiftreduce", "cfg-earley", "cfg-leftcorner", "cfg-leftcorner-chart",
-      "cfg-cyk", "cfg-cyk-extended", "cfg-cyk-general", "cfg-unger",
-      "pcfg-astar", "tag-earley", "tag-cyk", "srcg-cyk", "srcg-cyk-extended",
-      "srcg-earley"};
-    for (String algorithm : algorithms) {
-      Main.main(new String[] {grammarfile, w, algorithm});
-      Main.main(new String[] {grammarfile, w, algorithm, "--success"});
-      Main.main(new String[] {grammarfile, w, algorithm, "--please"});
-    }
+    Main.main(new String[] {grammarfile, w, algorithm});
+    Main.main(new String[] {grammarfile, w, algorithm, "--success"});
+    Main.main(new String[] {grammarfile, w, algorithm, "--please"});
   }
 }

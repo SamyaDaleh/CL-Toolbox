@@ -49,6 +49,8 @@ public class GrammarToDeductionRulesConverter {
       return TagToDeductionRulesConverter.tagToCykRules(tag, w);
     case "tag-earley":
       return TagToDeductionRulesConverter.tagToEarleyRules(tag, w);
+    case "tag-earley-prefixvalid":
+      return TagToDeductionRulesConverter.tagToEarleyPrefixValidRules(tag, w);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");

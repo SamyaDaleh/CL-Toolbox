@@ -22,6 +22,23 @@ import chartparsing.tag.TagEarleyPredictAdjoinable;
 import chartparsing.tag.TagEarleyPredictAdjoined;
 import chartparsing.tag.TagEarleyPredictNoAdj;
 import chartparsing.tag.TagEarleyPredictSubst;
+import chartparsing.tag.TagEarleyPrefixValidAdjoin;
+import chartparsing.tag.TagEarleyPrefixValidCompleteFoot;
+import chartparsing.tag.TagEarleyPrefixValidCompleteNode;
+import chartparsing.tag.TagEarleyPrefixValidConvertLa1;
+import chartparsing.tag.TagEarleyPrefixValidConvertLa2;
+import chartparsing.tag.TagEarleyPrefixValidConvertRb;
+import chartparsing.tag.TagEarleyPrefixValidItem;
+import chartparsing.tag.TagEarleyPrefixValidMoveDown;
+import chartparsing.tag.TagEarleyPrefixValidMoveRight;
+import chartparsing.tag.TagEarleyPrefixValidMoveUp;
+import chartparsing.tag.TagEarleyPrefixValidPredictAdjoinable;
+import chartparsing.tag.TagEarleyPrefixValidPredictAdjoined;
+import chartparsing.tag.TagEarleyPrefixValidPredictNoAdj;
+import chartparsing.tag.TagEarleyPrefixValidPredictSubst;
+import chartparsing.tag.TagEarleyPrefixValidScanEps;
+import chartparsing.tag.TagEarleyPrefixValidScanTerm;
+import chartparsing.tag.TagEarleyPrefixValidSubstitute;
 import chartparsing.tag.TagEarleyScanEps;
 import chartparsing.tag.TagEarleyScanTerm;
 import chartparsing.tag.TagEarleySubstitute;
@@ -178,6 +195,76 @@ public class TagToDeductionRulesConverter {
         new TagEarleyPredictSubst(iniTreeName, tag);
       schema.addRule(predictSubst);
     }
+    return schema;
+  }
+
+  public static ParsingSchema tagToEarleyPrefixValidRules(Tag tag, String w) {
+    String[] wSplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+    Set<String> iniTreesNameSet = tag.getInitialTreeNames();
+    String[] iniTreeNames =
+      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
+    Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
+    String[] auxTreeNames =
+      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
+
+    for (String iniTreeName : iniTreeNames) {
+      if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
+        .equals(tag.getStartSymbol())) {
+        StaticDeductionRule initialize = new StaticDeductionRule();
+        initialize.addConsequence(new TagEarleyPrefixValidItem(iniTreeName, "",
+          "la", "0", 0, (Integer) null, null, 0, false));
+        initialize.setName("initialize");
+        schema.addAxiom(initialize);
+        schema.addGoal(new TagEarleyPrefixValidItem(iniTreeName, "", "ra", "0",
+          0, (Integer) null, null, wSplit.length, false));
+      }
+
+      DynamicDeductionRule predictSubst =
+        new TagEarleyPrefixValidPredictSubst(iniTreeName, tag);
+      schema.addRule(predictSubst);
+    }
+
+    for (String auxTreeName : auxTreeNames) {
+      DynamicDeductionRule predictAdjoinable =
+        new TagEarleyPrefixValidPredictAdjoinable(auxTreeName, tag);
+      schema.addRule(predictAdjoinable);
+    }
+
+    DynamicDeductionRule scanTerm =
+      new TagEarleyPrefixValidScanTerm(wSplit, tag);
+    schema.addRule(scanTerm);
+    DynamicDeductionRule scanEps = new TagEarleyPrefixValidScanEps(wSplit, tag);
+    schema.addRule(scanEps);
+    DynamicDeductionRule convertRb = new TagEarleyPrefixValidConvertRb();
+    schema.addRule(convertRb);
+    DynamicDeductionRule convertLa1 = new TagEarleyPrefixValidConvertLa1();
+    schema.addRule(convertLa1);
+    DynamicDeductionRule convertLa2 = new TagEarleyPrefixValidConvertLa2();
+    schema.addRule(convertLa2);
+    DynamicDeductionRule predictNoAdj =
+      new TagEarleyPrefixValidPredictNoAdj(tag);
+    schema.addRule(predictNoAdj);
+    DynamicDeductionRule predictAdjoined =
+      new TagEarleyPrefixValidPredictAdjoined(tag);
+    schema.addRule(predictAdjoined);
+    DynamicDeductionRule completeFoot =
+      new TagEarleyPrefixValidCompleteFoot(tag);
+    schema.addRule(completeFoot);
+    DynamicDeductionRule adjoin = new TagEarleyPrefixValidAdjoin(tag);
+    schema.addRule(adjoin);
+    DynamicDeductionRule completeNode =
+      new TagEarleyPrefixValidCompleteNode(tag);
+    schema.addRule(completeNode);
+    DynamicDeductionRule moveDown = new TagEarleyPrefixValidMoveDown(tag);
+    schema.addRule(moveDown);
+    DynamicDeductionRule moveRight = new TagEarleyPrefixValidMoveRight(tag);
+    schema.addRule(moveRight);
+    DynamicDeductionRule moveUp = new TagEarleyPrefixValidMoveUp(tag);
+    schema.addRule(moveUp);
+    DynamicDeductionRule substitute = new TagEarleyPrefixValidSubstitute(tag);
+    schema.addRule(substitute);
+
     return schema;
   }
 }

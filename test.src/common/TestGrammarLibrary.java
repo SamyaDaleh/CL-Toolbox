@@ -45,6 +45,17 @@ public class TestGrammarLibrary {
     return g;
   }
 
+  public static Tag earleyPrefixValidExampleTag() throws ParseException {
+    Tag g = new Tag();
+    g.setNonterminals(new String[] {"S"});
+    g.setTerminals(new String[] {"a", "b"});
+    g.setStartsymbol("S");
+    g.addInitialTree("α", "(S ε)");
+    g.addAuxiliaryTree("βa", "(S_NA a (S S_NA* a) )");
+    g.addAuxiliaryTree("βb", "(S_NA b (S S_NA* b))");
+    return g;
+  }
+
   public static Srcg anBnSrcg() throws ParseException {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});

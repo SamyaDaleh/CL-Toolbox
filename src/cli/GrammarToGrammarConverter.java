@@ -140,6 +140,8 @@ class GrammarToGrammarConverter {
       }
     case "tag-earley":
       return new Tag(cfg);
+    case "tag-earley-prefixvalid":
+      return new Tag(cfg);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -310,6 +312,8 @@ class GrammarToGrammarConverter {
         return tag;
       }
     case "tag-earley":
+      return tag;
+    case "tag-earley-prefixvalid":
       return tag;
     default:
       System.out.println(
