@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 
 /** Makes a predicted item to a recognized item. */
@@ -23,7 +24,7 @@ public class CfgUngerScan extends AbstractDynamicDeductionRule {
       if (itemForm[0].charAt(0) == '•'
         && itemForm[0].substring(1).equals(wSplit[pos])) {
         consequences
-          .add(new CfgItem(wSplit[pos] + "•", itemForm[1], itemForm[2]));
+          .add(new DeductionItem(wSplit[pos] + "•", itemForm[1], itemForm[2]));
       }
     }
     return consequences;

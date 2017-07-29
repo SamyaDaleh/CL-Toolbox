@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.cfg.CfgProductionRule;
 
@@ -41,7 +42,7 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
             }
           }
           if (prevIjPlusOne.equals(mayLhsItem.getItemform()[2])) {
-            consequences.add(new CfgItem(rule.getLhs() + "•",
+            consequences.add(new DeductionItem(rule.getLhs() + "•",
               mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]));
           }
         }

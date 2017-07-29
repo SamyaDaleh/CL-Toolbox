@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 import common.tag.Tag;
@@ -56,8 +57,8 @@ public class TagEarleyPrefixValidCompleteNode
       && tag.isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;
-      consequences.add(new TagEarleyPrefixValidItem(treeName1, node1, "ra",
-        iGamma1, i1, f1, f2, l2, false));
+      consequences.add(new DeductionItem(treeName1, node1, "ra", iGamma1, i1,
+        f1, f2, l2, "0"));
     }
   }
 

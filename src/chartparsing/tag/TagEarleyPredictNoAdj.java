@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -24,12 +25,12 @@ public class TagEarleyPredictNoAdj extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      int l = Integer.parseInt(itemForm[6]);
+      String l = itemForm[6];
       boolean obligatoryAdjoin = tag.getTree(treeName).isInOA(node);
       if (!obligatoryAdjoin && itemForm[2].equals("la")
         && itemForm[7].equals("0")) {
-        consequences.add(new TagEarleyItem(treeName, node, "lb", l,
-          (Integer) null, null, l, false));
+        consequences
+          .add(new DeductionItem(treeName, node, "lb", l, "-", "-", l, "0"));
       }
     }
     return consequences;
@@ -37,7 +38,7 @@ public class TagEarleyPredictNoAdj extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i,j,k,l,0]" + "\n______ f_OA(ɣ,p) = 0\n"
-        + "[ɣ,p,lb,l,-,-,l,0]";
+      + "[ɣ,p,lb,l,-,-,l,0]";
   }
 
 }

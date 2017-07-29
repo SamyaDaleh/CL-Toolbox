@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.ArrayUtils;
 
@@ -38,7 +39,8 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
               .append(ArrayUtils.getSubSequenceAsString(stackSplit, k + 1,
                 stackSplit.length));
           }
-          consequences.add(new CfgDottedItem(newStack.toString(), i, j + 1));
+          consequences.add(new DeductionItem(newStack.toString(),
+            String.valueOf(i), String.valueOf(j + 1)));
         }
       }
     }

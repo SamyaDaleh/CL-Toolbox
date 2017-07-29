@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -29,24 +30,24 @@ public class TagEarleyPredictAdjoined extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      int l = Integer.parseInt(itemForm[6]);
+      String l = itemForm[6];
       boolean adjoinable = tag.isAdjoinable(treeName, outTreeName, outNode);
       boolean isFootNode = tag.getAuxiliaryTree(treeName) != null && tag
         .getAuxiliaryTree(treeName).getFoot().getGornAddress().equals(node);
       if (adjoinable && isFootNode && itemForm[2].equals("lb")
-        && itemForm[7].equals("0") && itemForm[3].equals(itemForm[6])
+        && itemForm[7].equals("0") && itemForm[3].equals(l)
         && itemForm[4].equals("-") && itemForm[5].equals("-")) {
-        consequences.add(new TagEarleyItem(outTreeName, outNode, "lb", l,
-          (Integer) null, null, l, false));
+        consequences.add(
+          new DeductionItem(outTreeName, outNode, "lb", l, "-", "-", l, "0"));
       }
     }
     return consequences;
   }
 
   @Override public String toString() {
-    return "[β,pf,lb,l,-,-,l,0]" + "\n______ pf foot node address in β, β ∈ f_SA("
-        + outTreeName + "," + outNode + ")\n" + "[" + outTreeName + ","
-        + outNode + ",lb,l,-,-,l,0]";
+    return "[β,pf,lb,l,-,-,l,0]"
+      + "\n______ pf foot node address in β, β ∈ f_SA(" + outTreeName + ","
+      + outNode + ")\n" + "[" + outTreeName + "," + outNode + ",lb,l,-,-,l,0]";
   }
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
@@ -24,17 +25,19 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == this.antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
-      int from = Integer.parseInt(itemForm[1]);
-      int to = Integer.parseInt(itemForm[2]);
+      String from = itemForm[1];
+      String to = itemForm[2];
+      int fromInt = Integer.parseInt(from);
+      int toInt = Integer.parseInt(to);
       if (itemForm[0].substring(1).equals(rule.getLhs())) {
         if (rule.getRhs().length == 1) {
-          consequences.add(new CfgItem("•" + rule.getRhs()[0],from,to));
+          consequences.add(new DeductionItem("•" + rule.getRhs()[0], from, to));
         } else {
-          for (ArrayList<Integer> sequence : getAllSeparations(from, to,
+          for (ArrayList<Integer> sequence : getAllSeparations(fromInt, toInt,
             rule.getRhs().length - 1)) {
             boolean skipSequence = false;
             if (cfg.terminalsContain(rule.getRhs()[0])
-              && sequence.get(0) - from > 1) {
+              && sequence.get(0) - fromInt > 1) {
               continue;
             }
             for (int i = 1; i < sequence.size() - 1; i++) {
@@ -48,18 +51,19 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
               continue;
             }
             if (cfg.terminalsContain(rule.getRhs()[rule.getRhs().length - 1])
-              && to - sequence.get(sequence.size() - 1) > 1) {
+              && toInt - sequence.get(sequence.size() - 1) > 1) {
               continue;
             }
-            consequences
-              .add(new CfgItem("•" + rule.getRhs()[0], from, sequence.get(0)));
+            consequences.add(new DeductionItem("•" + rule.getRhs()[0], from,
+              String.valueOf(sequence.get(0))));
             for (int i = 1; i < sequence.size(); i++) {
-              consequences.add(new CfgItem("•" + rule.getRhs()[i],
-                sequence.get(i - 1), sequence.get(i)));
+              consequences.add(new DeductionItem("•" + rule.getRhs()[i],
+                String.valueOf(sequence.get(i - 1)),
+                String.valueOf(sequence.get(i))));
             }
-            consequences
-              .add(new CfgItem("•" + rule.getRhs()[rule.getRhs().length - 1],
-                sequence.get(sequence.size() - 1), to));
+            consequences.add(
+              new DeductionItem("•" + rule.getRhs()[rule.getRhs().length - 1],
+                String.valueOf(sequence.get(sequence.size() - 1)), to));
           }
         }
       }

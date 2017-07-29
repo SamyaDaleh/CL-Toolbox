@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.cfg.CfgProductionRule;
 
@@ -47,7 +48,8 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
           return this.consequences;
         }
       }
-      consequences.add(new CfgItem(rule.getLhs(), minI, lSum));
+      consequences.add(new DeductionItem(rule.getLhs(), String.valueOf(minI),
+        String.valueOf(lSum)));
     }
     return this.consequences;
   }

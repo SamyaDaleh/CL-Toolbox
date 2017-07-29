@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.ArrayUtils;
 import common.cfg.CfgProductionRule;
@@ -24,14 +25,15 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       String stack = itemForm[0];
       String[] stackSplit = stack.split(" ");
-      int i = Integer.parseInt(itemForm[1]);
+      String i = itemForm[1];
       if (stackSplit[0].equals(rule.getLhs())) {
         if (stackSplit.length == 1) {
-          consequences.add(new CfgItem(String.join(" ", rule.getRhs()), i));
+          consequences
+            .add(new DeductionItem(String.join(" ", rule.getRhs()), i));
         } else {
           consequences
             .add(
-              new CfgItem(
+              new DeductionItem(
                 String.join(" ", rule.getRhs()) + " " + ArrayUtils
                   .getSubSequenceAsString(stackSplit, 1, stackSplit.length),
                 i));

@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.ArrayUtils;
 import common.cfg.CfgProductionRule;
@@ -47,7 +48,7 @@ public class CfgLeftCornerReduce extends AbstractDynamicDeductionRule {
         } else {
           newLhs = rule.getLhs() + " " + stackLhs;
         }
-        consequences.add(new CfgDollarItem(newCompl, newPred, newLhs));
+        consequences.add(new DeductionItem(newCompl, newPred, newLhs));
       }
     }
     return consequences;

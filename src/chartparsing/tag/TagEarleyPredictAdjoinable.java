@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -27,11 +28,11 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      int l = Integer.parseInt(itemForm[6]);
+      String l = itemForm[6];
       boolean adjoinable = tag.isAdjoinable(auxTreeName, treeName, node);
       if (adjoinable && itemForm[2].equals("la") && itemForm[7].equals("0")) {
-        consequences.add(new TagEarleyItem(auxTreeName, "", "la", l,
-          (Integer) null, null, l, false));
+        consequences
+          .add(new DeductionItem(auxTreeName, "", "la", l, "-", "-", l, "0"));
       }
     }
     return consequences;
@@ -39,7 +40,7 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i,j,k,l,0]" + "\n______ " + auxTreeName + " ∈ f_SA(ɣ,p)\n"
-        + "[" + auxTreeName + ",ε,la,l,-,-,l,0]";
+      + "[" + auxTreeName + ",ε,la,l,-,-,l,0]";
   }
 
 }

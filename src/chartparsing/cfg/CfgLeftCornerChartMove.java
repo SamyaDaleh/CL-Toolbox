@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 
 /** If the end of a rhs is encountered, move the topmost nonterminal from the
@@ -17,8 +18,10 @@ public class CfgLeftCornerChartMove extends AbstractDynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
-      if (itemForm[0].length() > 0 && itemForm[0].charAt(itemForm[0].length()-1) == '•') {
-        consequences.add(new CfgItem(itemForm[0].substring(0, 1),itemForm[1],itemForm[2]));
+      if (itemForm[0].length() > 0
+        && itemForm[0].charAt(itemForm[0].length() - 1) == '•') {
+        consequences.add(new DeductionItem(itemForm[0].substring(0, 1),
+          itemForm[1], itemForm[2]));
       }
     }
     return consequences;

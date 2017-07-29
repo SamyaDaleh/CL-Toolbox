@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -24,24 +25,18 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      int i = Integer.parseInt(itemForm[2]);
-      Integer f1;
-      Integer f2;
-      try {
-        f1 = Integer.parseInt(itemForm[3]);
-        f2 = Integer.parseInt(itemForm[4]);
-      } catch (NumberFormatException e) {
-        f1 = null;
-        f2 = null;
-      }
-      int j = Integer.parseInt(itemForm[5]);
+      String i = itemForm[2];
+      String f1 = itemForm[3];
+      String f2 = itemForm[4];
+      String j = itemForm[5];
       if (node.endsWith(".1⊤")) {
         String nodeSib = tag.getTree(treeName)
           .getNodeByGornAdress(node.substring(0, node.length() - 1))
           .getGornAddressOfPotentialRightSibling();
         if (tag.getTree(treeName).getNodeByGornAdress(nodeSib) == null) {
           String parentNode = node.substring(0, node.length() - 3) + "⊥";
-          consequences.add(new TagCykItem(treeName, parentNode, i, f1, f2, j));
+          consequences
+            .add(new DeductionItem(treeName, parentNode, i, f1, f2, j));
         }
       }
     }
@@ -50,7 +45,7 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,(p.1)⊤,i,f1,f2,j]"
-        + "\n______ node adress p.2 does not exist in ɣ\n" + "[ɣ,p⊥,i,f1,f2,j]";
+      + "\n______ node adress p.2 does not exist in ɣ\n" + "[ɣ,p⊥,i,f1,f2,j]";
   }
 
 }

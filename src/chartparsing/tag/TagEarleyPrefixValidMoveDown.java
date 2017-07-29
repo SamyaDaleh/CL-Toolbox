@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 import common.tag.Tag;
@@ -31,10 +32,10 @@ public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule
       String l = itemForm[7];
       String adj = itemForm[8];
       if (pos.equals("lb") && !iGamma.equals("~") && !i.equals("~")
-          && !j.equals("~") && !k.equals("~") && adj.equals("0")
+        && !j.equals("~") && !k.equals("~") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
-        consequences.add(new TagEarleyPrefixValidItem(treeName, node + ".1",
-          "la", iGamma, i, j, k, l, false));
+        consequences.add(new DeductionItem(treeName, node + ".1", "la", iGamma,
+          i, j, k, l, "0"));
       }
     }
     return consequences;

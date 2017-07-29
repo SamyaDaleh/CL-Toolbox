@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 
 /** Moves the next input symbol onto the stack */
@@ -23,9 +24,10 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
       int i = Integer.parseInt(itemForm[1]);
       if (i < wSplit.length) {
         if (stack.length() == 0) {
-          consequences.add(new CfgItem(wSplit[i], i + 1));
+          consequences.add(new DeductionItem(wSplit[i], String.valueOf(i + 1)));
         } else {
-          consequences.add(new CfgItem(stack + " " + wSplit[i], i + 1));
+          consequences.add(
+            new DeductionItem(stack + " " + wSplit[i], String.valueOf(i + 1)));
         }
       }
     }

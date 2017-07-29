@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 import common.tag.Tag;
@@ -35,8 +36,8 @@ public class TagEarleyPrefixValidPredictAdjoinable
       if (pos.equals("la") && adj.equals("0") && iGamma.equals("~")
         && i.equals("~") && j.equals("~") && k.equals("~") && !l.equals("~")
         && tag.isAdjoinable(auxTreeName, treeName, node)) {
-        consequences.add(new TagEarleyPrefixValidItem(auxTreeName, "", "la",
-          l, l, "-", "-", l, false));
+        consequences.add(
+          new DeductionItem(auxTreeName, "", "la", l, l, "-", "-", l, "0"));
       }
     }
     return consequences;
@@ -44,7 +45,7 @@ public class TagEarleyPrefixValidPredictAdjoinable
 
   @Override public String toString() {
     return "[ɣ,p,la,~,~,~,~,l,0]" + "\n______ " + auxTreeName + " ∈ f_SA(ɣ,p)\n"
-        + "[" + auxTreeName + ",ε,la,l,l,-,-,l,0]";
+      + "[" + auxTreeName + ",ε,la,l,l,-,-,l,0]";
   }
 
 }

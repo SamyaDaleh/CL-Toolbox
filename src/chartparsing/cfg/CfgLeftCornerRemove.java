@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.ArrayUtils;
 
@@ -29,7 +30,7 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
           stackComplSplit.length);
         String newPred = ArrayUtils.getSubSequenceAsString(stackPredSplit, 1,
           stackPredSplit.length);
-        consequences.add(new CfgDollarItem(newCompl, newPred, stackLhs));
+        consequences.add(new DeductionItem(newCompl, newPred, stackLhs));
       }
     }
     return consequences;

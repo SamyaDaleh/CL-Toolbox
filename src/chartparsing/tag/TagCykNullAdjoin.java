@@ -3,12 +3,13 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
 /** Goes from bottom into top position without adjoining. */
 public class TagCykNullAdjoin extends AbstractDynamicDeductionRule {
-  
+
   private final Tag tag;
 
   /** Constructor needs the grammar to check if adjoins is obligatory. */
@@ -29,21 +30,14 @@ public class TagCykNullAdjoin extends AbstractDynamicDeductionRule {
       } else {
         nodeGorn = node.substring(0, node.length() - 1);
       }
-      int i = Integer.parseInt(itemForm[2]);
-      Integer f1;
-      Integer f2;
-      try {
-        f1 = Integer.parseInt(itemForm[3]);
-        f2 = Integer.parseInt(itemForm[4]);
-      } catch (NumberFormatException e) {
-        f1 = null;
-        f2 = null;
-      }
+      String i = itemForm[2];
+      String f1 = itemForm[3];
+      String f2 = itemForm[4];
       boolean obligatoryAdjoin = tag.getTree(treeName).isInOA(nodeGorn);
-      int j = Integer.parseInt(itemForm[5]);
+      String j = itemForm[5];
       if (node.endsWith("⊥") && !obligatoryAdjoin) {
         String newNode = node.substring(0, node.length() - 1) + "⊤";
-        consequences.add(new TagCykItem(treeName, newNode, i, f1, f2, j));
+        consequences.add(new DeductionItem(treeName, newNode, i, f1, f2, j));
       }
     }
     return consequences;

@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.ArrayUtils;
 
@@ -35,21 +36,18 @@ public class CfgLeftCornerChartRemove extends AbstractDynamicDeductionRule {
         int l2 = Integer.parseInt(itemForm2[2]);
         if (mayDottedRuleSplit[k].substring(1).equals(itemForm2[0])
           && i + l1 == j && mayDottedRuleSplit[k].length() > 1) {
-          if (k == mayDottedRuleSplit.length-1) {
-            consequences
-              .add(new CfgItem(
-                ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k)
-                  + " " + mayDottedRuleSplit[k].substring(1) + " •",
-                i, l1 + l2));
+          if (k == mayDottedRuleSplit.length - 1) {
+            consequences.add(new DeductionItem(
+              ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
+                + mayDottedRuleSplit[k].substring(1) + " •",
+              String.valueOf(i), String.valueOf(l1 + l2)));
           } else {
-            consequences
-              .add(
-                new CfgItem(
-                  ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k)
-                    + " " + mayDottedRuleSplit[k].substring(1)
-                    + " •" + ArrayUtils.getSubSequenceAsString(
-                      mayDottedRuleSplit, k + 1, mayDottedRuleSplit.length),
-                  i, l1 + l2));
+            consequences.add(new DeductionItem(
+              ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
+                + mayDottedRuleSplit[k].substring(1) + " •"
+                + ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, k + 1,
+                  mayDottedRuleSplit.length),
+              String.valueOf(i), String.valueOf(l1 + l2)));
           }
         } else {
           return;

@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -25,23 +26,17 @@ public class TagEarleyMoveRight extends AbstractDynamicDeductionRule {
       String treeName = itemForm[0];
       String node = itemForm[1];
       String pos = itemForm[2];
-      int i = Integer.parseInt(itemForm[3]);
-      Integer j;
-      Integer k;
-      try {
-        j = Integer.parseInt(itemForm[4]);
-        k = Integer.parseInt(itemForm[5]);
-      } catch (NumberFormatException e) {
-        j = null;
-        k = null;
-      }
-      int l = Integer.parseInt(itemForm[6]);
+      String i = itemForm[3];
+      String j = itemForm[4];
+      String k = itemForm[5];
+      String l = itemForm[6];
       String adj = itemForm[7];
       String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
         .getGornAddressOfPotentialRightSibling();
       if (pos.equals("ra") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
-        consequences.add(new TagEarleyItem(treeName, siblingGorn, "la", i, j, k, l, false));
+        consequences
+          .add(new DeductionItem(treeName, siblingGorn, "la", i, j, k, l, "0"));
       }
     }
     return consequences;
@@ -49,7 +44,7 @@ public class TagEarleyMoveRight extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,ra,i,j,k,l,0]" + "\n______ ɣ(p+1) is defined\n"
-        + "[ɣ,p+1,la,i,j,k,l,0]";
+      + "[ɣ,p+1,la,i,j,k,l,0]";
   }
-  
+
 }

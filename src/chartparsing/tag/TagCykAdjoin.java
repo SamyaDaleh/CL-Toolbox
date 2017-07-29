@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -26,39 +27,27 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
       String treeName2 = itemForm2[0];
       String node1 = itemForm1[1];
       String node2 = itemForm2[1];
-      int i = Integer.parseInt(itemForm1[2]);
-      int f12 = Integer.parseInt(itemForm2[2]);
-      Integer f11;
-      Integer f21;
-      try {
-        f11 = Integer.parseInt(itemForm1[3]);
-        f21 = Integer.parseInt(itemForm1[4]);
-      } catch (NumberFormatException e) {
-        f11 = null;
-        f21 = null;
-      }
-      Integer f1b;
-      Integer f2b;
-      try {
-        f1b = Integer.parseInt(itemForm2[3]);
-        f2b = Integer.parseInt(itemForm2[4]);
-      } catch (NumberFormatException e) {
-        f1b = null;
-        f2b = null;
-      }
-      int j = Integer.parseInt(itemForm1[5]);
-      int f22 = Integer.parseInt(itemForm2[5]);
-      if (f11 != null && f11 == f12 && f21 != null && f21 == f22
+      String i = itemForm1[2];
+      String f12 = itemForm2[2];
+      String f11 = itemForm1[3];
+      String f21 = itemForm1[4];
+      String f1b = itemForm2[3];
+      String f2b = itemForm2[4];
+      String j = itemForm1[5];
+      String f22 = itemForm2[5];
+      if (!f11.equals("-") && f11.equals(f12) && !f21.equals("-")
+        && f21.equals(f22)
         && tag.isAdjoinable(treeName1, treeName2,
           node2.substring(0, node2.length() - 1))
         && node1.equals("⊤") && node2.endsWith("⊥")) {
-        consequences.add(new TagCykItem(treeName2,
+        consequences.add(new DeductionItem(treeName2,
           node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j));
         String node2Name =
           (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
         this.name =
           "adjoin " + treeName2 + "[" + node2Name + "," + treeName1 + "]";
-      } else if (f1b != null && f1b == i && f2b != null && f2b == j
+      } else if (!f1b.equals("-") && f1b.equals(i) && !f2b.equals("-")
+        && f2b.equals(j)
         && tag.isAdjoinable(treeName2, treeName1,
           node1.substring(0, node1.length() - 1))
         && node2.equals("⊤") && node1.endsWith("⊥")) {
@@ -67,7 +56,7 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
           (node1.length() > 1) ? node1.substring(0, node1.length() - 1) : "ε";
         this.name =
           "adjoin " + treeName1 + "[" + node1Name + "," + treeName2 + "]";
-        consequences.add(new TagCykItem(treeName1,
+        consequences.add(new DeductionItem(treeName1,
           node1.substring(0, node1.length() - 1) + "⊤", f12, f11, f21, f22));
       }
 

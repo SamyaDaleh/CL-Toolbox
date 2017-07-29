@@ -3,6 +3,7 @@ package chartparsing.cfg;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.cfg.CfgProductionRule;
 
@@ -36,11 +37,13 @@ public class CfgCykComplete extends AbstractDynamicDeductionRule {
 
       if (nt1.equals(rule.getRhs()[0]) && nt2.equals(rule.getRhs()[1])
         && i1int + j1int == i2int) {
-        this.consequences.add(new CfgItem(rule.getLhs(), i1int, j1int + j2int));
+        this.consequences.add(new DeductionItem(rule.getLhs(),
+          String.valueOf(i1int), String.valueOf(j1int + j2int)));
       } else if (nt2.equals(rule.getRhs()[0]) && nt1.equals(rule.getRhs()[1])
         && i2int + j2int == i1int) {
         // the other way round
-        this.consequences.add(new CfgItem(rule.getLhs(), i2int, j2int + j1int));
+        this.consequences.add(new DeductionItem(rule.getLhs(),
+          String.valueOf(i2int), String.valueOf(j2int + j1int)));
       }
     }
     return this.consequences;

@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
@@ -29,16 +30,16 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
       String treeName = itemForm[0];
       String node = itemForm[1];
       String pos = itemForm[2];
-      int i = Integer.parseInt(itemForm[3]);
+      String i = itemForm[3];
       String f1 = itemForm[4];
       String f2 = itemForm[5];
-      int j = Integer.parseInt(itemForm[6]);
+      String j = itemForm[6];
       String adj = itemForm[7];
       if (tag.getInitialTree(treeName) != null && node.equals("")
         && f1.equals("-") && f2.equals("-") && adj.equals("0")
         && pos.equals("ra")) {
-        consequences.add(new TagEarleyItem(outTreeName, outNode, "rb", i,
-          (Integer) null, null, j, false));
+        consequences.add(
+          new DeductionItem(outTreeName, outNode, "rb", i, "-", "-", j, "0"));
         // imagine a tree with 1 node where you would substitute into the root
         // ...
         String outNodeName = outNode.length() == 0 ? "ε" : outNode;

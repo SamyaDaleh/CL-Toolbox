@@ -3,6 +3,7 @@ package chartparsing.tag;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.DeductionItem;
 import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 import common.tag.Tag;
@@ -50,12 +51,11 @@ public class TagEarleyPrefixValidPredictAdjoined
     if (adj1.equals("0") && adj2.equals("0") && adjoinable1) {
       boolean isFootNode = tag.getAuxiliaryTree(treeName1).getFoot()
         .getGornAddress().equals(node1);
-      if (isFootNode  && pos1.equals("la")
-        && pos2.equals("la") && j1.equals("-") && k1.equals("-")
-        && iGamma1.equals(k2) && j2.equals("~") && g.equals("~")
-        && h.equals("~")) {
-        consequences.add(new TagEarleyPrefixValidItem(treeName2, node2, "lb",
-          iGamma2, m, "-", "-", m, false));
+      if (isFootNode && pos1.equals("la") && pos2.equals("la") && j1.equals("-")
+        && k1.equals("-") && iGamma1.equals(k2) && j2.equals("~")
+        && g.equals("~") && h.equals("~")) {
+        consequences.add(new DeductionItem(treeName2, node2, "lb", iGamma2, m,
+          "-", "-", m, "0"));
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name = "predict adjoined " + treeName2 + "[" + node2name + ","
           + treeName1 + "]";
