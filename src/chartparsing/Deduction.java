@@ -24,6 +24,12 @@ public class Deduction {
   private boolean successfulTrace = false;
   /** Markers if items lead to goal */
   private boolean[] usefulItem;
+  /** Specify if new items shall replace same existing items in the chart. If
+   * null, don't replace. If h, replace by items with higher value (like
+   * probabilities). If l, replace by items with lower value (like weights). If
+   * - don't replace and add new backpointers to the list, commonly used for
+   * items without value. */
+  private char replace = '-';
 
   /** Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
@@ -188,8 +194,8 @@ public class Deduction {
 
   /** Returns itemsNeeded items from the chart. All items appear only once per
    * list, no list is the permutation of another one. */
-  private List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList, int i,
-    int itemsNeeded) {
+  private List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList,
+    int i, int itemsNeeded) {
     if (itemsNeeded == 0) {
       return oldList;
     } else {
@@ -202,8 +208,8 @@ public class Deduction {
             newList.get(newList.size() - 1).addAll(subList);
             newList.get(newList.size() - 1).add(chart.get(j));
           }
-          finalList.addAll(
-              antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
+          finalList
+            .addAll(antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
         }
       }
       return finalList;
@@ -226,10 +232,32 @@ public class Deduction {
         deductedFrom.add(new ArrayList<ArrayList<Integer>>());
         deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
       } else {
-        int oldid = chart.indexOf(newItem);
-        if (!deductedFrom.get(oldid).contains(newItemsDeductedFrom)) {
-          appliedRule.get(oldid).add(rule.getName());
-          deductedFrom.get(oldid).add(newItemsDeductedFrom);
+        int oldId = chart.indexOf(newItem);
+        switch (replace) {
+        case '-':
+          if (!deductedFrom.get(oldId).contains(newItemsDeductedFrom)) {
+            appliedRule.get(oldId).add(rule.getName());
+            deductedFrom.get(oldId).add(newItemsDeductedFrom);
+          }
+          break;
+        case 'h':
+          Double oldValue = ((PItem) chart.get(oldId)).getProbability();
+          Double newValue = ((PItem) newItem).getProbability();
+          if (newValue > oldValue) {
+            chart.set(oldId, newItem);
+            appliedRule.get(oldId).set(0, rule.getName());
+            deductedFrom.get(oldId).set(0, newItemsDeductedFrom);
+          }
+          break;
+        case 'l':
+          oldValue = ((PItem) chart.get(oldId)).getProbability();
+          newValue = ((PItem) newItem).getProbability();
+          if (newValue < oldValue) {
+            chart.set(oldId, newItem);
+            appliedRule.get(oldId).set(0, rule.getName());
+            deductedFrom.get(oldId).set(0, newItemsDeductedFrom);
+          }
+          break;
         }
       }
     }
@@ -307,5 +335,13 @@ public class Deduction {
 
   public ArrayList<ArrayList<String>> getAppliedRules() {
     return this.appliedRule;
+  }
+
+  public char getReplace() {
+    return replace;
+  }
+
+  public void setReplace(char replace) {
+    this.replace = replace;
   }
 }
