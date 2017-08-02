@@ -55,6 +55,16 @@ public class TestGrammarLibrary {
     g.addAuxiliaryTree("βb", "(S_NA b (S S_NA* b))");
     return g;
   }
+  
+  public static Tag binarizeTag() throws ParseException {
+    Tag g = new Tag();
+    g.setNonterminals(new String[] {"S"});
+    g.setTerminals(new String[] {"a", "b", "c", "d"});
+    g.setStartsymbol("S");
+    g.addInitialTree("α", "(S ε)");
+    g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
+    return g;
+  }
 
   public static Srcg anBnSrcg() throws ParseException {
     Srcg srcg = new Srcg();

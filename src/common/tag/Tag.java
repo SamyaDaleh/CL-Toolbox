@@ -8,6 +8,7 @@ import java.util.Set;
 
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
+import common.tag.util.Binarization;
 
 /** Tree adjoining grammar that consists of terminals, nonterminals, a start
  * symbol, some initial trees and auxiliary trees. */
@@ -155,25 +156,12 @@ public class Tag {
   /** Returns true if the TAG is binaried, that means all nodes have at most 2
    * child nodes. */
   public boolean isBinarized() {
-    for (Tree tree : initialTrees.values()) {
-      for (Vertex p : tree.getVertexes()) {
-        String gornAddress = p.getGornAddress();
-        if (gornAddress.length() > 0
-          && gornAddress.charAt(gornAddress.length() - 1) == '3') {
-          return false;
-        }
-      }
-    }
-    for (Tree tree : auxiliaryTrees.values()) {
-      for (Vertex p : tree.getVertexes()) {
-        String gornAddress = p.getGornAddress();
-        if (gornAddress.length() > 0
-          && gornAddress.charAt(gornAddress.length() - 1) == '3') {
-          return false;
-        }
-      }
-    }
-    return true;
+    return Binarization.isBinarized(this);
+  }
+
+  /** Return equivalent TAG were all nodes have at most 2 child nodes. */
+  public Tag getBinarizedTag() throws ParseException {
+    return Binarization.getBinarizedTag(this);
   }
 
   /** Returns true if the passed label is one of the nonterminals. */

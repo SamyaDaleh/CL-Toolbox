@@ -295,15 +295,12 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Tag checkAndMayConvertToTag(Tag tag, String algorithm) {
+  Tag checkAndMayConvertToTag(Tag tag, String algorithm) throws ParseException {
     switch (algorithm) {
     case "tag-cyk":
       if (!tag.isBinarized()) {
         if (please) {
-          System.out.println("Not implemented yet.");
-          return null;
-          // TODO
-          // return tag.getBinarizedTag();
+           return tag.getBinarizedTag();
         } else {
           System.out.println("TAG must be binarized to apply CYK parsing.");
           return null;

@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.ArrayUtils;
 import common.cfg.CfgProductionRule;
 
 /** A non-recursive representation of a context-free tree consisting of
@@ -15,8 +16,8 @@ public class Tree {
   private final List<Edge> edges = new ArrayList<Edge>();
   private Vertex root = null;
   private Vertex foot = null;
-  private final List<Vertex> nA = new ArrayList<Vertex>();
-  private final List<Vertex> oA = new ArrayList<Vertex>();
+  private List<Vertex> nA = new ArrayList<Vertex>();
+  private List<Vertex> oA = new ArrayList<Vertex>();
 
   private ArrayList<String> leafOrder = new ArrayList<String>();
   private ArrayList<String> leafGorns = new ArrayList<String>();
@@ -184,18 +185,17 @@ public class Tree {
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
       representation.append("(")
-      .append(child.getLabel().equals("") ? "ε" : child.getLabel())
-      .append(child.equals(foot) ? "*" : "")
-      .append(isInOA(child.getGornAddress()) ? "_OA" : "")
-      .append(isInNA(child.getGornAddress()) ? "_NA" : "");
-    if (leafGorns.contains(child.getGornAddress())) {
-      representation.append('<');
-      representation
-        .append(leafOrder.get(leafGorns.indexOf(child.getGornAddress())));
-      representation.append('>');
-    }
-      representation.append(" ")
-      .append(toStringAllChildren(child)).append(")");
+        .append(child.getLabel().equals("") ? "ε" : child.getLabel())
+        .append(child.equals(foot) ? "*" : "")
+        .append(isInOA(child.getGornAddress()) ? "_OA" : "")
+        .append(isInNA(child.getGornAddress()) ? "_NA" : "");
+      if (leafGorns.contains(child.getGornAddress())) {
+        representation.append('<');
+        representation
+          .append(leafOrder.get(leafGorns.indexOf(child.getGornAddress())));
+        representation.append('>');
+      }
+      representation.append(" ").append(toStringAllChildren(child)).append(")");
     }
     return representation.toString();
   }
@@ -429,12 +429,111 @@ public class Tree {
     }
     return newTree;
   }
-  
+
+  /** Returns an equivalent Tree where all nodes have at most 2 children. For
+   * creating new nodes it creates labels not in the list and adds them to the
+   * list. */
+  public Tree getBinarizedTree(ArrayList<String> newNonterminals)
+    throws ParseException {
+    Tree newTree = this;
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (Vertex p : newTree.getVertexes()) {
+        String gornAddress = p.getGornAddress();
+        if (gornAddress.length() > 0
+          && gornAddress.charAt(gornAddress.length() - 1) == '3') {
+          int i = 1;
+          String newNonterminal = "X" + String.valueOf(i);
+          i++;
+          while (newNonterminals.contains(newNonterminal)) {
+            newNonterminal = "X" + String.valueOf(i);
+            i++;
+          }
+          Tree newestTree = new Tree();
+          newestTree.foot = newTree.foot;
+          newestTree.root = newTree.root;
+          newestTree.oA = newTree.oA;
+          newestTree.nA = newTree.nA;
+          newestTree.vertexes.addAll(newTree.getVertexes());
+          Vertex parent =
+            newTree.getNodeByGornAdress(p.getGornAddressOfParent());
+          Vertex firstChild =
+            newTree.getNodeByGornAdress(parent.getGornAddress() + ".1");
+          Vertex newNode = new Vertex(newNonterminal);
+          newNode.setGornaddress(parent.getGornAddress() + ".2");
+          newestTree.vertexes.add(newNode);
+          newestTree.edges.add(new Edge(parent, newNode));
+          for (Edge edge : newTree.edges) {
+            if (edge.getFrom().equals(parent)) {
+              if (edge.getTo().getGornAddress().endsWith(".1")) {
+                newestTree.edges.add(edge);
+              } else {
+                newestTree.edges.add(new Edge(newNode, edge.getTo()));
+                String oldGorn = edge.getTo().getGornAddress();
+                String[] oldGornSplit = oldGorn.split("[.]");
+                String newLastDigit = String.valueOf(
+                  Integer.parseInt(oldGornSplit[oldGornSplit.length - 1]) - 1);
+                edge.getTo().setGornaddress(
+                  newNode.getGornAddress() + "." + newLastDigit);
+              }
+            } else {
+              newestTree.edges.add(edge);
+              Vertex nodeCheckGornAddress = edge.getTo();
+              if (parent.dominates(nodeCheckGornAddress.getGornAddress())
+                && !firstChild
+                  .dominates(nodeCheckGornAddress.getGornAddress())) {
+                // TODO gorn address ... if dominated by not first child of
+                // parent,
+                String[] oldGornSplit =
+                  nodeCheckGornAddress.getGornAddress().split("[.]");
+                String[] parentGornSplit = parent.getGornAddress().split("[.]");
+                // replace that part (parentlength +1 ) of gorn address by
+                // newnode + newLastDigit,
+                String newLastDigit = String.valueOf(
+                  Integer.parseInt(oldGornSplit[parentGornSplit.length + 1])
+                    - 1);;
+                String newGornAddress = newNode.getGornAddress() + "." + newLastDigit
+                  + "." + String.join(".", ArrayUtils.getSubSequenceAsArray(oldGornSplit,
+                    parentGornSplit.length + 1, oldGornSplit.length)) ;
+                // rest stays
+                // for newLastDigit: if parent has length n, get part at n+1 and
+                // decrease 1
+                nodeCheckGornAddress.setGornaddress(newGornAddress);
+              }
+            }
+          }
+          // bonus points for allowing the same for trees with crossing edges,
+          // for that edit LeafGorns accordingly.
+          newNonterminals.add(newNonterminal);
+          changed = true;
+          newTree = newestTree;
+          break;
+        }
+      }
+      if (!changed) {
+        return newTree;
+      }
+    }
+    return null;
+  }
+
   public ArrayList<String> getLeafOrder() {
     return this.leafOrder;
   }
-  
+
   public ArrayList<String> getLeafGorns() {
     return this.leafGorns;
+  }
+
+  public boolean isBinarized() {
+    for (Vertex p : this.getVertexes()) {
+      String gornAddress = p.getGornAddress();
+      if (gornAddress.length() > 0
+        && gornAddress.charAt(gornAddress.length() - 1) == '3') {
+        return false;
+      }
+    }
+    return true;
   }
 }
