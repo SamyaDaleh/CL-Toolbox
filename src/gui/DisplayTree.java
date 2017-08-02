@@ -64,6 +64,9 @@ public class DisplayTree extends JFrame {
     } else if (itemForm.length == 8) {
       g.drawString(itemForm[3], 30, 60);
       g.drawString(itemForm[6], this.getWidth() - 30, 60);
+    } else if (itemForm.length == 9) {
+      g.drawString(itemForm[4], 30, 60);
+      g.drawString(itemForm[7], this.getWidth() - 30, 60);
     }
     drawSubTree(g, tree.getNodeByGornAdress(""), 60, 0, this.getWidth());
     for (int i = 0; i < tree.getLeafOrder().size(); i++) {
@@ -96,7 +99,7 @@ public class DisplayTree extends JFrame {
           || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
         drawTagCykDot(g, height, nodeX);
       }
-    } else if (itemForm.length == 8) {
+    } else if (itemForm.length == 8 || itemForm.length == 9) {
       if (p.getGornAddress().equals(itemForm[1])
         || (p.getGornAddress().equals("") && itemForm[1].equals("ε"))) {
         drawTagEarleyDot(g, height, nodeX, label);
@@ -178,6 +181,9 @@ public class DisplayTree extends JFrame {
     } else if (itemForm.length == 8) {
       g.drawString(itemForm[4], nodeX-halfLabelWidth-10, height);
       g.drawString(itemForm[5], nodeX+halfLabelWidth+10, height);
+    } else if (itemForm.length == 9) {
+      g.drawString(itemForm[5], nodeX-halfLabelWidth-10, height);
+      g.drawString(itemForm[6], nodeX+halfLabelWidth+10, height);
     }
   }
 
