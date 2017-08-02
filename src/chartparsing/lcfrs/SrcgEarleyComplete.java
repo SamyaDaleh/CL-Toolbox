@@ -73,6 +73,9 @@ public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
             newVector.add(itemForm2[k * 2 + 5]);
           }
           int IndexOfFirstQuestionMark = newVector.indexOf("?");
+          if (IndexOfFirstQuestionMark == -1) {
+            return;
+          }
           newVector.set(IndexOfFirstQuestionMark, pos2);
           newVector.set(IndexOfFirstQuestionMark+1, posB);
           consequences.add(new SrcgEarleyActiveItem(clause2, posBInt, iInt2,
