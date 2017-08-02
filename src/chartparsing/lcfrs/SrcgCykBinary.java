@@ -91,7 +91,6 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
         for (String elem : vectorRanges) {
           overallRanges.add(Integer.parseInt(elem));
         }
-
       }
       if (looksGood && overallRanges.size() > 0) {
         List<Integer> newVector = (List<Integer>) SrcgDeductionUtils

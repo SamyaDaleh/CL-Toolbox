@@ -36,7 +36,6 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
   }
 
   private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
-
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       String clause1 = itemForm1[0];
       Clause clause1Parsed;
@@ -75,7 +74,6 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
             break;
           }
         }
-
         for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
           Predicate rhsPred = clause2Parsed.getRhs().get(n);
           if (rhsPred.getNonterminal()
@@ -86,7 +84,6 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
             if (itemForm1[2 * (iInt1 - 1) + 4].equals(pos2)
               && iInt1 < clause1Parsed.getLhs().getDim() && clause1Parsed
                 .getLhs().getArgumentByIndex(iInt1).length == jInt1) {
-
               boolean vectorsMatch =
                 SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1Parsed,
                   itemForm1, rhsPred, iInt1, clause2Parsed, itemForm2);

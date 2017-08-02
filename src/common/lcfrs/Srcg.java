@@ -85,6 +85,10 @@ public class Srcg {
     this.clauses.add(new Clause(string));
   }
 
+  public void addClause(Clause newClause) {
+    this.clauses.add(newClause);
+  }
+
   @Override public String toString() {
     StringBuilder repr = new StringBuilder();
     repr.append("G = <N, T, V, P, S>\n");
@@ -171,10 +175,6 @@ public class Srcg {
   /** Return an equivalent sRCG without epsilon as any lhs argument. */
   public Srcg getSrcgWithoutEmptyProductions() throws ParseException {
     return EmptyProductions.getSrcgWithoutEmptyProductions(this);
-  }
-
-  public void addClause(Clause newClause) {
-    this.clauses.add(newClause);
   }
 
   /** Returns true if mayT is one of the terminals. */

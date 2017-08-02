@@ -41,6 +41,152 @@ class GrammarToGrammarConverter {
     }
   }
 
+  Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm) {
+    Cfg cfg = new Cfg(pcfg);
+    return checkAndMayConvertToCfg(cfg, algorithm);
+  }
+
+  Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm) {
+    switch (algorithm) {
+    case "pcfg-astar":
+      if (!cfg.isInChomskyNormalForm()) {
+        if (please) {
+          return new Pcfg(cfg.getCfgWithoutEmptyProductions()
+            .getCfgWithoutNonGeneratingSymbols()
+            .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+            .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
+            .getCfgWithoutChainRules());
+        } else {
+          System.out.println(
+            "CFG must be in Chomsky Normal Form to convert it into a PCFG where A* parsing is possible.");
+          return null;
+        }
+      } else {
+        return new Pcfg(cfg);
+      }
+    default:
+      System.out.println(
+        "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
+
+  Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm) {
+    switch (algorithm) {
+    case "pcfg-astar":
+      Cfg cfg = new Cfg(pcfg);
+      if (!cfg.isInChomskyNormalForm()) {
+        if (please) {
+          System.out.println("PCFG can't be converted.");
+          return null;
+        } else {
+          System.out.println(
+            "PCFG must be in Chomsky Normal Form to apply A* parsing.");
+          return null;
+        }
+      } else {
+        return pcfg;
+      }
+    default:
+      System.out.println(
+        "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
+
+  Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm)
+    throws ParseException {
+    switch (algorithm) {
+    case "srcg-earley":
+      return getSrcgForEarley(cfg);
+    case "srcg-cyk":
+      return getSrcgForCyk(cfg);
+    case "srcg-cyk-extended":
+      return getSrcgForCykExtended(cfg);
+    default:
+      System.out.println(
+        "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
+
+  Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm)
+    throws ParseException {
+    switch (algorithm) {
+    case "srcg-earley":
+      return getSrcgForEarley(srcg);
+    case "srcg-cyk":
+      return getSrcgForCyk(srcg);
+    case "srcg-cyk-extended":
+      return getSrcgForCykExtended(srcg);
+    default:
+      System.out.println(
+        "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
+
+  Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm)
+    throws ParseException {
+    Cfg cfg = new Cfg(pcfg);
+    return checkAndMayConvertToSrcg(cfg, algorithm);
+  }
+
+  Tag checkAndMayConvertToTag(Tag tag, String algorithm) throws ParseException {
+    switch (algorithm) {
+    case "tag-cyk":
+      if (!tag.isBinarized()) {
+        if (please) {
+           return tag.getBinarizedTag();
+        } else {
+          System.out.println("TAG must be binarized to apply CYK parsing.");
+          return null;
+        }
+      } else {
+        return tag;
+      }
+    case "tag-earley":
+      return tag;
+    case "tag-earley-prefixvalid":
+      return tag;
+    default:
+      System.out.println(
+        "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
+
+  Tag checkAndMayConvertToTag(Cfg cfg, String algorithm) throws ParseException {
+    switch (algorithm) {
+    case "tag-cyk":
+      if (!cfg.isBinarized()) {
+        if (please) {
+          return new Tag(cfg.getBinarizedCfg());
+        } else {
+          System.out.println(
+            "CFG must be binarized to convert it into a TAG where CYK parsing is possible.");
+          return null;
+        }
+      } else {
+        return new Tag(cfg);
+      }
+    case "tag-earley":
+      return new Tag(cfg);
+    case "tag-earley-prefixvalid":
+      return new Tag(cfg);
+    default:
+      System.out.println(
+        "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
+
+  Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm)
+    throws ParseException {
+    Cfg cfg = new Cfg(pcfg);
+    return checkAndMayConvertToTag(cfg, algorithm);
+  }
+
   private Cfg getCfgForCykExtended(Cfg cfg) {
     if (!cfg.isInCanonicalTwoForm()) {
       if (please) {
@@ -124,146 +270,6 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Tag checkAndMayConvertToTag(Cfg cfg, String algorithm) throws ParseException {
-    switch (algorithm) {
-    case "tag-cyk":
-      if (!cfg.isBinarized()) {
-        if (please) {
-          return new Tag(cfg.getBinarizedCfg());
-        } else {
-          System.out.println(
-            "CFG must be binarized to convert it into a TAG where CYK parsing is possible.");
-          return null;
-        }
-      } else {
-        return new Tag(cfg);
-      }
-    case "tag-earley":
-      return new Tag(cfg);
-    case "tag-earley-prefixvalid":
-      return new Tag(cfg);
-    default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
-    }
-  }
-
-  Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm) {
-    switch (algorithm) {
-    case "pcfg-astar":
-      if (!cfg.isInChomskyNormalForm()) {
-        if (please) {
-          return new Pcfg(cfg.getCfgWithoutEmptyProductions()
-            .getCfgWithoutNonGeneratingSymbols()
-            .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
-            .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
-            .getCfgWithoutChainRules());
-        } else {
-          System.out.println(
-            "CFG must be in Chomsky Normal Form to convert it into a PCFG where A* parsing is possible.");
-          return null;
-        }
-      } else {
-        return new Pcfg(cfg);
-      }
-    default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
-    }
-  }
-
-  Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm)
-    throws ParseException {
-    switch (algorithm) {
-    case "srcg-earley":
-      return getSrcgForEarley(cfg);
-    case "srcg-cyk":
-      return getSrcgForCyk(cfg);
-    case "srcg-cyk-extended":
-      return getSrcgForCykExtended(cfg);
-    default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
-    }
-  }
-
-  private Srcg getSrcgForCykExtended(Cfg cfg) throws ParseException {
-    if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
-      if (please) {
-        return new Srcg(cfg.getBinarizedCfg()
-          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
-      } else {
-        System.out.println(
-          "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
-        return null;
-      }
-    } else {
-      return new Srcg(cfg);
-    }
-  }
-
-  private Srcg getSrcgForCyk(Cfg cfg) throws ParseException {
-    if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
-      if (please) {
-        return new Srcg(cfg.getBinarizedCfg().getCfgWithoutChainRules()
-          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
-      } else {
-        System.out.println(
-          "CFG must be binarized, not contain chain rules and not contain rules with mixed rhs sides to convert it into a sRCG where CYK parsing is possible.");
-        return null;
-      }
-    } else {
-      return new Srcg(cfg);
-    }
-  }
-
-  private Srcg getSrcgForEarley(Cfg cfg) throws ParseException {
-    if (!cfg.isBinarized()) {
-      if (please) {
-        return new Srcg(cfg.getBinarizedCfg());
-      } else {
-        System.out.println(
-          "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");
-        return null;
-      }
-    } else {
-      return new Srcg(cfg);
-    }
-  }
-
-  Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm)
-    throws ParseException {
-    switch (algorithm) {
-    case "srcg-earley":
-      return getSrcgForEarley(srcg);
-    case "srcg-cyk":
-      return getSrcgForCyk(srcg);
-    case "srcg-cyk-extended":
-      return getSrcgForCykExtended(srcg);
-    default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
-    }
-  }
-
-  private Srcg getSrcgForCykExtended(Srcg srcg) throws ParseException {
-    if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
-      if (please) {
-        return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions();
-      } else {
-        System.out.println(
-          "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
-        return null;
-      }
-    } else {
-      return srcg;
-    }
-  }
-
   private Srcg getSrcgForCyk(Srcg srcg) {
     if (!srcg.isBinarized() || srcg.hasChainRules()
       || srcg.hasEpsilonProductions()) {
@@ -282,6 +288,50 @@ class GrammarToGrammarConverter {
     }
   }
 
+  private Srcg getSrcgForCyk(Cfg cfg) throws ParseException {
+    if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
+      if (please) {
+        return new Srcg(cfg.getBinarizedCfg().getCfgWithoutChainRules()
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
+      } else {
+        System.out.println(
+          "CFG must be binarized, not contain chain rules and not contain rules with mixed rhs sides to convert it into a sRCG where CYK parsing is possible.");
+        return null;
+      }
+    } else {
+      return new Srcg(cfg);
+    }
+  }
+
+  private Srcg getSrcgForCykExtended(Srcg srcg) throws ParseException {
+    if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
+      if (please) {
+        return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions();
+      } else {
+        System.out.println(
+          "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
+        return null;
+      }
+    } else {
+      return srcg;
+    }
+  }
+
+  private Srcg getSrcgForCykExtended(Cfg cfg) throws ParseException {
+    if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
+      if (please) {
+        return new Srcg(cfg.getBinarizedCfg()
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
+      } else {
+        System.out.println(
+          "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
+        return null;
+      }
+    } else {
+      return new Srcg(cfg);
+    }
+  }
+
   private Srcg getSrcgForEarley(Srcg srcg) throws ParseException {
     if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
       if (please) {
@@ -295,67 +345,17 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Tag checkAndMayConvertToTag(Tag tag, String algorithm) throws ParseException {
-    switch (algorithm) {
-    case "tag-cyk":
-      if (!tag.isBinarized()) {
-        if (please) {
-           return tag.getBinarizedTag();
-        } else {
-          System.out.println("TAG must be binarized to apply CYK parsing.");
-          return null;
-        }
+  private Srcg getSrcgForEarley(Cfg cfg) throws ParseException {
+    if (!cfg.isBinarized()) {
+      if (please) {
+        return new Srcg(cfg.getBinarizedCfg());
       } else {
-        return tag;
+        System.out.println(
+          "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");
+        return null;
       }
-    case "tag-earley":
-      return tag;
-    case "tag-earley-prefixvalid":
-      return tag;
-    default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
+    } else {
+      return new Srcg(cfg);
     }
-  }
-
-  Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm) {
-    switch (algorithm) {
-    case "pcfg-astar":
-      Cfg cfg = new Cfg(pcfg);
-      if (!cfg.isInChomskyNormalForm()) {
-        if (please) {
-          System.out.println("PCFG can't be converted.");
-          return null;
-        } else {
-          System.out.println(
-            "PCFG must be in Chomsky Normal Form to apply A* parsing.");
-          return null;
-        }
-      } else {
-        return pcfg;
-      }
-    default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
-    }
-  }
-
-  Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm)
-    throws ParseException {
-    Cfg cfg = new Cfg(pcfg);
-    return checkAndMayConvertToTag(cfg, algorithm);
-  }
-
-  Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm)
-    throws ParseException {
-    Cfg cfg = new Cfg(pcfg);
-    return checkAndMayConvertToSrcg(cfg, algorithm);
-  }
-
-  Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm) {
-    Cfg cfg = new Cfg(pcfg);
-    return checkAndMayConvertToCfg(cfg, algorithm);
   }
 }
