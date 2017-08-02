@@ -14,7 +14,7 @@ import cli.Main;
 
 @RunWith(Parameterized.class) public class MainTest {
 
-  private String algorithm;
+  private final String algorithm;
 
   @Parameters public static Collection<String[]> browsers() {
     return Arrays.asList(new String[][] {{"cfg-neverheardofthis"},

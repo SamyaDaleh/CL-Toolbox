@@ -66,8 +66,7 @@ public class SrcgDeductionUtils {
   }
 
   /** If you pass it a list of vectors/ranges and the predicate of a rule
-   * (mostly a lhs) it returns ranges for the whole arguments.
-   * @param <T> */
+   * (mostly a lhs) it returns ranges for the whole arguments. */
   public static <T> ArrayList<?> getRangesForArguments(ArrayList<T> rangeOverElements,
     Predicate lhs) {
     ArrayList<T> rangeOverArguments = new ArrayList<T>();

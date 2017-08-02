@@ -337,10 +337,6 @@ public class Deduction {
     return this.appliedRule;
   }
 
-  public char getReplace() {
-    return replace;
-  }
-
   public void setReplace(char replace) {
     this.replace = replace;
   }

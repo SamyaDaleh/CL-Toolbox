@@ -235,7 +235,7 @@ public class TagToDeductionRulesConverter {
     DynamicDeductionRule scanTerm =
       new TagEarleyPrefixValidScanTerm(wSplit, tag);
     schema.addRule(scanTerm);
-    DynamicDeductionRule scanEps = new TagEarleyPrefixValidScanEps(wSplit, tag);
+    DynamicDeductionRule scanEps = new TagEarleyPrefixValidScanEps(tag);
     schema.addRule(scanEps);
     DynamicDeductionRule convertRb = new TagEarleyPrefixValidConvertRb();
     schema.addRule(convertRb);

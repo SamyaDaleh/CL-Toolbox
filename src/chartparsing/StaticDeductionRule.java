@@ -7,7 +7,7 @@ import java.util.List;
  * Used as axiom. */
 public class StaticDeductionRule implements DeductionRule{
   private List<Item> antecedences = new ArrayList<Item>();
-  List<Item> consequences = new ArrayList<Item>();
+  final List<Item> consequences = new ArrayList<Item>();
   private String name = null;
 
   public void addAntecedence(Item item) {

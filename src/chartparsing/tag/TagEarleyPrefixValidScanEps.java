@@ -13,7 +13,7 @@ public class TagEarleyPrefixValidScanEps extends AbstractDynamicDeductionRule
 
   private final Tag tag;
 
-  public TagEarleyPrefixValidScanEps(String[] wSplit, Tag tag) {
+  public TagEarleyPrefixValidScanEps(Tag tag) {
     this.tag = tag;
     this.name = "scan epsilon";
     this.antNeeded = 1;

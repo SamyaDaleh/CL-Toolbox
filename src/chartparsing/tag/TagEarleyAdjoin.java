@@ -52,7 +52,7 @@ public class TagEarleyAdjoin extends AbstractDynamicDeductionRule {
           this.name =
             "adjoin " + treeName2 + "[" + node2name + "," + treeName1 + "]";
         } else if (adjoinable2 && node2.equals("") && pos2.equals("ra")
-          && pos1.equals("rb") && g == i) {
+          && pos1.equals("rb") && g.equals(i)) {
           // the other way around
           String node1Name = node1.length() == 0 ? "ε" : node1;
           consequences.add(

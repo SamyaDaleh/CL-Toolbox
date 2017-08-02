@@ -23,8 +23,7 @@ public class Binarization {
   }
 
   /** Returns an equivalent Srcg were all clauses have at most two rhs
-   * predicates.
-   * @throws ParseException */
+   * predicates. */
   public static Srcg getBinarizedSrcg(Srcg oldSrcg) throws ParseException {
     Srcg newSrcg = new Srcg();
     newSrcg.setStartSymbol(oldSrcg.getStartSymbol());
@@ -113,13 +112,11 @@ public class Binarization {
 
   private static Clause getReducedClause(Clause clause, int j, String newNt,
     Predicate predicate, Srcg srcg) throws ParseException {
-    StringBuilder newClause = new StringBuilder();
-    newClause.append(predicate).append(" -> ")
-      .append(clause.getRhs().get(0).toString()).append(' ').append(newNt)
-      .append('(').append(getVectorLhsReducedByRhsPredAsString(predicate,
-        clause.getRhs().get(j), srcg))
-      .append(')');
-    return new Clause(newClause.toString());
+    String newClause =
+        String.valueOf(predicate) + " -> " + clause.getRhs().get(0).toString()
+            + ' ' + newNt + '(' + getVectorLhsReducedByRhsPredAsString(
+            predicate, clause.getRhs().get(j), srcg) + ')';
+    return new Clause(newClause);
   }
 
   /** reduction of a1 e T U V*k1 is a2 e V*k2 where all variables in a2 occur in

@@ -74,7 +74,7 @@ public class ChartToTreeConverter {
                   clauseString.substring(0, clauseString.indexOf('('));
                 derivatedTree = new Tree(derivatedTreeString.substring(0,
                   derivatedTreeString.lastIndexOf("(" + lhsNt + " )"))
-                  + itemTreeString.toString()
+                  + itemTreeString
                   + derivatedTreeString.substring(
                     derivatedTreeString.lastIndexOf("(" + lhsNt + " )")
                       + lhsNt.length() + 3));

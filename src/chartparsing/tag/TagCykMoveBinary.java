@@ -1,6 +1,7 @@
 package chartparsing.tag;
 
 import java.util.List;
+import java.util.Objects;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
@@ -45,7 +46,7 @@ public class TagCykMoveBinary extends AbstractDynamicDeductionRule {
           String f2New = (f2.equals("-")) ? f2b : f2;
           consequences
             .add(new DeductionItem(treeName1, parentNode, i, f1New, f2New, j));
-        } else if (node2.endsWith(".1⊤") && node1.endsWith(".2⊤") && j == i) {
+        } else if (node2.endsWith(".1⊤") && node1.endsWith(".2⊤") && j.equals(i)) {
           // the other way around
           String parentNode = node1.substring(0, node1.length() - 3) + "⊥";
           String f1New = (f1.equals("-")) ? f1b : f1;

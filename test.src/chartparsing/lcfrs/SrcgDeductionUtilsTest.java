@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -68,9 +69,7 @@ public class SrcgDeductionUtilsTest {
       new String[] {"0", "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", "6"};
     ArrayList<String> rangesList = new ArrayList<String>() {
       {
-        for (String range : ranges) {
-          this.add(range);
-        }
+        Collections.addAll(this, ranges);
       }
     };
     List<String> rangesoverarguments =

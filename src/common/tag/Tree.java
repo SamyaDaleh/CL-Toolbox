@@ -19,8 +19,8 @@ public class Tree {
   private List<Vertex> nA = new ArrayList<Vertex>();
   private List<Vertex> oA = new ArrayList<Vertex>();
 
-  private ArrayList<String> leafOrder = new ArrayList<String>();
-  private ArrayList<String> leafGorns = new ArrayList<String>();
+  private final ArrayList<String> leafOrder = new ArrayList<String>();
+  private final ArrayList<String> leafGorns = new ArrayList<String>();
 
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
@@ -433,11 +433,10 @@ public class Tree {
   /** Returns an equivalent Tree where all nodes have at most 2 children. For
    * creating new nodes it creates labels not in the list and adds them to the
    * list. */
-  public Tree getBinarizedTree(ArrayList<String> newNonterminals)
-    throws ParseException {
+  public Tree getBinarizedTree(ArrayList<String> newNonterminals) {
     Tree newTree = this;
-    boolean changed = true;
-    while (changed) {
+    boolean changed;
+    do {
       changed = false;
       for (Vertex p : newTree.getVertexes()) {
         String gornAddress = p.getGornAddress();
@@ -483,22 +482,17 @@ public class Tree {
               if (parent.dominates(nodeCheckGornAddress.getGornAddress())
                 && !firstChild
                   .dominates(nodeCheckGornAddress.getGornAddress())) {
-                // TODO gorn address ... if dominated by not first child of
-                // parent,
                 String[] oldGornSplit =
                   nodeCheckGornAddress.getGornAddress().split("[.]");
                 String[] parentGornSplit = parent.getGornAddress().split("[.]");
-                // replace that part (parentlength +1 ) of gorn address by
-                // newnode + newLastDigit,
                 String newLastDigit = String.valueOf(
                   Integer.parseInt(oldGornSplit[parentGornSplit.length + 1])
-                    - 1);;
-                String newGornAddress = newNode.getGornAddress() + "." + newLastDigit
-                  + "." + String.join(".", ArrayUtils.getSubSequenceAsArray(oldGornSplit,
-                    parentGornSplit.length + 1, oldGornSplit.length)) ;
-                // rest stays
-                // for newLastDigit: if parent has length n, get part at n+1 and
-                // decrease 1
+                    - 1);
+                String newGornAddress =
+                  newNode.getGornAddress() + "." + newLastDigit + "."
+                    + String.join(".",
+                      ArrayUtils.getSubSequenceAsArray(oldGornSplit,
+                        parentGornSplit.length + 1, oldGornSplit.length));
                 nodeCheckGornAddress.setGornaddress(newGornAddress);
               }
             }
@@ -514,7 +508,7 @@ public class Tree {
       if (!changed) {
         return newTree;
       }
-    }
+    } while (changed);
     return null;
   }
 

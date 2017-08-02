@@ -45,13 +45,13 @@ public class TagEarleyCompleteNode extends AbstractDynamicDeductionRule {
         tag.getTree(treeName1).getNodeByGornAdress(node1).getLabel();
       if (treeName1.equals(treeName2) && node1.equals(node2)
         && tag.isInNonterminals(label)) {
-        if (pos1.equals("la") && pos2.equals("rb") && i1 == i2
+        if (pos1.equals("la") && pos2.equals("rb") && i1.equals(i2)
           && adj1.equals("0")) {
           String f1 = (g.equals("-")) ? j : g;
           String f2 = (h.equals("-")) ? k : h;
           consequences
             .add(new DeductionItem(treeName1, node1, "ra", f, f1, f2, l, "0"));
-        } else if (pos2.equals("la") && pos1.equals("rb") && l == f
+        } else if (pos2.equals("la") && pos1.equals("rb") && l.equals(f)
           && adj2.equals("0")) {
           // the other way around
           String f1 = (g.equals("-")) ? j : g;

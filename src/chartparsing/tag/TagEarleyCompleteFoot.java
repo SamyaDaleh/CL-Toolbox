@@ -43,13 +43,13 @@ public class TagEarleyCompleteFoot extends AbstractDynamicDeductionRule {
       String adj2 = itemForm2[7];
       boolean adjoinable1 = tag.isAdjoinable(treeName2, treeName1, node1);
       boolean adjoinable2 = tag.isAdjoinable(treeName1, treeName2, node2);
-      if (i1 == i21 && adj1.equals("0") && adj2.equals("0")) {
-        if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb") && i21 == i22
+      if (i1.equals(i21) && adj1.equals("0") && adj2.equals("0")) {
+        if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb") && i21.equals(i22)
           && f12.equals("-") && f22.equals("-")) {
           consequences
             .add(new DeductionItem(treeName2, node2, "rb", i1, i1, l, l, "0"));
         } else if (adjoinable2 && pos2.equals("rb") && pos1.equals("lb")
-          && i1 == l && j.equals("-") && k.equals("-")) {
+          && i1.equals(l) && j.equals("-") && k.equals("-")) {
           // the other way around
           consequences.add(
             new DeductionItem(treeName1, node1, "rb", i21, i21, i22, i22, "0"));

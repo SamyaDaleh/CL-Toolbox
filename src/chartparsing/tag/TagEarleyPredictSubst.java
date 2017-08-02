@@ -37,7 +37,7 @@ public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
       String adj = itemForm[7];
       Vertex p = tag.getTree(treeName).getNodeByGornAdress(node);
       boolean substNode = tag.isSubstitutionNode(p, treeName);
-      if (substNode && pos.equals("lb") && i1 == i2 && f1.equals("-")
+      if (substNode && pos.equals("lb") && i1.equals(i2) && f1.equals("-")
         && f2.equals("-") && adj.equals("0")) {
         consequences
           .add(new DeductionItem(iniTreeName, "", "la", i1, "-", "-", i1, "0"));
