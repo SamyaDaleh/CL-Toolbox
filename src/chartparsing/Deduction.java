@@ -258,6 +258,9 @@ public class Deduction {
             deductedFrom.get(oldId).set(0, newItemsDeductedFrom);
           }
           break;
+        default:
+          System.out.println(
+            "Unknown replace parameter " + replace + ", doing nothing.");
         }
       }
     }

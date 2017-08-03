@@ -188,6 +188,8 @@ public class ChartToTreeConverter {
     case "unger":
       steps = retrieveSteps(i, deduction, new String[] {"complete"});
       break;
+    default:
+      System.out.println("Unknown algorithm: " + algorithm);
     }
     return steps;
   }
@@ -228,6 +230,8 @@ public class ChartToTreeConverter {
             derivatedTree = applyStep(derivatedTree, step, true);
           }
           break;
+        default:
+          System.out.println("Unknown algorithm: " + algorithm);
         }
       }
     }

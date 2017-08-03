@@ -3,9 +3,7 @@ package chartparsing;
 import chartparsing.Item;
 import common.ArrayUtils;
 
-/**
- * Abstract class that holds the functions commonly used by all items.
- */
+/** Abstract class that holds the functions commonly used by all items. */
 public abstract class AbstractItem implements Item {
 
   protected String[] itemForm;
@@ -16,6 +14,19 @@ public abstract class AbstractItem implements Item {
 
   @Override public boolean equals(Object o) {
     return ArrayUtils.match(this.itemForm, ((Item) o).getItemform());
+  }
+
+  @Override public int hashCode() {
+    int hashCode = 0;
+    int i = 2;
+    for (String item : this.itemForm) {
+      for (char chara : item.toCharArray()) {
+        int value = (int) chara;
+        hashCode += value * i;
+        i += 2;
+      }
+    }
+    return hashCode;
   }
 
   @Override public String toString() {

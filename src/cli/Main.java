@@ -23,23 +23,7 @@ class Main {
    * help about the what arguments to use. */
   public static void main(String[] args) throws ParseException, IOException {
     if (args.length < 3) {
-      System.out.println(
-        "Please pass at least 3 parameters: [grammar file] [input string] "
-          + "[parsing algorithm] [<optional parameters>]");
-      System.out.println("Parsing algorithm can be one of: \n   cfg-cyk"
-        + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
-        + "\n   cfg-leftcorner" + "\n   cfg-leftcorner-chart"
-        + "\n   cfg-topdown" + "\n   cfg-shiftreduce" + "\n   cfg-unger"
-        + "\n   pcfg-astar" + "\n   tag-cyk" + "\n   tag-earley"
-        + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk"
-        + "\n   srcg-cyk-extended" + "\n   srcg-earley");
-      System.out.println(
-        "Optional parameters can be: \n   --success : prints a trace only of items "
-          + "that lead to a goal item."
-          + "\n   --please : if a grammar doesn't fit an "
-          + "algorithm, ask me to convert it. No promises.");
-      System.out.println(
-        "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
+      printHelp();
       return;
     }
     String grammarFile = args[0];
@@ -63,99 +47,125 @@ class Main {
     Tag tag = null;
     Srcg srcg;
     Pcfg pcfg;
-    if (grammarFile.endsWith(".cfg")) {
+    String[] algorithmSplit = algorithm.split("-");
+    String[] grammarFileSplit = grammarFile.split("[.]");
+    switch (grammarFileSplit[grammarFileSplit.length - 1]) {
+    case "cfg":
       cfg = GrammarParser.parseCfgFile(grammarFile);
-      if (algorithm.startsWith("cfg")) {
+      switch (algorithmSplit[0]) {
+      case "cfg":
         cfg = ggc.checkAndMayConvertToCfg(cfg, algorithm);
         if (cfg != null) {
           schema = gdrc.convertToSchema(cfg, w, algorithm);
         }
-      } else if (algorithm.startsWith("tag")) {
+        break;
+      case "tag":
         tag = ggc.checkAndMayConvertToTag(cfg, algorithm);
         if (tag != null) {
           schema = gdrc.convertToSchema(tag, w, algorithm);
         }
-      } else if (algorithm.startsWith("pcfg")) {
+        break;
+      case "pcfg":
         pcfg = ggc.checkAndMayConvertToPcfg(cfg, algorithm);
         if (pcfg != null) {
           schema = gdrc.convertToSchema(pcfg, w, algorithm);
         }
-      } else if (algorithm.startsWith("srcg")) {
+        break;
+      case "srcg":
         srcg = ggc.checkAndMayConvertToSrcg(cfg, algorithm);
         if (srcg != null) {
           schema = gdrc.convertToSchema(srcg, w, algorithm);
         }
-      } else {
+        break;
+      default:
         System.out
           .println("I don't know that formalism, please check the spelling.");
         return;
       }
-    } else if (grammarFile.endsWith(".pcfg")) {
+      break;
+    case "pcfg":
       pcfg = GrammarParser.parsePcfgFile(grammarFile);
-      if (algorithm.startsWith("cfg")) {
+      switch (algorithmSplit[0]) {
+      case "cfg":
         cfg = ggc.checkAndMayConvertToCfg(pcfg, algorithm);
         if (cfg != null) {
           schema = gdrc.convertToSchema(cfg, w, algorithm);
         }
-      } else if (algorithm.startsWith("tag")) {
-        tag = ggc.checkAndMayConvertToTag(pcfg, algorithm);
-        if (tag != null) {
-          schema = gdrc.convertToSchema(tag, w, algorithm);
-        }
-      } else if (algorithm.startsWith("pcfg")) {
+        break;
+      case "pcfg":
         pcfg = ggc.checkAndMayConvertToPcfg(pcfg, algorithm);
         if (pcfg != null) {
           schema = gdrc.convertToSchema(pcfg, w, algorithm);
         }
-      } else if (algorithm.startsWith("srcg")) {
+        break;
+      case "tag":
+        tag = ggc.checkAndMayConvertToTag(pcfg, algorithm);
+        if (tag != null) {
+          schema = gdrc.convertToSchema(tag, w, algorithm);
+        }
+        break;
+      case "srcg":
         srcg = ggc.checkAndMayConvertToSrcg(pcfg, algorithm);
         if (srcg != null) {
           schema = gdrc.convertToSchema(srcg, w, algorithm);
         }
-      } else {
+        break;
+      default:
         System.out
           .println("I don't know that formalism, please check the spelling.");
         return;
       }
-    } else if (grammarFile.endsWith(".tag")) {
+      break;
+    case "tag":
       tag = GrammarParser.parseTagFile(grammarFile);
-      if (algorithm.startsWith("cfg")) {
+      switch (algorithmSplit[0]) {
+      case "cfg":
         System.out.println("I can't parse with a less expressive formalism.");
         return;
-      } else if (algorithm.startsWith("tag")) {
+      case "pcfg":
+        System.out.println("I can't parse with a less expressive formalism.");
+        return;
+      case "tag":
         tag = ggc.checkAndMayConvertToTag(tag, algorithm);
         if (tag != null) {
           schema = gdrc.convertToSchema(tag, w, algorithm);
         }
-      } else if (algorithm.startsWith("pcfg")) {
-        System.out.println("I can't parse with a less expressive formalism.");
-      } else if (algorithm.startsWith("srcg")) {
+        break;
+      case "srcg":
         System.out
           .println("I can't convert a tree language to a string language.");
         return;
-      } else {
+      default:
         System.out
           .println("I don't know that formalism, please check the spelling.");
         return;
       }
-    } else if (grammarFile.endsWith(".srcg")) {
+      break;
+    case "srcg":
       srcg = GrammarParser.parseSrcgFile(grammarFile);
-      if (algorithm.startsWith("cfg")) {
+      switch (algorithmSplit[0]) {
+      case "cfg":
         System.out.println("I can't parse with a less expressive formalism.");
-      } else if (algorithm.startsWith("tag")) {
+        return;
+      case "pcfg":
         System.out.println("I can't parse with a less expressive formalism.");
-      } else if (algorithm.startsWith("pcfg")) {
+        return;
+      case "tag":
         System.out.println("I can't parse with a less expressive formalism.");
-      } else if (algorithm.startsWith("srcg")) {
+        return;
+      case "srcg":
         srcg = ggc.checkAndMayConvertToSrcg(srcg, algorithm);
         if (srcg != null) {
           schema = gdrc.convertToSchema(srcg, w, algorithm);
         }
-      } else {
+        break;
+      default:
         System.out
           .println("I don't know that formalism, please check the spelling.");
         return;
       }
+      break;
+    default:
     }
     Deduction deduction = new Deduction();
     if (algorithm.equals("pcfg-astar")) {
@@ -171,28 +181,51 @@ class Main {
         new String[] {"Id", "Item", "Rules", "Backpointers"});
     }
     if (schema != null) {
-      if (algorithm.startsWith("tag")) {
-        Tree derivedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
-          schema.getGoals(), tag);
-        if (derivedTree != null) {
-          new DisplayTree(new String[] {derivedTree.toString()});
-        }
-      }
-      if (algorithm.startsWith("cfg")) {
+      switch (algorithmSplit[0]) {
+      case "cfg":
         Tree derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
           schema.getGoals(), algorithm.substring(4));
         if (derivedTree != null) {
           new DisplayTree(new String[] {derivedTree.toString()});
         }
-      }
-      if (algorithm.startsWith("srcg")) {
-        Tree derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
+        break;
+      case "tag":
+        derivedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
+          schema.getGoals(), tag);
+        if (derivedTree != null) {
+          new DisplayTree(new String[] {derivedTree.toString()});
+        }
+        break;
+      case "srcg":
+        derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
           schema.getGoals(), algorithm.substring(5));
         if (derivedTree != null) {
           new DisplayTree(new String[] {derivedTree.toString()});
         }
+        break;
+      default:
+        break;
       }
     }
+  }
+
+  private static void printHelp() {
+    System.out.println(
+      "Please pass at least 3 parameters: [grammar file] [input string] "
+        + "[parsing algorithm] [<optional parameters>]");
+    System.out.println("Parsing algorithm can be one of: \n   cfg-cyk"
+      + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
+      + "\n   cfg-leftcorner" + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
+      + "\n   cfg-shiftreduce" + "\n   cfg-unger" + "\n   pcfg-astar"
+      + "\n   tag-cyk" + "\n   tag-earley" + "\n   tag-earley-prefixvalid"
+      + "\n   srcg-cyk" + "\n   srcg-cyk-extended" + "\n   srcg-earley");
+    System.out.println(
+      "Optional parameters can be: \n   --success : prints a trace only of items "
+        + "that lead to a goal item."
+        + "\n   --please : if a grammar doesn't fit an "
+        + "algorithm, ask me to convert it. No promises.");
+    System.out.println(
+      "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
   }
 
 }

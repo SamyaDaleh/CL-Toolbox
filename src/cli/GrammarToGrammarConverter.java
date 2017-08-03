@@ -276,7 +276,7 @@ class GrammarToGrammarConverter {
       if (please) {
         System.out.println("Not implemented yet.");
         return null;
-        // TODO
+        // TODO think about deleting this.
         // return srcg.getBinarizedSrcg().getSrcgWithoutChainRules();
       } else {
         System.out.println(

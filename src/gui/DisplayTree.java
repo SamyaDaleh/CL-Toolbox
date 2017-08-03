@@ -150,6 +150,8 @@ public class DisplayTree extends JFrame {
     case '⊥':
       g.drawString("•", nodeX, height + 8);
       break;
+    default:
+      System.out.println("Unknown pos: " + pos);
     }
   }
 
@@ -169,6 +171,8 @@ public class DisplayTree extends JFrame {
     case "ra":
       g.drawString("•", nodeX + halfLabelWidth, height - 5);
       break;
+    default:
+      System.out.println("Unknown pos: " + itemForm[2]);
     }
   }
 
