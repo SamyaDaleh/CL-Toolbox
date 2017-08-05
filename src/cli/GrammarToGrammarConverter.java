@@ -99,8 +99,6 @@ class GrammarToGrammarConverter {
     switch (algorithm) {
     case "srcg-earley":
       return getSrcgForEarley(cfg);
-    case "srcg-cyk":
-      return getSrcgForCyk(cfg);
     case "srcg-cyk-extended":
       return getSrcgForCykExtended(cfg);
     default:
@@ -115,8 +113,6 @@ class GrammarToGrammarConverter {
     switch (algorithm) {
     case "srcg-earley":
       return getSrcgForEarley(srcg);
-    case "srcg-cyk":
-      return getSrcgForCyk(srcg);
     case "srcg-cyk-extended":
       return getSrcgForCykExtended(srcg);
     default:
@@ -267,39 +263,6 @@ class GrammarToGrammarConverter {
       }
     } else {
       return cfg;
-    }
-  }
-
-  private Srcg getSrcgForCyk(Srcg srcg) {
-    if (!srcg.isBinarized() || srcg.hasChainRules()
-      || srcg.hasEpsilonProductions()) {
-      if (please) {
-        System.out.println("Not implemented yet.");
-        return null;
-        // TODO think about deleting this.
-        // return srcg.getBinarizedSrcg().getSrcgWithoutChainRules();
-      } else {
-        System.out.println(
-          "sRCG must be binarized not contain chain rules and not contain empty productions to apply CYK parsing");
-        return null;
-      }
-    } else {
-      return srcg;
-    }
-  }
-
-  private Srcg getSrcgForCyk(Cfg cfg) throws ParseException {
-    if (!cfg.isBinarized() || cfg.hasChainRules() || cfg.hasMixedRhs()) {
-      if (please) {
-        return new Srcg(cfg.getBinarizedCfg().getCfgWithoutChainRules()
-          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
-      } else {
-        System.out.println(
-          "CFG must be binarized, not contain chain rules and not contain rules with mixed rhs sides to convert it into a sRCG where CYK parsing is possible.");
-        return null;
-      }
-    } else {
-      return new Srcg(cfg);
     }
   }
 

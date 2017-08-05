@@ -26,36 +26,6 @@ import common.lcfrs.Srcg;
  * Kallmeyer about Parsing as Deduction. */
 public class LcfrsToDeductionRulesConverter {
 
-  static ParsingSchema srcgToCykRules(Srcg srcg, String w) {
-    if (srcg.hasEpsilonProductions()) {
-      System.out.println(
-        "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
-      return null;
-    }
-    if (!srcg.isBinarized()) {
-      System.out.println("sRCG must be binarized for this CYK algorithm.");
-      return null;
-    }
-    if (srcg.hasChainRules()) {
-      System.out
-        .println("sRCG must not contain chain rules for this CYK algorithm.");
-      return null;
-    }
-    String[] wsplit = w.split(" ");
-    ParsingSchema schema = new ParsingSchema();
-
-    for (Clause clause : srcg.getClauses()) {
-      if (clause.getRhs().size() == 2) {
-        DynamicDeductionRule binary = new SrcgCykBinary(clause, wsplit);
-        schema.addRule(binary);
-      } else if (clause.getRhs().size() == 0) {
-        addSrcgCykScanRules(wsplit, schema, clause);
-      }
-    }
-    schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
-    return schema;
-  }
-
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
     Clause clause) {
     for (List<Integer> ranges : getAllRanges(clause.getLhs(), wsplit)) {

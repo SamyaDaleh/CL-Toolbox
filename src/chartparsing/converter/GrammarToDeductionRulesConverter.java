@@ -64,8 +64,6 @@ public class GrammarToDeductionRulesConverter {
     switch (algorithm) {
     case "srcg-earley":
       return LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcg, w);
-    case "srcg-cyk":
-      return LcfrsToDeductionRulesConverter.srcgToCykRules(srcg, w);
     case "srcg-cyk-extended":
       return LcfrsToDeductionRulesConverter.srcgToCykExtendedRules(srcg, w);
     default:
