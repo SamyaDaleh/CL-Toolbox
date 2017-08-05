@@ -1,6 +1,7 @@
 package chartparsing.lcfrs;
 
 import java.text.ParseException;
+import java.util.List;
 
 import chartparsing.AbstractItem;
 import chartparsing.Item;
@@ -32,13 +33,17 @@ public class SrcgEarleyActiveItem extends AbstractItem implements Item {
   /** Constructor with string array instead of a range vector to spare me a lot
    * of conversions. */
   SrcgEarleyActiveItem(String clause, int pos, int i, int j,
-    String[] rangeVector) {
-    this.itemForm = new String[rangeVector.length + 4];
+    List<String> rangeVector) {
+    this.itemForm = new String[rangeVector.size() + 4];
     this.itemForm[0] = clause;
     this.itemForm[1] = String.valueOf(pos);
     this.itemForm[2] = String.valueOf(i);
     this.itemForm[3] = String.valueOf(j);
-    System.arraycopy(rangeVector, 0, this.itemForm, 4, rangeVector.length);
+    int k = 4;
+    for (String range : rangeVector) {
+      itemForm[k] = range;
+      k++;
+    }
   }
 
   @Override public String toString() {

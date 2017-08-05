@@ -1,5 +1,7 @@
 package chartparsing.lcfrs;
 
+import java.util.List;
+
 import chartparsing.AbstractItem;
 import chartparsing.Item;
 
@@ -8,10 +10,14 @@ import chartparsing.Item;
 class SrcgEarleyPassiveItem extends AbstractItem implements Item {
 
   SrcgEarleyPassiveItem(String nt,
-    String[] newVector) {
-    this.itemForm = new String[newVector.length + 1];
+    List<String> newVector) {
+    this.itemForm = new String[newVector.size() + 1];
     this.itemForm[0] = nt;
-    System.arraycopy(newVector, 0, this.itemForm, 1, newVector.length);
+    int i = 1;
+    for (String entry : newVector) {
+      itemForm[i] = entry;
+      i++;
+    }
   }
 
   @Override public String toString() {

@@ -79,7 +79,7 @@ public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
           newVector.set(IndexOfFirstQuestionMark, pos2);
           newVector.set(IndexOfFirstQuestionMark+1, posB);
           consequences.add(new SrcgEarleyActiveItem(clause2, posBInt, iInt2,
-            jInt2 + 1, newVector.toArray(new String[newVector.size()])));
+            jInt2 + 1, newVector));
         }
       }
     } 

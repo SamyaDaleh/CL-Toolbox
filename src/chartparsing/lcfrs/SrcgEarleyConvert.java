@@ -44,10 +44,8 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
           Predicate lhs = clauseParsed.getLhs();
           List<String> newVector = (List<String>) SrcgDeductionUtils
             .getRangesForArguments(rangesForElements, lhs);
-          String[] newVectorArr =
-            newVector.toArray(new String[newVector.size()]);
           consequences.add(new SrcgEarleyPassiveItem(
-            clauseParsed.getLhs().getNonterminal(), newVectorArr));
+            clauseParsed.getLhs().getNonterminal(), newVector));
         }
       }
     }

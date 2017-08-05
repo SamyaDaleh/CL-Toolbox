@@ -52,7 +52,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
           newVector.set(place * 2, pos);
           newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
           consequences.add(new SrcgEarleyActiveItem(clause, posInt + 1, iInt,
-            jInt + 1, newVector.toArray(new String[newVector.size()])));
+            jInt + 1, newVector));
         }
       }
     }

@@ -97,7 +97,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
                 newVector.set(indabspos * 2 + 1, pos1);
                 consequences.add(
                   new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1,
-                    newVector.toArray(new String[newVector.size()])));
+                    newVector));
               }
             }
           }

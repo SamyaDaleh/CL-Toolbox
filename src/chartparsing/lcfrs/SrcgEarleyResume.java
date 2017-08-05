@@ -93,7 +93,7 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
                 itemForm1, rhs, iInt1, clause2Parsed, itemForm2);
             if (vectorsmatch) {
               consequences.add(new SrcgEarleyActiveItem(itemForm2[0], posInt1,
-                iInt2 + 1, 0, ArrayUtils.getSubSequenceAsArray(itemForm2, 4,
+                iInt2 + 1, 0, ArrayUtils.getSubSequenceAsList(itemForm2, 4,
                   itemForm2.length)));
             }
           }

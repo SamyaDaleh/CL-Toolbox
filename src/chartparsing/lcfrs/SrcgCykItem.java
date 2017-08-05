@@ -1,5 +1,7 @@
 package chartparsing.lcfrs;
 
+import java.util.List;
+
 import chartparsing.AbstractItem;
 import chartparsing.Item;
 
@@ -14,11 +16,11 @@ public class SrcgCykItem extends AbstractItem implements Item {
     this.itemForm[2] = String.valueOf(j);
   }
 
-  public SrcgCykItem(String nt, Integer... ranges) {
-    this.itemForm = new String[ranges.length + 1];
+  public SrcgCykItem(String nt, List<Integer> ranges) {
+    this.itemForm = new String[ranges.size() + 1];
     this.itemForm[0] = nt;
-    for (int i = 0; i < ranges.length; i++) {
-      this.itemForm[i + 1] = String.valueOf(ranges[i]);
+    for (int i = 0; i < ranges.size(); i++) {
+      this.itemForm[i + 1] = String.valueOf(ranges.get(i));
     }
   }
 

@@ -82,9 +82,8 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
           List<Integer> newVector = (List<Integer>) SrcgDeductionUtils.getRangesForArguments(
             overallRanges,
             clause.getLhs());
-          Integer[] newVectorArr = newVector.toArray(new Integer[newVector.size()]);
           consequences
-            .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVectorArr));
+            .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVector));
           this.name = "complete " + clause.toString();
         }
       }

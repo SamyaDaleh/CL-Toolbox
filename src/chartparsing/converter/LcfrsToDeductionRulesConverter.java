@@ -29,10 +29,9 @@ public class LcfrsToDeductionRulesConverter {
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
     Clause clause) {
     for (List<Integer> ranges : getAllRanges(clause.getLhs(), wsplit)) {
-      Integer[] rangesArr = ranges.toArray(new Integer[ranges.size()]);
       StaticDeductionRule scan = new StaticDeductionRule();
       scan.addConsequence(
-        new SrcgCykItem(clause.getLhs().getNonterminal(), rangesArr));
+        new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
       scan.setName("scan " + clause.toString());
       schema.addAxiom(scan);
     }

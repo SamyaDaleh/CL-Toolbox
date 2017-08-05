@@ -1,5 +1,6 @@
 package chartparsing.converter;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import chartparsing.DeductionItem;
@@ -59,13 +60,8 @@ public class TagToDeductionRulesConverter {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     Set<String> iniTreesNameSet = tag.getInitialTreeNames();
-    String[] iniTreeNames =
-      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
     Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
-    String[] auxTreeNames =
-      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
     Set<String> treesNameSet = tag.getTreeNames();
-    String[] treeNames = treesNameSet.toArray(new String[treesNameSet.size()]);
 
     DynamicDeductionRule moveUnary = new TagCykMoveUnary(tag);
     schema.addRule(moveUnary);
@@ -77,7 +73,9 @@ public class TagToDeductionRulesConverter {
     schema.addRule(adjoin);
 
     for (int i = 0; i < wSplit.length; i++) {
-      for (String treeName : treeNames) {
+      Iterator<String> treeNameIterator = treesNameSet.iterator();
+      while (treeNameIterator.hasNext()) {
+        String treeName = treeNameIterator.next();
         for (Vertex p : tag.getTree(treeName).getVertexes()) {
           if (p.getLabel().equals(wSplit[i])) {
             StaticDeductionRule lexScan = new StaticDeductionRule();
@@ -103,7 +101,9 @@ public class TagToDeductionRulesConverter {
         }
       }
 
-      for (String iniTreeName : iniTreeNames) {
+      Iterator<String> iniTreeNameIterator = iniTreesNameSet.iterator();
+      while (iniTreeNameIterator.hasNext()) {
+        String iniTreeName = iniTreeNameIterator.next();
         Tree iniTree = tag.getInitialTree(iniTreeName);
         if (iniTree.getRoot().getLabel().equals(tag.getStartSymbol())) {
           schema.addGoal(new DeductionItem(iniTreeName, "⊤", "0", "-", "-",
@@ -112,7 +112,9 @@ public class TagToDeductionRulesConverter {
       }
 
       for (int j = i; j <= wSplit.length; j++) {
-        for (String auxTree : auxTreeNames) {
+        Iterator<String> auxTreeIterator = auxTreesNameSet.iterator();
+        while (auxTreeIterator.hasNext()) {
+          String auxTree = auxTreeIterator.next();
           StaticDeductionRule footPredict = new StaticDeductionRule();
           String footGorn =
             tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
@@ -134,13 +136,8 @@ public class TagToDeductionRulesConverter {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     Set<String> iniTreesNameSet = tag.getInitialTreeNames();
-    String[] iniTreeNames =
-      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
     Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
-    String[] auxTreeNames =
-      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
     Set<String> treesNameSet = tag.getTreeNames();
-    String[] treeNames = treesNameSet.toArray(new String[treesNameSet.size()]);
 
     DynamicDeductionRule scanTerm = new TagEarleyScanTerm(wSplit, tag);
     schema.addRule(scanTerm);
@@ -161,13 +158,17 @@ public class TagToDeductionRulesConverter {
     DynamicDeductionRule moveUp = new TagEarleyMoveUp(tag);
     schema.addRule(moveUp);
 
-    for (String auxTreeName : auxTreeNames) {
+    Iterator<String> auxTreeIterator = auxTreesNameSet.iterator();
+    while (auxTreeIterator.hasNext()) {
+      String auxTreeName = auxTreeIterator.next();
       DynamicDeductionRule predictAdjoinable =
         new TagEarleyPredictAdjoinable(auxTreeName, tag);
       schema.addRule(predictAdjoinable);
     }
 
-    for (String treeName : treeNames) {
+    Iterator<String> treeNameIterator = treesNameSet.iterator();
+    while (treeNameIterator.hasNext()) {
+      String treeName = treeNameIterator.next();
       for (Vertex p : tag.getTree(treeName).getVertexes()) {
         DynamicDeductionRule predictAdjoined =
           new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
@@ -180,7 +181,9 @@ public class TagToDeductionRulesConverter {
       }
     }
 
-    for (String iniTreeName : iniTreeNames) {
+    Iterator<String> iniTreeNameIterator = iniTreesNameSet.iterator();
+    while (iniTreeNameIterator.hasNext()) {
+      String iniTreeName = iniTreeNameIterator.next();
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
         .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
