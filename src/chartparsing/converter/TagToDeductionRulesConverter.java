@@ -1,6 +1,5 @@
 package chartparsing.converter;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import chartparsing.DeductionItem;
@@ -73,54 +72,48 @@ public class TagToDeductionRulesConverter {
     schema.addRule(adjoin);
 
     for (int i = 0; i < wSplit.length; i++) {
-      Iterator<String> treeNameIterator = treesNameSet.iterator();
-      while (treeNameIterator.hasNext()) {
-        String treeName = treeNameIterator.next();
+      for (String treeName : treesNameSet) {
         for (Vertex p : tag.getTree(treeName).getVertexes()) {
           if (p.getLabel().equals(wSplit[i])) {
             StaticDeductionRule lexScan = new StaticDeductionRule();
             lexScan.addConsequence(
-              new DeductionItem(treeName, p.getGornAddress() + "⊤",
-                String.valueOf(i), "-", "-", String.valueOf(i + 1)));
+                new DeductionItem(treeName, p.getGornAddress() + "⊤",
+                    String.valueOf(i), "-", "-", String.valueOf(i + 1)));
             lexScan.setName("lex-scan " + wSplit[i]);
             schema.addAxiom(lexScan);
           }
           if (p.getLabel().equals("")) {
             StaticDeductionRule epsScan = new StaticDeductionRule();
             epsScan.addConsequence(
-              new DeductionItem(treeName, p.getGornAddress() + "⊤",
-                String.valueOf(i), "-", "-", String.valueOf(i)));
+                new DeductionItem(treeName, p.getGornAddress() + "⊤",
+                    String.valueOf(i), "-", "-", String.valueOf(i)));
             epsScan.setName("eps-scan");
             schema.addAxiom(epsScan);
           }
           if (tag.isSubstitutionNode(p, treeName)) {
             DynamicDeductionRule substitute =
-              new TagCykSubstitute(treeName, p.getGornAddress(), tag);
+                new TagCykSubstitute(treeName, p.getGornAddress(), tag);
             schema.addRule(substitute);
           }
         }
       }
 
-      Iterator<String> iniTreeNameIterator = iniTreesNameSet.iterator();
-      while (iniTreeNameIterator.hasNext()) {
-        String iniTreeName = iniTreeNameIterator.next();
+      for (String iniTreeName : iniTreesNameSet) {
         Tree iniTree = tag.getInitialTree(iniTreeName);
         if (iniTree.getRoot().getLabel().equals(tag.getStartSymbol())) {
           schema.addGoal(new DeductionItem(iniTreeName, "⊤", "0", "-", "-",
-            String.valueOf(wSplit.length)));
+              String.valueOf(wSplit.length)));
         }
       }
 
       for (int j = i; j <= wSplit.length; j++) {
-        Iterator<String> auxTreeIterator = auxTreesNameSet.iterator();
-        while (auxTreeIterator.hasNext()) {
-          String auxTree = auxTreeIterator.next();
+        for (String auxTree : auxTreesNameSet) {
           StaticDeductionRule footPredict = new StaticDeductionRule();
           String footGorn =
-            tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
+              tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
           footPredict.addConsequence(
-            new DeductionItem(auxTree, footGorn + "⊤", String.valueOf(i),
-              String.valueOf(i), String.valueOf(j), String.valueOf(j)));
+              new DeductionItem(auxTree, footGorn + "⊤", String.valueOf(i),
+                  String.valueOf(i), String.valueOf(j), String.valueOf(j)));
           footPredict.setName("foot-predict");
           schema.addAxiom(footPredict);
         }
@@ -158,45 +151,39 @@ public class TagToDeductionRulesConverter {
     DynamicDeductionRule moveUp = new TagEarleyMoveUp(tag);
     schema.addRule(moveUp);
 
-    Iterator<String> auxTreeIterator = auxTreesNameSet.iterator();
-    while (auxTreeIterator.hasNext()) {
-      String auxTreeName = auxTreeIterator.next();
+    for (String auxTreeName : auxTreesNameSet) {
       DynamicDeductionRule predictAdjoinable =
-        new TagEarleyPredictAdjoinable(auxTreeName, tag);
+          new TagEarleyPredictAdjoinable(auxTreeName, tag);
       schema.addRule(predictAdjoinable);
     }
 
-    Iterator<String> treeNameIterator = treesNameSet.iterator();
-    while (treeNameIterator.hasNext()) {
-      String treeName = treeNameIterator.next();
+    for (String treeName : treesNameSet) {
       for (Vertex p : tag.getTree(treeName).getVertexes()) {
         DynamicDeductionRule predictAdjoined =
-          new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
+            new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
         schema.addRule(predictAdjoined);
         if (tag.isSubstitutionNode(p, treeName)) {
           DynamicDeductionRule substitute =
-            new TagEarleySubstitute(treeName, p.getGornAddress(), tag);
+              new TagEarleySubstitute(treeName, p.getGornAddress(), tag);
           schema.addRule(substitute);
         }
       }
     }
 
-    Iterator<String> iniTreeNameIterator = iniTreesNameSet.iterator();
-    while (iniTreeNameIterator.hasNext()) {
-      String iniTreeName = iniTreeNameIterator.next();
+    for (String iniTreeName : iniTreesNameSet) {
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
-        .equals(tag.getStartSymbol())) {
+          .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
         initialize.addConsequence(
-          new DeductionItem(iniTreeName, "", "la", "0", "-", "-", "0", "0"));
+            new DeductionItem(iniTreeName, "", "la", "0", "-", "-", "0", "0"));
         initialize.setName("initialize");
         schema.addAxiom(initialize);
         schema.addGoal(new DeductionItem(iniTreeName, "", "ra", "0", "-", "-",
-          String.valueOf(wSplit.length), "0"));
+            String.valueOf(wSplit.length), "0"));
       }
 
       DynamicDeductionRule predictSubst =
-        new TagEarleyPredictSubst(iniTreeName, tag);
+          new TagEarleyPredictSubst(iniTreeName, tag);
       schema.addRule(predictSubst);
     }
     return schema;
