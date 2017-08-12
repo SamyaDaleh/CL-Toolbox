@@ -38,14 +38,42 @@ Additionally two flags can be added to the call. --success instead of printing t
 
 ### Grammar formats
 
+This section covers the different grammar formats that can be read from files. Different examples are located in directory resources/grammars. They all are plain text files where the file extension indicates the grammar type.
+
 #### CFG
 
+A context-free grammar is the most commonly used grammar type. Most programming languages fall into this category. Generally speaking it can be described as the one that "counts to two", which means it covers languages where there is two times the same amount of terminals, where the outermost symbols belong together. The format of the files is close to the definition. Here is an example:
+```
+N = {"S"}
+T = {"a", "b"}
+S = "S"
+P = {"S -> a S b", "S -> a b"}
+```
+In every line one component of the grammar tuple is defined. Nonterminals, terminals, start symbol and production rules can be defined in any order. Every line consists of a symbol indicating the type of the component: N - nonterminals, T - terminals, S - start symbol and P - production rules. Every element is set into quotes. The user can freely use both uppercase and lowercase strings both as terminals and nonterminals and even mixed. Because of the quotes the user can also use symbols like comma or brackets as symbols. Each production rule must consist of a single nonterminal on the left hand side followed by "->". The tokens of the right hand side must be separated by spaces, other spaces are optional. Currently the grammar parser is not very strict. It looks for the first symbol indicating the component and then grabs everything between quotes as one element. This might change in further development. Also there is no check for consistency. The user can declare the same symbol as nonterminal and terminal or use a symbol in a rule that is declared as neither and might get unexpected results. The user is asked to take care of creating grammars that make sense.
+
 #### PCFG
-
+```
+N = {"S", "A", "B"}
+T = {"0", "1"}
+S = "S"
+P = {"1 : S -> A B", "0.7 : A -> 1", "0.3 : A -> 0", "0.6 : B -> BB", "0.4 : B -> 0"}
+```
 #### TAG
-
+```
+N = {"S"}
+T = {"a", "b", "c", "d"}
+S = "S"
+I = {"α1 : (S_OA ε)"}
+A = {"β : (S_NA a (S b S* c) d)"}
+```
 #### SRCG
-
+```
+N = {"A", "B", "S"}
+T = {"a", "b", "c", "d"}
+V = {"X", "Y", "V", "W"}
+P = {"S( X V Y W ) -> A(X,Y) B(V,W)", "B(ε,ε) -> ε", "B(b X,d Y) -> B(X,Y)", "A(a,c) -> ε", "A(a X,c Y) -> A(X,Y)"}
+S = "S"
+```
 ## Program Workflow
 
 This chapter explains the different processing stages that occur when the CL-Toolbox is requested.
