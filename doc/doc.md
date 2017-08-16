@@ -49,9 +49,7 @@ T = {"a", "b"}
 S = "S"
 P = {"S -> a S b", "S -> a b"}
 ```
-Nonterminals, terminals, start symbol and production rules can be defined in any order. Every line consists of a symbol indicating the type of the component: N - nonterminals, T - terminals, S - start symbol and P - production rules. Each production rule must consist of a single nonterminal on the left hand side followed by "->". The tokens of the right hand side must be separated by spaces, other spaces are optional. An empty string on the right hand side can be either represented as ε or by writing nothing.
-
-TODO Object
+Nonterminals, terminals, start symbol and production rules can be defined in any order. Every line consists of a symbol indicating the type of the component: N - nonterminals, T - terminals, S - start symbol and P - production rules. Each production rule must consist of a single nonterminal on the left hand side followed by "->". The tokens of the right hand side must be separated by spaces, other spaces are optional. An empty string on the right hand side can be either represented as ε or by writing nothing. In the Cfg object terminals and nonterminals are represented as lists for better access despite they are sets according to the definition. This holds for all grammar formats where the definitions prescribe sets of anything. A CfgProductionRule is represented as object where the left hand side is a string and the right hand side is an array of strings.
 
 #### PCFG
 
@@ -62,9 +60,7 @@ T = {"0", "1"}
 S = "S"
 P = {"1 : S -> A B", "0.7 : A -> 1", "0.3 : A -> 0", "0.6 : B -> BB", "0.4 : B -> 0"}
 ```
-The rules with the same nonterminal on the right hand side are supposed to add up to a probability of 1. However, as in most cases there is currently no check if that is the case and it is up to the user to take care of that.
-
-TODO Object
+The rules with the same nonterminal on the right hand side are supposed to add up to a probability of 1. However, as in most cases there is currently no check if that is the case and it is up to the user to take care of that. Internally the Pcfg is an extension of the Cfg with the only difference that each rule has a probability.
 
 #### TAG
 
@@ -76,9 +72,7 @@ S = "S"
 I = {"α1 : (S_OA ε)"}
 A = {"β : (S_NA a (S b S* c) d)"}
 ```
-A TAG consists of nonterminals, terminals and a start symbol like a CFG. But instead of production rules its rules are two sets of trees: I - initial trees and A - auxiliary trees. The tree format is described below. An initial tree might replace a nonterminal leaf in another tree where that leaf has the same label as the root node of the initial tree. This function is called substitution and is similar to a derivation step of a CFG. An auxiliary tree might replace an inner node in another tree that has the same label as the so called foot and root nodes of that auxiliary tree. This function is called adjunction and gives the TAG a higher expressive power compared to a CFG. Each tree has a name that is specified in front of the colon. Usually initially trees are named α concatenated with a number and auxiliary trees β with a number. However, indeed the user is relatively free to give them any name that is no meta symbol like a colon.
-
-TODO Object
+A TAG consists of nonterminals, terminals and a start symbol like a CFG. But instead of production rules its rules are two sets of trees: I - initial trees and A - auxiliary trees. The tree format is described below. An initial tree might replace a nonterminal leaf in another tree where that leaf has the same label as the root node of the initial tree. This function is called substitution and is similar to a derivation step of a CFG. An auxiliary tree might replace an inner node in another tree that has the same label as the so called foot and root nodes of that auxiliary tree. This function is called adjunction and gives the TAG a higher expressive power compared to a CFG. Each tree has a name that is specified in front of the colon. Usually initially trees are named α concatenated with a number and auxiliary trees β with a number. However, indeed the user is relatively free to give them any name that is no meta symbol like a colon. Internally the initial and auxiliary trees are stored in two separate maps with the tree names as keys. To represent trees there are different approaches. One considered was to build up a tree recursively of having a root label and a list of children which are trees or subtrees themselves. However, this implementation stays close to the definition, which states that a tree consists of sets of vertexes, directed edges between two vertexes each and one root node. An auxiliary tree also has one foot node. Here each tree also holds a list of nodes that are labeled "no adjoin" or "obligatory adjoin". Each vertex remembers its label and gorn address.
 
 ##### Tree format
 
@@ -98,9 +92,7 @@ V = {"X", "Y", "V", "W"}
 P = {"S( X V Y W ) -> A(X,Y) B(V,W)", "B(ε,ε) -> ε", "B(b X,d Y) -> B(X,Y)", "A(a,c) -> ε", "A(a X,c Y) -> A(X,Y)"}
 S = "S"
 ```
-An empty string can be either represented as ε or by writing nothing.
-
-TODO Object
+An empty string can be either represented as ε or by writing nothing. Internally the Srcg object contains the sets (lists) of terminals, nonterminals, variables and clauses. A clause consists of predicates. Similar to a CfgProductionRule a clause has one predicate on the left hand side and a list of predicates on the right hand side. A predicate is made up of one nonterminal and arguments consisting of elements, here represented as a two dimensional string.
 
 ## Program Workflow
 
@@ -124,13 +116,23 @@ This section covers how grammars are transformed into other equivalent grammars.
 
 ##### CFG to PCFG
 
+For converting a CFG to a PCFG the number of rules with the same left hand symbol are determined and the probabilities are divided equally among them so they add up to 1.
+
 ##### CFG to TAG
+
+To get an equivalent TAG for a CFG each production rule is converted to a tree where the left hand symbol is the root and the right hand side symbols are the children in the same order. Each tree becomes an initial tree in the new TAG. Hence each derivation step is now performed as substitution in the TAG.
 
 ##### CFG to SRCG
 
+Each CfgProductionRule is converted to a clause. Each nonterminal symbol becomes the nonterminal symbol of a new predicate and new variables are added up to the amount of right hand side nonterminals, so all strings can be appended to one string in the left hand side. Each terminal in the right hand side is left away and put directly into the string of the left hand side.
+
 ##### PCFG to CFG
 
+The conversion of a PCFG to a CFG is nothing else than tossing away all probabilities.
+
 ##### CFG Binarization
+
+When a CFG is binarized all rules with a right hand side of length greater than 2 are altered. The first symbol on the right hand side is kept and all others are replaced by a new nonterminal which is not yet in the grammar. It is named "X" and a number which is incremented until the symbol has not been seen before. A new rule with that new symbol on the left hand side and all remaining symbols on the right hand side is added to the grammar. This process repeats until no rule is altered anymore.
 
 ##### CFG Removal of Chain Rules
 
