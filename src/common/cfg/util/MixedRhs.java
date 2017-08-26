@@ -73,7 +73,8 @@ public class MixedRhs {
               cfg.getProductionRules()
                 .add(new CfgProductionRule(newLhs, new String[] {sym}));
             }
-            while (cfgOld.nonterminalsContain(newLhs)) {
+            while (cfgOld.nonterminalsContain(newLhs)
+              || cfgOld.terminalsContain(newLhs)) {
               newLhs = "Y" + String.valueOf(i);
               i++;
             }

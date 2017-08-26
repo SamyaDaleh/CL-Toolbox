@@ -36,7 +36,7 @@ public class Binarization {
         CfgProductionRule ruleRest = rule;
         while (ruleRest.getRhs().length > 2) {
           String newN = "X" + String.valueOf(i);
-          while (cfg.nonterminalsContain(newN)) {
+          while (cfg.nonterminalsContain(newN) || cfg.terminalsContain(newN)) {
             i++;
             newN = "X" + String.valueOf(i);
           }

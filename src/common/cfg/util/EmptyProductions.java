@@ -16,7 +16,6 @@ public class EmptyProductions {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
         if (rule.getLhs().equals(cfg.getStartSymbol())) {
-
           for (CfgProductionRule rule2 : cfg.getProductionRules()) {
             String[] rhs = rule2.getRhs();
             for (String symbol : rhs) {
@@ -82,7 +81,7 @@ public class EmptyProductions {
       if (nt.equals(cfgOld.getStartSymbol())) {
         int i = 1;
         String newStart = "S" + String.valueOf(i);
-        while (newNt.contains(newStart)) {
+        while (newNt.contains(newStart) || cfgOld.terminalsContain(newStart)) {
           i++;
           newStart = "S" + String.valueOf(i);
         }

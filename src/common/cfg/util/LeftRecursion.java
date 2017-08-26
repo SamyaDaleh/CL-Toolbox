@@ -34,7 +34,7 @@ public class LeftRecursion {
       int i = 1;
       String newNt = nt + String.valueOf(i);
       i++;
-      while (newNts.contains(newNt)) {
+      while (newNts.contains(newNt) || cfg.terminalsContain(newNt)) {
         newNt = nt + String.valueOf(i);
         i++;
       }
