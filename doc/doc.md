@@ -136,9 +136,15 @@ When a CFG is binarized all rules with a right hand side of length greater than 
 
 ##### CFG Removal of Chain Rules
 
+First the set (list) of all unit pairs is determined, that are pairs of nonterminals that can be derived to the other by some derivation steps A ->+ B. Then for each pair all right hand rule sides of B that are no chain rule are added as rules with A as left hand side.
+
 ##### CFG Removal of Empty Productions
 
+All rules with an empty right hand side are removed. If it was the only rule of the left hand side symbol, it is removed completely from all other right hand sides where it occurs. If it was not, then for every right hand side where this nonterminal occurs a new rule is added with the same right hand side except without that symbol. The only empty production that is allowed to remain is the one with the start symbol on the left hand side. If this rule exists and the start symbol is part of any right hand side, a new start symbol is created. Two new rules are added to the grammar, one chain rule from the new start symbol to the old one and a rule with the new start symbol as left hand side and the empty string as right hand side.
+
 ##### CFG Removal of Left Recursion
+
+Currently the algorithm removes only direct left recursion. It treats every rule where the first symbol on the right hand side is the same as the one on the left hand side except if it is a unary production. For each nonterminal that is the left hand side of a left recursive rule it adds a new nonterminal appended to the rules without left recursion. For instance a grammar has the rules `S -> S a` which is left recursive and `S -> b` which is not. Then for each terminating rule a new rule like `S -> b S1` using a new nonterminal symbol is added, also `S1 -> ε`. For each recursive rule a new like `S1 -> a S1` is added. The former left recursive rules are removed.
 
 ##### CFG have either terminals or nonterminals on the Right Hand Side
 
