@@ -13,11 +13,20 @@ public class LeftRecursion {
    * is left. */
   public static boolean hasDirectLeftRecursion(Cfg cfg) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      if (rule.getLhs().equals(rule.getRhs()[0])) {
+      if (hasDirectLeftRecursion(rule)) {
         return true;
       }
     }
     return false;
+  }
+
+  /** Returns true if rule has direct left recursion. */
+  private static boolean hasDirectLeftRecursion(CfgProductionRule rule) {
+    if (rule.getLhs().equals(rule.getRhs()[0]) && rule.getRhs().length > 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /** Removes direct left recursion. S -> S is ignored. S -> S a | b are
@@ -31,6 +40,14 @@ public class LeftRecursion {
     ArrayList<String> newNts = new ArrayList<String>();
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (String nt : cfgOld.getNonterminals()) {
+      if (!nonterminalIsLhsOfLeftRecursion(cfgOld, nt)) {
+        continue;
+      }
+      if (!nonterminalIsLhsOfTermination(cfgOld, nt)) {
+        System.err
+          .println(nt + " has left recursive rule but no termination rule.");
+        return null;
+      }
       int i = 1;
       String newNt = nt + String.valueOf(i);
       i++;
@@ -47,8 +64,31 @@ public class LeftRecursion {
     return cfg;
   }
 
-  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 | ε where nt is the
-   * old nonterminal and newnt is S1 in this example. */
+  /** Returns true if in this grammar there is any not left recursive rule with
+   * this nonterminals as left hand side. Does not really check for termination,
+   * remove useless symbols first. */
+  private static boolean nonterminalIsLhsOfTermination(Cfg cfg, String nt) {
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
+      if (rule.getLhs().equals(nt) && !hasDirectLeftRecursion(rule)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Returns true if in this grammar there is any left recursive rule with this
+   * nonterminals as left hand side. */
+  private static boolean nonterminalIsLhsOfLeftRecursion(Cfg cfg, String nt) {
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
+      if (rule.getLhs().equals(nt) && hasDirectLeftRecursion(rule)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 | ε where nt is
+   * the old nonterminal and newnt is S1 in this example. */
   private static void doRemoveLeftRecursion(Cfg cfg, String nt, String newNt,
     Cfg cfgOld) {
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {

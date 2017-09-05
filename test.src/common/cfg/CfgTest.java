@@ -1,6 +1,7 @@
 package common.cfg;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -28,7 +29,8 @@ public class CfgTest {
   }
 
   @Test public void testReplaceTerminals() {
-    Cfg treplaced = TestGrammarLibrary.eftCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
+    Cfg treplaced = TestGrammarLibrary.eftCfg()
+      .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
       + "T = {a, b, 0, 1, (, ), *, +}\n" + "S = E\n"
@@ -40,8 +42,9 @@ public class CfgTest {
 
   @Test public void testToCnf() {
     Cfg cfgcnf = TestGrammarLibrary.eftCfg().getCfgWithoutEmptyProductions()
-      .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols().getBinarizedCfg()
-      .getCfgWithEitherOneTerminalOrNonterminalsOnRhs().getCfgWithoutChainRules();
+      .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols()
+      .getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
+      .getCfgWithoutChainRules();
     assertTrue(cfgcnf.isInChomskyNormalForm());
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, X1, X2, X3, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
@@ -55,28 +58,36 @@ public class CfgTest {
 
   @Test public void testToC2f() {
     assertTrue(TestGrammarLibrary.eftCfg().getCfgWithoutEmptyProductions()
-      .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols().getBinarizedCfg()
-      .getCfgWithEitherOneTerminalOrNonterminalsOnRhs().isInCanonicalTwoForm());
+      .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols()
+      .getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
+      .isInCanonicalTwoForm());
   }
 
   @Test public void testRemoveLeftRecursion() {
-    Cfg cfgwlr = TestGrammarLibrary.leftRecursionCfg().getCfgWithoutLeftRecursion();
+    Cfg cfgwlr =
+      TestGrammarLibrary.leftRecursionCfg().getCfgWithoutLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
         + "P = {S1 -> ε, S -> a S1, S -> b S1, S -> c S1, S -> d S1}\n",
       cfgwlr.toString());
   }
 
+  @Test public void testRemoveLeftRecursionNoTermination() {
+    Cfg cfgwlr = TestGrammarLibrary.leftRecursionNoTerminationCfg()
+      .getCfgWithoutLeftRecursion();
+    assertNull(cfgwlr);
+  }
+
   @Test public void testRemoveNotReachableSymbols() {
-    Cfg after =
-      TestGrammarLibrary.nonReachableSymbolsCfg().getCfgWithoutNonReachableSymbols();
+    Cfg after = TestGrammarLibrary.nonReachableSymbolsCfg()
+      .getCfgWithoutNonReachableSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
   }
 
   @Test public void testRemoveNonGeneratingSymbols() {
-    Cfg after =
-      TestGrammarLibrary.nonGeneratingSymbolsCfg().getCfgWithoutNonGeneratingSymbols();
+    Cfg after = TestGrammarLibrary.nonGeneratingSymbolsCfg()
+      .getCfgWithoutNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
   }

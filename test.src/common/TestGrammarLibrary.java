@@ -125,6 +125,16 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg leftRecursionNoTerminationCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a"});
+    cfg.setNonterminals(new String[] {"S", "A"});
+    cfg.addProductionRule("S -> A");
+    cfg.addProductionRule("A -> A a");
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Cfg nonReachableSymbolsCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a"});
