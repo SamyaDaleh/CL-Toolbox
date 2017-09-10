@@ -18,24 +18,26 @@ public class DisplayTree extends JFrame {
   private Tree tree;
   private Map<String, Integer[]> nodesDrawn;
   private String[] itemForm;
+  private int x = 100;
+  private int y = 500;
 
   /** Called with a tree in bracket format as argument, retrieves the depth by
    * brackets to estimate needed windows size. */
   public DisplayTree(String[] args) throws ParseException {
     super();
-    this.setLocation(100, 500);
-
-    int maxDepth = getMaxDepth(args[0]);
-    this.setSize(80 * maxDepth, 80 * maxDepth);
-    this.setVisible(true);
-    
-    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     this.tree = new Tree(args[0]);
     if (args.length > 1) {
       this.itemForm = args[1].substring(1, args[1].length() - 1).split(",");
     } else {
       itemForm = new String[] {};
     }
+    this.setLocation(x, y);
+
+    int maxDepth = getMaxDepth(args[0]);
+    this.setSize(80 * maxDepth, 80 * maxDepth);
+    this.setVisible(true);
+    
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     nodesDrawn = new HashMap<String, Integer[]>();
   }
 

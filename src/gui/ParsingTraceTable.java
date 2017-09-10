@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -89,7 +90,7 @@ public class ParsingTraceTable {
           Rectangle bounds = table.getCellRect(hintCell.y, hintCell.x, true);
           bounds.setSize(popup.getWidth(), popup.getHeight());
           bounds.setLocation((int) Math.round(bounds.getX() + table.getWidth()),
-            (int) Math.round(bounds.getY()));
+            (int) Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
           popup.setBounds(bounds);
           popup.setAlwaysOnTop(true);
           popup.setVisible(true);
