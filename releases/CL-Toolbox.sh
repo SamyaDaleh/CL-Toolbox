@@ -1,2 +1,3 @@
 #!/bin/bash
-java -Dfile.encoding="UTF-8" -jar CL-Toolbox.jar $@
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+java -Dfile.encoding="UTF-8" -jar "$SCRIPTPATH/CL-Toolbox.jar" $@
