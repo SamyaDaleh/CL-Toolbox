@@ -54,6 +54,18 @@ public class TestGrammarLibrary {
     g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
     return g;
   }
+  
+  public static Tag acbTag() throws ParseException {
+    Tag g = new Tag();
+    g.setNonterminals(new String[] {"A", "B", "S"});
+    g.setTerminals(new String[] {"a", "b", "c"});
+    g.setStartsymbol("S");
+    g.addInitialTree("α1", "(S (A )(S )(B ))");
+    g.addInitialTree("α2", "(S (c ))");
+    g.addInitialTree("α3", "(A (a ))");
+    g.addInitialTree("α4", "(B (b ))");
+    return g;
+  }
 
   public static Srcg anBnSrcg() throws ParseException {
     Srcg srcg = new Srcg();
@@ -302,5 +314,48 @@ public class TestGrammarLibrary {
     srcg.addClause("A(a X,c Y) -> A(X,Y)");
     srcg.setStartSymbol("S");
     return srcg;
+  }
+  public static Tag gentag() throws ParseException {
+    Tag g = new Tag();
+    g.setNonterminals(new String[] {"S", "T"});
+    g.setTerminals(new String[] {"a", "b", "c"});
+    g.setStartsymbol("S");
+    g.addInitialTree("α1", "(S T b)");
+    g.addInitialTree("α2", "(T c)");
+    g.addAuxiliaryTree("β", "(T a T*)");
+    return g;
+  }
+
+  public static Cfg gencfg() {
+    Cfg cfg = new Cfg();
+
+    cfg.setTerminals(new String[] {"a", "b", "c"});
+    cfg.setNonterminals(new String[] {"A", "B", "S"});
+    cfg.addProductionRule("S -> A S B");
+    cfg.addProductionRule("S -> a b");
+    cfg.addProductionRule("S -> c");
+    cfg.addProductionRule("A -> a");
+    cfg.addProductionRule("B -> b");
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
+  public static Cfg gen_cfgdedtest() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.addProductionRule("S -> a S b");
+    cfg.addProductionRule("S -> a b");
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
+  public static Cfg noUsefulNonterminalCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.addProductionRule("S -> a S b");
+    cfg.setStartSymbol("S");
+    return cfg;
   }
 }

@@ -23,6 +23,10 @@ public class UselessSymbols {
         restNts.add(symbol);
       }
     }
+    if (restNts.isEmpty()) {
+      System.err.println("Input grammar has no generating symbols.");
+      return null;
+    }
     cfg.setNonterminals(restNts.toArray(new String[restNts.size()]));
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       boolean notGeneratingSeen = false;

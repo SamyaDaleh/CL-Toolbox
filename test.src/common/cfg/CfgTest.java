@@ -90,6 +90,9 @@ public class CfgTest {
       .getCfgWithoutNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
+    
+    assertNull(TestGrammarLibrary.noUsefulNonterminalCfg()
+      .getCfgWithoutNonGeneratingSymbols());
   }
 
   @Test public void testCreateCfgFromPcfg() {
