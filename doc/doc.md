@@ -168,7 +168,7 @@ The removal of empty productions in simple range concatenation grammars can grea
 
 ##### SRCG Ordering
 
-In an ordered simple range concatenation grammar all variables in one right hand side predicate have to appear in the same order in the left hand side.
+In an ordered simple range concatenation grammar all variables in one right hand side predicate have to appear in the same order in the left hand side. For each clause that is not ordered according to one right hand side predicate the positions of the arguments are swapped according to the order in the left hand side predicate. The new predicate in the right hand side also obtains a new label with respect to the previous order, for instance if in predicate `A(Y,X)` the arguments are swapped, the new predicate becomes `A<2,1>(X,Y)`. For each clause that has in this case `A` as left hand side nonterminal a new rule is added where those nonterminal is replaced by the new label that indicates the order.
 
 ### GrammarToDeductionRulesConverter
 
