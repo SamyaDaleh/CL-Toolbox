@@ -164,9 +164,11 @@ The binarizaion of a simple range concatenation grammar follows a naive approach
 
 ##### SRCG Removal of Empty Productions
 
-The removal of empty productions in simple range concatenation grammars can greatly increase the size of a grammar. 
+The removal of empty productions in simple range concatenation grammars can greatly increase the size of a grammar. First all epsilon candidates are determined, that are nonterminals followed by a vector that indicates which arguments can become epsilon. For instance `A(ε,a) -> ε` will yield the candidate `["A", "01"]`, because the first argument can be empty and the second not, indicated by 0 and 1 respectively. In a next step all rules with the nonterminal of one on the candidates in the left hand side are altered so that the respective elements are empty. If a nonterminal is part of more than one candidate like `["A", "01"]` and `["A", "10"]` for each possibility new rules are created. If all arguments are always empty, the nonterminal and its occurences are removed completely. The epsilon rule itself is replaced by a one without epsilon using the new nonterminal, in this example `A^01(a) -> ε`.
 
 ##### SRCG Ordering
+
+In an ordered simple range concatenation grammar all variables in one right hand side predicate have to appear in the same order in the left hand side.
 
 ### GrammarToDeductionRulesConverter
 
