@@ -182,39 +182,121 @@ The Deduction object takes a parsing schema as input for performing the parsing 
 
 This section covers the currently implemented parsing algorithm. See here which properties an appropriate grammar must have in order to work with this algorithm, the working of the algorithm in general and its different rules.
 
-##### CFG Bottom Up
+##### CFG Shift Reduce
+
+Shift reduce or bottom-up parsing demands a grammar without epsilon productions. If a conversion occurs beside removing empty productions also useless symbols are removed. The algorithm starts from the input string and tries to combine the symbols to get the left hand side of the rules until the start symbol is left. It starts with an empty string and an index indicating how many input symbols have been shifted. That means if a "shift" occurs, one more input symbol is moved onto the stack and the index is increased. The other rule called "reduce" takes stack symbol from the left or rather top if they match the complete right hand side of a production rule and replaces them by its left hand side. The outcome of the algorithm is a rightmost derivation.
 
 ##### CFG CYK
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### CFG CYK Extended
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### CFG CYK General
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### CFG Earley
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### CFG Left Corner
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### CFG Left Corner Chart
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### CFG Top Down
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### CFG Unger
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### PCFG A*
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### TAG CYK
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### TAG CYK Extended
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### TAG Earley
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### TAG Earley Prefix Valid
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### SRCG CYK
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ##### SRCG CYK Extended
 
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
+
 ##### SRCG Earley
+
+// Grammar properties
+// Algorithm general working
+// more detailed working mentioning rules
+// information included in items
 
 ### ChartToTreeConverter
 
