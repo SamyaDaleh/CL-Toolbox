@@ -144,11 +144,15 @@ All rules with an empty right hand side are removed. If it was the only rule of 
 
 ##### CFG Removal of Left Recursion
 
-Currently the algorithm removes only direct left recursion. It treats every rule where the first symbol on the right hand side is the same as the one on the left hand side except if it is a unary production. For each nonterminal that is the left hand side of a left recursive rule it adds a new nonterminal appended to the rules without left recursion. For instance a grammar has the rules `S -> S a` which is left recursive and `S -> b` which is not. Then for each terminating rule a new rule like `S -> b S1` using a new nonterminal symbol is added, also `S1 -> ε`. For each recursive rule a new like `S1 -> a S1` is added. The former left recursive rules are removed.
+Currently the algorithm removes only direct left recursion. It treats every rule where the first symbol on the right hand side is the same as the one on the left hand side except if it is a unary production. For each nonterminal that is the left hand side of a left recursive rule it adds a new nonterminal appended to the rules without left recursion. For instance a grammar has the rules `S -> S a` which is left recursive and `S -> b` which is not. Then for each terminating rule a new rule like `S -> b S1` using a new nonterminal symbol is added, also `S1 -> ε`. For each recursive rule a new like `S1 -> a S1` is added. The former left recursive rules are removed. If a nonterminal is associated with only left recursive rules, an error message is printed and no conversion is performed.
 
-##### CFG have either terminals or nonterminals on the Right Hand Side
+##### CFG have either one terminal or nonterminals on the Right Hand Side
+
+Internally called `doReplaceTerminals` it is one of the steps needed for converting a grammar into Chomsky Normal Form: For each rule whose right hand side is longer than 1, all terminals are replaced by a new nonterminal for each terminal and a new rule like `X1 -> a` is added. The algorithm is smart enough to use the same nonterminal for every occurence of the same terminal.
 
 ##### CFG Removal of Useless Symbols
+
+The removal of useless symbols consists of two steps: The preferred first step is to remove all non-generating symbols. Generating symbols are initially all terminals and recursively all nonterminals whose right hand sides consist of only generating symbols, which are then declared as generating as well. Useless nonterminals and rules using those are removed. If the start symbol happens to be non-generating, an error message is printed and null is returned. In a second step all non-reachable symbols can be removed. Reachable symbols initially include the start symbol and recursively all symbols that occur in right hand sides of rules where a generating symbol is on the left hand side. All rules with non-reachable symbols as left hand side and those symbols itself are removed from the grammar.
 
 ##### TAG Binarization
 
