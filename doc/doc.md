@@ -156,9 +156,15 @@ The removal of useless symbols consists of two steps: The preferred first step i
 
 ##### TAG Binarization
 
+The binarization of a Tree Adjoining Grammar changes the tree language, hence the resulting grammar generates the same string language, but not the same tree language. A grammar is binarized similar to how it is done for a context-free grammar: For each node that has more than two children a new nonterminal node is introduced with a label that is not one of the existing nonterminals. This node becomes second child of the parent node and all its childen from 2 to n become children of the new node. This process is repeated for each tree until all trees are binarized.
+
 ##### SRCG Binarization
 
+The binarizaion of a simple range concatenation grammar follows a naive approach at the moment. Similar to the binarization of a context free grammar for each clause with more than 2 left hand side predicates a new predicate with a new nonterminal is introduced and replaces the predicates 2 to n. For each clause that is altered a new reduced left hand side predicate replaces the old one. In a reduced rule the variables of a taken out predicate were removed and appearing or disappearing arguments have to be considered. Example: `A(a X1, X2, b X3) -> B(X2) C(X1) D(X3)` shall be binarized. X2 stays in this clause, while the other variables also move to a new clause. The two clauses that replace this one are: `A(X1, X2, b X3) -> B(X2) C1(X1, X3)` and `C1(X1, X3) -> C(X1) D(X3)`. 
+
 ##### SRCG Removal of Empty Productions
+
+The removal of empty productions in simple range concatenation grammars can greatly increase the size of a grammar. 
 
 ##### SRCG Ordering
 
