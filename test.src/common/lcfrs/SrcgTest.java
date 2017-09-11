@@ -48,11 +48,12 @@ public class SrcgTest {
     Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrderedSrcg();
     assertTrue(srcgOrd.isOrdered());
     assertEquals(
-      "G = <N, T, V, P, S>\n" + "N = {S, A, A^<2,1>}\n" + "T = {a, b}\n"
+      "G = <N, T, V, P, S>\n" + "N = {S^<1>, A^<1,2>, A^<2,1>}\n" + "T = {a, b}\n"
         + "V = {X, Y}\n"
-        + "P = {S(X Y) -> A(X,Y), A(X,Y) -> A^<2,1>(X,Y), A(a X,b Y) -> A(X,Y), "
-        + "A(a,b) -> ε, A^<2,1>(X,Y) -> A^<2,1>(X,Y), "
-        + "A^<2,1>(a X,b Y) -> A(X,Y), A^<2,1>(a,b) -> ε}\n" + "S = S\n",
+        + "P = {S^<1>(X Y) -> A^<1,2>(X,Y), A^<1,2>(X,Y) -> A^<2,1>(X,Y), " 
+        + "A^<1,2>(a X,b Y) -> A^<1,2>(X,Y), A^<1,2>(a,b) -> ε, " 
+        + "A^<2,1>(Y,X) -> A^<1,2>(Y,X), A^<2,1>(b Y,a X) -> A^<2,1>(Y,X), " 
+        + "A^<2,1>(b,a) -> ε}\n" + "S = S\n",
       srcgOrd.toString());
   }
 
