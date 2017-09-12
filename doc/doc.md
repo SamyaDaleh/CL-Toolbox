@@ -200,35 +200,23 @@ CYK General works similar to the previously mentioned CYK algorithms, but it can
 
 ##### CFG Earley
 
-The early algorithm
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+The early algorithm does not demand any properties of the grammar. It follows a top-down approach where it predicts derivations and tries to match the symbols with the input starting from the beginning. It has a predict rule to try out production rules, a scan rule to match predicted terminals with symbols from the input string and a complete rule that matches the nonterminal of a rule whose right hand side has been completely seen with the nonterminal in another right hand side yet to see. Its items encode the rule where a dot marks up until which point the right hand side has been seen, an index saying where this item starts and another index saying where the dot is located regarding the input string.
 
 ##### CFG Left Corner
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+For this version of left corner the grammar must not contain empty productions or loops, also called recursions. It combines a top-down with a bottom-up approach. Its items contain the symbols that are left to be bottom-up completed, starting with the input string, a second stack with symbols that are left for top-down predictions containing the remaining right hand sides without the left corners, starting with the start symbols and a third stack of left hand sides that are waiting to be completed, starting empty. A reduce step can be applied when the first symbol on the right hand side of a rule is the leftmost symbol of the first stack. The symbol is removed, the remaining symbol of the right hand side are put onto the second stack and the left hand side symbol is put onto the third stack. Whenever symbols of a new production rule are added to the second step a dollar symbol is added first, which separates different right hand sides from each other.  A reduce step removes the topmost symbols on first and second stack if they both are the same. A move step can be applied when a dollar sign is on top or better to say leftmost on the second stack, that means a complete right hand side of a rule has been seen and the left hand side nonterminal which is on top of the third stack is moved to the first stack.
 
 ##### CFG Left Corner Chart
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+This version of left corner works with any grammar and similar to the previously mentioned version, but its items look different. There are two types of items: Passive items contain a symbol that has completely been seen while active items contain a production rule where a dot indicates up to which entry of the right hand side the rule has been seen. Both items also contain an index that says where the item starts and its length. First all input symbols are turned to passive items including all possible empty strings. A reduce step now is applied when the left corner of a production rule matches any passive item and produces an active item with the dot after that first item. Remove can be applied on matching passive and active items to move the dot over another symbol in the right hand side. Whenever a dot is located at the end of a right hand side, the whole rule is completed and can be turned to a passive item with the left hand side symbol as entry.
 
 ##### CFG Top Down
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+For top down parsing a grammar must not contain empty production rules. Top down parsing is the simplest approach, following the definition of derivation, which begins with a start symbol and replaces each left hand side symbol that occurs in that string by the right hand side of a corresponding rule. The items consist of two elements which are the working string and the length of the input that was already matched. Starting with the start symbol and length 0 a predict step does the derivation and replaces the nonterminal. The scan step matches the first symbol in the working string with the input in which case the terminal is removed from the working string and the length is increased by 1.
 
 ##### CFG Unger
 
+This implementation of the Unger algorithm can not handle empty productions or recursion.
 // Grammar properties
 // Algorithm general working
 // more detailed working mentioning rules
