@@ -168,7 +168,7 @@ The removal of empty productions in simple range concatenation grammars can grea
 
 ##### SRCG Ordering
 
-In an ordered simple range concatenation grammar all variables in one right hand side predicate have to appear in the same order in the left hand side. For each clause that is not ordered according to one right hand side predicate the positions of the arguments are swapped according to the order in the left hand side predicate. The new predicate in the right hand side also obtains a new label with respect to the previous order, for instance if in predicate `A(Y,X)` the arguments are swapped, the new predicate becomes `A<2,1>(X,Y)`. For each clause that has in this case `A` as left hand side nonterminal a new rule is added where those nonterminal is replaced by the new label that indicates the order.
+In an ordered simple range concatenation grammar all variables in one right hand side predicate have to appear in the same order in the left hand side. All nonterminals are extended with a vector of the length of their arguments that indicate the position, initially incrasing from 1 to the number of arguments. For each clause that is not ordered according to one right hand side predicate the positions of the arguments are swapped according to the order in the left hand side predicate. The new predicate in the right hand side also obtains a new label with respect to the previous order, for instance if in predicate `A^<1,2>(Y,X)` the arguments are swapped, the new predicate becomes `A<2,1>(X,Y)`. For each clause that has in this case `A^<1,2>` as left hand side nonterminal a new rule is added where those nonterminal is replaced by the new label that indicates the order. This process repeats until the grammar does not change anymore.
 
 ### GrammarToDeductionRulesConverter
 
@@ -188,27 +188,19 @@ Shift reduce or bottom-up parsing demands a grammar without epsilon productions.
 
 ##### CFG CYK
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+For CYK parsing the grammar needs to be in Chomsky Normal Form. This means that all rules either have exactly one terminal or two nonterminals as right hand side. No empty productions, chain rules, mixed or longer right hand sides are allowed. The algorithm follows a bottom-up approach, starting from the input string and moving upwards until the start symbol. With axiomatic scan rules production rules with one terminal are considered to reduce the input symbols. Then with complete rules and production rules with two nonterminals on the right hand side are used to combine two nonterminals and replacing them by the left hand side of the matching production rule. The items include the respective nonterminal, the start index of the span and its length.
 
 ##### CFG CYK Extended
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+This algorithm is an extension to the common CYK algorithm and works similar to that one. The grammar is also allowed to contain chain rules, that are rules with one nonterminal on the right hand side. Because the removal of chain rules increases the grammar size exponentially, this algorithm has the same parsing complexity regarding the input, but is much cheaper regarding grammar size.
 
 ##### CFG CYK General
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+CYK General works similar to the previously mentioned CYK algorithms, but it can handle any input grammar without restriction, which comes with worse performance, as the handling of any number of items for completing the right hand side of a rule is costly.
 
 ##### CFG Earley
 
+The early algorithm
 // Grammar properties
 // Algorithm general working
 // more detailed working mentioning rules
