@@ -216,16 +216,11 @@ For top down parsing a grammar must not contain empty production rules. Top down
 
 ##### CFG Unger
 
-This implementation of the Unger algorithm can not handle empty productions or recursion.
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+This implementation of the Unger algorithm can not handle empty productions or recursion. The algorithm itself is costly with a factorial runtime. The algorithm follows a top down approach. Beginning with the start symbol when performing a prediction it tries out every possible separation to divide the span of the left hand side symbol among all symbols on the right hand side. However, it is smart enough to predict a length of 1 for a terminal symbol. The items contain a single symbol along with a dot that indicates if the symbol has been completely seen in which case the dot is after the symbol, else not and the dot is before. Also the items maintain an index indicating its start and its length. A predict step returns all items that can result from any separation, breaking with the assumption that a derivation rule shall only return one kind of items. On items that contain a terminal symbol the rule scan can be applied. If the terminal matches the input string at the respective position the dot can be moved behind the terminal. Similar if for a production rule matching items with dots at their ends for every right hand side symbol are present the rule complete can move the dot after the corresponding nonterminal item with a matching span.
 
 ##### PCFG A*
 
-// Grammar properties
-// Algorithm general working
+A* or A Star parsing is based on probabilistic CYK parsing. Hence it needs a probabilistic grammar in Chomsky Normal Form. Because probabilities are used a not fitting grammar can not be converted into a fitting one. The algorithm works like CYK parsing described above, differences affect the handling of the probabilities. The probabilities here are handled as weights instead, that is the absolute value of the logarithm of the probability. The main idea of the algorithm is beside the actual weight of the applied rules also to include an estimation 
 // more detailed working mentioning rules
 // information included in items
 
