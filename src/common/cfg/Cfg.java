@@ -54,9 +54,10 @@ public class Cfg extends AbstractCfg {
             return false;
           }
         }
-      } else if (rule.getRhs().length > 1
+      } else if (rule.getRhs().length == 2
         && (!nonterminalsContain(rule.getRhs()[0])
-          || !nonterminalsContain(rule.getRhs()[1]))) {
+          || !nonterminalsContain(rule.getRhs()[1]))
+        || rule.getRhs().length > 2) {
         return false;
       }
     }

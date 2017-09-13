@@ -177,6 +177,8 @@ class Main { // NO_UCD (test only)
     Deduction deduction = new Deduction();
     if (algorithm.equals("pcfg-astar")) {
       deduction.setReplace('l');
+    } else if (algorithm.equals("pcfg-cyk")) {
+      deduction.setReplace('l');
     }
     System.out.println(deduction.doParse(schema, success));
     String[][] data = deduction.printTrace();
@@ -218,7 +220,8 @@ class Main { // NO_UCD (test only)
       }
       break;
     default:
-      System.err.println("Unknown formalism " + algorithmSplit[0]);
+      System.out.println("Unknown formalism " + algorithmSplit[0]
+        + ", can not retrieve derivated tree.");
       break;
     }
   }
@@ -231,8 +234,9 @@ class Main { // NO_UCD (test only)
       + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
       + "\n   cfg-leftcorner" + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
       + "\n   cfg-shiftreduce" + "\n   cfg-unger" + "\n   pcfg-astar"
-      + "\n   tag-cyk-extended" + "\n   tag-earley" + "\n   tag-earley-prefixvalid"
-      + "\n   srcg-cyk-extended" + "\n   srcg-earley");
+      + "\n   tag-cyk-extended" + "\n   tag-earley"
+      + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk-extended"
+      + "\n   srcg-earley");
     System.out.println(
       "Optional parameters can be: \n   --success : prints a trace only of items "
         + "that lead to a goal item."

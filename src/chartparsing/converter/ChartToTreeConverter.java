@@ -189,7 +189,8 @@ public class ChartToTreeConverter {
       steps = retrieveSteps(i, deduction, new String[] {"complete"});
       break;
     default:
-      System.out.println("Unknown algorithm: " + algorithm);
+      System.out.println("Unknown algorithm: " + algorithm
+        + ", can not retrieve derivated tree.");
     }
     return steps;
   }
@@ -231,7 +232,8 @@ public class ChartToTreeConverter {
           }
           break;
         default:
-          System.out.println("Unknown algorithm: " + algorithm);
+          System.out.println("Unknown algorithm: " + algorithm
+            + ", can not retrieve derivated tree.");
         }
       }
     }

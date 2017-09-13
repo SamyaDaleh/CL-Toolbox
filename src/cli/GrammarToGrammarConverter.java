@@ -49,6 +49,7 @@ class GrammarToGrammarConverter {
   Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm) {
     switch (algorithm) {
     case "pcfg-astar":
+    case "pcfg-cyk":
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
           return new Pcfg(cfg.getCfgWithoutEmptyProductions()
@@ -58,7 +59,8 @@ class GrammarToGrammarConverter {
             .getCfgWithoutChainRules());
         } else {
           System.out.println(
-            "CFG must be in Chomsky Normal Form to convert it into a PCFG where A* parsing is possible.");
+            "CFG must be in Chomsky Normal Form to convert it into a PCFG where "
+              + " is possible.");
           return null;
         }
       } else {
@@ -74,6 +76,7 @@ class GrammarToGrammarConverter {
   Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm) {
     switch (algorithm) {
     case "pcfg-astar":
+    case "pcfg-cyk":
       Cfg cfg = new Cfg(pcfg);
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
@@ -133,7 +136,7 @@ class GrammarToGrammarConverter {
     case "tag-cyk-extended":
       if (!tag.isBinarized()) {
         if (please) {
-           return tag.getBinarizedTag();
+          return tag.getBinarizedTag();
         } else {
           System.out.println("TAG must be binarized to apply CYK parsing.");
           return null;
@@ -300,7 +303,8 @@ class GrammarToGrammarConverter {
       if (please) {
         return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions();
       } else {
-        System.out.println("sRCG must be ordered and not contain epsilon productions for this Earley algorithm");
+        System.out.println(
+          "sRCG must be ordered and not contain epsilon productions for this Earley algorithm");
         return null;
       }
     } else {

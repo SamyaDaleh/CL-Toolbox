@@ -13,6 +13,7 @@ Parsing as Deduction:
 - Left Corner for CFG
 - Unger for CFG
 - A* for PCFG
+- CYK for PCFG
 - CYK for TAG
 - Earley for TAG
 - CYK for sRCG

@@ -13,13 +13,15 @@ public class GrammarToDeductionRulesConverter {
   public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm) {
     switch (algorithm) {
     case "cfg-topdown":
-      return CfgToDeductionRulesConverter
-        .cfgToTopDownRules(cfg.getCfgWithoutEmptyProductions()
-          .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols(), w);
+      return CfgToDeductionRulesConverter.cfgToTopDownRules(
+        cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols(),
+        w);
     case "cfg-shiftreduce":
-      return CfgToDeductionRulesConverter
-        .cfgToShiftReduceRules(cfg.getCfgWithoutEmptyProductions()
-          .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols(), w);
+      return CfgToDeductionRulesConverter.cfgToShiftReduceRules(
+        cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+          .getCfgWithoutNonReachableSymbols(),
+        w);
     case "cfg-earley":
       return CfgToDeductionRulesConverter.cfgToEarleyRules(cfg, w);
     case "cfg-leftcorner":
@@ -79,6 +81,8 @@ public class GrammarToDeductionRulesConverter {
     switch (algorithm) {
     case "pcfg-astar":
       return PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg, w);
+    case "pcfg-cyk":
+      return PcfgToDeductionRulesConverter.pcfgToCykRules(pcfg, w);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");

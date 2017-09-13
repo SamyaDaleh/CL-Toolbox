@@ -147,6 +147,15 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
+  @Test public void testPcfgCyk() throws ParseException {
+    String w = "red nice ugly car";
+    ParsingSchema schema = PcfgToDeductionRulesConverter
+      .pcfgToCykRules(TestGrammarLibrary.niceUglyCarPcfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
   @Test public void testCfgUnger() {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
