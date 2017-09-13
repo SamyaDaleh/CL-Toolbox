@@ -81,8 +81,7 @@ public class TagToDeductionRulesConverter {
                     String.valueOf(i), "-", "-", String.valueOf(i + 1)));
             lexScan.setName("lex-scan " + wSplit[i]);
             schema.addAxiom(lexScan);
-          }
-          if (p.getLabel().equals("")) {
+          } else if (p.getLabel().equals("")) {
             StaticDeductionRule epsScan = new StaticDeductionRule();
             epsScan.addConsequence(
                 new DeductionItem(treeName, p.getGornAddress() + "⊤",

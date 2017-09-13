@@ -16,18 +16,19 @@ public class EmptyProductions {
   public static boolean hasEpsilonProductions(Srcg srcg) {
     for (Clause clause : srcg.getClauses()) {
       for (String[] argument : clause.getLhs().getSymbols()) {
-        if (argument.length == 1 && argument[0].equals("")) {
-          if (clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
-            for (Clause clause2 : srcg.getClauses()) {
-              for (Predicate rhsPred : clause2.getRhs()) {
-                if (rhsPred.getNonterminal().equals(srcg.getStartSymbol())) {
-                  return true;
-                }
+        if (!argument[0].equals("")) {
+          continue;
+        }
+        if (clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
+          for (Clause clause2 : srcg.getClauses()) {
+            for (Predicate rhsPred : clause2.getRhs()) {
+              if (rhsPred.getNonterminal().equals(srcg.getStartSymbol())) {
+                return true;
               }
             }
-          } else {
-            return true;
           }
+        } else {
+          return true;
         }
       }
     }
@@ -45,7 +46,7 @@ public class EmptyProductions {
     ArrayList<String> newNts = new ArrayList<String>();
     for (String[] candidate : epsilonCandidates) {
       if (candidate[1].contains("1")) {
-      newNts.add(candidate[0] + "^" + candidate[1]);
+        newNts.add(candidate[0] + "^" + candidate[1]);
       }
     }
     for (String[] candidate : epsilonCandidates) {
@@ -72,7 +73,6 @@ public class EmptyProductions {
       for (ArrayList<String[]> combination : getCombinationsForRhs(
         epsilonCandidates, clause)) {
         Clause newClause = getClauseForEpsilonCombination(clause, combination);
-
         Predicate oldLhs = newClause.getLhs();
         String jotaLhs = getJotaForPredicate(oldLhs);
         if (jotaLhs.contains("1")) {
@@ -82,15 +82,16 @@ public class EmptyProductions {
           newSrcg.addClause(newClause);
         }
       }
-      if (clause.getRhs().isEmpty()) {
-        Clause newClause = new Clause(clause.toString());
-        String jotaLhs = getJotaForPredicate(newClause.getLhs());
-        if (jotaLhs.contains("1")) {
-          Predicate newLhs =
-              getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
-            newClause.setLhs(newLhs);
-            newSrcg.addClause(newClause);
-        }
+      if (!clause.getRhs().isEmpty()) {
+        continue;
+      }
+      Clause newClause = new Clause(clause.toString());
+      String jotaLhs = getJotaForPredicate(newClause.getLhs());
+      if (jotaLhs.contains("1")) {
+        Predicate newLhs =
+          getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
+        newClause.setLhs(newLhs);
+        newSrcg.addClause(newClause);
       }
     }
     newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
@@ -135,25 +136,25 @@ public class EmptyProductions {
     return newClause;
   }
 
-  private static Predicate getPredicateWithoutEmptyArguments(
-    String jotaLhs, Predicate oldLhs) throws ParseException {
+  private static Predicate getPredicateWithoutEmptyArguments(String jotaLhs,
+    Predicate oldLhs) throws ParseException {
     StringBuilder newLhsPred = new StringBuilder();
-    newLhsPred.append(oldLhs.getNonterminal()).append('^')
-      .append(jotaLhs).append('(');
+    newLhsPred.append(oldLhs.getNonterminal()).append('^').append(jotaLhs)
+      .append('(');
     boolean argAdded = false;
     for (int i = 0; i < oldLhs.getDim(); i++) {
-      if (!Objects.equals(oldLhs.getArgumentByIndex(i + 1)[0], "")) {
-        if (argAdded) {
-          newLhsPred.append(',');
+      if (Objects.equals(oldLhs.getArgumentByIndex(i + 1)[0], "")) {
+        continue;
+      }
+      if (argAdded) {
+        newLhsPred.append(',');
+      }
+      argAdded = true;
+      for (int j = 0; j < oldLhs.getArgumentByIndex(i + 1).length; j++) {
+        if (j > 0) {
+          newLhsPred.append(' ');
         }
-        argAdded = true;
-        for (int j = 0; j < oldLhs
-          .getArgumentByIndex(i + 1).length; j++) {
-          if (j > 0) {
-            newLhsPred.append(' ');
-          }
-          newLhsPred.append(oldLhs.getSymAt(i + 1, j));
-        }
+        newLhsPred.append(oldLhs.getSymAt(i + 1, j));
       }
     }
     newLhsPred.append(')');
@@ -238,7 +239,6 @@ public class EmptyProductions {
             }
           }
         }
-
         if (!somethingAppended) {
           for (ArrayList<String[]> combination : combinations) {
             combination.add(new String[] {});
@@ -300,14 +300,15 @@ public class EmptyProductions {
         } else {
           for (Predicate rhsPred : clause.getRhs()) {
             int[] indices = rhsPred.find(element);
-            if (indices[0] >= 0) {
-              if (rhsPred.getNonterminal().equals(candidate[0])
-                && candidate[1].length() == rhsPred.getDim()
-                && candidate[1].charAt(indices[0] - 1) == '0') {
-                newArgument.append("");
-              } else {
-                newArgument.append(element);
-              }
+            if (indices[0] == -1) {
+              continue;
+            }
+            if (rhsPred.getNonterminal().equals(candidate[0])
+              && candidate[1].length() == rhsPred.getDim()
+              && candidate[1].charAt(indices[0] - 1) == '0') {
+              newArgument.append("");
+            } else {
+              newArgument.append(element);
             }
           }
         }

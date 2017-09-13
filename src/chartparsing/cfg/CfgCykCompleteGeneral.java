@@ -25,10 +25,11 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
       int prevItemStart = 0;
       for (Item mayFirstRhsItem : antecedences) {
         int i = Integer.parseInt(mayFirstRhsItem.getItemform()[1]);
-        if (i < minI) {
-          minI = i;
-          prevItemStart = i;
+        if (i >= minI) {
+          continue;
         }
+        minI = i;
+        prevItemStart = i;
       }
       int lSum = 0;
       for (int j = 0; j < rule.getRhs().length; j++) {

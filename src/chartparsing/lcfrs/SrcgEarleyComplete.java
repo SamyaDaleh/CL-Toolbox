@@ -59,6 +59,7 @@ public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
             || !itemForm1[m * 2 + 2]
               .equals(itemForm2[absPosOfVarIn2 * 2 + 5])) {
             vectorsMatch = false;
+            break;
           }
         }
 

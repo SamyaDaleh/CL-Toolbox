@@ -36,7 +36,7 @@ public class Vertex implements Cloneable {
       int nthchild =
         Integer.parseInt(gornAddress.substring(1, gornAddress.length()));
       return "." + String.valueOf(nthchild + 1);
-    } // */
+    }
     int nthchild = Integer.parseInt(gornsplit[gornsplit.length - 1]);
     return String.join(".",
       ArrayUtils.getSubSequenceAsArray(gornsplit, 0, gornsplit.length - 1))

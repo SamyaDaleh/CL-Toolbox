@@ -47,17 +47,16 @@ public class Cfg extends AbstractCfg {
    * Normal form, but chain rules are also allowed. */
   public boolean isInCanonicalTwoForm() {
     for (CfgProductionRule rule : this.productionRules) {
-      if (rule.getRhs().length == 1) {
-        if (rule.getLhs().equals(startSymbol) && rule.getRhs()[0].equals("")) {
-          for (CfgProductionRule rule2 : this.productionRules) {
-            if (rule2.getRhs()[0].equals(startSymbol)
-              || rule2.getRhs()[1].equals(startSymbol)) {
-              return false;
-            }
+      if (rule.getLhs().equals(startSymbol) && rule.getRhs()[0].equals("")) {
+        for (CfgProductionRule rule2 : this.productionRules) {
+          if (rule2.getRhs()[0].equals(startSymbol)
+            || rule2.getRhs()[1].equals(startSymbol)) {
+            return false;
           }
         }
-      } else if (!nonterminalsContain(rule.getRhs()[0])
-        || !nonterminalsContain(rule.getRhs()[1])) {
+      } else if (rule.getRhs().length > 1
+        && (!nonterminalsContain(rule.getRhs()[0])
+          || !nonterminalsContain(rule.getRhs()[1]))) {
         return false;
       }
     }
@@ -116,6 +115,7 @@ public class Cfg extends AbstractCfg {
   public Cfg getCfgWithoutNonGeneratingSymbols() {
     return UselessSymbols.removeNonGeneratingSymbols(this);
   }
+
   /** Returns an equivalent grammar without non-reachable symbols. Before
    * calling this, remove all non-generating symbols. */
   public Cfg getCfgWithoutNonReachableSymbols() {
@@ -145,7 +145,7 @@ public class Cfg extends AbstractCfg {
   public Cfg getCfgWithEitherOneTerminalOrNonterminalsOnRhs() {
     return MixedRhs.replaceTerminals(this);
   }
-  
+
   protected void appendRuleRepresentation(StringBuilder builder) {
     for (int i = 0; i < productionRules.size(); i++) {
       if (i > 0) {
@@ -176,10 +176,8 @@ public class Cfg extends AbstractCfg {
     return MixedRhs.hasMixedRhs(this);
   }
 
-  /**
-   * Creates a CfgProductionRule from the string representation and adds it
-   * to its set of rules.
-   */
+  /** Creates a CfgProductionRule from the string representation and adds it to
+   * its set of rules. */
   public void addProductionRule(String rule) {
     this.productionRules.add(new CfgProductionRule(rule));
   }

@@ -32,16 +32,17 @@ public class PcfgToDeductionRulesConverter {
     for (PcfgProductionRule pRule : pcfg.getProductionRules()) {
       if (pRule.getRhs().length == 1) {
         for (int i = 0; i < wSplit.length; i++) {
-          if (pRule.getRhs()[0].equals(wSplit[i])) {
-            StaticDeductionRule scan = new StaticDeductionRule();
-            Double rulew = -Math.log(pRule.getP());
-            Double outw = outsides.get(SxCalc.getOutsideKey(pRule.getLhs(), i,
-              1, wSplit.length - 1 - i));
-            scan.addConsequence(
-              new PcfgAstarItem(rulew, outw, pRule.getLhs(), i, i + 1));
-            scan.setName("Scan");
-            schema.addAxiom(scan);
+          if (!pRule.getRhs()[0].equals(wSplit[i])) {
+            continue;
           }
+          StaticDeductionRule scan = new StaticDeductionRule();
+          Double rulew = -Math.log(pRule.getP());
+          Double outw = outsides.get(
+            SxCalc.getOutsideKey(pRule.getLhs(), i, 1, wSplit.length - 1 - i));
+          scan.addConsequence(
+            new PcfgAstarItem(rulew, outw, pRule.getLhs(), i, i + 1));
+          scan.setName("Scan");
+          schema.addAxiom(scan);
         }
       } else {
         DynamicDeductionRule complete =
@@ -49,8 +50,8 @@ public class PcfgToDeductionRulesConverter {
         schema.addRule(complete);
       }
     }
-    schema
-      .addGoal(new PcfgAstarItem(0, 0, pcfg.getStartSymbol(), 0, wSplit.length));
+    schema.addGoal(
+      new PcfgAstarItem(0, 0, pcfg.getStartSymbol(), 0, wSplit.length));
 
     return schema;
   }

@@ -78,63 +78,63 @@ public class Order {
         for (int i = 0; i < newSrcg.getClauses().get(j).getRhs().size(); i++) {
           Predicate rhsPred = clause.getRhs().get(i);
           String oldNt = rhsPred.getNonterminal();
-          if (!isOrdered(clause, rhsPred)) {
-            change = true;
-            ArrayList<Integer> orderVector =
-              getNormalizedPos(getOrderInLhs(clause, rhsPred));
-            StringBuilder newNt = new StringBuilder();
-            newNt.append(oldNt).append("^<");
-            for (int k = 0; k < orderVector.size(); k++) {
-              if (k > 0) {
-                newNt.append(',');
-              }
-              newNt.append(String.valueOf(orderVector.get(k)));
+          if (isOrdered(clause, rhsPred)) {
+            continue;
+          }
+          change = true;
+          ArrayList<Integer> orderVector =
+            getNormalizedPos(getOrderInLhs(clause, rhsPred));
+          StringBuilder newNt = new StringBuilder();
+          newNt.append(oldNt).append("^<");
+          for (int k = 0; k < orderVector.size(); k++) {
+            if (k > 0) {
+              newNt.append(',');
             }
-            newNt.append(">");
+            newNt.append(String.valueOf(orderVector.get(k)));
+          }
+          newNt.append(">");
 
-            int pos1 = newNt.toString().indexOf('^');
-            int pos2 = newNt.toString().indexOf('^', pos1 + 1);
-            if (pos2 != -1) {
-              StringBuilder newestNt = new StringBuilder();
-              newestNt.append(newNt.substring(0, pos1)).append("^<");
-              String[] vec1 = newNt.substring(pos1 + 2, pos2 - 1).split(",");
-              String[] vec2 =
-                newNt.substring(pos2 + 2, newNt.length() - 1).split(",");
-              for (int k = 1; k <= vec1.length; k++) {
-                for (int l = 0; l < vec1.length; l++) {
-                  if (Integer.parseInt(vec2[l]) == k) {
-                    if (k > 1) {
-                      newestNt.append(',');
-                    }
-                    newestNt.append(vec1[l]);
-                    break;
+          int pos1 = newNt.toString().indexOf('^');
+          int pos2 = newNt.toString().indexOf('^', pos1 + 1);
+          if (pos2 != -1) {
+            StringBuilder newestNt = new StringBuilder();
+            newestNt.append(newNt.substring(0, pos1)).append("^<");
+            String[] vec1 = newNt.substring(pos1 + 2, pos2 - 1).split(",");
+            String[] vec2 =
+              newNt.substring(pos2 + 2, newNt.length() - 1).split(",");
+            for (int k = 1; k <= vec1.length; k++) {
+              for (int l = 0; l < vec1.length; l++) {
+                if (Integer.parseInt(vec2[l]) == k) {
+                  if (k > 1) {
+                    newestNt.append(',');
                   }
+                  newestNt.append(vec1[l]);
+                  break;
                 }
               }
-              newestNt.append('>');
-              newNt = newestNt;
             }
+            newestNt.append('>');
+            newNt = newestNt;
+          }
 
-            clause.getRhs().set(i,
-              orderedPredicate(rhsPred, newNt.toString(), orderVector));
-            if (!newSrcg.nonTerminalsContain(newNt.toString())) {
-              ArrayList<String> newNts = new ArrayList<String>();
-              Collections.addAll(newNts, newSrcg.getNonterminals());
-              newNts.add(newNt.toString());
-              newSrcg
-                .setNonterminals(newNts.toArray(new String[newNts.size()]));
-              for (int l = 0; l < newSrcg.getClauses().size(); l++) {
-                Clause clause2 = newSrcg.getClauses().get(l);
-                if (clause2.getLhs().getNonterminal().equals(oldNt)) {
-                  String clause2String = clause2.toString();
-                  int ibrack = clause2String.indexOf(')');
-                  String newClause = orderedPredicate(clause2.getLhs(),
-                    newNt.toString(), orderVector)
-                    + clause2String.substring(ibrack + 1,
-                      clause2String.length());
-                  newSrcg.addClause(newClause);
-                }
-              }
+          clause.getRhs().set(i,
+            orderedPredicate(rhsPred, newNt.toString(), orderVector));
+          if (newSrcg.nonTerminalsContain(newNt.toString())) {
+            continue;
+          }
+          ArrayList<String> newNts = new ArrayList<String>();
+          Collections.addAll(newNts, newSrcg.getNonterminals());
+          newNts.add(newNt.toString());
+          newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+          for (int l = 0; l < newSrcg.getClauses().size(); l++) {
+            Clause clause2 = newSrcg.getClauses().get(l);
+            if (clause2.getLhs().getNonterminal().equals(oldNt)) {
+              String clause2String = clause2.toString();
+              int ibrack = clause2String.indexOf(')');
+              String newClause = orderedPredicate(clause2.getLhs(),
+                newNt.toString(), orderVector)
+                + clause2String.substring(ibrack + 1, clause2String.length());
+              newSrcg.addClause(newClause);
             }
           }
         }
@@ -144,7 +144,7 @@ public class Order {
   }
 
   /** Returns a new clause where all nonterminals where replaced by nonterminal
-   * + order vector. Adds all generated nonterminals to list if they are not 
+   * + order vector. Adds all generated nonterminals to list if they are not
    * there yet. */
   private static String getClauseWithPositionVectors(Clause clause,
     ArrayList<String> newNonterminals) {
@@ -187,7 +187,7 @@ public class Order {
       ibrack = predRep.indexOf('(');
       newClause.append(predRep.substring(ibrack));
     }
-    
+
     return newClause.toString();
   }
 

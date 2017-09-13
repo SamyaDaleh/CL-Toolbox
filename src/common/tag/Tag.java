@@ -124,7 +124,7 @@ public class Tag {
     }
   }
 
-  public void setStartsymbol(String startSymbol) {
+  public void setStartSymbol(String startSymbol) {
     this.startSymbol = startSymbol;
   }
 

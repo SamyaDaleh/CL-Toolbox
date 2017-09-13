@@ -30,11 +30,10 @@ public class SrcgDeductionUtils {
         clause2Parsed.getLhs().getSymbols()[argNum].length - 1);
       String argTo = itemform2[argToAbsPos * 2 + 5];
       for (int il = 0; il < lhsSym.length; il++) {
-        if (lhsSym[il].equals(arg[0])) {
-          if (!itemForm1[il * 2 + 4].equals(argFrom)
-            || !itemForm1[il * 2 + 5].equals(argTo)) {
-            vectorsMatch = false;
-          }
+        if (lhsSym[il].equals(arg[0]) && (!itemForm1[il * 2 + 4].equals(argFrom)
+          || !itemForm1[il * 2 + 5].equals(argTo))) {
+          vectorsMatch = false;
+          break;
         }
       }
     }
@@ -67,8 +66,8 @@ public class SrcgDeductionUtils {
 
   /** If you pass it a list of vectors/ranges and the predicate of a rule
    * (mostly a lhs) it returns ranges for the whole arguments. */
-  public static <T> ArrayList<?> getRangesForArguments(ArrayList<T> rangeOverElements,
-    Predicate lhs) {
+  public static <T> ArrayList<?>
+    getRangesForArguments(ArrayList<T> rangeOverElements, Predicate lhs) {
     ArrayList<T> rangeOverArguments = new ArrayList<T>();
     for (int i = 0; i < lhs.getDim(); i++) {
       rangeOverArguments

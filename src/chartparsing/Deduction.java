@@ -86,12 +86,13 @@ public class Deduction {
     }
     if (successfulTrace) {
       for (int i = 0; i < chart.size(); i++) {
-        if (usefulItem[i]) {
-          String[] line = prettyPrint(i, chart.get(i).toString(),
-            appliedRule.get(i), deductedFrom.get(i), iMaxWidth + 3,
-            chartMaxWidth + 3, appliedRuleMaxWidth + 3);
-          chartData.add(line);
+        if (!usefulItem[i]) {
+          continue;
         }
+        String[] line = prettyPrint(i, chart.get(i).toString(),
+          appliedRule.get(i), deductedFrom.get(i), iMaxWidth + 3,
+          chartMaxWidth + 3, appliedRuleMaxWidth + 3);
+        chartData.add(line);
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
@@ -106,21 +107,23 @@ public class Deduction {
   }
 
   private void markUsefulItems() {
-    if (successfulTrace) {
-      boolean changed = true;
-      while (changed) {
-        changed = false;
-        for (int i = chart.size() - 1; i >= 0; i--) {
-          if (usefulItem[i]) {
-            ArrayList<Integer> pointers =
-              getPointersAsArray(deductedFrom.get(i));
-            for (int pointer : pointers) {
-              if (!usefulItem[pointer]) {
-                usefulItem[pointer] = true;
-                changed = true;
-              }
-            }
+    if (!successfulTrace) {
+      return;
+    }
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      for (int i = chart.size() - 1; i >= 0; i--) {
+        if (!usefulItem[i]) {
+          continue;
+        }
+        ArrayList<Integer> pointers = getPointersAsArray(deductedFrom.get(i));
+        for (int pointer : pointers) {
+          if (usefulItem[pointer]) {
+            continue;
           }
+          usefulItem[pointer] = true;
+          changed = true;
         }
       }
     }
@@ -153,20 +156,21 @@ public class Deduction {
   @SuppressWarnings("serial") private void
     applyAxiomRule(StaticDeductionRule rule) {
     for (Item item : rule.consequences) {
-      if (!chart.contains(item)) {
-        chart.add(item);
-        agenda.add(item);
-        deductedFrom.add(new ArrayList<ArrayList<Integer>>() {
-          {
-            add(new ArrayList<Integer>());
-          }
-        });
-        appliedRule.add(new ArrayList<String>() {
-          {
-            add(rule.getName());
-          }
-        });
+      if (chart.contains(item)) {
+        continue;
       }
+      chart.add(item);
+      agenda.add(item);
+      deductedFrom.add(new ArrayList<ArrayList<Integer>>() {
+        {
+          add(new ArrayList<Integer>());
+        }
+      });
+      appliedRule.add(new ArrayList<String>() {
+        {
+          add(rule.getName());
+        }
+      });
     }
   }
 
@@ -176,18 +180,19 @@ public class Deduction {
    * found. */
   private void applyRule(Item item, DynamicDeductionRule rule) {
     int itemsNeeded = rule.getAntecedencesNeeded();
-    if (chart.size() >= itemsNeeded) {
-      List<List<Item>> startList = new ArrayList<List<Item>>();
-      startList.add(new ArrayList<Item>());
-      startList.get(0).add(item);
-      for (List<Item> tryAntecedences : antecedenceListGenerator(startList, 0,
-        itemsNeeded - 1)) {
-        rule.clearItems();
-        rule.setAntecedences(tryAntecedences);
-        List<Item> newItems = rule.getConsequences();
-        if (newItems.size() > 0) {
-          processNewItems(newItems, rule);
-        }
+    if (chart.size() < itemsNeeded) {
+      return;
+    }
+    List<List<Item>> startList = new ArrayList<List<Item>>();
+    startList.add(new ArrayList<Item>());
+    startList.get(0).add(item);
+    for (List<Item> tryAntecedences : antecedenceListGenerator(startList, 0,
+      itemsNeeded - 1)) {
+      rule.clearItems();
+      rule.setAntecedences(tryAntecedences);
+      List<Item> newItems = rule.getConsequences();
+      if (newItems.size() > 0) {
+        processNewItems(newItems, rule);
       }
     }
   }
@@ -198,22 +203,21 @@ public class Deduction {
     int i, int itemsNeeded) {
     if (itemsNeeded == 0) {
       return oldList;
-    } else {
-      List<List<Item>> finalList = new ArrayList<List<Item>>();
-      for (int j = i; j <= chart.size() - itemsNeeded; j++) {
-        if (!chart.get(j).equals(oldList.get(0).get(0))) {
-          List<List<Item>> newList = new ArrayList<List<Item>>();
-          for (List<Item> subList : oldList) {
-            newList.add(new ArrayList<Item>());
-            newList.get(newList.size() - 1).addAll(subList);
-            newList.get(newList.size() - 1).add(chart.get(j));
-          }
-          finalList
-            .addAll(antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
-        }
-      }
-      return finalList;
     }
+    List<List<Item>> finalList = new ArrayList<List<Item>>();
+    for (int j = i; j <= chart.size() - itemsNeeded; j++) {
+      if (!chart.get(j).equals(oldList.get(0).get(0))) {
+        List<List<Item>> newList = new ArrayList<List<Item>>();
+        for (List<Item> subList : oldList) {
+          newList.add(new ArrayList<Item>());
+          newList.get(newList.size() - 1).addAll(subList);
+          newList.get(newList.size() - 1).add(chart.get(j));
+        }
+        finalList
+          .addAll(antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
+      }
+    }
+    return finalList;
   }
 
   /** Adds new items to chart and agenda if they are not in the chart yet. */
@@ -224,14 +228,7 @@ public class Deduction {
     }
     Collections.sort(newItemsDeductedFrom);
     for (Item newItem : newItems) {
-      if (!chart.contains(newItem)) {
-        chart.add(newItem);
-        agenda.add(newItem);
-        appliedRule.add(new ArrayList<String>());
-        appliedRule.get(appliedRule.size() - 1).add(rule.getName());
-        deductedFrom.add(new ArrayList<ArrayList<Integer>>());
-        deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
-      } else {
+      if (chart.contains(newItem)) {
         int oldId = chart.indexOf(newItem);
         switch (replace) {
         case '-':
@@ -262,6 +259,13 @@ public class Deduction {
           System.out.println(
             "Unknown replace parameter " + replace + ", doing nothing.");
         }
+      } else {
+        chart.add(newItem);
+        agenda.add(newItem);
+        appliedRule.add(new ArrayList<String>());
+        appliedRule.get(appliedRule.size() - 1).add(rule.getName());
+        deductedFrom.add(new ArrayList<ArrayList<Integer>>());
+        deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
       }
     }
   }

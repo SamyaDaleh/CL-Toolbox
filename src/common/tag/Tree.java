@@ -58,10 +58,9 @@ public class Tree {
           .add(this.vertexes.get(this.vertexes.size() - 1).getGornAddress());
         i += 2;
         break;
-      default: {
+      default:
         handleChildNode(tokens, vertexPath, children, i);
         break;
-      }
       }
     }
   }
@@ -309,11 +308,12 @@ public class Tree {
   private int getWidthInLayerBelowNode(Vertex p, int layer) {
     int width = 0;
     for (Vertex node : this.vertexes) {
-      if (p.dominates(node.getGornAddress())) {
-        String[] nodeSplit = node.getGornAddress().split("[.]");
-        if (nodeSplit.length == layer) {
-          width++;
-        }
+      if (!p.dominates(node.getGornAddress())) {
+        continue;
+      }
+      String[] nodeSplit = node.getGornAddress().split("[.]");
+      if (nodeSplit.length == layer) {
+        width++;
       }
     }
     return width;

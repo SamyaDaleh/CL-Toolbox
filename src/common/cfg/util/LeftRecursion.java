@@ -42,8 +42,7 @@ public class LeftRecursion {
     for (String nt : cfgOld.getNonterminals()) {
       if (!nonterminalIsLhsOfLeftRecursion(cfgOld, nt)) {
         continue;
-      }
-      if (!nonterminalIsLhsOfTermination(cfgOld, nt)) {
+      } else if (!nonterminalIsLhsOfTermination(cfgOld, nt)) {
         System.err
           .println(nt + " has left recursive rule but no termination rule.");
         return null;

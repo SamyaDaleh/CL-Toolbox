@@ -14,19 +14,20 @@ public class EmptyProductions {
    * rhs. */
   public static boolean hasEpsilonProductions(Cfg cfg) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")) {
-        if (rule.getLhs().equals(cfg.getStartSymbol())) {
-          for (CfgProductionRule rule2 : cfg.getProductionRules()) {
-            String[] rhs = rule2.getRhs();
-            for (String symbol : rhs) {
-              if (symbol.equals(cfg.getStartSymbol())) {
-                return true;
-              }
+      if (!rule.getRhs()[0].equals("")) {
+        continue;
+      }
+      if (rule.getLhs().equals(cfg.getStartSymbol())) {
+        for (CfgProductionRule rule2 : cfg.getProductionRules()) {
+          String[] rhs = rule2.getRhs();
+          for (String symbol : rhs) {
+            if (symbol.equals(cfg.getStartSymbol())) {
+              return true;
             }
           }
-        } else {
-          return true;
         }
+      } else {
+        return true;
       }
     }
     return false;
@@ -66,8 +67,8 @@ public class EmptyProductions {
   /** Removes all empty productions except if epsilon can be derived from the
    * start symbol, in which case if the start symbol appears in a rhs, a new
    * start symbol is added. */
-  private static void doEliminateEmptyProductions(Cfg cfg, ArrayList<String> newNt,
-    ArrayList<String> eliminateable, Cfg cfgOld) {
+  private static void doEliminateEmptyProductions(Cfg cfg,
+    ArrayList<String> newNt, ArrayList<String> eliminateable, Cfg cfgOld) {
     for (String nt : eliminateable) {
       for (int j = 0; j < cfg.getProductionRules().size(); j++) {
         CfgProductionRule rule = cfg.getProductionRules().get(j);

@@ -22,29 +22,30 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == this.antNeeded) {
       for (Item mayLhsItem : antecedences) {
-        if (mayLhsItem.getItemform()[0].startsWith("•")) {
-          String prevIjPlusOne = mayLhsItem.getItemform()[1];
-          for (int i = 0; i < antNeeded - 1; i++) {
-            boolean found = false;
-            for (Item mayRhsItem : antecedences) {
-              if (mayRhsItem.getItemform()[0].endsWith("•")
-                && mayRhsItem.getItemform()[0]
-                  .substring(0, mayRhsItem.getItemform()[0].length() - 1)
-                  .equals(rule.getRhs()[i])
-                && mayRhsItem.getItemform()[1].equals(prevIjPlusOne)) {
-                found = true;
-                prevIjPlusOne = mayRhsItem.getItemform()[2];
-                break;
-              }
-            }
-            if (!found) {
-              return this.consequences;
+        if (!mayLhsItem.getItemform()[0].startsWith("•")) {
+          continue;
+        }
+        String prevIjPlusOne = mayLhsItem.getItemform()[1];
+        for (int i = 0; i < antNeeded - 1; i++) {
+          boolean found = false;
+          for (Item mayRhsItem : antecedences) {
+            if (mayRhsItem.getItemform()[0].endsWith("•")
+              && mayRhsItem.getItemform()[0]
+                .substring(0, mayRhsItem.getItemform()[0].length() - 1)
+                .equals(rule.getRhs()[i])
+              && mayRhsItem.getItemform()[1].equals(prevIjPlusOne)) {
+              found = true;
+              prevIjPlusOne = mayRhsItem.getItemform()[2];
+              break;
             }
           }
-          if (prevIjPlusOne.equals(mayLhsItem.getItemform()[2])) {
-            consequences.add(new DeductionItem(rule.getLhs() + "•",
-              mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]));
+          if (!found) {
+            return this.consequences;
           }
+        }
+        if (prevIjPlusOne.equals(mayLhsItem.getItemform()[2])) {
+          consequences.add(new DeductionItem(rule.getLhs() + "•",
+            mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]));
         }
       }
     }

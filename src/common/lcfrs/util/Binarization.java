@@ -32,7 +32,9 @@ public class Binarization {
     ArrayList<String> newNonterminals = new ArrayList<String>();
     Collections.addAll(newNonterminals, oldSrcg.getNonterminals());
     for (Clause clause : oldSrcg.getClauses()) {
-      if (clause.getRhs().size() > 2) {
+      if (clause.getRhs().size() <= 2) {
+        newSrcg.addClause(clause);
+      } else {
         ArrayList<Clause> r = new ArrayList<Clause>();
         int i = 1;
         ArrayList<String> newNtsLocal = new ArrayList<String>();
@@ -55,15 +57,14 @@ public class Binarization {
         }
         List<Predicate> clauseRhs = clause.getRhs();
         List<Predicate> lastCreatedRhs = r.get(r.size() - 1).getRhs();
-        Predicate lastNewPredicate = lastCreatedRhs.get(lastCreatedRhs.size()-1);
-        r.add(new Clause(lastNewPredicate + " -> "
-          + clauseRhs.get(clauseRhs.size() - 2)
-          + clauseRhs.get(clauseRhs.size() - 1)));
+        Predicate lastNewPredicate =
+          lastCreatedRhs.get(lastCreatedRhs.size() - 1);
+        r.add(new Clause(
+          lastNewPredicate + " -> " + clauseRhs.get(clauseRhs.size() - 2)
+            + clauseRhs.get(clauseRhs.size() - 1)));
         for (Clause rbar : r) {
           newSrcg.addClause(getClauseReplaceLongRhsArguments(rbar));
         }
-      } else {
-        newSrcg.addClause(clause);
       }
     }
     newSrcg.setNonterminals(
@@ -113,9 +114,10 @@ public class Binarization {
   private static Clause getReducedClause(Clause clause, int j, String newNt,
     Predicate predicate, Srcg srcg) throws ParseException {
     String newClause =
-        String.valueOf(predicate) + " -> " + clause.getRhs().get(0).toString()
-            + ' ' + newNt + '(' + getVectorLhsReducedByRhsPredAsString(
-            predicate, clause.getRhs().get(j), srcg) + ')';
+      String.valueOf(predicate) + " -> " + clause.getRhs().get(0).toString()
+        + ' ' + newNt + '(' + getVectorLhsReducedByRhsPredAsString(predicate,
+          clause.getRhs().get(j), srcg)
+        + ')';
     return new Clause(newClause);
   }
 

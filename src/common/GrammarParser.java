@@ -24,28 +24,32 @@ public class GrammarParser {
     String line = in.readLine().trim();
     while (line != null) {
       String lineTrim = line.trim();
-      if (lineTrim.charAt(0) == 'N') {
+      switch (lineTrim.charAt(0)) {
+      case 'N':
         if (cfg.getNonterminals() != null) {
           System.out.println("Declaring N twice is not allowed");
           in.close();
           return null;
         }
         cfg.setNonterminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'T') {
+        break;
+      case 'T':
         if (cfg.getTerminals() != null) {
           System.out.println("Declaring T twice is not allowed");
           in.close();
           return null;
         }
         cfg.setTerminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'S') {
+        break;
+      case 'S':
         if (cfg.getStartSymbol() != null) {
           System.out.println("Declaring S twice is not allowed");
           in.close();
           return null;
         }
         cfg.setStartSymbol(parseS(lineTrim));
-      } else if (lineTrim.charAt(0) == 'P') {
+        break;
+      case 'P':
         if (cfg.getProductionRules().size() > 0) {
           System.out.println("Declaring P twice is not allowed");
           in.close();
@@ -54,6 +58,9 @@ public class GrammarParser {
         for (String rule : parseNT(lineTrim)) {
           cfg.addProductionRule(rule);
         }
+        break;
+      default:
+        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
       }
       line = in.readLine();
     }
@@ -68,34 +75,41 @@ public class GrammarParser {
     String line = in.readLine().trim();
     while (line != null) {
       String lineTrim = line.trim();
-      if (lineTrim.charAt(0) == 'N') {
+      switch (lineTrim.charAt(0)) {
+      case 'N':
         if (pcfg.getNonterminals() != null) {
           System.out.println("Declaring N twice is not allowed");
           in.close();
           return null;
         }
         pcfg.setNonterminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'T') {
+        break;
+      case 'T':
         if (pcfg.getTerminals() != null) {
           System.out.println("Declaring T twice is not allowed");
           in.close();
           return null;
         }
         pcfg.setTerminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'S') {
+        break;
+      case 'S':
         if (pcfg.getStartSymbol() != null) {
           System.out.println("Declaring S twice is not allowed");
           in.close();
           return null;
         }
         pcfg.setStartSymbol(parseS(lineTrim));
-      } else if (lineTrim.charAt(0) == 'P') {
+        break;
+      case 'P':
         if (pcfg.getProductionRules().size() > 0) {
           System.out.println("Declaring P twice is not allowed");
           in.close();
           return null;
         }
         pcfg.setProductionRules(parseProbabilisticRules(lineTrim, ":", "->"));
+        break;
+      default:
+        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
       }
       line = in.readLine();
     }
@@ -153,28 +167,32 @@ public class GrammarParser {
     String line = in.readLine().trim();
     while (line != null) {
       String lineTrim = line.trim();
-      if (lineTrim.charAt(0) == 'N') {
+      switch (lineTrim.charAt(0)) {
+      case 'N':
         if (tag.getNonterminals() != null) {
           System.out.println("Declaring N twice is not allowed");
           in.close();
           return null;
         }
         tag.setNonterminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'T') {
+        break;
+      case 'T':
         if (tag.getTerminals() != null) {
           System.out.println("Declaring T twice is not allowed");
           in.close();
           return null;
         }
         tag.setTerminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'S') {
+        break;
+      case 'S':
         if (tag.getStartSymbol() != null) {
           System.out.println("Declaring S twice is not allowed");
           in.close();
           return null;
         }
-        tag.setStartsymbol(parseS(lineTrim));
-      } else if (lineTrim.charAt(0) == 'I') {
+        tag.setStartSymbol(parseS(lineTrim));
+        break;
+      case 'I':
         if (tag.getInitialTreeNames().size() > 0) {
           System.out.println("Declaring I twice is not allowed");
           in.close();
@@ -183,7 +201,8 @@ public class GrammarParser {
         for (String[] treedec : parseRules(lineTrim, ":")) {
           tag.addInitialTree(treedec[0], treedec[1]);
         }
-      } else if (lineTrim.charAt(0) == 'A') {
+        break;
+      case 'A':
         if (tag.getAuxiliaryTreeNames().size() > 0) {
           System.out.println("Declaring A twice is not allowed");
           in.close();
@@ -192,6 +211,9 @@ public class GrammarParser {
         for (String[] treeDec : parseRules(lineTrim, ":")) {
           tag.addAuxiliaryTree(treeDec[0], treeDec[1]);
         }
+        break;
+      default:
+        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
       }
       line = in.readLine();
     }
@@ -227,35 +249,40 @@ public class GrammarParser {
     String line = in.readLine().trim();
     while (line != null) {
       String lineTrim = line.trim();
-      if (lineTrim.charAt(0) == 'N') {
+      switch (lineTrim.charAt(0)) {
+      case 'N':
         if (srcg.getNonterminals() != null) {
           System.out.println("Declaring N twice is not allowed");
           in.close();
           return null;
         }
         srcg.setNonterminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'V') {
+        break;
+      case 'V':
         if (srcg.getVariables() != null) {
           System.out.println("Declaring V twice is not allowed");
           in.close();
           return null;
         }
         srcg.setVariables(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'T') {
+        break;
+      case 'T':
         if (srcg.getTerminals() != null) {
           System.out.println("Declaring T twice is not allowed");
           in.close();
           return null;
         }
         srcg.setTerminals(parseNT(lineTrim));
-      } else if (lineTrim.charAt(0) == 'S') {
+        break;
+      case 'S':
         if (srcg.getStartSymbol() != null) {
           System.out.println("Declaring S twice is not allowed");
           in.close();
           return null;
         }
         srcg.setStartSymbol(parseS(lineTrim));
-      } else if (lineTrim.charAt(0) == 'P') {
+        break;
+      case 'P':
         if (srcg.getClauses().size() > 0) {
           System.out.println("Declaring P twice is not allowed");
           in.close();
@@ -264,6 +291,9 @@ public class GrammarParser {
         for (String clauseDec : parseNT(lineTrim)) {
           srcg.addClause(clauseDec);
         }
+        break;
+      default:
+        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
       }
       line = in.readLine();
     }

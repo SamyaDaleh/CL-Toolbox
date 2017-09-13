@@ -31,26 +31,27 @@ public class ChainRules {
     Cfg cfgOld) {
     for (String[] unitPair : unitPairs) {
       for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-        if (isChainRuleAndConcernOfUnitPair(unitPair, rule, cfg)) {
-          boolean alreadyThere = false;
-          for (CfgProductionRule rule2 : cfg.getProductionRules()) {
-            if (rule.getLhs().equals(unitPair[0])
-              && rule2.getRhs().length == rule.getRhs().length) {
-              boolean alright = false;
-              for (int i = 0; i < rule.getRhs().length; i++) {
-                if (!rule.getRhs()[i].equals(rule2.getRhs()[i])) {
-                  alright = true;
-                }
-              }
-              if (!alright) {
-                alreadyThere = true;
+        if (!isChainRuleAndConcernOfUnitPair(unitPair, rule, cfg)) {
+          continue;
+        }
+        boolean alreadyThere = false;
+        for (CfgProductionRule rule2 : cfg.getProductionRules()) {
+          if (rule.getLhs().equals(unitPair[0])
+            && rule2.getRhs().length == rule.getRhs().length) {
+            boolean alright = false;
+            for (int i = 0; i < rule.getRhs().length; i++) {
+              if (!rule.getRhs()[i].equals(rule2.getRhs()[i])) {
+                alright = true;
               }
             }
+            if (!alright) {
+              alreadyThere = true;
+            }
           }
-          if (!alreadyThere) {
-            cfg.getProductionRules()
-              .add(new CfgProductionRule(unitPair[0], rule.getRhs()));
-          }
+        }
+        if (!alreadyThere) {
+          cfg.getProductionRules()
+            .add(new CfgProductionRule(unitPair[0], rule.getRhs()));
         }
       }
     }

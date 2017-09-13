@@ -32,7 +32,15 @@ public class Binarization {
     ArrayList<String[]> newP, Cfg cfg) {
     int i = 1;
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      if (rule.getRhs().length > 2) {
+      switch (rule.getRhs().length) {
+      case 1:
+        newP.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
+        break;
+      case 2:
+        newP.add(new String[] {rule.getLhs(),
+          rule.getRhs()[0] + " " + rule.getRhs()[1]});
+        break;
+      default:
         CfgProductionRule ruleRest = rule;
         while (ruleRest.getRhs().length > 2) {
           String newN = "X" + String.valueOf(i);
@@ -51,12 +59,6 @@ public class Binarization {
         }
         newP.add(new String[] {ruleRest.getLhs(),
           ruleRest.getRhs()[0] + " " + ruleRest.getRhs()[1]});
-      } else if (rule.getRhs().length == 2) {
-        newP.add(new String[] {rule.getLhs(),
-          rule.getRhs()[0] + " " + rule.getRhs()[1]});
-      }
-      if (rule.getRhs().length == 1) {
-        newP.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
       }
     }
   }

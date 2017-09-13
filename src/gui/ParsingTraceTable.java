@@ -52,11 +52,10 @@ public class ParsingTraceTable {
         int row = table.rowAtPoint(p);
         int col = table.columnAtPoint(p);
         if ((row > -1 && row < table.getRowCount())
-          && (col > -1 && col < table.getColumnCount())) {
-          if (hintCell == null || (hintCell.x != col || hintCell.y != row)) {
-            hintCell = new Point(col, row);
-            showTimer.restart();
-          }
+          && (col > -1 && col < table.getColumnCount())
+          && (hintCell == null || hintCell.x != col || hintCell.y != row)) {
+          hintCell = new Point(col, row);
+          showTimer.restart();
         }
       }
     });

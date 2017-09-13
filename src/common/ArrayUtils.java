@@ -49,13 +49,9 @@ public class ArrayUtils {
       return false;
     }
     for (int i = 0; i < itemForm1.length; i++) {
-      try { // DEBUG
       if (!(itemForm1[i].equals("?") || itemForm2[i].equals("?")
         || itemForm1[i].equals(itemForm2[i]))) {
         return false;
-      }
-      } catch (NullPointerException e) {
-        System.out.println("gotcha");
       }
     }
     return true;
@@ -101,7 +97,6 @@ public class ArrayUtils {
       if (j != i) {
         newArray.add(array[j]);
       }
-
     }
     return newArray.toArray(new String[newArray.size()]);
   }

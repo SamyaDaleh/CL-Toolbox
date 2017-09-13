@@ -91,6 +91,7 @@ public class LcfrsToDeductionRulesConverter {
           if (!lhsSymbolsAsPlainArray[i]
             .equals(wSplit[tryOutRange.get(i * 2)])) {
             match = false;
+            break;
           }
         }
         if (match) {
@@ -133,17 +134,18 @@ public class LcfrsToDeductionRulesConverter {
     for (Clause clause : srcg.getClauses()) {
       DynamicDeductionRule predict = new SrcgEarleyPredict(clause);
       schema.addRule(predict);
-      if (clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
-        StaticDeductionRule initialize = new StaticDeductionRule();
-        initialize
-          .addConsequence(new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
-            new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
-        initialize.setName("initialize");
-        schema.addAxiom(initialize);
-        schema.addGoal(new SrcgEarleyActiveItem(clause.toString(),
-          wsplit.length, 1, clause.getLhs().getSymbolsAsPlainArray().length,
-          new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
+      if (!clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
+        continue;
       }
+      StaticDeductionRule initialize = new StaticDeductionRule();
+      initialize
+        .addConsequence(new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
+          new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
+      initialize.setName("initialize");
+      schema.addAxiom(initialize);
+      schema.addGoal(new SrcgEarleyActiveItem(clause.toString(), wsplit.length,
+        1, clause.getLhs().getSymbolsAsPlainArray().length,
+        new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
     }
     DynamicDeductionRule scan = new SrcgEarleyScan(wsplit);
     schema.addRule(scan);
@@ -155,7 +157,6 @@ public class LcfrsToDeductionRulesConverter {
     schema.addRule(complete);
     DynamicDeductionRule resume = new SrcgEarleyResume(srcg.getVariables());
     schema.addRule(resume);
-
     return schema;
   }
 }

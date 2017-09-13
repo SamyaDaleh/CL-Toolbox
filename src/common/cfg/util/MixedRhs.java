@@ -53,41 +53,41 @@ public class MixedRhs {
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       if (rule.getRhs().length == 1) {
         cfg.getProductionRules().add(rule);
-      } else {
-        ArrayList<String> newRhs = new ArrayList<String>();
-        for (String sym : rule.getRhs()) {
-          if (cfgOld.nonterminalsContain(sym)) {
-            newRhs.add(sym);
-          } else {
-            String newLhs = null;
-            for (String[] tryRule : newTRules) {
-              if (tryRule[1].equals(sym)) {
-                newLhs = tryRule[0];
-              }
-            }
-            boolean isNew = false;
-            if (newLhs == null) {
-              newLhs = "Y" + String.valueOf(i);
-              i++;
-              isNew = true;
-              cfg.getProductionRules()
-                .add(new CfgProductionRule(newLhs, new String[] {sym}));
-            }
-            while (cfgOld.nonterminalsContain(newLhs)
-              || cfgOld.terminalsContain(newLhs)) {
-              newLhs = "Y" + String.valueOf(i);
-              i++;
-            }
-            if (isNew) {
-              newNt.add(newLhs);
-              newTRules.add(new String[] {newLhs, sym});
-            }
-            newRhs.add(newLhs);
+        continue;
+      }
+      ArrayList<String> newRhs = new ArrayList<String>();
+      for (String sym : rule.getRhs()) {
+        if (cfgOld.nonterminalsContain(sym)) {
+          newRhs.add(sym);
+          continue;
+        }
+        String newLhs = null;
+        for (String[] tryRule : newTRules) {
+          if (tryRule[1].equals(sym)) {
+            newLhs = tryRule[0];
           }
         }
-        cfg.getProductionRules().add(new CfgProductionRule(rule.getLhs(),
-          newRhs.toArray(new String[newRhs.size()])));
+        boolean isNew = false;
+        if (newLhs == null) {
+          newLhs = "Y" + String.valueOf(i);
+          i++;
+          isNew = true;
+          cfg.getProductionRules()
+            .add(new CfgProductionRule(newLhs, new String[] {sym}));
+        }
+        while (cfgOld.nonterminalsContain(newLhs)
+          || cfgOld.terminalsContain(newLhs)) {
+          newLhs = "Y" + String.valueOf(i);
+          i++;
+        }
+        if (isNew) {
+          newNt.add(newLhs);
+          newTRules.add(new String[] {newLhs, sym});
+        }
+        newRhs.add(newLhs);
       }
+      cfg.getProductionRules().add(new CfgProductionRule(rule.getLhs(),
+        newRhs.toArray(new String[newRhs.size()])));
     }
   }
 }

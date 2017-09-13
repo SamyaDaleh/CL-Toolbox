@@ -24,7 +24,7 @@ public class Binarization {
   /** Return equivalent TAG were all nodes have at most 2 child nodes. */
   public static Tag getBinarizedTag(Tag oldTag) throws ParseException {
     Tag newTag = new Tag();
-    newTag.setStartsymbol(oldTag.getStartSymbol());
+    newTag.setStartSymbol(oldTag.getStartSymbol());
     newTag.setTerminals(oldTag.getTerminals());
     ArrayList<String> newNonterminals = new ArrayList<String>();
     newNonterminals.addAll(Arrays.asList(oldTag.getNonterminals()));

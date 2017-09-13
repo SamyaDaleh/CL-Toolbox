@@ -84,7 +84,6 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
           int[] indices = rhs.find(mayV1);
           boolean dotIsAtArgEnd = clause2Parsed.getLhs().ifSymExists(iInt2, 0)
             && jInt2 == clause2Parsed.getLhs().getSymbols()[iInt2 - 1].length;
-
           if (indices[0] == iInt2 + 1 && isVar1 && !mayV1FirstArg
             && dotIsAtArgEnd
             && clause2Parsed.getLhs().ifSymExists(iInt2 + 1, 0)) {

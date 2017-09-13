@@ -76,12 +76,13 @@ public class UselessSymbols {
     while (changed) {
       changed = false;
       for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-        if (reachable.contains(rule.getLhs())) {
-          for (String symbol : rule.getRhs()) {
-            if (!reachable.contains(symbol)) {
-              reachable.add(symbol);
-              changed = true;
-            }
+        if (!reachable.contains(rule.getLhs())) {
+          continue;
+        }
+        for (String symbol : rule.getRhs()) {
+          if (!reachable.contains(symbol)) {
+            reachable.add(symbol);
+            changed = true;
           }
         }
       }
