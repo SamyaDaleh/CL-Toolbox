@@ -136,7 +136,7 @@ public class Cfg extends AbstractCfg {
   }
 
   /** Returns true if grammar has rules of the form A -> B. */
-  public boolean hasChainRules() {
+  boolean hasChainRules() {
     return ChainRules.hasChainRules(this);
   }
 

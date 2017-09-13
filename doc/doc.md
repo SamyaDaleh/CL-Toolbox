@@ -220,16 +220,11 @@ This implementation of the Unger algorithm can not handle empty productions or r
 
 ##### PCFG A*
 
-A* or A Star parsing is based on probabilistic CYK parsing. Hence it needs a probabilistic grammar in Chomsky Normal Form. Because probabilities are used a not fitting grammar can not be converted into a fitting one. The algorithm works like CYK parsing described above, differences affect the handling of the probabilities. The probabilities here are handled as weights instead, that is the absolute value of the logarithm of the probability. The main idea of the algorithm is beside the actual weight of the applied rules also to include an estimation 
-// more detailed working mentioning rules
-// information included in items
+A* or A Star parsing is based on probabilistic CYK parsing. Hence it needs a probabilistic grammar in Chomsky Normal Form. Because probabilities are used a not fitting grammar can not be converted into a fitting one. The algorithm works like CYK parsing described above, differences affect the handling of the probabilities. The probabilities here are handled as weights instead, that is the absolute value of the logarithm of the probability. The main idea of the algorithm is beside the actual weight of the applied rules also to include an estimation of the outside weight. For comparison of the weights the overall weight of an item is considered while when deriving a new item only the rule weights are further used and the own outside weight of the new item is added to that. The items beside the weight and the nonterminal like in CYK include the from and to indices rather then the length of the span.
 
 ##### TAG CYK
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+// Shall become mapping to CYK Extended.
 
 ##### TAG CYK Extended
 

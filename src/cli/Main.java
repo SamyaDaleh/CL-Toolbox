@@ -17,7 +17,7 @@ import gui.DisplayTree;
 import gui.ParsingTraceTable;
 
 /** Entry point into toolbox for the calls by command line */
-class Main {
+class Main { // NO_UCD (test only)
 
   /** Command line arguments are passed here. Call without arguments displays
    * help about the what arguments to use. */

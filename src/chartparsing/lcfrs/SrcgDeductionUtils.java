@@ -17,7 +17,7 @@ public class SrcgDeductionUtils {
    * Suspend: [S(•X1 X2) -> A(X1,X2), 0, <1,0>, (<?,?>)]] [[A(a •,b) -> ε, 1,
    * <1,1>, (<0,1>, <?,?>)] all previously seen arguments in item1 have to match
    * with the ones in item 2. */
-  static boolean ifRhsVectorMatchesLhsVector(Clause clause1Parsed,
+  public static boolean ifRhsVectorMatchesLhsVector(Clause clause1Parsed,
     String[] itemForm1, Predicate rhs1, int iInt1, Clause clause2Parsed,
     String[] itemform2) {
     boolean vectorsMatch = true;
@@ -40,7 +40,7 @@ public class SrcgDeductionUtils {
     return vectorsMatch;
   }
 
-  static boolean ifRhsVectorMatchesLhsVectorResume(Clause clause1Parsed,
+  public static boolean ifRhsVectorMatchesLhsVectorResume(Clause clause1Parsed,
     String[] itemForm1, Predicate rhs1, int iInt1, Clause clause2Parsed,
     String[] itemform2) {
     boolean vectorsMatch = true;
