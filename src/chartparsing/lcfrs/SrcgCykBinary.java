@@ -58,12 +58,6 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
             vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 2]);
           }
         }
-    /*    int i = 0; // TODO try 
-        for (; i * 2 < vectorRanges.size(); i++) {
-          if (!vectorRanges.get(i * 2).equals("?")) {
-            break;
-          }
-        }//*/
         int i = (vectorRanges.lastIndexOf("?") + 1) / 2;
         int prevnum = Integer.parseInt(vectorRanges.get(i * 2));
         for (; i > 0; --i) {

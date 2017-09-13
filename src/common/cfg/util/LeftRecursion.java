@@ -22,11 +22,7 @@ public class LeftRecursion {
 
   /** Returns true if rule has direct left recursion. */
   private static boolean hasDirectLeftRecursion(CfgProductionRule rule) {
-    if (rule.getLhs().equals(rule.getRhs()[0]) && rule.getRhs().length > 1) {
-      return true;
-    } else {
-      return false;
-    }
+    return rule.getLhs().equals(rule.getRhs()[0]) && rule.getRhs().length > 1;
   }
 
   /** Removes direct left recursion. S -> S is ignored. S -> S a | b are

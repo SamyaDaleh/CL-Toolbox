@@ -81,7 +81,7 @@ public class DeductionTest {
   @Test public void testTagCyk() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToCykRules(TestGrammarLibrary.anCBTag(), w2);
+      .tagToCykExtendedRules(TestGrammarLibrary.anCBTag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();

@@ -45,8 +45,8 @@ public class GrammarToDeductionRulesConverter {
    * first. */
   public ParsingSchema convertToSchema(Tag tag, String w, String algorithm) {
     switch (algorithm) {
-    case "tag-cyk":
-      return TagToDeductionRulesConverter.tagToCykRules(tag, w);
+    case "tag-cyk-extended":
+      return TagToDeductionRulesConverter.tagToCykExtendedRules(tag, w);
     case "tag-earley":
       return TagToDeductionRulesConverter.tagToEarleyRules(tag, w);
     case "tag-earley-prefixvalid":

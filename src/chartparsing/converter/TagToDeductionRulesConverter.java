@@ -51,7 +51,7 @@ import common.tag.Vertex;
 public class TagToDeductionRulesConverter {
 
   /** Returns a parsing schema for CYK parsing of the given input w with tag. */
-  public static ParsingSchema tagToCykRules(Tag tag, String w) {
+  public static ParsingSchema tagToCykExtendedRules(Tag tag, String w) {
     if (!tag.isBinarized()) {
       System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
       return null;

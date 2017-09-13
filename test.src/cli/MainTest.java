@@ -21,7 +21,7 @@ import cli.Main;
       {"cfg-topdown"}, {"cfg-shiftreduce"}, {"cfg-earley"}, {"cfg-leftcorner"},
       {"cfg-leftcorner-chart"}, {"cfg-cyk"},
       {"cfg-cyk-extended"},{"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"},
-      {"tag-earley"}, {"tag-cyk"}, {"tag-earley-prefixvalid"},
+      {"tag-earley"}, {"tag-cyk-extended"}, {"tag-earley-prefixvalid"},
       {"srcg-cyk-extended"}, {"srcg-earley"}});
   }
 

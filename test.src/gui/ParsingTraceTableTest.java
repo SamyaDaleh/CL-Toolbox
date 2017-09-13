@@ -16,7 +16,7 @@ public class ParsingTraceTableTest {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S", "T"});
     g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartsymbol("S");
+    g.setStartSymbol("S");
     g.addInitialTree("α1", "(S T b)");
     g.addInitialTree("α2", "(T c)");
     g.addAuxiliaryTree("β", "(T a T*)");

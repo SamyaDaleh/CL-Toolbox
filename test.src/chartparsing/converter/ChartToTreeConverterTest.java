@@ -17,7 +17,7 @@ public class ChartToTreeConverterTest {
   @Test public void testTagCykToDerivatedTree() throws ParseException {
     String w2 = "a a c b";
     ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToCykRules(TestGrammarLibrary.gentag(), w2);
+      .tagToCykExtendedRules(TestGrammarLibrary.gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,

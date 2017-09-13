@@ -130,7 +130,7 @@ class GrammarToGrammarConverter {
 
   Tag checkAndMayConvertToTag(Tag tag, String algorithm) throws ParseException {
     switch (algorithm) {
-    case "tag-cyk":
+    case "tag-cyk-extended":
       if (!tag.isBinarized()) {
         if (please) {
            return tag.getBinarizedTag();
@@ -154,7 +154,7 @@ class GrammarToGrammarConverter {
 
   Tag checkAndMayConvertToTag(Cfg cfg, String algorithm) throws ParseException {
     switch (algorithm) {
-    case "tag-cyk":
+    case "tag-cyk-extended":
       if (!cfg.isBinarized()) {
         if (please) {
           return new Tag(cfg.getBinarizedCfg());

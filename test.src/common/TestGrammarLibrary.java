@@ -38,7 +38,7 @@ public class TestGrammarLibrary {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S", "T"});
     g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartsymbol("S");
+    g.setStartSymbol("S");
     g.addInitialTree("α1", "(S T b)");
     g.addInitialTree("α2", "(T c)");
     g.addAuxiliaryTree("β", "(T a T*)");
@@ -49,7 +49,7 @@ public class TestGrammarLibrary {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S"});
     g.setTerminals(new String[] {"a", "b", "c", "d"});
-    g.setStartsymbol("S");
+    g.setStartSymbol("S");
     g.addInitialTree("α", "(S ε)");
     g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
     return g;
@@ -59,7 +59,7 @@ public class TestGrammarLibrary {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"A", "B", "S"});
     g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartsymbol("S");
+    g.setStartSymbol("S");
     g.addInitialTree("α1", "(S (A )(S )(B ))");
     g.addInitialTree("α2", "(S (c ))");
     g.addInitialTree("α3", "(A (a ))");
@@ -319,7 +319,7 @@ public class TestGrammarLibrary {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S", "T"});
     g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartsymbol("S");
+    g.setStartSymbol("S");
     g.addInitialTree("α1", "(S T b)");
     g.addInitialTree("α2", "(T c)");
     g.addAuxiliaryTree("β", "(T a T*)");

@@ -36,7 +36,7 @@ public class DisplayTree extends JFrame {
     int maxDepth = getMaxDepth(args[0]);
     this.setSize(80 * maxDepth, 80 * maxDepth);
     this.setVisible(true);
-    
+
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     nodesDrawn = new HashMap<String, Integer[]>();
   }
@@ -60,15 +60,24 @@ public class DisplayTree extends JFrame {
   /** Initiates the drawing of the tree. */
   public void paint(Graphics g) {
     g.clearRect(0, 0, this.getWidth(), this.getHeight());
-    if (itemForm.length == 6) {
+    switch (itemForm.length) {
+    case 0:
+      break;
+    case 6:
       g.drawString(itemForm[2], 30, 60);
       g.drawString(itemForm[5], this.getWidth() - 30, 60);
-    } else if (itemForm.length == 8) {
+      break;
+    case 8:
       g.drawString(itemForm[3], 30, 60);
       g.drawString(itemForm[6], this.getWidth() - 30, 60);
-    } else if (itemForm.length == 9) {
+      break;
+    case 9:
       g.drawString(itemForm[4], 30, 60);
       g.drawString(itemForm[7], this.getWidth() - 30, 60);
+      break;
+    default:
+      System.err
+        .println("Unexpected item length " + String.valueOf(itemForm.length));
     }
     drawSubTree(g, tree.getNodeByGornAdress(""), 60, 0, this.getWidth());
     for (int i = 0; i < tree.getLeafOrder().size(); i++) {
@@ -95,17 +104,26 @@ public class DisplayTree extends JFrame {
       drawFootIndices(g, height, nodeX, label);
     }
     g.drawString(label, nodeX, height);
-    if (itemForm.length == 6) {
-      String gorn = itemForm[1].substring(0, itemForm[1].length()-1);
+    switch (itemForm.length) {
+    case 0:
+      break;
+    case 6:
+      String gorn = itemForm[1].substring(0, itemForm[1].length() - 1);
       if (p.getGornAddress().equals(gorn)
-          || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
+        || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
         drawTagCykDot(g, height, nodeX);
       }
-    } else if (itemForm.length == 8 || itemForm.length == 9) {
+      break;
+    case 8:
+    case 9:
       if (p.getGornAddress().equals(itemForm[1])
         || (p.getGornAddress().equals("") && itemForm[1].equals("ε"))) {
         drawTagEarleyDot(g, height, nodeX, label);
       }
+      break;
+    default:
+      System.err
+        .println("Unexpected item length " + String.valueOf(itemForm.length));
     }
     nodesDrawn.put(p.getGornAddress(), new Integer[] {nodeX, height});
     if (!p.getGornAddress().equals("")) {
@@ -182,14 +200,14 @@ public class DisplayTree extends JFrame {
     String label) {
     int halfLabelWidth = label.length() * 10 / 2;
     if (itemForm.length == 6) {
-      g.drawString(itemForm[3], nodeX-halfLabelWidth-10, height);
-      g.drawString(itemForm[4], nodeX+halfLabelWidth+10, height);
+      g.drawString(itemForm[3], nodeX - halfLabelWidth - 10, height);
+      g.drawString(itemForm[4], nodeX + halfLabelWidth + 10, height);
     } else if (itemForm.length == 8) {
-      g.drawString(itemForm[4], nodeX-halfLabelWidth-10, height);
-      g.drawString(itemForm[5], nodeX+halfLabelWidth+10, height);
+      g.drawString(itemForm[4], nodeX - halfLabelWidth - 10, height);
+      g.drawString(itemForm[5], nodeX + halfLabelWidth + 10, height);
     } else if (itemForm.length == 9) {
-      g.drawString(itemForm[5], nodeX-halfLabelWidth-10, height);
-      g.drawString(itemForm[6], nodeX+halfLabelWidth+10, height);
+      g.drawString(itemForm[5], nodeX - halfLabelWidth - 10, height);
+      g.drawString(itemForm[6], nodeX + halfLabelWidth + 10, height);
     }
   }
 

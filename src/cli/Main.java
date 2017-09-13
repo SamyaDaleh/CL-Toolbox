@@ -32,6 +32,9 @@ class Main {
     if (algorithm.equals("srcg-cyk")) {
       System.out.println("Using srcg-cyk-extended instead.");
       algorithm = "srcg-cyk-extended";
+    } else if (algorithm.equals("tag-cyk")) {
+      System.out.println("Using tag-cyk-extended instead.");
+      algorithm = "tag-cyk-extended";
     }
     boolean success = false;
     boolean please = false;
@@ -185,31 +188,38 @@ class Main {
         new String[] {"Id", "Item", "Rules", "Backpointers"});
     }
     if (schema != null) {
-      switch (algorithmSplit[0]) {
-      case "cfg":
-        Tree derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-          schema.getGoals(), algorithm.substring(4));
-        if (derivedTree != null) {
-          new DisplayTree(new String[] {derivedTree.toString()});
-        }
-        break;
-      case "tag":
-        derivedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
-          schema.getGoals(), tag);
-        if (derivedTree != null) {
-          new DisplayTree(new String[] {derivedTree.toString()});
-        }
-        break;
-      case "srcg":
-        derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
-          schema.getGoals(), algorithm.substring(5));
-        if (derivedTree != null) {
-          new DisplayTree(new String[] {derivedTree.toString()});
-        }
-        break;
-      default:
-        break;
+      drawDerivationTree(algorithm, schema, tag, deduction);
+    }
+  }
+
+  private static void drawDerivationTree(String algorithm, ParsingSchema schema,
+    Tag tag, Deduction deduction) throws ParseException {
+    String[] algorithmSplit = algorithm.split("-");
+    switch (algorithmSplit[0]) {
+    case "cfg":
+      Tree derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+        schema.getGoals(), algorithm.substring(4));
+      if (derivedTree != null) {
+        new DisplayTree(new String[] {derivedTree.toString()});
       }
+      break;
+    case "tag":
+      derivedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
+        schema.getGoals(), tag);
+      if (derivedTree != null) {
+        new DisplayTree(new String[] {derivedTree.toString()});
+      }
+      break;
+    case "srcg":
+      derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
+        schema.getGoals(), algorithm.substring(5));
+      if (derivedTree != null) {
+        new DisplayTree(new String[] {derivedTree.toString()});
+      }
+      break;
+    default:
+      System.err.println("Unknown formalism " + algorithmSplit[0]);
+      break;
     }
   }
 
@@ -221,7 +231,7 @@ class Main {
       + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
       + "\n   cfg-leftcorner" + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
       + "\n   cfg-shiftreduce" + "\n   cfg-unger" + "\n   pcfg-astar"
-      + "\n   tag-cyk" + "\n   tag-earley" + "\n   tag-earley-prefixvalid"
+      + "\n   tag-cyk-extended" + "\n   tag-earley" + "\n   tag-earley-prefixvalid"
       + "\n   srcg-cyk-extended" + "\n   srcg-earley");
     System.out.println(
       "Optional parameters can be: \n   --success : prints a trace only of items "
