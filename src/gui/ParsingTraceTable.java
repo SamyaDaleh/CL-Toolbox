@@ -21,6 +21,7 @@ public class ParsingTraceTable {
     table.setEnabled(false);
     f.add(new JScrollPane(table));
     f.pack();
+    f.setTitle("Parsing Trace Table");
     f.setVisible(true);
   }
 
@@ -39,6 +40,7 @@ public class ParsingTraceTable {
     f.add(new JScrollPane(table));
     this.tag = tag;
     f.pack();
+    f.setTitle("Parsing Trace Table");
     f.setVisible(true);
     showTimer = new Timer(200, new ShowPopupActionHandler());
     showTimer.setRepeats(false);

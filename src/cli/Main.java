@@ -2,6 +2,8 @@ package cli;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import chartparsing.Deduction;
 import chartparsing.ParsingSchema;
@@ -15,6 +17,7 @@ import common.tag.Tag;
 import common.tag.Tree;
 import gui.DisplayTree;
 import gui.ParsingTraceTable;
+import gui.ParsingTraceTableFx;
 
 /** Entry point into toolbox for the calls by command line */
 class Main { // NO_UCD (test only)
@@ -38,12 +41,14 @@ class Main { // NO_UCD (test only)
     }
     boolean success = false;
     boolean please = false;
+    boolean javafx = false;
     for (int i = 3; i < args.length; i++) {
       if (args[i].equals("--success")) {
         success = true;
-      }
-      if (args[i].equals("--please")) {
+      } else if (args[i].equals("--please")) {
         please = true;
+      } if (args[i].equals("--javafx")) {
+        javafx = true;
       }
     }
     ParsingSchema schema = null;
@@ -183,46 +188,58 @@ class Main { // NO_UCD (test only)
     System.out.println(deduction.doParse(schema, success));
     String[][] data = deduction.printTrace();
     if (tag != null) {
-      new ParsingTraceTable(data,
-        new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
+      if (javafx) {
+        // TODO
+      } else {
+        new ParsingTraceTable(data,
+          new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
+      }
     } else {
-      ParsingTraceTable.displayTrace(data,
-        new String[] {"Id", "Item", "Rules", "Backpointers"});
+      if (javafx) {
+        ArrayList<String> flatData = new ArrayList<String>();
+        for (String[] line : data) {
+          Collections.addAll(flatData, line);
+        }
+        ParsingTraceTableFx.main(flatData.toArray(new String[flatData.size()]));
+        
+      } else {
+        ParsingTraceTable.displayTrace(data,
+          new String[] {"Id", "Item", "Rules", "Backpointers"});
+      }
     }
     if (schema != null) {
-      drawDerivationTree(algorithm, schema, tag, deduction);
+      drawDerivationTree(algorithm, schema, tag, deduction, javafx);
     }
   }
 
   private static void drawDerivationTree(String algorithm, ParsingSchema schema,
-    Tag tag, Deduction deduction) throws ParseException {
+    Tag tag, Deduction deduction, boolean javafx) throws ParseException {
     String[] algorithmSplit = algorithm.split("-");
+    Tree derivedTree = null;
     switch (algorithmSplit[0]) {
     case "cfg":
-      Tree derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+       derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
         schema.getGoals(), algorithm.substring(4));
-      if (derivedTree != null) {
-        new DisplayTree(new String[] {derivedTree.toString()});
-      }
       break;
     case "tag":
       derivedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
         schema.getGoals(), tag);
-      if (derivedTree != null) {
-        new DisplayTree(new String[] {derivedTree.toString()});
-      }
       break;
     case "srcg":
       derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
         schema.getGoals(), algorithm.substring(5));
-      if (derivedTree != null) {
-        new DisplayTree(new String[] {derivedTree.toString()});
-      }
       break;
     default:
       System.out.println("Unknown formalism " + algorithmSplit[0]
         + ", can not retrieve derivated tree.");
-      break;
+    }
+    if (derivedTree != null) {
+      if (javafx) {
+        // TODO
+        System.out.println("Not implemented yet.");
+      } else {
+        new DisplayTree(new String[] {derivedTree.toString()});
+      }
     }
   }
 
@@ -241,7 +258,9 @@ class Main { // NO_UCD (test only)
       "Optional parameters can be: \n   --success : prints a trace only of items "
         + "that lead to a goal item."
         + "\n   --please : if a grammar doesn't fit an "
-        + "algorithm, ask me to convert it. No promises.");
+        + "algorithm, ask me to convert it. No promises."
+        + "\n   --javafx : display graphics with javafx instead of awt."
+        );
     System.out.println(
       "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
   }
