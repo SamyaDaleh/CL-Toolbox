@@ -37,13 +37,6 @@ public class Tag {
       i++;
     }
   }
-/**
- * Parses a TAG from its string representation.
- */
-  public Tag(String string) {
-    // TODO Auto-generated constructor stub
-    // I might change string representation to include quotes
-  }
 
   public void setNonterminals(String[] nonterminals) {
     this.nonterminals = nonterminals;

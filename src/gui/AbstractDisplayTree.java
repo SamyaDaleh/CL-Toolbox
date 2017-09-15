@@ -7,7 +7,7 @@ import common.tag.Vertex;
 
 public abstract class AbstractDisplayTree {
 
-  static String createTreeLabel(DisplayTreeInterface dti, Vertex p) {
+  private static String createTreeLabel(DisplayTreeInterface dti, Vertex p) {
     StringBuilder label = new StringBuilder();
     label.append(p.getLabel());
     if (dti.getTree().isInOA(p.getGornAddress())) {
@@ -22,8 +22,8 @@ public abstract class AbstractDisplayTree {
     return label.toString();
   }
 
-  static void drawFootIndices(DisplayTreeInterface dti, int height, int nodeX,
-    String label) {
+  private static void drawFootIndices(DisplayTreeInterface dti, int height,
+    int nodeX, String label) {
     int halfLabelWidth = label.length() * 10 / 2;
     if (dti.getItemForm().length == 6) {
       dti.drawText(dti.getItemForm()[3], nodeX - halfLabelWidth - 10, height);
@@ -37,8 +37,8 @@ public abstract class AbstractDisplayTree {
     }
   }
 
-  static void drawTagEarleyDot(DisplayTreeInterface dti, int height, int nodeX,
-    String label) {
+  private static void drawTagEarleyDot(DisplayTreeInterface dti, int height,
+    int nodeX, String label) {
     int halfLabelWidth = label.length() * 8 / 2;
     switch (dti.getItemForm()[2]) {
     case "la":
@@ -58,7 +58,8 @@ public abstract class AbstractDisplayTree {
     }
   }
 
-  static void drawTagCykDot(DisplayTreeInterface dti, int height, int nodeX) {
+  private static void drawTagCykDot(DisplayTreeInterface dti, int height,
+    int nodeX) {
     char pos = dti.getItemForm()[1].charAt(dti.getItemForm()[1].length() - 1);
     switch (pos) {
     case '⊤':

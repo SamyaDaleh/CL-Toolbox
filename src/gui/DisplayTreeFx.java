@@ -19,6 +19,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   private int x = 100;
   private int y = 500;
   private GraphicsContext gc;
+  private Stage stage;
 
   public DisplayTreeFx(String[] args) throws ParseException {
     this.tree = new Tree(args[0]);
@@ -31,7 +32,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   }
 
   private void displayTree() {
-    Stage stage = new Stage();
+    stage = new Stage();
     stage.setTitle("Tree");
     Group root = new Group();
     Canvas canvas = new Canvas(80 * tree.getWidth(), 80 * tree.getHeight());
@@ -81,5 +82,9 @@ public class DisplayTreeFx implements DisplayTreeInterface {
 
   @Override public int getHeight() {
     return (int) gc.getCanvas().getHeight();
+  }
+
+  public void dispose() {
+    stage.hide();
   }
 }
