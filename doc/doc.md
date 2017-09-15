@@ -34,7 +34,7 @@ Currently this only works if the user is located in the same folder as the jar a
 * srcg-cyk-extended
 * srcg-earley
 
-Additionally two flags can be added to the call. --success instead of printing the full trace it prints only items that lead to a goal item. If the parsing fails because the input sequence is not in the language of the grammar no steps are displayed. If steps are displayed they keep their original numbering, leaving gaps in the sequence of indices where items are left out. The other parameter is --please. When set and a grammar is not obviously not fitting for an algorithm, it is converted. Obvious conversions are performed regardless if the flag is set or not. That means for instance if a grammar is a CFG and the algorithm is for TAG, the grammar is trivially converted, no matter if the flag is set or not. If the grammar is CFG and the algorithm is for CFG the grammar still may not be appropriate. The CYK algorithm works only for grammars in Chomsky Normal Form. If the grammar is not in Chomsky Normal Form but shall be parsed with cfg-cyk, if the flag is not set the user will be informed that the grammar is not appropriate. If --please is set, the grammar is converted to Chomsky Normal Form before further steps are performed. See section GrammarToGrammarConverter in chapter Program Workflow for more details.
+Additionally three flags can be added to the call. --success instead of printing the full trace it prints only items that lead to a goal item. If the parsing fails because the input sequence is not in the language of the grammar no steps are displayed. If steps are displayed they keep their original numbering, leaving gaps in the sequence of indices where items are left out. The second parameter is --please. When set and a grammar is not obviously not fitting for an algorithm, it is converted. Obvious conversions are performed regardless if the flag is set or not. That means for instance if a grammar is a CFG and the algorithm is for TAG, the grammar is trivially converted, no matter if the flag is set or not. If the grammar is CFG and the algorithm is for CFG the grammar still may not be appropriate. The CYK algorithm works only for grammars in Chomsky Normal Form. If the grammar is not in Chomsky Normal Form but shall be parsed with cfg-cyk, if the flag is not set the user will be informed that the grammar is not appropriate. If --please is set, the grammar is converted to Chomsky Normal Form before further steps are performed. See section GrammarToGrammarConverter in chapter Program Workflow for more details. The last parameter --javafx is only for cosmetic use and displays the table with JavaFX rather than with AWT.
 
 ### Grammar formats
 
@@ -224,10 +224,7 @@ A* or A Star parsing is based on probabilistic CYK parsing. Hence it needs a pro
 
 ##### PCFG CYK
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+This is directly the probabilistic implementation of the CYK algorithm and needs a grammar in Chomsky normal form. Like A Star parsing the items include a weight rather than the probability and items encode start and end indices.
 
 ##### TAG CYK
 
@@ -235,6 +232,7 @@ As a removal of chain rules for TAG would remove possible nodes for adjunction a
 
 ##### TAG CYK Extended
 
+The CYK algorithm for TAG needs a grammar loosely similar to Chomsky Normal Form but with some differences since this is a tree grammar: Every node is supposed to contain at most two child nodes. Beside that the algorithm handles leaf nodes labeled with the empty string and a terminal node might be the sibling of a nonterminal node.
 // Grammar properties
 // Algorithm general working
 // more detailed working mentioning rules

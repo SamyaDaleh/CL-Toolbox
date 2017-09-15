@@ -1,9 +1,9 @@
 package cli;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.concurrent.FutureTask;
+
+import javax.swing.SwingUtilities;
 
 import chartparsing.Deduction;
 import chartparsing.ParsingSchema;
@@ -16,15 +16,19 @@ import common.lcfrs.Srcg;
 import common.tag.Tag;
 import common.tag.Tree;
 import gui.DisplayTree;
+import gui.DisplayTreeFx;
 import gui.ParsingTraceTable;
 import gui.ParsingTraceTableFx;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 
 /** Entry point into toolbox for the calls by command line */
 class Main { // NO_UCD (test only)
 
   /** Command line arguments are passed here. Call without arguments displays
-   * help about the what arguments to use. */
-  public static void main(String[] args) throws ParseException, IOException {
+   * help about the what arguments to use.
+   * @throws Exception */
+  public static void main(String[] args) throws Exception {
     if (args.length < 3) {
       printHelp();
       return;
@@ -47,10 +51,12 @@ class Main { // NO_UCD (test only)
         success = true;
       } else if (args[i].equals("--please")) {
         please = true;
-      } if (args[i].equals("--javafx")) {
+      }
+      if (args[i].equals("--javafx")) {
         javafx = true;
       }
     }
+    JfxWindowHolder jwh = new JfxWindowHolder();
     ParsingSchema schema = null;
     GrammarToGrammarConverter ggc = new GrammarToGrammarConverter(please);
     GrammarToDeductionRulesConverter gdrc =
@@ -189,36 +195,35 @@ class Main { // NO_UCD (test only)
     String[][] data = deduction.printTrace();
     if (tag != null) {
       if (javafx) {
-        // TODO
+        jwh.setRowData(data);
+        jwh.setTag(tag);
+        jwh.showParsingTraceTableFx();
       } else {
         new ParsingTraceTable(data,
           new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
       }
     } else {
       if (javafx) {
-        ArrayList<String> flatData = new ArrayList<String>();
-        for (String[] line : data) {
-          Collections.addAll(flatData, line);
-        }
-        ParsingTraceTableFx.main(flatData.toArray(new String[flatData.size()]));
-        
+        jwh.setRowData(data);
+        jwh.showParsingTraceTableFx();
       } else {
         ParsingTraceTable.displayTrace(data,
           new String[] {"Id", "Item", "Rules", "Backpointers"});
       }
     }
     if (schema != null) {
-      drawDerivationTree(algorithm, schema, tag, deduction, javafx);
+      drawDerivationTree(algorithm, schema, tag, deduction, javafx, jwh);
     }
   }
 
   private static void drawDerivationTree(String algorithm, ParsingSchema schema,
-    Tag tag, Deduction deduction, boolean javafx) throws ParseException {
+    Tag tag, Deduction deduction, boolean javafx, JfxWindowHolder jwc)
+    throws Exception {
     String[] algorithmSplit = algorithm.split("-");
     Tree derivedTree = null;
     switch (algorithmSplit[0]) {
     case "cfg":
-       derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
         schema.getGoals(), algorithm.substring(4));
       break;
     case "tag":
@@ -235,8 +240,8 @@ class Main { // NO_UCD (test only)
     }
     if (derivedTree != null) {
       if (javafx) {
-        // TODO
-        System.out.println("Not implemented yet.");
+        jwc.setArgs(new String[] {derivedTree.toString()});
+        jwc.showDisplayTreeFx();
       } else {
         new DisplayTree(new String[] {derivedTree.toString()});
       }
@@ -259,10 +264,63 @@ class Main { // NO_UCD (test only)
         + "that lead to a goal item."
         + "\n   --please : if a grammar doesn't fit an "
         + "algorithm, ask me to convert it. No promises."
-        + "\n   --javafx : display graphics with javafx instead of awt."
-        );
+        + "\n   --javafx : display graphics with javafx instead of awt.");
     System.out.println(
       "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
   }
+}
 
+class JfxWindowHolder {
+  private JFXPanel jfxPanel = null;
+  private String[] colNames =
+    new String[] {"Id", "Item", "Rules", "Backpointers"};
+  private String[][] rowData;
+  private Tag tag = null;
+  private String[] args = null;
+
+  public void setArgs(String[] args) {
+   this.args = args;
+  }
+
+  public void setTag(Tag tag) {
+    this.tag = tag;
+  }
+
+  public void showParsingTraceTableFx() throws Exception {
+    ensureFXApplicationThreadRunning();
+    Platform.runLater(this::_callParsingTraceTableFx);
+  }
+
+  public void showDisplayTreeFx() throws Exception {
+    ensureFXApplicationThreadRunning();
+    Platform.runLater(() -> {
+      try {
+        _callDisplayTreeFx();
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private void _callDisplayTreeFx() throws ParseException {
+    new DisplayTreeFx(args);
+  }
+
+  private void _callParsingTraceTableFx() {
+    new ParsingTraceTableFx(rowData, colNames, tag);
+  }
+
+  private void ensureFXApplicationThreadRunning() throws Exception {
+    if (jfxPanel != null)
+      return;
+    FutureTask<JFXPanel> fxThreadStarter = new FutureTask<>(() -> {
+      return new JFXPanel();
+    });
+    SwingUtilities.invokeLater(fxThreadStarter);
+    jfxPanel = fxThreadStarter.get();
+  }
+
+  public void setRowData(String[][] rowData) {
+    this.rowData = rowData;
+  }
 }

@@ -1,81 +1,86 @@
 package gui;
 
-import java.awt.Graphics;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
-
 import common.tag.Tree;
 import common.tag.Vertex;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.stage.Stage;
 
-public class DisplayTree extends JFrame {
+public class DisplayTreeFx {
 
-  private static final long serialVersionUID = -9123591819196303915L;
   private Tree tree;
   private Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
   private String[] itemForm;
   private int x = 100;
   private int y = 500;
 
-  /** Called with a tree in bracket format as argument, retrieves the depth by
-   * brackets to estimate needed windows size. */
-  public DisplayTree(String[] args) throws ParseException {
-    super();
+  public DisplayTreeFx(String[] args) throws ParseException {
     this.tree = new Tree(args[0]);
     if (args.length > 1) {
       this.itemForm = args[1].substring(1, args[1].length() - 1).split(",");
     } else {
       itemForm = new String[] {};
     }
-    this.setLocation(x, y);
+    displayTree();
+  }
 
-    this.setSize(80 * tree.getWidth(), 80 * tree.getHeight());
-    this.setVisible(true);
-
-    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+  private void displayTree() {
+    Stage stage = new Stage();
+    stage.setTitle("Tree");
+    Group root = new Group();
+    Canvas canvas = new Canvas(80 * tree.getWidth(), 80 * tree.getHeight());
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    paint(gc);
+    root.getChildren().add(canvas);
+    stage.setScene(new Scene(root));
+    stage.show();
   }
 
   /** Initiates the drawing of the tree. */
-  public void paint(Graphics g) {
-    g.clearRect(0, 0, this.getWidth(), this.getHeight());
+  public void paint(GraphicsContext gc) {
+    gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
     switch (itemForm.length) {
     case 0:
       break;
     case 6:
-      g.drawString(itemForm[2], 30, 60);
-      g.drawString(itemForm[5], this.getWidth() - 30, 60);
+      gc.fillText(itemForm[2], 30, 60);
+      gc.fillText(itemForm[5], gc.getCanvas().getWidth() - 30, 60);
       break;
     case 8:
-      g.drawString(itemForm[3], 30, 60);
-      g.drawString(itemForm[6], this.getWidth() - 30, 60);
+      gc.fillText(itemForm[3], 30, 60);
+      gc.fillText(itemForm[6], gc.getCanvas().getWidth() - 30, 60);
       break;
     case 9:
-      g.drawString(itemForm[4], 30, 60);
-      g.drawString(itemForm[7], this.getWidth() - 30, 60);
+      gc.fillText(itemForm[4], 30, 60);
+      gc.fillText(itemForm[7], gc.getCanvas().getWidth() - 30, 60);
       break;
     default:
       System.err
         .println("Unexpected item length " + String.valueOf(itemForm.length));
     }
-    drawSubTree(g, tree.getNodeByGornAdress(""), 60, 0, this.getWidth());
+    drawSubTree(gc, tree.getNodeByGornAdress(""), 60, 0, (int) gc.getCanvas().getWidth());
     for (int i = 0; i < tree.getLeafOrder().size(); i++) {
       int index = tree.getLeafOrder().indexOf(String.valueOf(i));
       Vertex p = tree.getNodeByGornAdress(tree.getLeafGorns().get(index));
-      int nodex = (i + 1) * this.getWidth() / (tree.getLeafOrder().size() + 1);
-      int height = this.getHeight() - 50;
-      g.drawString(p.getLabel(), nodex, height);
+      int nodex = (int) ((i + 1) * gc.getCanvas().getWidth() / (tree.getLeafOrder().size() + 1));
+      int height = (int) (gc.getCanvas().getHeight() - 50);
+      gc.fillText(p.getLabel(), nodex, height);
       Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
-      g.drawLine(nodex, height - 10, xyParent[0], xyParent[1] + 10);
+      gc.strokeLine(nodex, height - 10, xyParent[0], xyParent[1] + 10);
     }
   }
 
   /** Draws the root of a subtree in the middle, divides its space by the number
    * of its children's width, triggers to draw the children. */
-  private void drawSubTree(Graphics g, Vertex p, int height, int widthFrom,
+  private void drawSubTree(GraphicsContext g, Vertex p, int height, int widthFrom,
     int widthDelta) {
     if (tree.getLeafGorns().contains(p.getGornAddress())) {
       return;
@@ -85,7 +90,7 @@ public class DisplayTree extends JFrame {
     if (tree.getFoot() != null && tree.getFoot().equals(p)) {
       drawFootIndices(g, height, nodeX, label);
     }
-    g.drawString(label, nodeX, height);
+    g.fillText(label, nodeX, height);
     switch (itemForm.length) {
     case 0:
       break;
@@ -110,7 +115,7 @@ public class DisplayTree extends JFrame {
     nodesDrawn.put(p.getGornAddress(), new Integer[] {nodeX, height});
     if (!p.getGornAddress().equals("")) {
       Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
-      g.drawLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
+      g.strokeLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
     }
     int widthSum = 0;
     List<Vertex> children = tree.getChildren(p);
@@ -131,65 +136,65 @@ public class DisplayTree extends JFrame {
       if (widthSum > 0) {
         int newWidthDelta = widthDelta * widths.get(i) / widthSum;
         drawSubTree(g, children.get(i),
-          height + this.getHeight() / tree.getHeight(), drawWidth,
+          (int) (height + g.getCanvas().getHeight() / tree.getHeight()), drawWidth,
           newWidthDelta);
         drawWidth += newWidthDelta;
       } else {
         drawSubTree(g, children.get(i),
-          height + this.getHeight() / tree.getHeight(), drawWidth,
+          (int) (height + g.getCanvas().getHeight() / tree.getHeight()), drawWidth,
           widthDelta / children.size());
         drawWidth += widthDelta / children.size();
       }
     }
   }
 
-  private void drawTagCykDot(Graphics g, int height, int nodeX) {
+  private void drawTagCykDot(GraphicsContext g, int height, int nodeX) {
     char pos = itemForm[1].charAt(itemForm[1].length() - 1);
     switch (pos) {
     case '⊤':
-      g.drawString("•", nodeX, height - 8);
+      g.fillText("•", nodeX, height - 8);
       break;
     case '⊥':
-      g.drawString("•", nodeX, height + 8);
+      g.fillText("•", nodeX, height + 8);
       break;
     default:
       System.out.println("Unknown pos: " + pos);
     }
   }
 
-  private void drawTagEarleyDot(Graphics g, int height, int nodeX,
+  private void drawTagEarleyDot(GraphicsContext g, int height, int nodeX,
     String label) {
     int halfLabelWidth = label.length() * 8 / 2;
     switch (itemForm[2]) {
     case "la":
-      g.drawString("•", nodeX - halfLabelWidth, height - 5);
+      g.fillText("•", nodeX - halfLabelWidth, height - 5);
       break;
     case "lb":
-      g.drawString("•", nodeX - halfLabelWidth, height + 8);
+      g.fillText("•", nodeX - halfLabelWidth, height + 8);
       break;
     case "rb":
-      g.drawString("•", nodeX + halfLabelWidth, height + 8);
+      g.fillText("•", nodeX + halfLabelWidth, height + 8);
       break;
     case "ra":
-      g.drawString("•", nodeX + halfLabelWidth, height - 5);
+      g.fillText("•", nodeX + halfLabelWidth, height - 5);
       break;
     default:
       System.out.println("Unknown pos: " + itemForm[2]);
     }
   }
 
-  private void drawFootIndices(Graphics g, int height, int nodeX,
+  private void drawFootIndices(GraphicsContext g, int height, int nodeX,
     String label) {
     int halfLabelWidth = label.length() * 10 / 2;
     if (itemForm.length == 6) {
-      g.drawString(itemForm[3], nodeX - halfLabelWidth - 10, height);
-      g.drawString(itemForm[4], nodeX + halfLabelWidth + 10, height);
+      g.fillText(itemForm[3], nodeX - halfLabelWidth - 10, height);
+      g.fillText(itemForm[4], nodeX + halfLabelWidth + 10, height);
     } else if (itemForm.length == 8) {
-      g.drawString(itemForm[4], nodeX - halfLabelWidth - 10, height);
-      g.drawString(itemForm[5], nodeX + halfLabelWidth + 10, height);
+      g.fillText(itemForm[4], nodeX - halfLabelWidth - 10, height);
+      g.fillText(itemForm[5], nodeX + halfLabelWidth + 10, height);
     } else if (itemForm.length == 9) {
-      g.drawString(itemForm[5], nodeX - halfLabelWidth - 10, height);
-      g.drawString(itemForm[6], nodeX + halfLabelWidth + 10, height);
+      g.fillText(itemForm[5], nodeX - halfLabelWidth - 10, height);
+      g.fillText(itemForm[6], nodeX + halfLabelWidth + 10, height);
     }
   }
 
