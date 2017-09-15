@@ -14,16 +14,6 @@ import javax.swing.*;
 import common.tag.Tag;
 
 public class ParsingTraceTable {
-  public static void displayTrace(String[][] rowData, String[] columnNames) {
-    JFrame f = new JFrame();
-    f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    JTable table = new JTable(rowData, columnNames);
-    table.setEnabled(false);
-    f.add(new JScrollPane(table));
-    f.pack();
-    f.setTitle("Parsing Trace Table");
-    f.setVisible(true);
-  }
 
   private final Timer showTimer;
   private final Timer disposeTimer;
@@ -42,25 +32,30 @@ public class ParsingTraceTable {
     f.pack();
     f.setTitle("Parsing Trace Table");
     f.setVisible(true);
-    showTimer = new Timer(200, new ShowPopupActionHandler());
-    showTimer.setRepeats(false);
-    showTimer.setCoalesce(true);
-    disposeTimer = new Timer(5000, new DisposePopupActionHandler());
-    disposeTimer.setRepeats(false);
-    disposeTimer.setCoalesce(true);
-    table.addMouseMotionListener(new MouseMotionAdapter() {
-      @Override public void mouseMoved(MouseEvent e) {
-        Point p = e.getPoint();
-        int row = table.rowAtPoint(p);
-        int col = table.columnAtPoint(p);
-        if ((row > -1 && row < table.getRowCount())
-          && (col > -1 && col < table.getColumnCount())
-          && (hintCell == null || hintCell.x != col || hintCell.y != row)) {
-          hintCell = new Point(col, row);
-          showTimer.restart();
+    if (tag == null) {
+      showTimer = null;
+      disposeTimer = null;
+    } else {
+      showTimer = new Timer(200, new ShowPopupActionHandler());
+      showTimer.setRepeats(false);
+      showTimer.setCoalesce(true);
+      disposeTimer = new Timer(5000, new DisposePopupActionHandler());
+      disposeTimer.setRepeats(false);
+      disposeTimer.setCoalesce(true);
+      table.addMouseMotionListener(new MouseMotionAdapter() {
+        @Override public void mouseMoved(MouseEvent e) {
+          Point p = e.getPoint();
+          int row = table.rowAtPoint(p);
+          int col = table.columnAtPoint(p);
+          if ((row > -1 && row < table.getRowCount())
+            && (col > -1 && col < table.getColumnCount())
+            && (hintCell == null || hintCell.x != col || hintCell.y != row)) {
+            hintCell = new Point(col, row);
+            showTimer.restart();
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   private DisplayTree getTreePopup() {

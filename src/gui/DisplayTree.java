@@ -2,17 +2,15 @@ package gui;
 
 import java.awt.Graphics;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import common.tag.Tree;
-import common.tag.Vertex;
 
-public class DisplayTree extends JFrame {
+public class DisplayTree extends JFrame implements DisplayTreeInterface {
 
   private static final long serialVersionUID = -9123591819196303915L;
   private Tree tree;
@@ -20,6 +18,7 @@ public class DisplayTree extends JFrame {
   private String[] itemForm;
   private int x = 100;
   private int y = 500;
+  private Graphics g;
 
   /** Called with a tree in bracket format as argument, retrieves the depth by
    * brackets to estimate needed windows size. */
@@ -41,170 +40,33 @@ public class DisplayTree extends JFrame {
 
   /** Initiates the drawing of the tree. */
   public void paint(Graphics g) {
-    g.clearRect(0, 0, this.getWidth(), this.getHeight());
-    switch (itemForm.length) {
-    case 0:
-      break;
-    case 6:
-      g.drawString(itemForm[2], 30, 60);
-      g.drawString(itemForm[5], this.getWidth() - 30, 60);
-      break;
-    case 8:
-      g.drawString(itemForm[3], 30, 60);
-      g.drawString(itemForm[6], this.getWidth() - 30, 60);
-      break;
-    case 9:
-      g.drawString(itemForm[4], 30, 60);
-      g.drawString(itemForm[7], this.getWidth() - 30, 60);
-      break;
-    default:
-      System.err
-        .println("Unexpected item length " + String.valueOf(itemForm.length));
-    }
-    drawSubTree(g, tree.getNodeByGornAdress(""), 60, 0, this.getWidth());
-    for (int i = 0; i < tree.getLeafOrder().size(); i++) {
-      int index = tree.getLeafOrder().indexOf(String.valueOf(i));
-      Vertex p = tree.getNodeByGornAdress(tree.getLeafGorns().get(index));
-      int nodex = (i + 1) * this.getWidth() / (tree.getLeafOrder().size() + 1);
-      int height = this.getHeight() - 50;
-      g.drawString(p.getLabel(), nodex, height);
-      Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
-      g.drawLine(nodex, height - 10, xyParent[0], xyParent[1] + 10);
-    }
+    this.g = g;
+    AbstractDisplayTree.paint(this);
   }
 
-  /** Draws the root of a subtree in the middle, divides its space by the number
-   * of its children's width, triggers to draw the children. */
-  private void drawSubTree(Graphics g, Vertex p, int height, int widthFrom,
-    int widthDelta) {
-    if (tree.getLeafGorns().contains(p.getGornAddress())) {
-      return;
-    }
-    int nodeX = widthFrom + widthDelta / 2;
-    String label = createTreeLabel(p);
-    if (tree.getFoot() != null && tree.getFoot().equals(p)) {
-      drawFootIndices(g, height, nodeX, label);
-    }
-    g.drawString(label, nodeX, height);
-    switch (itemForm.length) {
-    case 0:
-      break;
-    case 6:
-      String gorn = itemForm[1].substring(0, itemForm[1].length() - 1);
-      if (p.getGornAddress().equals(gorn)
-        || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
-        drawTagCykDot(g, height, nodeX);
-      }
-      break;
-    case 8:
-    case 9:
-      if (p.getGornAddress().equals(itemForm[1])
-        || (p.getGornAddress().equals("") && itemForm[1].equals("ε"))) {
-        drawTagEarleyDot(g, height, nodeX, label);
-      }
-      break;
-    default:
-      System.err
-        .println("Unexpected item length " + String.valueOf(itemForm.length));
-    }
-    nodesDrawn.put(p.getGornAddress(), new Integer[] {nodeX, height});
-    if (!p.getGornAddress().equals("")) {
-      Integer[] xyParent = nodesDrawn.get(p.getGornAddressOfParent());
-      g.drawLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
-    }
-    int widthSum = 0;
-    List<Vertex> children = tree.getChildren(p);
-    ArrayList<Integer> widths = new ArrayList<Integer>();
-    for (Vertex child : children) {
-      int width = tree.getWidthBelowNode(child);
-      if (width == 0) {
-        widthSum += 1;
-        widths.add(1);
-      } else {
-        widthSum += width;
-        widths.add(width);
-      }
-    }
-
-    int drawWidth = widthFrom;
-    for (int i = 0; i < children.size(); i++) {
-      if (widthSum > 0) {
-        int newWidthDelta = widthDelta * widths.get(i) / widthSum;
-        drawSubTree(g, children.get(i),
-          height + this.getHeight() / tree.getHeight(), drawWidth,
-          newWidthDelta);
-        drawWidth += newWidthDelta;
-      } else {
-        drawSubTree(g, children.get(i),
-          height + this.getHeight() / tree.getHeight(), drawWidth,
-          widthDelta / children.size());
-        drawWidth += widthDelta / children.size();
-      }
-    }
+  @Override public Tree getTree() {
+    return this.tree;
   }
 
-  private void drawTagCykDot(Graphics g, int height, int nodeX) {
-    char pos = itemForm[1].charAt(itemForm[1].length() - 1);
-    switch (pos) {
-    case '⊤':
-      g.drawString("•", nodeX, height - 8);
-      break;
-    case '⊥':
-      g.drawString("•", nodeX, height + 8);
-      break;
-    default:
-      System.out.println("Unknown pos: " + pos);
-    }
+  @Override public String[] getItemForm() {
+    return this.itemForm;
   }
 
-  private void drawTagEarleyDot(Graphics g, int height, int nodeX,
-    String label) {
-    int halfLabelWidth = label.length() * 8 / 2;
-    switch (itemForm[2]) {
-    case "la":
-      g.drawString("•", nodeX - halfLabelWidth, height - 5);
-      break;
-    case "lb":
-      g.drawString("•", nodeX - halfLabelWidth, height + 8);
-      break;
-    case "rb":
-      g.drawString("•", nodeX + halfLabelWidth, height + 8);
-      break;
-    case "ra":
-      g.drawString("•", nodeX + halfLabelWidth, height - 5);
-      break;
-    default:
-      System.out.println("Unknown pos: " + itemForm[2]);
-    }
+  @Override public void drawText(String label, int x, int y) {
+    g.drawString(label, x, y);
   }
 
-  private void drawFootIndices(Graphics g, int height, int nodeX,
-    String label) {
-    int halfLabelWidth = label.length() * 10 / 2;
-    if (itemForm.length == 6) {
-      g.drawString(itemForm[3], nodeX - halfLabelWidth - 10, height);
-      g.drawString(itemForm[4], nodeX + halfLabelWidth + 10, height);
-    } else if (itemForm.length == 8) {
-      g.drawString(itemForm[4], nodeX - halfLabelWidth - 10, height);
-      g.drawString(itemForm[5], nodeX + halfLabelWidth + 10, height);
-    } else if (itemForm.length == 9) {
-      g.drawString(itemForm[5], nodeX - halfLabelWidth - 10, height);
-      g.drawString(itemForm[6], nodeX + halfLabelWidth + 10, height);
-    }
+  @Override public void drawLine(int x1, int y1, int x2,
+    int y2) {
+    g.drawLine(x1, y1, x2, y2);
   }
 
-  private String createTreeLabel(Vertex p) {
-    StringBuilder label = new StringBuilder();
-    label.append(p.getLabel());
-    if (tree.isInOA(p.getGornAddress())) {
-      label.append("_OA");
-    }
-    if (tree.isInNA(p.getGornAddress())) {
-      label.append("_NA");
-    }
-    if (tree.getFoot() != null && tree.getFoot().equals(p)) {
-      label.append("*");
-    }
-    return label.toString();
+  @Override public Map<String, Integer[]> getNodesDrawn() {
+    return this.nodesDrawn;
   }
+
+  @Override public void clearRect(int i, int j, int width, int height) {
+    g.clearRect(i, j, width, height);
+  }
+  
 }

@@ -1,10 +1,5 @@
 package cli;
 
-import java.text.ParseException;
-import java.util.concurrent.FutureTask;
-
-import javax.swing.SwingUtilities;
-
 import chartparsing.Deduction;
 import chartparsing.ParsingSchema;
 import chartparsing.converter.ChartToTreeConverter;
@@ -16,11 +11,8 @@ import common.lcfrs.Srcg;
 import common.tag.Tag;
 import common.tag.Tree;
 import gui.DisplayTree;
-import gui.DisplayTreeFx;
+import gui.JfxWindowHolder;
 import gui.ParsingTraceTable;
-import gui.ParsingTraceTableFx;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
 
 /** Entry point into toolbox for the calls by command line */
 class Main { // NO_UCD (test only)
@@ -207,8 +199,8 @@ class Main { // NO_UCD (test only)
         jwh.setRowData(data);
         jwh.showParsingTraceTableFx();
       } else {
-        ParsingTraceTable.displayTrace(data,
-          new String[] {"Id", "Item", "Rules", "Backpointers"});
+        new ParsingTraceTable(data,
+          new String[] {"Id", "Item", "Rules", "Backpointers"}, null);
       }
     }
     if (schema != null) {
@@ -267,60 +259,5 @@ class Main { // NO_UCD (test only)
         + "\n   --javafx : display graphics with javafx instead of awt.");
     System.out.println(
       "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
-  }
-}
-
-class JfxWindowHolder {
-  private JFXPanel jfxPanel = null;
-  private String[] colNames =
-    new String[] {"Id", "Item", "Rules", "Backpointers"};
-  private String[][] rowData;
-  private Tag tag = null;
-  private String[] args = null;
-
-  public void setArgs(String[] args) {
-   this.args = args;
-  }
-
-  public void setTag(Tag tag) {
-    this.tag = tag;
-  }
-
-  public void showParsingTraceTableFx() throws Exception {
-    ensureFXApplicationThreadRunning();
-    Platform.runLater(this::_callParsingTraceTableFx);
-  }
-
-  public void showDisplayTreeFx() throws Exception {
-    ensureFXApplicationThreadRunning();
-    Platform.runLater(() -> {
-      try {
-        _callDisplayTreeFx();
-      } catch (ParseException e) {
-        e.printStackTrace();
-      }
-    });
-  }
-
-  private void _callDisplayTreeFx() throws ParseException {
-    new DisplayTreeFx(args);
-  }
-
-  private void _callParsingTraceTableFx() {
-    new ParsingTraceTableFx(rowData, colNames, tag);
-  }
-
-  private void ensureFXApplicationThreadRunning() throws Exception {
-    if (jfxPanel != null)
-      return;
-    FutureTask<JFXPanel> fxThreadStarter = new FutureTask<>(() -> {
-      return new JFXPanel();
-    });
-    SwingUtilities.invokeLater(fxThreadStarter);
-    jfxPanel = fxThreadStarter.get();
-  }
-
-  public void setRowData(String[][] rowData) {
-    this.rowData = rowData;
   }
 }
