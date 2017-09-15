@@ -2,6 +2,10 @@
 
 The CL-Toolbox is an open source implementation of the parsing-as-deduction approach. It takes a grammar file, a string containing the input sequence and a string that determines the parsing algorithm and puts out the trace of steps of how the input was processed by that algorithm. According to the deduction approach a set of rules are used to derive a goal item. The deductions happens for every implemented parsing algorithm, only the underlying rules are changed. This documentation gives details about the functionality of the CL-Toolbox. It is aimed at users who seek a deeper understanding of how the different parts work together.
 
+## Folder Structure
+
+As state of the art the folder `src` contains the source code of the application while `test` contains the JUnit tests that ensure everything works correctly. In folder `releases` the exported, runable jar is located which is replaced sometimes as well as the wrapper scripts explained in the next section. Finally the folder `resources` contains some example grammars that can be used to parse inputs with this toolbox.
+
 ## Command line parameters
 
 This chapter explains all command line parameters that can be used when requesting the CL-Toolbox. Usually the Cl-Toolbox.jar file is used that is provided in the folder releases. A basic call can be this:
@@ -232,14 +236,11 @@ As a removal of chain rules for TAG would remove possible nodes for adjunction a
 
 ##### TAG CYK Extended
 
-The CYK algorithm for TAG needs a grammar loosely similar to Chomsky Normal Form but with some differences since this is a tree grammar: Every node is supposed to contain at most two child nodes. Beside that the algorithm handles leaf nodes labeled with the empty string and a terminal node might be the sibling of a nonterminal node.
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+The CYK algorithm for TAG needs a grammar loosely similar to Chomsky Normal Form but with some differences since this is a tree grammar: Every node is supposed to contain at most two child nodes. Beside that the algorithm handles leaf nodes labeled with the empty string and a terminal node might be the sibling of a nonterminal node. Like the CYK algorithm for CFG this one starts at the input string, following a bottom-up approach until it reaches the root node of the sentence. In lex-scan steps one item is created for every leaf node in the grammar whose label matches any of the input symbols. Similarly eps-scan matches an epsilon label with any position in the input. For every foot node all possible spans over the input string each trigger a new item. A move-unary or move-binary moves up from one respectively two child nodes to their parent. With substitute the algorithm moves from the root node of one tree to the substitution node in another tree that has the same label. Adjoin, because of the bottom-up approach, is so to say following an adjunction backwards: When there is an auxiliary tree item in the root node and another item where the position is in a node with the same label and if the foot node indices match the span of the other item, it assumes that an adjunction has occured, adding the outer span of the auxiliary tree item to the other item. Contrary null-adjoin assumes that no adjunction has occured, only setting the state of the applied item marking that nothing else is left to do. The items include the name of the tree they represent, a gorn address with some position marker either in the top (⊤) or bottom (⊥) position of a node, the beginning index of the items span, two indices of beginning and end of the foot node's span which is not set if no range has been determined or no foot node exists and finally the last index of the overall item span.
 
 ##### TAG Earley
 
+The Earley algorithm like the one for CFG works with arbitrary grammars and follows a top-down approach while trying to match the input from the beginning to the end. However, this version of the algorithm also generates some unused items from other parts of the input, because it does not check if triggering items have been completed yet. It starts with initializing
 // Grammar properties
 // Algorithm general working
 // more detailed working mentioning rules
