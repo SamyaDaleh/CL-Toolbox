@@ -4,7 +4,7 @@ The CL-Toolbox is an open source implementation of the parsing-as-deduction appr
 
 ## Folder Structure
 
-As state of the art the folder `src` contains the source code of the application while `test` contains the JUnit tests that ensure everything works correctly. In folder `releases` the exported, runable jar is located which is replaced sometimes as well as the wrapper scripts explained in the next section. Finally the folder `resources` contains some example grammars that can be used to parse inputs with this toolbox.
+As state of the art the folder `src` contains the source code of the application while `test` contains the JUnit tests that ensure everything works correctly. In folder `releases` the exported, runable jar is located which is replaced sometimes as well as the wrapper scripts explained in the next section. Finally the folder `resources` contains some example grammars that can be used to parse inputs with this toolbox. If some error due to javafx occurs please drop me a note and use the file from `releases/old/wo_javafx` as fallback.
 
 ## Command line parameters
 

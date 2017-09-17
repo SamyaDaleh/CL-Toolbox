@@ -87,4 +87,9 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   public void dispose() {
     stage.hide();
   }
+
+  public void setLocation(double x, double y) {
+    stage.setX(x);
+    stage.setY(y);
+  }
 }

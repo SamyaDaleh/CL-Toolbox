@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.MouseInfo;
 import java.text.ParseException;
 
 import common.tag.Tag;
@@ -30,7 +31,7 @@ public class ParsingTraceTableFx {
     new String[] {"Id", "Item", "Rules", "Backpointers"};
   private final Timeline showTimer;
   private final Timeline disposeTimer;
-  private TableRow popupRow;
+  private TableRow<?> popupRow;
   private TableColumn<ParsingStep, String> popupColumn;
   private DisplayTreeFx popup;
 
@@ -42,24 +43,21 @@ public class ParsingTraceTableFx {
     if (tag == null) {
       showTimer = null;
       disposeTimer = null;
-      displayTable();
     } else {
-      showTimer = new Timeline(new KeyFrame(
-        Duration.millis(500),
-        ae -> showPopup()));
+      showTimer =
+        new Timeline(new KeyFrame(Duration.millis(500), ae -> showPopup()));
       showTimer.play();
       showTimer.setAutoReverse(false);
-      disposeTimer = new Timeline(new KeyFrame(
-        Duration.millis(2500),
-        ae -> disposePopup()));
+      disposeTimer =
+        new Timeline(new KeyFrame(Duration.millis(2500), ae -> disposePopup()));
       showTimer.setAutoReverse(false);
-      displayTableWithHover();
     }
+    displayTable();
   }
 
-  private Object disposePopup() {
+  private DisplayTreeFx disposePopup() {
     DisplayTreeFx popup = getTreePopup();
-   // popup.setVisible(false);
+    popup.dispose();
     return popup;
   }
 
@@ -73,59 +71,27 @@ public class ParsingTraceTableFx {
     }
     return popup;
   }
-  
 
   private DisplayTreeFx getTreePopup() {
     if (popup != null) {
       popup.dispose();
       popup = null;
     }
-    String value = (String) popupColumn.getCellData(popupRow.getIndex());
+    String value = popupColumn.getCellData(popupRow.getIndex());
     if (value.charAt(0) == '[') {
       String treeName = value.substring(1, value.indexOf(','));
       try {
         popup = new DisplayTreeFx(
           new String[] {tag.getTree(treeName).toString(), value});
+        popup.setLocation(
+          Math.round(
+            MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()),
+          Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
       } catch (ParseException e) {
         e.printStackTrace();
       }
     }
     return popup;
-  }
-
-  private void displayTableWithHover() {
-    Stage stage = new Stage();
-    final VBox vbox = new VBox();
-    Scene scene = new Scene(vbox);
-    stage.setTitle("Parsing Trace Table");
-    stage.setWidth(850);
-    stage.setHeight(750);
-
-    for (String columnName : columnNames) {
-      TableColumn<ParsingStep, String> col =
-        new TableColumn<ParsingStep, String>(columnName);
-      col.setCellValueFactory(
-        new PropertyValueFactory<ParsingStep, String>(columnName));
-      col.setCellFactory(tc -> new HoverCell(this));
-      col.setMinWidth(200);
-      table.getColumns().add(col);
-    }
-    ObservableList<ParsingStep> data = FXCollections.observableArrayList();
-    for (String[] date : rowData) {
-      data.add(new ParsingStep(date));
-    }
-    table.setItems(data);
-    table.setPrefHeight(stage.getHeight() - 40);
-    table.setPrefWidth(stage.getWidth() - 40);
-
-    vbox.setSpacing(5);
-    vbox.setPadding(new Insets(10, 0, 0, 10));
-    vbox.getChildren().addAll(table);
-
-    VBox.setVgrow(table, Priority.ALWAYS);
-
-    stage.setScene(scene);
-    stage.show();
   }
 
   private void displayTable() {
@@ -141,6 +107,9 @@ public class ParsingTraceTableFx {
         new TableColumn<ParsingStep, String>(columnName);
       col.setCellValueFactory(
         new PropertyValueFactory<ParsingStep, String>(columnName));
+      if (tag != null) {
+        col.setCellFactory(tc -> new HoverCell(this));
+      }
       col.setMinWidth(200);
       table.getColumns().add(col);
     }
@@ -169,7 +138,7 @@ public class ParsingTraceTableFx {
     }
 
     protected void showPopup(ParsingTraceTableFx pttf) {
-      TableRow row = this.getTableRow();
+      TableRow<?> row = this.getTableRow();
       TableColumn<ParsingStep, String> col = this.getTableColumn();
       if ((row.getIndex() > -1) // && row < table.getRowCount()
         && (this.getIndex() > -1) // && col < table.getColumnCount()
@@ -180,14 +149,14 @@ public class ParsingTraceTableFx {
         pttf.getRestartShowTimer();
       }
     }
-    @Override
-    protected void updateItem(String item, boolean empty) {
-        super.updateItem(item, empty);
-        setText(empty ? null : item);
+
+    @Override protected void updateItem(String item, boolean empty) {
+      super.updateItem(item, empty);
+      setText(empty ? null : item);
     }
   }
 
-  public TableRow getPopupRow() {
+  public TableRow<?> getPopupRow() {
     return this.popupRow;
   }
 
@@ -204,7 +173,7 @@ public class ParsingTraceTableFx {
     this.popupColumn = col;
   }
 
-  public void setPopupRow(TableRow row) {
+  public void setPopupRow(TableRow<?> row) {
     this.popupRow = row;
   }
 

@@ -54,7 +54,7 @@ public class JfxWindowHolder {
   private void ensureFXApplicationThreadRunning() throws Exception {
     if (jfxPanel != null)
       return;
-    Platform.setImplicitExit(true);
+    Platform.setImplicitExit(false);
     FutureTask<JFXPanel> fxThreadStarter = new FutureTask<>(() -> {
       return new JFXPanel();
     });
