@@ -14,10 +14,10 @@ import javafx.stage.Stage;
 public class DisplayTreeFx implements DisplayTreeInterface {
 
   private Tree tree;
-  private Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
+  private final Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
   private String[] itemForm;
-  private int x = 100;
-  private int y = 500;
+  private final int x = 100;
+  private final int y = 500;
   private GraphicsContext gc;
   private Stage stage;
 
@@ -46,7 +46,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   }
 
   /** Initiates the drawing of the tree. */
-  public void paint(GraphicsContext gc) {
+  private void paint(GraphicsContext gc) {
     this.gc = gc;
     AbstractDisplayTree.paint(this);
   }

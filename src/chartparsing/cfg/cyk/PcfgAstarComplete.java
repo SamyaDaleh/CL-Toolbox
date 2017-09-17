@@ -32,10 +32,6 @@ public class PcfgAstarComplete implements DynamicDeductionRule {
     this.name = "complete " + pRule.toString();
   }
 
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add((PItem) item);
-  }
-
   @Override public List<Item> getAntecedences() {
     List<Item> outantecedences = new ArrayList<Item>();
     outantecedences.addAll(this.antecedences);

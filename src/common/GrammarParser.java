@@ -236,9 +236,12 @@ public class GrammarParser {
   /** Takes a line like "S" and returns the string inside the quotes. */
   private static String parseS(String lineTrim) {
     Matcher m = p.matcher(lineTrim);
-    m.find();
-    String s = m.group();
-    return s.substring(1, s.length() - 1);
+    if (m.find()) {
+      String s = m.group();
+      return s.substring(1, s.length() - 1);
+    }
+    System.err.println("No declaration of start symbol found in line " + lineTrim);
+    return null;
   }
 
   /** Parses a sRCG from a file and returns it as Srcg. */

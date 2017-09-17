@@ -13,10 +13,6 @@ public abstract class AbstractDynamicDeductionRule
 
   protected int antNeeded;
 
-  @Override public void addAntecedence(Item item) {
-    this.antecedences.add(item);
-  }
-
   @Override public List<Item> getAntecedences() {
     return this.antecedences;
   }

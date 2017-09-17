@@ -4,7 +4,7 @@ import java.util.Map;
 
 import common.tag.Tree;
 
-public interface DisplayTreeInterface {
+interface DisplayTreeInterface {
   
   Tree getTree();
   String[] getItemForm();

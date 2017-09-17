@@ -9,7 +9,7 @@ import common.ArrayUtils;
  */
 public class PcfgCykItem extends AbstractItem implements PItem {
   
-  private double p;
+  private final double p;
   
   /** Constructor takes the weight, a nonterminal, the beginning and end of
    * its span. */

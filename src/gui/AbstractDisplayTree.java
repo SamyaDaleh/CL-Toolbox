@@ -5,7 +5,7 @@ import java.util.List;
 
 import common.tag.Vertex;
 
-public abstract class AbstractDisplayTree {
+abstract class AbstractDisplayTree {
 
   private static String createTreeLabel(DisplayTreeInterface dti, Vertex p) {
     StringBuilder label = new StringBuilder();

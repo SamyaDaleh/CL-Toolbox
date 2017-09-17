@@ -18,8 +18,7 @@ import gui.ParsingTraceTable;
 class Main { // NO_UCD (test only)
 
   /** Command line arguments are passed here. Call without arguments displays
-   * help about the what arguments to use.
-   * @throws Exception */
+   * help about the what arguments to use. */
   public static void main(String[] args) throws Exception {
     if (args.length < 3) {
       printHelp();

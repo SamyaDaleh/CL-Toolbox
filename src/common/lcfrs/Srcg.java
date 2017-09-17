@@ -145,17 +145,6 @@ public class Srcg {
     return Order.isOrdered(this);
   }
 
-  /** Returns true if grammar has chain rules, that are rules with exactly one
-   * rhs predicate. */
-  public boolean hasChainRules() {
-    for (Clause clause : this.clauses) {
-      if (clause.getRhs().size() == 1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   /** Returns an equivalent sRCG where the variables are ordered in each rule
    * for each predicate. Might leave useless nonterminals behind. */
   public Srcg getOrderedSrcg() throws ParseException {

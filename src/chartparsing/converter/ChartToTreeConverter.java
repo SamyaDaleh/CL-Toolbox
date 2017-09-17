@@ -94,11 +94,12 @@ public class ChartToTreeConverter {
     Clause clause = new Clause(item.getItemform()[0]);
     StringBuilder extractedRule = new StringBuilder();
     extractedRule.append(clause.getLhs().getNonterminal()).append(" ->");
-    for (int i = 0; i < clause.getLhs().getDim(); i++) {
-      extractedRule.append(' ')
-        .append(clause.getLhs().getArgumentByIndex(i + 1)[0]).append('<');
-      extractedRule.append(item.getItemform()[i * 2 + 4]);
-      extractedRule.append('>');
+    String[] lhsSyms = clause.getLhs().getSymbolsAsPlainArray();
+    for (int i = 0; i < lhsSyms.length; i++) {
+        extractedRule.append(' ')
+          .append(lhsSyms[i]).append('<');
+        extractedRule.append(item.getItemform()[i * 2 + 4]);
+        extractedRule.append('>');
     }
     return new CfgProductionRule(extractedRule.toString());
   }

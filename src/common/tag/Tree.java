@@ -505,11 +505,8 @@ public class Tree {
           break;
         }
       }
-      if (!changed) {
-        return newTree;
-      }
     } while (changed);
-    return null;
+    return newTree;
   }
 
   public ArrayList<String> getLeafOrder() {

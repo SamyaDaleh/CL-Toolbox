@@ -14,10 +14,10 @@ public class DisplayTree extends JFrame implements DisplayTreeInterface {
 
   private static final long serialVersionUID = -9123591819196303915L;
   private Tree tree;
-  private Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
+  private final Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
   private String[] itemForm;
-  private int x = 100;
-  private int y = 500;
+  private final int x = 100;
+  private final int y = 500;
   private Graphics g;
 
   /** Called with a tree in bracket format as argument, retrieves the depth by

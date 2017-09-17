@@ -10,10 +10,6 @@ public class StaticDeductionRule implements DeductionRule{
   final List<Item> consequences = new ArrayList<Item>();
   private String name = null;
 
-  public void addAntecedence(Item item) {
-    antecedences.add(item);
-  }
-
   public void addConsequence(Item item) {
     consequences.add(item);
   }

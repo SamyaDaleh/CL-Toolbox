@@ -20,12 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class ParsingTraceTableFx {
+class ParsingTraceTableFx {
 
-  private String[][] rowData;
-  private Tag tag;
+  private final String[][] rowData;
+  private final Tag tag;
 
-  private TableView<ParsingStep> table = new TableView<ParsingStep>();
+  private final TableView<ParsingStep> table = new TableView<ParsingStep>();
 
   private String[] columnNames =
     new String[] {"Id", "Item", "Rules", "Backpointers"};
@@ -137,7 +137,7 @@ public class ParsingTraceTableFx {
       setOnMouseMoved(e -> showPopup(pttf));
     }
 
-    protected void showPopup(ParsingTraceTableFx pttf) {
+    void showPopup(ParsingTraceTableFx pttf) {
       TableRow<?> row = this.getTableRow();
       TableColumn<ParsingStep, String> col = this.getTableColumn();
       if ((row.getIndex() > -1) // && row < table.getRowCount()
@@ -156,24 +156,24 @@ public class ParsingTraceTableFx {
     }
   }
 
-  public TableRow<?> getPopupRow() {
+  private TableRow<?> getPopupRow() {
     return this.popupRow;
   }
 
-  public TableColumn<ParsingStep, String> getPopupCol() {
+  private TableColumn<ParsingStep, String> getPopupCol() {
     return this.popupColumn;
   }
 
-  public void getRestartShowTimer() {
+  private void getRestartShowTimer() {
     this.showTimer.stop();
     this.showTimer.playFromStart();
   }
 
-  public void setPopupCol(TableColumn<ParsingStep, String> col) {
+  private void setPopupCol(TableColumn<ParsingStep, String> col) {
     this.popupColumn = col;
   }
 
-  public void setPopupRow(TableRow<?> row) {
+  private void setPopupRow(TableRow<?> row) {
     this.popupRow = row;
   }
 

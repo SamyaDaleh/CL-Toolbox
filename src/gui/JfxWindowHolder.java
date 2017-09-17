@@ -13,7 +13,7 @@ import javafx.embed.swing.JFXPanel;
  * once. Calls the initialization of the other JFX windows. */
 public class JfxWindowHolder {
   private JFXPanel jfxPanel = null;
-  private String[] colNames =
+  private final String[] colNames =
     new String[] {"Id", "Item", "Rules", "Backpointers"};
   private String[][] rowData;
   private Tag tag = null;
@@ -55,9 +55,7 @@ public class JfxWindowHolder {
     if (jfxPanel != null)
       return;
     Platform.setImplicitExit(false);
-    FutureTask<JFXPanel> fxThreadStarter = new FutureTask<>(() -> {
-      return new JFXPanel();
-    });
+    FutureTask<JFXPanel> fxThreadStarter = new FutureTask<>(JFXPanel::new);
     SwingUtilities.invokeLater(fxThreadStarter);
     jfxPanel = fxThreadStarter.get();
   }
