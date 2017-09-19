@@ -256,9 +256,7 @@ Similar to the CYK algorithm for CFG this algorithm demands that no clause in th
 
 ##### SRCG Earley
 
-Unlike the previously seen Earley algorithms this implementation can not handle empty productions and assumes that the grammar is ordered. Despite that it still works top-down matching the input string starting at the beginning, with the difference that an item has to be suspended whenever the end of an argument is reached, so the string in between can be parsed before the next argument.
-// Grammar properties
-// Algorithm general working
+Unlike the previously seen Earley algorithms this implementation can not handle empty productions and assumes that the grammar is ordered. Despite that it still works top-down matching the input string starting at the beginning, with the difference that an item has to be suspended whenever the end of an argument is reached, so the string in between can be parsed before the next argument. There are two kinds of items: active and passive ones. Active items
 // more detailed working mentioning rules
 // information included in items
 
