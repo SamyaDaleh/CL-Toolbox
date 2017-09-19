@@ -244,10 +244,7 @@ The Earley algorithm like the one for CFG works with arbitrary grammars and foll
 
 ##### TAG Earley Prefix Valid
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+This prefix valid version works similar to the previous one but will not generate items that have not been predicted before. Its items contain an additional #TODO check# flag before the start index, also the index values can be '~' which stands for "does not matter". Most of the previous rules work the same despite handling the new flag. Predict adjoined now takes two items: Beside the auxiliary tree it also needs another item of any tree in any node position la where the adjunction can occur and generates the new item in lb where the auxiliary tree added to the span. Complete foot and adjoin now take three antecendence items: Complete foot needs one item in the foot node that shall be filled, any tree item in position rb to fill the gap and a tree item of the same tree and same node in la that triggered thr process. Similarly adjoin needs a complete auxiliary tree item, an item in rb where shall be adjoined and a similar item in la that triggered the adjunction. Also some new rules were added: Convert la1 takes any item with position la and turns the start index and both foot node indices to '~' Convert la2 takes any item with position la and turns the new predict flag and all but the last indices to '~'. The last new rule is called Convert rb and turns the predict flag and both foot node indices to '~'.
 
 ##### SRCG CYK
 
@@ -255,13 +252,11 @@ As chain rules in sRCG may add to the word and removing chain rules would change
 
 ##### SRCG CYK Extended
 
-// Grammar properties
-// Algorithm general working
-// more detailed working mentioning rules
-// information included in items
+Similar to the CYK algorithm for CFG this algorithm demands that no clause in the grammar has more than two predicates on the right hand side, also no epsilon rules are allowed, that are rules with an empty right hand side and the empty string as one or more left hand side predicate arguments. The working is also the same as for every CYK variant: Scan steps map terminating rules with strings from the input, with the difference that here different strings in one predicate might not precede each other. After that complete steps combine items that match the right hand sides of a rule to derive an item that represents the left hand side of the rule. The items consist of a nonterminal and a span vector that stores start and end span of every argument of the left hand side.
 
 ##### SRCG Earley
 
+Unlike the previously seen Earley algorithms this implementation can not handle empty productions and assumes that the grammar is ordered.
 // Grammar properties
 // Algorithm general working
 // more detailed working mentioning rules
