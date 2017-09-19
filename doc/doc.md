@@ -256,7 +256,7 @@ Similar to the CYK algorithm for CFG this algorithm demands that no clause in th
 
 ##### SRCG Earley
 
-Unlike the previously seen Earley algorithms this implementation can not handle empty productions and assumes that the grammar is ordered.
+Unlike the previously seen Earley algorithms this implementation can not handle empty productions and assumes that the grammar is ordered. Despite that it still works top-down matching the input string starting at the beginning, with the difference that an item has to be suspended whenever the end of an argument is reached, so the string in between can be parsed before the next argument.
 // Grammar properties
 // Algorithm general working
 // more detailed working mentioning rules
@@ -266,6 +266,17 @@ Unlike the previously seen Earley algorithms this implementation can not handle 
 
 The ChartToTreeConverter retrieves the derivated trees from a Deduction object. Currently not from every parsing trace the derivation tree can be retrieved. In general the converter searches for the goal item and retrieves the steps that lead to this goal, while considering only the first sets of backpointers in each case, hence the first found tree is generated. Because the search starts with the goal item the steps are retrieved in reversed order. Depending on the algorithm the steps are considered either in the given or in reversed (hence flipped again) order. The names of the steps contain the applied rule. The rules are converted to trees and applied to each other in the respective order, in this way the whole derivated tree is build up and returned in bracket format.
 
+#### CFG
+
+For every algorithm basically the steps are considered top down. Each rule is coverted into its respective tree. Each nonterminal leaf is replaced by the tree of the next rule that expands those nonterminal. This process repeats for every used rule and results in the full tree for an input string.
+
+#### TAG
+
+Under construction ...
+
+#### SRCG
+
+For sRCG the process nearly works the same as for CFG: Every used rule is converted into its string representation using only its nonterminals. Terminal strings are added as children after the nonterminals has been considered, this is because no generalization about the order of nonterminal and terminal children is possible. To each terminal string its index is extracted from the range vector and added in pointed brackets. This results in a full tree for the whole sentence in the bracket tree format described below.
 
 #### Tree format
 
