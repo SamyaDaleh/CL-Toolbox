@@ -47,9 +47,8 @@ import org.junit.runners.Parameterized.Parameters;
     callWithGrammar(".\\resources\\grammars\\anbmcndm.srcg", "a a b c c d");
   }
 
-  private void callWithGrammar(String grammarfile, String w)
-    throws Exception {
+  private void callWithGrammar(String grammarfile, String w) throws Exception {
     Main.main(new String[] {grammarfile, w, algorithm, "--please"});
-   // Main.main(new String[] {grammarfile, w, algorithm, "--javafx"});
+    Main.main(new String[] {grammarfile, w, algorithm, "--javafx"});
   }
 }
