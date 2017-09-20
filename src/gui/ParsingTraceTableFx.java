@@ -107,6 +107,7 @@ class ParsingTraceTableFx {
         new TableColumn<ParsingStep, String>(columnName);
       col.setCellValueFactory(
         new PropertyValueFactory<ParsingStep, String>(columnName));
+      col.setSortable(false);
       if (tag != null) {
         col.setCellFactory(tc -> new HoverCell(this));
       }
