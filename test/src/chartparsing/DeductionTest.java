@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import chartparsing.converter.CfgToDeductionRulesConverter;
@@ -124,6 +125,15 @@ public class DeductionTest {
     String w = "a a b b a c b b a c";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
       .srcgToCykExtendedRules(TestGrammarLibrary.longStringsSrcg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
+  @Ignore public void testSrcgCykGeneral() throws ParseException {
+    String w = "a a b b a c b b a c";
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .srcgToCykGeneralRules(TestGrammarLibrary.longStringsSrcg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();

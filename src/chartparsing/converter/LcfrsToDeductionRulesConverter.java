@@ -8,6 +8,7 @@ import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
 import chartparsing.lcfrs.SrcgDeductionUtils;
 import chartparsing.lcfrs.cyk.SrcgCykBinary;
+import chartparsing.lcfrs.cyk.SrcgCykGeneral;
 import chartparsing.lcfrs.cyk.SrcgCykItem;
 import chartparsing.lcfrs.cyk.SrcgCykUnary;
 import chartparsing.lcfrs.earley.SrcgEarleyActiveItem;
@@ -59,6 +60,27 @@ public class LcfrsToDeductionRulesConverter {
       } else if (clause.getRhs().size() == 1) {
         DynamicDeductionRule unary = new SrcgCykUnary(clause, wsplit);
         schema.addRule(unary);
+      }
+    }
+    schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
+    return schema;
+  }
+
+  public static ParsingSchema srcgToCykGeneralRules(Srcg srcg, String w) {
+    if (srcg.hasEpsilonProductions()) {
+      System.out.println(
+        "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
+      return null;
+    }
+    String[] wsplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+
+    for (Clause clause : srcg.getClauses()) {
+      if (clause.getRhs().size() == 0) {
+        addSrcgCykScanRules(wsplit, schema, clause);
+      } else {
+        DynamicDeductionRule general = new SrcgCykGeneral(clause, wsplit);
+        schema.addRule(general);
       }
     }
     schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
