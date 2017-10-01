@@ -294,6 +294,70 @@ Currently the graphical output consists of two classes: The ParsingTraceTable di
 
 This class takes a tree in bracket format as parameter and draws it on the canvas of a new window. Based on the number of brackets the highest depth of the tree is determined, which is used for a rough estimate of the window size. The tree object is parsed from the string representation. It starts to draw the tree with the root on top in the middle of the canvas. For each drawn node the coordinates where it was drawn are stored. For each child node of the current node the max width, that is the greatest number of nodes in one level below that node are retrieved and the horizontal space is divided according to this. Roughly speaking that means if a node has one child with 9 children itself (and no grand children) and one other child with one child, the first one gets 9/10 of the horizontal space, is drawn in the middle of that 9/10 and the remaining horizontal space is divided in the same way between its children. While the second child gets the remaining 1/10 of space. The vertical space is divided equally between the levels of the tree. When the position of a node that is not the root has been determined and its label was drawn, a line is drawn from above the label to below the parent node, which coordinates have already been stored. The trees of TAG rules are drawn in the same way, but along with their tree representation the string representation of their item is passed as second parameter. From the item form additional information is retrieved and drawn: Start and end indices of that item are displayed left and right of the canvas. Foot node indices are written below. A dot indicating a position in the tree is drawn at the respective node label, roughly considering the size of the label: For the CYK algorithm the dot can be below or above a node and for the Earley algorithms it can be at one of the four corners around a node label. For the derived tree of a sRCG algorithm which can have crossing edges the drawing of the tree is slightly different. If a leaf is encountered, it is not yet drawn, instead all leaves are drawn at last on the bottom level in the order their indices determine and lines are drawn from them to their parent. Because for the other nodes the space between them has been divided according to the widths of the subtrees below them, the changed order of the leaves may leave skewed trees behind.
 
-### References
+## References
+
+### A* for PCFG
+
+Kallmeyer, Laura: A* Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/a-star-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/a-star-parsing.pdf) – last checked 2017-05-27, p. 18
+
+### CFG: Removing left recursion
+
+Left Recursion. Wikipedia, 2017. URL [https://en.wikipedia.org/wiki/Left_recursion#Removing_direct_left_recursion](https://en.wikipedia.org/wiki/Left_recursion#Removing_direct_left_recursion) – last checked 2017-27-05 
+
+### CFG: Removing useless symbols, Removing epsilon productions, removing unary productions, replacing terminals, removing chain rules
+
+Hopcroft, John E. ; Motwani, Rajeev ; Ullman, Jeffrey D.: Einführung in die Automatentheorie, formale Sprachen und Komplexitätstheorie. 2nd Ed. München [u.a.] : Pearson Studium, 2002 (Informatik). -- ISBN 3-8273-7020-5, p. 298-313
+
+### CYK for CFG
+
+Kallmeyer, Laura: Cocke Younger Kasami (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/cyk.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/cyk.pdf) – last checked 2017-05-27, p. 12
+
+### CYK for sRCG
+
+Kallmeyer, Laura: LCFRS Parsing (Parsing Beyond Context-Free Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/lcfrs-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/lcfrs-parsing.pdf) – last checked 2017-27-05 p. 8
+
+### CYK for TAG
+
+Kallmeyer, Laura: Parsing beyond context-free grammars. Heidelberg : Springer, 2010 (Cognitive technologies). – ISBN 978-3-642-14845-3 S. 78-82
+
+Kallmeyer, Laura: Tree Adjoining Grammar Parsing (Parsing Beyond Context-Free Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf) – last checked 2017-27-05 p. 11-19
+
+### Earley for CFG
+
+Kallmeyer, Laura: Earley Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/earley.pdf](https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/earley.pdf) – last checked 2017-05-27, p. 6-8
+
+### Earley for sRCG
+
+Kallmeyer, Laura: Parsing beyond context-free grammars. Heidelberg : Springer, 2010 (Cognitive technologies). – ISBN 978-3-642-14845-3 p. 151-153
+
+Kallmeyer, Laura: LCFRS Parsing (Parsing Beyond Context-Free Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/lcfrs-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/lcfrs-parsing.pdf) – last checked 2017-27-05 p. 16-22
+
+### Earley for TAG
+
+Kallmeyer, Laura: Parsing beyond context-free grammars. Heidelberg : Springer, 2010 (Cognitive technologies). – ISBN 978-3-642-14845-3 S. 85-90
+
+Kallmeyer, Laura: Tree Adjoining Grammar Parsing (Parsing Beyond Context-Free Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf) – last checked 2017-27-05 p. 28-36
+
+### Extended CYK for CFG
+
+Satta, Giorgio: Part III: CKY Parsing (Everything you always wanted to know about parsing). Düsseldorf, August 2013, p. 32-33
+
+### Left Corner for CFG
+
+Kallmeyer, Laura: Left-Corner Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf) – last checked 2017-05-27, p. 6-8
+
+### Top-Down for CFG
+
+Kallmeyer, Laura: Parsing as Deduction (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf) – last checked 2017-05-27, p. 18-19
+
+### Tree String Format
 
 Marcus, Mitchell et. al: The Penn Treebank: annotating predicate argument structure. HLT '94 Proceedings of the workshop on Human Language Technology : Plainsboro, NJ, 1994. URL http://dl.acm.org/citation.cfm?id=1075835. – ISBN:1-55860-357-3 p. 114-119
+
+### Shift-Reduce for CFG
+
+Kallmeyer, Laura: Shift Reduce Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf) – last checked 2017-05-27, p. 12
+
+### Unger for CFG
+
+Kallmeyer, Laura: Parsing as Deduction (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf) – last checked 2017-06-15, p. 12-13
