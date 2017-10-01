@@ -130,7 +130,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Ignore public void testSrcgCykGeneral() throws ParseException {
+  @Test public void testSrcgCykGeneral() throws ParseException {
     String w = "a a b b a c b b a c";
     ParsingSchema schema = LcfrsToDeductionRulesConverter
       .srcgToCykGeneralRules(TestGrammarLibrary.longStringsSrcg(), w);

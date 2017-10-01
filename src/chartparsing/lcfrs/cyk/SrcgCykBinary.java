@@ -17,7 +17,7 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
   private final String[] wSplit;
 
   public SrcgCykBinary(Clause clause, String[] wSplit) {
-    this.name = "complete";
+    this.name = "complete " + clause.toString();
     this.antNeeded = 2;
     this.clause = clause;
     this.wSplit = wSplit;

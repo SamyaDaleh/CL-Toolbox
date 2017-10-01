@@ -104,6 +104,8 @@ class GrammarToGrammarConverter {
       return getSrcgForEarley(cfg);
     case "srcg-cyk-extended":
       return getSrcgForCykExtended(cfg);
+    case "srcg-cyk-general":
+      return getSrcgForCykGeneral(cfg);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -118,6 +120,8 @@ class GrammarToGrammarConverter {
       return getSrcgForEarley(srcg);
     case "srcg-cyk-extended":
       return getSrcgForCykExtended(srcg);
+    case "srcg-cyk-general":
+      return getSrcgForCykGeneral(srcg);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -291,6 +295,34 @@ class GrammarToGrammarConverter {
       } else {
         System.out.println(
           "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
+        return null;
+      }
+    } else {
+      return new Srcg(cfg);
+    }
+  }
+
+  private Srcg getSrcgForCykGeneral(Srcg srcg) throws ParseException {
+    if (srcg.hasEpsilonProductions()) {
+      if (please) {
+        return srcg.getSrcgWithoutEmptyProductions();
+      } else {
+        System.out.println(
+          "sRCG must not contain empty productions to apply general CYK parsing");
+        return null;
+      }
+    } else {
+      return srcg;
+    }
+  }
+
+  private Srcg getSrcgForCykGeneral(Cfg cfg) throws ParseException {
+    if (cfg.hasEpsilonProductions()) {
+      if (please) {
+        return new Srcg(cfg.getCfgWithoutEmptyProductions());
+      } else {
+        System.out.println(
+          "CFG must not contain empty productions to be converted into a sRCG where general CYK parsing is possible.");
         return null;
       }
     } else {

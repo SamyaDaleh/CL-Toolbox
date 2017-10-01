@@ -18,12 +18,14 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
 
   private final Clause clause;
   private final String[] wSplit;
+  private final int rangesNeeded;
 
   public SrcgCykGeneral(Clause clause, String[] wSplit) {
-    this.name = "complete";
+    this.name = "complete " + clause.toString();
     this.antNeeded = clause.getRhs().size();
     this.clause = clause;
     this.wSplit = wSplit;
+    this.rangesNeeded = clause.getLhs().getSymbolsAsPlainArray().length;
   }
 
   @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
@@ -38,11 +40,13 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
             addTerminalVectors(solutionRangesList, i, mayV);
             continue;
           }
+          List<List<String>> newsolutionRangesList =
+            new ArrayList<List<String>>();
           for (Item item : antecedences) {
             if (!nt.equals(item.getItemform()[0])) {
               continue;
             }
-            if (i == 0) {
+            if (i == 0 && j == 0) {
               for (Predicate rhsPred : clause.getRhs()) {
                 int[] indices = rhsPred.find(mayV);
                 if (indices[0] == -1) {
@@ -64,16 +68,22 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
                 }
                 int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
                 for (List<String> solutionRangeVector : solutionRangesList) {
-                  solutionRangeVector.add(item.getItemform()[absPos * 2 + 1]);
-                  solutionRangeVector.add(item.getItemform()[absPos * 2 + 2]);
+                  List<String> newList = new ArrayList<String>();
+                  newList.addAll(solutionRangeVector);
+                  newList.add(item.getItemform()[absPos * 2 + 1]);
+                  newList.add(item.getItemform()[absPos * 2 + 2]);
+                  newsolutionRangesList.add(newList);
                 }
               }
             }
           }
+          if (!newsolutionRangesList.isEmpty()) {
+            solutionRangesList = newsolutionRangesList;
+          }
         }
       }
       for (List<String> solutionRangeVector : solutionRangesList) {
-        if (solutionRangeVector.size() < this.antNeeded * 2) {
+        if (solutionRangeVector.size() < this.rangesNeeded * 2) {
           continue;
         }
         ArrayList<Integer> rangeOverElements = new ArrayList<Integer>();
@@ -81,13 +91,13 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         for (int o = 0; o < lhs.getDim(); o++) {
           String lastEnd = null;
           for (int p = 0; p < lhs.getArgumentByIndex(o + 1).length; p++) {
+            int absPos = lhs.getAbsolutePos(o + 1, p);
             if (p > 0) {
-              if (!lastEnd.equals(lhs.getSymAt(o + 1, p))) {
+              if (!lastEnd.equals(solutionRangeVector.get(absPos * 2))) {
                 vectorsMatch = false;
                 break;
               }
             }
-            int absPos = lhs.getAbsolutePos(o + 1, p);
             lastEnd = solutionRangeVector.get(absPos * 2 + 1);
             rangeOverElements
               .add(Integer.parseInt(solutionRangeVector.get(absPos * 2)));

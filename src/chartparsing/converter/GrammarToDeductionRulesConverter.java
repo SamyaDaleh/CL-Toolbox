@@ -68,6 +68,8 @@ public class GrammarToDeductionRulesConverter {
       return LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcg, w);
     case "srcg-cyk-extended":
       return LcfrsToDeductionRulesConverter.srcgToCykExtendedRules(srcg, w);
+    case "srcg-cyk-general":
+      return LcfrsToDeductionRulesConverter.srcgToCykGeneralRules(srcg, w);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");

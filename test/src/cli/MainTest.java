@@ -18,7 +18,7 @@ import org.junit.runners.Parameterized.Parameters;
       {"cfg-leftcorner-chart"}, {"cfg-cyk"}, {"cfg-cyk-extended"},
       {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"}, {"pcfg-cyk"},
       {"tag-earley"}, {"tag-cyk-extended"}, {"tag-earley-prefixvalid"},
-      {"srcg-cyk-extended"}, {"srcg-earley"}});
+      {"srcg-cyk-extended"}, {"srcg-cyk-general"}, {"srcg-earley"}});
   }
 
   public MainTest(String algorithm) {

@@ -249,7 +249,7 @@ class Main { // NO_UCD (test only)
       + "\n   cfg-shiftreduce" + "\n   cfg-unger" + "\n   pcfg-astar"
       + "\n   tag-cyk-extended" + "\n   tag-earley"
       + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk-extended"
-      + "\n   srcg-earley");
+      + "\n   srcg-cyk-general" + "\n   srcg-earley");
     System.out.println(
       "Optional parameters can be: \n   --success : prints a trace only of items "
         + "that lead to a goal item."

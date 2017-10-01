@@ -16,7 +16,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
   private final String[] wSplit;
 
   public SrcgCykUnary(Clause clause, String[] wSplit) {
-    this.name = "unary";
+    this.name = "unary " + clause.toString();
     this.antNeeded = 1;
     this.clause = clause;
     this.wSplit = wSplit;
