@@ -302,6 +302,20 @@ public class TestGrammarLibrary {
     return srcg;
   }
   
+  public static Srcg testSrcgWUselessRules() throws ParseException {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
+    srcg.setTerminals(new String[]{"a", "b", "c"});
+    srcg.setVariables(new String[]{"X", "Y", "Z", "U", "V", "W"});
+    srcg.addClause("S(X Y Z U V W) -> A(X,U)");
+    srcg.addClause("A(a X, a Y) -> A(X, Y)");
+    srcg.addClause("A(b X, b Y) -> B(X, Y)");
+    srcg.addClause("A(a, a) -> ε");
+    srcg.addClause("C(c, c) -> ε");
+    srcg.setStartSymbol("S");
+    return srcg;
+  }
+  
   public static Srcg snbmcndmSrcg() throws ParseException {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[]{"S", "A", "B"});
@@ -315,6 +329,7 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
+  
   public static Tag gentag() throws ParseException {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S", "T"});

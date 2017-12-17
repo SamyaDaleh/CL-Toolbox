@@ -89,7 +89,7 @@ public class LcfrsToDeductionRulesConverter {
 
   /** If lhs is a lhs Predicate of a clause and and wsplit is the splitted input
    * string this returns a list of all possible (non overlapping) ranges the
-   * arguments could have over parts of the input. All symbols in the Predictae
+   * arguments could have over parts of the input. All symbols in the Predicate
    * have to be terminals. */
   @SuppressWarnings("unchecked") private static List<List<Integer>>
     getAllRanges(Predicate lhs, String[] wSplit) {

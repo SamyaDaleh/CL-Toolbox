@@ -9,6 +9,7 @@ import common.cfg.CfgProductionRule;
 import common.lcfrs.util.Binarization;
 import common.lcfrs.util.EmptyProductions;
 import common.lcfrs.util.Order;
+import common.lcfrs.util.UselessRules;
 
 /** Representation of a sRCG - simple Range Concatenation Grammar. */
 public class Srcg {
@@ -132,21 +133,27 @@ public class Srcg {
     return Binarization.isBinarized(this);
   }
 
-  /** Returns true if there is at least one clause that contains the empty
-   * string in one of its lhs arguments, except if it is the start symbol in
-   * which case it must not occur on any rhs. */
+  /**
+   * Returns true if there is at least one clause that contains the empty string
+   * in one of its lhs arguments, except if it is the start symbol in which case
+   * it must not occur on any rhs.
+   */
   public boolean hasEpsilonProductions() {
     return EmptyProductions.hasEpsilonProductions(this);
   }
 
-  /** Returns true if all variables in rhs predicates appear in the same order
-   * as in the lhs predicate. */
+  /**
+   * Returns true if all variables in rhs predicates appear in the same order as
+   * in the lhs predicate.
+   */
   public boolean isOrdered() {
     return Order.isOrdered(this);
   }
 
-  /** Returns an equivalent sRCG where the variables are ordered in each rule
-   * for each predicate. Might leave useless nonterminals behind. */
+  /**
+   * Returns an equivalent sRCG where the variables are ordered in each rule for
+   * each predicate. Might leave useless nonterminals behind.
+   */
   public Srcg getOrderedSrcg() throws ParseException {
     return Order.getOrderedSrcg(this);
   }
@@ -178,5 +185,21 @@ public class Srcg {
 
   public Srcg getBinarizedSrcg() throws ParseException {
     return Binarization.getBinarizedSrcg(this);
+  }
+
+  /**
+   * Returns true if sRCG contains either rules that do not lead to a terminal
+   * sequence or whose lhs nonterminal is not reachable from the start symbol.
+   */
+  public boolean hasUselessRules() {
+    return UselessRules.hasNonterminatingSymbols(this)
+      | UselessRules.hasNonreachableSymbols(this);
+  }
+
+  /**
+   * Returns a sRCG equivalent to this one but with only useful rules.
+   */
+  public Srcg getSrcgWithoutUselessRules() {
+    return UselessRules.getSrcgWithoutUselessRules(this);
   }
 }

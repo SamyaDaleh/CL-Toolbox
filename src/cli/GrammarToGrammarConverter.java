@@ -276,7 +276,8 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCykExtended(Srcg srcg) throws ParseException {
     if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
       if (please) {
-        return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions();
+        return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions()
+          .getSrcgWithoutUselessRules();
       } else {
         System.out.println(
           "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
@@ -291,7 +292,8 @@ class GrammarToGrammarConverter {
     if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
       if (please) {
         return new Srcg(cfg.getBinarizedCfg()
-          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs());
+          .getCfgWithEitherOneTerminalOrNonterminalsOnRhs())
+            .getSrcgWithoutUselessRules();
       } else {
         System.out.println(
           "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
@@ -305,7 +307,8 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCykGeneral(Srcg srcg) throws ParseException {
     if (srcg.hasEpsilonProductions()) {
       if (please) {
-        return srcg.getSrcgWithoutEmptyProductions();
+        return srcg.getSrcgWithoutEmptyProductions()
+          .getSrcgWithoutUselessRules();
       } else {
         System.out.println(
           "sRCG must not contain empty productions to apply general CYK parsing");
@@ -319,7 +322,8 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForCykGeneral(Cfg cfg) throws ParseException {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
-        return new Srcg(cfg.getCfgWithoutEmptyProductions());
+        return new Srcg(cfg.getCfgWithoutEmptyProductions())
+          .getSrcgWithoutUselessRules();
       } else {
         System.out.println(
           "CFG must not contain empty productions to be converted into a sRCG where general CYK parsing is possible.");
@@ -333,7 +337,8 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForEarley(Srcg srcg) throws ParseException {
     if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
       if (please) {
-        return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions();
+        return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions()
+          .getSrcgWithoutUselessRules();
       } else {
         System.out.println(
           "sRCG must be ordered and not contain epsilon productions for this Earley algorithm");
@@ -347,7 +352,7 @@ class GrammarToGrammarConverter {
   private Srcg getSrcgForEarley(Cfg cfg) throws ParseException {
     if (!cfg.isBinarized()) {
       if (please) {
-        return new Srcg(cfg.getBinarizedCfg());
+        return new Srcg(cfg.getBinarizedCfg()).getSrcgWithoutUselessRules();
       } else {
         System.out.println(
           "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");

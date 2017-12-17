@@ -101,4 +101,15 @@ public class ArrayUtils {
     return newArray.toArray(new String[newArray.size()]);
   }
 
+  /**
+   * Returns true if the element is to be found somewhere in the array.
+   */
+  public static boolean contains(String[] array, String element) {
+    for (String el : array) {
+      if (el.equals(element)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
