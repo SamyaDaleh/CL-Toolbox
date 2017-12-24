@@ -50,6 +50,15 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
+  @Test public void testCfgLeftcornerBreak() {
+    String w = "a b c d e f g h i";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToLeftCornerRules(TestGrammarLibrary.leftCornerBreak(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+  }
+
   @Test public void testCfgLeftcornerChart() {
     String w = "a b c b a";
     ParsingSchema schema = CfgToDeductionRulesConverter

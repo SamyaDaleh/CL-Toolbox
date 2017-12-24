@@ -8,15 +8,19 @@ import chartparsing.Item;
 import common.tag.Tag;
 import common.tag.Vertex;
 
-/** If in a node is substitution possible, predict the new tree that can be
- * substituted there. */
+/**
+ * If in a node is substitution possible, predict the new tree that can be
+ * substituted there.
+ */
 public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
 
   private final String iniTreeName;
   private final Tag tag;
 
-  /** Constructor takes an auxiliary tree for the items the rule shall derive,
-   * also needs the grammar to retrieve information about the antecedence. */
+  /**
+   * Constructor takes an auxiliary tree for the items the rule shall derive,
+   * also needs the grammar to retrieve information about the antecedence.
+   */
   public TagEarleyPredictSubst(String auxTreeName, Tag tag) {
     this.iniTreeName = auxTreeName;
     this.tag = tag;
@@ -36,9 +40,13 @@ public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
       String i2 = itemForm[6];
       String adj = itemForm[7];
       Vertex p = tag.getTree(treeName).getNodeByGornAdress(node);
+      String substNodeLabel = p.getLabel();
+      String iniTreeRootLabel =
+        tag.getInitialTree(iniTreeName).getRoot().getLabel();
       boolean substNode = tag.isSubstitutionNode(p, treeName);
       if (substNode && pos.equals("lb") && i1.equals(i2) && f1.equals("-")
-        && f2.equals("-") && adj.equals("0")) {
+        && f2.equals("-") && adj.equals("0")
+        && substNodeLabel.equals(iniTreeRootLabel)) {
         consequences
           .add(new DeductionItem(iniTreeName, "", "la", i1, "-", "-", i1, "0"));
       }

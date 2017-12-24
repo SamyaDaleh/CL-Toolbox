@@ -54,7 +54,7 @@ public class TestGrammarLibrary {
     g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
     return g;
   }
-  
+
   public static Tag acbTag() throws ParseException {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"A", "B", "S"});
@@ -259,12 +259,12 @@ public class TestGrammarLibrary {
     cfgeps.setStartSymbol("S");
     return cfgeps;
   }
-  
+
   public static Srcg unorderedSrcg() throws ParseException {
     Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[]{"S", "A"});
-    srcg.setTerminals(new String[]{"a", "b"});
-    srcg.setVariables(new String[]{"X", "Y"});
+    srcg.setNonterminals(new String[] {"S", "A"});
+    srcg.setTerminals(new String[] {"a", "b"});
+    srcg.setVariables(new String[] {"X", "Y"});
     srcg.addClause("S(X Y) -> A(X,Y)");
     srcg.addClause("A(X, Y) -> A(Y,X)");
     srcg.addClause("A(a X,b Y) -> A(X,Y)");
@@ -272,12 +272,12 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
-  
+
   public static Srcg withEmptyProductionsSrcg() throws ParseException {
     Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[]{"S", "A"});
-    srcg.setTerminals(new String[]{"a", "b"});
-    srcg.setVariables(new String[]{"X", "Y"});
+    srcg.setNonterminals(new String[] {"S", "A"});
+    srcg.setTerminals(new String[] {"a", "b"});
+    srcg.setVariables(new String[] {"X", "Y"});
     srcg.addClause("S(X Y) -> A(X,Y)");
     srcg.addClause("A(a, ε) -> ε");
     srcg.addClause("A(ε, b) -> ε");
@@ -285,12 +285,12 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
-  
+
   public static Srcg testBinarizationSrcg() throws ParseException {
     Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
-    srcg.setTerminals(new String[]{"a", "b", "c"});
-    srcg.setVariables(new String[]{"X", "Y", "Z", "U", "V", "W"});
+    srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
+    srcg.setTerminals(new String[] {"a", "b", "c"});
+    srcg.setVariables(new String[] {"X", "Y", "Z", "U", "V", "W"});
     srcg.addClause("S(X Y Z U V W) -> A(X,U) B(Y,V) C(Z,W)");
     srcg.addClause("A(a X, a Y) -> A(X, Y)");
     srcg.addClause("B(b X, b Y) -> B(X, Y)");
@@ -301,12 +301,12 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
-  
+
   public static Srcg testSrcgWUselessRules() throws ParseException {
     Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[]{"S", "A", "B", "C"});
-    srcg.setTerminals(new String[]{"a", "b", "c"});
-    srcg.setVariables(new String[]{"X", "Y", "Z", "U", "V", "W"});
+    srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
+    srcg.setTerminals(new String[] {"a", "b", "c"});
+    srcg.setVariables(new String[] {"X", "Y", "Z", "U", "V", "W"});
     srcg.addClause("S(X Y Z U V W) -> A(X,U)");
     srcg.addClause("A(a X, a Y) -> A(X, Y)");
     srcg.addClause("A(b X, b Y) -> B(X, Y)");
@@ -315,12 +315,12 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
-  
+
   public static Srcg snbmcndmSrcg() throws ParseException {
     Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[]{"S", "A", "B"});
-    srcg.setTerminals(new String[]{"a", "b", "c", "d"});
-    srcg.setVariables(new String[]{"X", "Y", "V", "W"});
+    srcg.setNonterminals(new String[] {"S", "A", "B"});
+    srcg.setTerminals(new String[] {"a", "b", "c", "d"});
+    srcg.setVariables(new String[] {"X", "Y", "V", "W"});
     srcg.addClause("S( X V Y W ) -> A(X,Y) B(V,W)");
     srcg.addClause("B(b,d) -> ε");
     srcg.addClause("B(b X,d Y) -> B(X,Y)");
@@ -329,7 +329,7 @@ public class TestGrammarLibrary {
     srcg.setStartSymbol("S");
     return srcg;
   }
-  
+
   public static Tag gentag() throws ParseException {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S", "T"});
@@ -372,5 +372,29 @@ public class TestGrammarLibrary {
     cfg.addProductionRule("S -> a S b");
     cfg.setStartSymbol("S");
     return cfg;
+  }
+
+  public static Cfg leftCornerBreak() {
+    Cfg cfg = new Cfg();
+    cfg
+      .setTerminals(new String[] {"a", "b", "c", "d", "e", "f", "g", "h", "i"});
+    cfg.setNonterminals(new String[] {"S", "A", "B", "C", "D", "E", "F", "G",
+      "H", "I", "J", "K", "L"});
+    cfg.addProductionRule("S -> A B C");
+    cfg.addProductionRule("A -> D E F");
+    cfg.addProductionRule("D -> a");
+    cfg.addProductionRule("E -> b");
+    cfg.addProductionRule("F -> c");
+    cfg.addProductionRule("B -> G H I");
+    cfg.addProductionRule("G -> d");
+    cfg.addProductionRule("H -> e");
+    cfg.addProductionRule("I -> f");
+    cfg.addProductionRule("C -> J K L");
+    cfg.addProductionRule("J -> g");
+    cfg.addProductionRule("K -> h");
+    cfg.addProductionRule("L -> i");
+    cfg.setStartSymbol("S");
+    return cfg;
+
   }
 }

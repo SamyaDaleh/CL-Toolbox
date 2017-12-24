@@ -14,8 +14,10 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
   private final String outNode;
   private final Tag tag;
 
-  /** Constructor takes a tree and a node where maybe is, was, will be adjoined,
-   * also needs the grammar to retrieve information about the antecedence. */
+  /**
+   * Constructor takes a tree and a node where maybe is, was, will be adjoined,
+   * also needs the grammar to retrieve information about the antecedence.
+   */
   public TagEarleySubstitute(String outTreeName, String outNode, Tag tag) {
     this.outTreeName = outTreeName;
     this.outNode = outNode;
@@ -35,9 +37,13 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
       String f2 = itemForm[5];
       String j = itemForm[6];
       String adj = itemForm[7];
+      String iniTreeRootLabel =
+        tag.getTree(treeName).getRoot().getLabel();
+      String substNodeLabel =
+        tag.getTree(outTreeName).getNodeByGornAdress(outNode).getLabel();
       if (tag.getInitialTree(treeName) != null && node.equals("")
         && f1.equals("-") && f2.equals("-") && adj.equals("0")
-        && pos.equals("ra")) {
+        && pos.equals("ra") && iniTreeRootLabel.equals(substNodeLabel)) {
         consequences.add(
           new DeductionItem(outTreeName, outNode, "rb", i, "-", "-", j, "0"));
         // imagine a tree with 1 node where you would substitute into the root
