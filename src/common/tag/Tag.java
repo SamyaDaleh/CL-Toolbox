@@ -230,4 +230,20 @@ public class Tag {
     builder.append("S = ").append(startSymbol).append("\n");
     return builder.toString();
   }
+
+  /**
+   * Parses a tree representation that includes name, colon before tree string.
+   */
+  public void addAuxiliaryTree(String treeDec) throws ParseException {
+    String[] treeSplit = treeDec.split(":");
+    addAuxiliaryTree(treeSplit[0].trim(), treeSplit[1].trim());
+  }
+
+  /**
+   * Parses a tree representation that includes name, colon before tree string.
+   */
+  public void addInitialTree(String treeDec) throws ParseException {
+    String[] treeSplit = treeDec.split(":");
+    addInitialTree(treeSplit[0].trim(), treeSplit[1].trim());
+  }
 }

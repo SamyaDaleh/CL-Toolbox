@@ -59,6 +59,9 @@ public class GrammarParser {
           cfg.addProductionRule(rule);
         }
         break;
+      case 'G':
+        System.out.println("Grammar declaration detected. Nothing to do.");
+        break;
       default:
         System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
       }
@@ -106,7 +109,12 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        pcfg.setProductionRules(parseProbabilisticRules(lineTrim, ":", "->"));
+        for (String rule : parseNT(lineTrim)) {
+          pcfg.addProductionRule(rule);
+        }
+        break;
+      case 'G':
+        System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
         System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
@@ -115,48 +123,6 @@ public class GrammarParser {
     }
     in.close();
     return pcfg;
-  }
-
-  /** For a line like "S -> a b", "S -> A B" it gets the content of each quote,
-   * separates it by delimiter, in this case '->' and returns 2d array where
-   * each entry represents a rule and each sub array consists of lhs and rhs */
-  private static String[][] parseRules(String lineTrim, String delimiter) {
-    Matcher m = p.matcher(lineTrim);
-    ArrayList<String[]> ruleList = new ArrayList<String[]>();
-    while (m.find()) {
-      String rawRule = m.group();
-      String lhs = rawRule.substring(0, rawRule.indexOf(delimiter)).trim();
-      String rhs = rawRule
-        .substring(rawRule.indexOf(delimiter) + delimiter.length()).trim();
-      ruleList.add(
-        new String[] {lhs.substring(1), rhs.substring(0, rhs.length() - 1)});
-    }
-
-    return ruleList.toArray(new String[ruleList.size()][]);
-  }
-
-  /** For a line like "1 : S -> a b", "1 : S -> A B" it gets the content of each
-   * quote, separates it by delimiters, in this case ':' and '->' and returns 2d
-   * array where each entry represents a rule and each sub array consists of
-   * lhs, rhs and p */
-  private static String[][] parseProbabilisticRules(String lineTrim,
-    String leftDelimiter, String rightDelimiter) {
-    Matcher m = p.matcher(lineTrim);
-    ArrayList<String[]> ruleList = new ArrayList<String[]>();
-    while (m.find()) {
-      String rawRule = m.group();
-      String p = rawRule.substring(0, rawRule.indexOf(leftDelimiter)).trim();
-      String lhs = rawRule
-        .substring(rawRule.indexOf(leftDelimiter) + leftDelimiter.length(),
-          rawRule.indexOf(rightDelimiter))
-        .trim();
-      String rhs = rawRule
-        .substring(rawRule.indexOf(rightDelimiter) + rightDelimiter.length())
-        .trim();
-      ruleList.add(
-        new String[] {lhs, rhs.substring(0, rhs.length() - 1), p.substring(1)});
-    }
-    return ruleList.toArray(new String[ruleList.size()][]);
   }
 
   /** Parses a TAG from a text file and returns it as a Tag object. */
@@ -198,8 +164,8 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        for (String[] treedec : parseRules(lineTrim, ":")) {
-          tag.addInitialTree(treedec[0], treedec[1]);
+        for (String treeDec : parseNT(lineTrim)) {
+          tag.addInitialTree(treeDec);
         }
         break;
       case 'A':
@@ -208,9 +174,12 @@ public class GrammarParser {
           in.close();
           return null;
         }
-        for (String[] treeDec : parseRules(lineTrim, ":")) {
-          tag.addAuxiliaryTree(treeDec[0], treeDec[1]);
+        for (String treeDec : parseNT(lineTrim)) {
+          tag.addAuxiliaryTree(treeDec);
         }
+        break;
+      case 'G':
+        System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
         System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
@@ -294,6 +263,9 @@ public class GrammarParser {
         for (String clauseDec : parseNT(lineTrim)) {
           srcg.addClause(clauseDec);
         }
+        break;
+      case 'G':
+        System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
         System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));

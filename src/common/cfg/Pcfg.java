@@ -52,4 +52,10 @@ public class Pcfg extends AbstractCfg{
       builder.append(productionRules.get(i).toString());
     }
   }
+
+  /** Creates a PcfgProductionRule from the string representation and adds it to
+   * its set of rules. */
+  public void addProductionRule(String rule) {
+    this.productionRules.add(new PcfgProductionRule(rule));
+  }
 }
