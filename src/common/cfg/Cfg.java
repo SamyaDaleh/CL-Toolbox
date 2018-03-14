@@ -1,5 +1,6 @@
 package common.cfg;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,8 +179,9 @@ public class Cfg extends AbstractCfg {
   }
 
   /** Creates a CfgProductionRule from the string representation and adds it to
-   * its set of rules. */
-  public void addProductionRule(String rule) {
+   * its set of rules. 
+   * @throws ParseException */
+  public void addProductionRule(String rule) throws ParseException {
     this.productionRules.add(new CfgProductionRule(rule));
   }
 }

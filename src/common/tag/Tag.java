@@ -235,7 +235,11 @@ public class Tag {
    * Parses a tree representation that includes name, colon before tree string.
    */
   public void addAuxiliaryTree(String treeDec) throws ParseException {
-    String[] treeSplit = treeDec.split(":");
+    if (!treeDec.contains(":")) {
+      throw new ParseException(
+        "Separator : missing in tree declaration " + treeDec, 0);
+    }
+    String[] treeSplit = treeDec.split(":", 2);
     addAuxiliaryTree(treeSplit[0].trim(), treeSplit[1].trim());
   }
 
@@ -243,7 +247,11 @@ public class Tag {
    * Parses a tree representation that includes name, colon before tree string.
    */
   public void addInitialTree(String treeDec) throws ParseException {
-    String[] treeSplit = treeDec.split(":");
+    if (!treeDec.contains(":")) {
+      throw new ParseException(
+        "Separator : missing in tree declaration " + treeDec, 0);
+    }
+    String[] treeSplit = treeDec.split(":", 2);
     addInitialTree(treeSplit[0].trim(), treeSplit[1].trim());
   }
 }

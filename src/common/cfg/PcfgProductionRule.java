@@ -1,5 +1,7 @@
 package common.cfg;
 
+import java.text.ParseException;
+
 /**
  * Representation of a context-free rule where the lhs is only allowed to
  * contain one symbol and the rule has a probability.
@@ -27,12 +29,22 @@ public class PcfgProductionRule {
 
   /**
    * Creates a rule from a String representation like 0.5 : S -> A B
+   * @throws ParseException
    */
-  public PcfgProductionRule(String ruleString) {
-    String[] ruleSplit = ruleString.split(":");
+  public PcfgProductionRule(String ruleString) throws ParseException {
+    if (!ruleString.contains("->")) {
+      throw new ParseException("Separator -> missing in rule " + ruleString, 0);
+    }
+    if (!ruleString.contains(":")) {
+      throw new ParseException("Separator : missing in rule " + ruleString, 0);
+    }
+    if (ruleString.indexOf("->") < ruleString.indexOf(':')) {
+      throw new ParseException(": has to be left of -> in rule " + ruleString,
+        0);
+    }
+    String[] ruleSplit = ruleString.split(":", 2);
     this.p = Double.parseDouble(ruleSplit[0].trim());
-    String[] ruleSplit2 = ruleSplit[1].split("->");
-
+    String[] ruleSplit2 = ruleSplit[1].split("->", 2);
     this.lhs = ruleSplit2[0].trim();
     if (ruleSplit2[1].trim().equals("") || ruleSplit2[1].trim().equals("ε")) {
       this.rhs = new String[] {""};

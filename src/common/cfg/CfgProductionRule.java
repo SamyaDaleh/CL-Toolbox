@@ -1,7 +1,11 @@
 package common.cfg;
 
-/** Representation of a CFG production rule where the lhs consists of one
- * nonterminal and the rhs can be any length. */
+import java.text.ParseException;
+
+/**
+ * Representation of a CFG production rule where the lhs consists of one
+ * nonterminal and the rhs can be any length.
+ */
 public class CfgProductionRule {
   private final String lhs;
   private final String[] rhs;
@@ -17,10 +21,10 @@ public class CfgProductionRule {
     }
   }
 
-  
-
-  /** Lhs and Rhs passed separately, used when converting one rule format to
-   * another. */
+  /**
+   * Lhs and Rhs passed separately, used when converting one rule format to
+   * another.
+   */
   public CfgProductionRule(String lhs, String[] rhs) {
     this.lhs = lhs;
     if (rhs.length == 1 && rhs[0].equals("ε")) {
@@ -32,9 +36,13 @@ public class CfgProductionRule {
 
   /**
    * Creates a rule from a String representation like S -> A B
+   * @throws ParseException
    */
-  public CfgProductionRule(String ruleString) {
-    String[] ruleSplit = ruleString.split("->");
+  public CfgProductionRule(String ruleString) throws ParseException {
+    if (!ruleString.contains("->")) {
+      throw new ParseException("Separator -> missing in rule " + ruleString, 0);
+    }
+    String[] ruleSplit = ruleString.split("->", 2);
     this.lhs = ruleSplit[0].trim();
     if (ruleSplit[1].trim().equals("") || ruleSplit[1].trim().equals("ε")) {
       this.rhs = new String[] {""};

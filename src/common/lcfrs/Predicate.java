@@ -21,12 +21,16 @@ public class Predicate {
       if (predicate.charAt(i) == ')')
         rBrackNum++;
     }
-    if (lBrackNum != rBrackNum) {
+    if (lBrackNum != 1 || rBrackNum != 1) {
       throw new ParseException(
-        "Amounts of opening and closing brackets are different.", 0);
+        "Amounts of opening or closing brackets is not correct.", 0);
     }
     int lBrack = predicate.indexOf('(');
     int rBrack = predicate.indexOf(')');
+    if (rBrack < lBrack) {
+      throw new ParseException("Closing bracket is left of opening bracket.",
+        0);
+    }
     this.nonterminal = predicate.substring(0, lBrack).trim();
     String rightOver = predicate.substring(lBrack + 1, rBrack).trim();
     if (rightOver.length() == 0 || rightOver.equals("ε")) {
@@ -79,8 +83,10 @@ public class Predicate {
     return symbolsArray.toArray(new String[symbolsArray.size()]);
   }
 
-  /** Returns a string representation where the dot is at the ith argument at
-   * the jth element. */
+  /**
+   * Returns a string representation where the dot is at the ith argument at the
+   * jth element.
+   */
   String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
     repr.append(nonterminal);
@@ -118,8 +124,10 @@ public class Predicate {
     return symbols.length;
   }
 
-  /** If all elements were a plain list, return the index the specified item
-   * would have. */
+  /**
+   * If all elements were a plain list, return the index the specified item
+   * would have.
+   */
   public int getAbsolutePos(int iInt, int jInt) {
     int index = 0;
     for (int i = 1; i < iInt; i++) {
@@ -132,8 +140,9 @@ public class Predicate {
     return symbols.length >= i && symbols[i - 1].length > j;
   }
 
-  /** Looks for a symbol and returns its indices. Returns [-1, -1] if not
-   * found. */
+  /**
+   * Looks for a symbol and returns its indices. Returns [-1, -1] if not found.
+   */
   public int[] find(String symbol) {
     for (int i = 0; i < symbols.length; i++) {
       for (int j = 0; j < symbols[i].length; j++) {

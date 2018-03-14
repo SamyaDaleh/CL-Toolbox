@@ -2,10 +2,12 @@ package common.cfg;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 
 public class PcfgTest {
-  @Test public void testCreatePcfgFromCfg() {
+  @Test public void testCreatePcfgFromCfg() throws ParseException {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c", "d"});
     cfg.setNonterminals(new String[] {"S"});

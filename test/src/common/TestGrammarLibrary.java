@@ -11,27 +11,33 @@ public class TestGrammarLibrary {
 
   public static Cfg anBnCfg() {
     Cfg cfg = new Cfg();
-
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.addProductionRule("S -> a S b");
-    cfg.addProductionRule("S -> a b");
-    cfg.setStartSymbol("S");
-
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a S b");
+      cfg.addProductionRule("S -> a b");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg wwRCfg() {
     Cfg cfg = new Cfg();
-
     cfg.setTerminals(new String[] {"a", "b", "c"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.addProductionRule("S -> a S a");
-    cfg.addProductionRule("S -> b S b");
-    cfg.addProductionRule("S -> c");
-    cfg.setStartSymbol("S");
-
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a S a");
+      cfg.addProductionRule("S -> b S b");
+      cfg.addProductionRule("S -> c");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Tag anCBTag() throws ParseException {
@@ -83,68 +89,93 @@ public class TestGrammarLibrary {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.addProductionRule("S -> a S b S S a S b a b");
-    cfg.addProductionRule("S -> a b");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a S b S S a S b a b");
+      cfg.addProductionRule("S -> a b");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg epsCfg() {
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
     cfgeps.setNonterminals(new String[] {"S", "A", "B", "C"});
-    cfgeps.addProductionRule("A -> ε");
-    cfgeps.addProductionRule("S -> ");
-    cfgeps.addProductionRule("C -> ");
-    cfgeps.addProductionRule("S -> b A a S b C");
-    cfgeps.addProductionRule("A -> a");
-    cfgeps.addProductionRule("A -> b B");
-    cfgeps.addProductionRule("B -> b");
-    cfgeps.setStartSymbol("S");
-    return cfgeps;
+    try {
+      cfgeps.addProductionRule("A -> ε");
+      cfgeps.addProductionRule("S -> ");
+      cfgeps.addProductionRule("C -> ");
+      cfgeps.addProductionRule("S -> b A a S b C");
+      cfgeps.addProductionRule("A -> a");
+      cfgeps.addProductionRule("A -> b B");
+      cfgeps.addProductionRule("B -> b");
+      cfgeps.setStartSymbol("S");
+      return cfgeps;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg eftCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "0", "1", "(", ")", "*", "+"});
     cfg.setNonterminals(new String[] {"I", "F", "T", "E"});
-    cfg.addProductionRule("I -> a");
-    cfg.addProductionRule("I -> b");
-    cfg.addProductionRule("I -> I a");
-    cfg.addProductionRule("I -> I b");
-    cfg.addProductionRule("I -> I 0");
-    cfg.addProductionRule("I -> I 1");
-    cfg.addProductionRule("F -> I");
-    cfg.addProductionRule("F -> ( E )");
-    cfg.addProductionRule("T -> F");
-    cfg.addProductionRule("T -> T * F");
-    cfg.addProductionRule("E -> T");
-    cfg.addProductionRule("E -> E + T");
-    cfg.setStartSymbol("E");
-    return cfg;
+    try {
+      cfg.addProductionRule("I -> a");
+      cfg.addProductionRule("I -> b");
+      cfg.addProductionRule("I -> I a");
+      cfg.addProductionRule("I -> I b");
+      cfg.addProductionRule("I -> I 0");
+      cfg.addProductionRule("I -> I 1");
+      cfg.addProductionRule("F -> I");
+      cfg.addProductionRule("F -> ( E )");
+      cfg.addProductionRule("T -> F");
+      cfg.addProductionRule("T -> T * F");
+      cfg.addProductionRule("E -> T");
+      cfg.addProductionRule("E -> E + T");
+      cfg.setStartSymbol("E");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg leftRecursionCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c", "d"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.addProductionRule("S -> S");
-    cfg.addProductionRule("S -> S a");
-    cfg.addProductionRule("S -> S b");
-    cfg.addProductionRule("S -> c");
-    cfg.addProductionRule("S -> d");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> S");
+      cfg.addProductionRule("S -> S a");
+      cfg.addProductionRule("S -> S b");
+      cfg.addProductionRule("S -> c");
+      cfg.addProductionRule("S -> d");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg leftRecursionNoTerminationCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a"});
     cfg.setNonterminals(new String[] {"S", "A"});
-    cfg.addProductionRule("S -> A");
-    cfg.addProductionRule("A -> A a");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> A");
+      cfg.addProductionRule("A -> A a");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg nonReachableSymbolsCfg() {
@@ -152,9 +183,14 @@ public class TestGrammarLibrary {
     cfg.setTerminals(new String[] {"a"});
     cfg.setNonterminals(new String[] {"S", "G"});
     cfg.setStartSymbol("S");
-    cfg.addProductionRule("S -> a");
-    cfg.addProductionRule("G -> b");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a");
+      cfg.addProductionRule("G -> b");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg nonGeneratingSymbolsCfg() {
@@ -162,10 +198,15 @@ public class TestGrammarLibrary {
     cfg.setTerminals(new String[] {"a"});
     cfg.setNonterminals(new String[] {"S", "G"});
     cfg.setStartSymbol("S");
-    cfg.addProductionRule("S -> a");
-    cfg.addProductionRule("S -> G");
-    cfg.addProductionRule("G -> G b");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a");
+      cfg.addProductionRule("S -> G");
+      cfg.addProductionRule("G -> G b");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Pcfg banPcfg() {
@@ -183,27 +224,37 @@ public class TestGrammarLibrary {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S", "A", "B", "X1"});
-    cfg.addProductionRule("S -> A X1");
-    cfg.addProductionRule("S -> A B");
-    cfg.addProductionRule("A -> a");
-    cfg.addProductionRule("B -> b");
-    cfg.addProductionRule("X1 -> S B");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> A X1");
+      cfg.addProductionRule("S -> A B");
+      cfg.addProductionRule("A -> a");
+      cfg.addProductionRule("B -> b");
+      cfg.addProductionRule("X1 -> S B");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg anbnC2fCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S", "A", "B", "C", "X1"});
-    cfg.addProductionRule("S -> A X1");
-    cfg.addProductionRule("S -> A B");
-    cfg.addProductionRule("C -> a");
-    cfg.addProductionRule("B -> b");
-    cfg.addProductionRule("X1 -> S B");
-    cfg.addProductionRule("A -> C");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> A X1");
+      cfg.addProductionRule("S -> A B");
+      cfg.addProductionRule("C -> a");
+      cfg.addProductionRule("B -> b");
+      cfg.addProductionRule("X1 -> S B");
+      cfg.addProductionRule("A -> C");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Pcfg niceUglyCarPcfg() {
@@ -251,13 +302,18 @@ public class TestGrammarLibrary {
     Cfg cfgeps = new Cfg();
     cfgeps.setTerminals(new String[] {"a", "b"});
     cfgeps.setNonterminals(new String[] {"S", "X1", "Y1", "Y2"});
-    cfgeps.addProductionRule("Y1 -> a");
-    cfgeps.addProductionRule("S -> Y1 X1");
-    cfgeps.addProductionRule("Y2 -> b");
-    cfgeps.addProductionRule("X1 -> S Y2");
-    cfgeps.addProductionRule("S -> Y1 Y2");
-    cfgeps.setStartSymbol("S");
-    return cfgeps;
+    try {
+      cfgeps.addProductionRule("Y1 -> a");
+      cfgeps.addProductionRule("S -> Y1 X1");
+      cfgeps.addProductionRule("Y2 -> b");
+      cfgeps.addProductionRule("X1 -> S Y2");
+      cfgeps.addProductionRule("S -> Y1 Y2");
+      cfgeps.setStartSymbol("S");
+      return cfgeps;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Srcg unorderedSrcg() throws ParseException {
@@ -346,32 +402,47 @@ public class TestGrammarLibrary {
 
     cfg.setTerminals(new String[] {"a", "b", "c"});
     cfg.setNonterminals(new String[] {"A", "B", "S"});
-    cfg.addProductionRule("S -> A S B");
-    cfg.addProductionRule("S -> a b");
-    cfg.addProductionRule("S -> c");
-    cfg.addProductionRule("A -> a");
-    cfg.addProductionRule("B -> b");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> A S B");
+      cfg.addProductionRule("S -> a b");
+      cfg.addProductionRule("S -> c");
+      cfg.addProductionRule("A -> a");
+      cfg.addProductionRule("B -> b");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg gen_cfgdedtest() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.addProductionRule("S -> a S b");
-    cfg.addProductionRule("S -> a b");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a S b");
+      cfg.addProductionRule("S -> a b");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg noUsefulNonterminalCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
     cfg.setNonterminals(new String[] {"S"});
-    cfg.addProductionRule("S -> a S b");
-    cfg.setStartSymbol("S");
-    return cfg;
+    try {
+      cfg.addProductionRule("S -> a S b");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static Cfg leftCornerBreak() {
@@ -380,21 +451,25 @@ public class TestGrammarLibrary {
       .setTerminals(new String[] {"a", "b", "c", "d", "e", "f", "g", "h", "i"});
     cfg.setNonterminals(new String[] {"S", "A", "B", "C", "D", "E", "F", "G",
       "H", "I", "J", "K", "L"});
-    cfg.addProductionRule("S -> A B C");
-    cfg.addProductionRule("A -> D E F");
-    cfg.addProductionRule("D -> a");
-    cfg.addProductionRule("E -> b");
-    cfg.addProductionRule("F -> c");
-    cfg.addProductionRule("B -> G H I");
-    cfg.addProductionRule("G -> d");
-    cfg.addProductionRule("H -> e");
-    cfg.addProductionRule("I -> f");
-    cfg.addProductionRule("C -> J K L");
-    cfg.addProductionRule("J -> g");
-    cfg.addProductionRule("K -> h");
-    cfg.addProductionRule("L -> i");
-    cfg.setStartSymbol("S");
-    return cfg;
-
+    try {
+      cfg.addProductionRule("S -> A B C");
+      cfg.addProductionRule("A -> D E F");
+      cfg.addProductionRule("D -> a");
+      cfg.addProductionRule("E -> b");
+      cfg.addProductionRule("F -> c");
+      cfg.addProductionRule("B -> G H I");
+      cfg.addProductionRule("G -> d");
+      cfg.addProductionRule("H -> e");
+      cfg.addProductionRule("I -> f");
+      cfg.addProductionRule("C -> J K L");
+      cfg.addProductionRule("J -> g");
+      cfg.addProductionRule("K -> h");
+      cfg.addProductionRule("L -> i");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
