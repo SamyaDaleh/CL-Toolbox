@@ -12,6 +12,6 @@
   },
   "homepage": "https://github.com/SamyaDaleh/CL-Toolbox",
     "devDependencies" : {
-    "junit": "^4.12"
+    "junit4": "^4.12"
   }
 }
