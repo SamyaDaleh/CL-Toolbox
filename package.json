@@ -1,0 +1,17 @@
+{
+  "name": "cl_toolbox",
+  "description": "A Parsing-as-Deduction system that parses with different parsing algorithms and some related tools for educational purposes.",
+  "version": "0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SamyaDaleh/CL-Toolbox.git"
+  },
+  "author": "Samya Daleh",
+  "bugs": {
+    "url": "https://github.com/SamyaDaleh/CL-Toolbox/issues"
+  },
+  "homepage": "https://github.com/SamyaDaleh/CL-Toolbox",
+    "devDependencies" : {
+    "junit": "^4.12"
+  }
+}
