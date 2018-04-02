@@ -27,6 +27,7 @@ public class ParsingTraceTable {
     f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     table = new JTable(rowData, columnNames);
     table.setEnabled(false);
+    table.getTableHeader().setReorderingAllowed(false);
     f.add(new JScrollPane(table));
     this.tag = tag;
     f.pack();
