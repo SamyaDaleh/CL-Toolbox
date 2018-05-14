@@ -139,6 +139,7 @@ public class GrammarParser {
 
   /** Parses a PCFG from a file and returns it as Pcfg. */
   public static Pcfg parsePcfgFile(String grammarFile) throws IOException {
+    errors = new LinkedList<Exception>();
     Pcfg pcfg = new Pcfg();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
@@ -249,6 +250,7 @@ public class GrammarParser {
 
   /** Parses a TAG from a text file and returns it as a Tag object. */
   public static Tag parseTagFile(String grammarFile) throws IOException {
+    errors = new LinkedList<Exception>();
     Tag tag = new Tag();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
@@ -347,7 +349,7 @@ public class GrammarParser {
               + treeName + " is neither declared nonterminal nor terminal "
               + "and is not epsilon.", 0));
         }
-        if (!tree.getLeafGorns().contains(v.getGornAddress())
+        if (tree.getNodeByGornAdress(v.getGornAddress()+ ".1") != null
           && contains(tag.getTerminals(), v.getLabel())) {
           errors.add(new ParseException("Node with gorn address "
             + v.getGornAddress() + " in tree " + treeName
@@ -422,6 +424,7 @@ public class GrammarParser {
 
   /** Parses a sRCG from a file and returns it as Srcg. */
   public static Srcg parseSrcgFile(String grammarFile) throws IOException {
+    errors = new LinkedList<Exception>();
     Srcg srcg = new Srcg();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();

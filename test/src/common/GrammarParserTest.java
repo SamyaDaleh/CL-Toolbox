@@ -46,8 +46,8 @@ public class GrammarParserTest {
     assert pcfg != null;
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, A, B}\n" + "T = {0, 1}\n" + "S = S\n"
-        + "P = {1.0 : S -> A B, 0.7 : A -> 1, 0.3 : A -> 0, 0.6 : B -> BB, "
-        + "0.4 : B -> 0}\n",
+        + "P = {1.0 : S -> A B, 0.7 : A -> 1, 0.3 : A -> 0, "
+        + "1.0 : B -> 0}\n",
       pcfg.toString());
   }
 
