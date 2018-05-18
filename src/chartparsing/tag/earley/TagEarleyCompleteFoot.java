@@ -7,14 +7,18 @@ import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
-/** If there is an auxiliary tree and another tree where the aux tree can adjoin
- * into, fill the foot of the aux tree with the span of the other tree. */
+/**
+ * If there is an auxiliary tree and another tree where the aux tree can adjoin
+ * into, fill the foot of the aux tree with the span of the other tree.
+ */
 public class TagEarleyCompleteFoot extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
-  /** Constructor needs the grammar to retrieve information about the
-   * antecedences. */
+  /**
+   * Constructor needs the grammar to retrieve information about the
+   * antecedences.
+   */
   public TagEarleyCompleteFoot(Tag tag) {
     this.tag = tag;
     this.name = "complete foot";
@@ -44,12 +48,16 @@ public class TagEarleyCompleteFoot extends AbstractDynamicDeductionRule {
       boolean adjoinable1 = tag.isAdjoinable(treeName2, treeName1, node1);
       boolean adjoinable2 = tag.isAdjoinable(treeName1, treeName2, node2);
       if (i1.equals(i21) && adj1.equals("0") && adj2.equals("0")) {
-        if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb") && i21.equals(i22)
-          && f12.equals("-") && f22.equals("-")) {
+        if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb")
+          && i21.equals(i22) && f12.equals("-") && f22.equals("-")
+          && tag.getAuxiliaryTree(treeName2).getFoot().getGornAddress()
+            .equals(node2)) {
           consequences
             .add(new DeductionItem(treeName2, node2, "rb", i1, i1, l, l, "0"));
         } else if (adjoinable2 && pos2.equals("rb") && pos1.equals("lb")
-          && i1.equals(l) && j.equals("-") && k.equals("-")) {
+          && i1.equals(l) && j.equals("-") && k.equals("-")
+          && tag.getAuxiliaryTree(treeName1).getFoot().getGornAddress()
+            .equals(node1)) {
           // the other way around
           consequences.add(
             new DeductionItem(treeName1, node1, "rb", i21, i21, i22, i22, "0"));
