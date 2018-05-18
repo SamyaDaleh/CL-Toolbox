@@ -8,20 +8,15 @@ import common.tag.Tag;
 
 public class GrammarToDeductionRulesConverter {
 
-  /** Call with appropriate grammar. Better call the convert-to function
-   * first. */
+  /**
+   * Call with appropriate grammar. Better call the convert-to function first.
+   */
   public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm) {
     switch (algorithm) {
     case "cfg-topdown":
-      return CfgToDeductionRulesConverter.cfgToTopDownRules(
-        cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
-          .getCfgWithoutNonReachableSymbols(),
-        w);
+      return CfgToDeductionRulesConverter.cfgToTopDownRules(cfg, w);
     case "cfg-shiftreduce":
-      return CfgToDeductionRulesConverter.cfgToShiftReduceRules(
-        cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
-          .getCfgWithoutNonReachableSymbols(),
-        w);
+      return CfgToDeductionRulesConverter.cfgToShiftReduceRules(cfg, w);
     case "cfg-earley":
       return CfgToDeductionRulesConverter.cfgToEarleyRules(cfg, w);
     case "cfg-leftcorner":
@@ -43,8 +38,9 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
-  /** Call with appropriate grammar. Better call the convert-to function
-   * first. */
+  /**
+   * Call with appropriate grammar. Better call the convert-to function first.
+   */
   public ParsingSchema convertToSchema(Tag tag, String w, String algorithm) {
     switch (algorithm) {
     case "tag-cyk-extended":
@@ -60,8 +56,9 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
-  /** Call with appropriate grammar. Better call the convert-to function
-   * first. */
+  /**
+   * Call with appropriate grammar. Better call the convert-to function first.
+   */
   public ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm) {
     switch (algorithm) {
     case "srcg-earley":
@@ -77,8 +74,9 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
-  /** Call with appropriate grammar. Better call the convert-to function
-   * first. */
+  /**
+   * Call with appropriate grammar. Better call the convert-to function first.
+   */
   public ParsingSchema convertToSchema(Pcfg pcfg, String w, String algorithm) {
     switch (algorithm) {
     case "pcfg-astar":

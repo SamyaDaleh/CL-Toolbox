@@ -43,7 +43,7 @@ public class UselessSymbols {
     return cfg;
   }
 
-  /** Returns all symbols where strings only containing terinals can be derived
+  /** Returns all symbols where strings only containing terminals can be derived
    * from. */
   private static void getGeneratingSymbols(ArrayList<String> generating,
     Cfg cfgOld) {
@@ -108,5 +108,16 @@ public class UselessSymbols {
       }
     }
     return cfg;
+  }
+
+  /**
+   * Returns true if grammar has generating nonterminals.
+   */
+  public static boolean hasGeneratingSymbols(Cfg cfg) {
+    ArrayList<String> generating = new ArrayList<String>();
+    Collections.addAll(generating, cfg.getTerminals());
+    getGeneratingSymbols(generating, cfg);
+    return cfg.getTerminals().length > 0
+      && generating.size() - cfg.getTerminals().length > 0;
   }
 }

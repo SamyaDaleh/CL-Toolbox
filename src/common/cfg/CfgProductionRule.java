@@ -14,7 +14,7 @@ public class CfgProductionRule {
   public CfgProductionRule(String[] rule) {
     this.lhs = rule[0];
     String[] ruleSplit = rule[1].split(" ");
-    if (ruleSplit.length == 1 && ruleSplit[0].equals("ε")) {
+    if ((ruleSplit.length == 1 && ruleSplit[0].equals("ε"))) {
       this.rhs = new String[] {""};
     } else {
       this.rhs = ruleSplit;
