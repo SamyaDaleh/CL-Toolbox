@@ -52,7 +52,7 @@ public class SrcgTest {
       + "P = {S^<1>(X Y) -> A^<1,2>(X,Y), A^<1,2>(X,Y) -> A^<2,1>(X,Y), "
       + "A^<1,2>(a X,b Y) -> A^<1,2>(X,Y), A^<1,2>(a,b) -> ε, "
       + "A^<2,1>(Y,X) -> A^<1,2>(Y,X), A^<2,1>(b Y,a X) -> A^<2,1>(Y,X), "
-      + "A^<2,1>(b,a) -> ε}\n" + "S = S\n", srcgOrd.toString());
+      + "A^<2,1>(b,a) -> ε}\n" + "S = S^<1>\n", srcgOrd.toString());
   }
 
   @Test public void testSrcgRemoveEmptyProductions() throws ParseException {

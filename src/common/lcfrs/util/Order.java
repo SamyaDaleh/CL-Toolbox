@@ -63,7 +63,7 @@ public class Order {
     Srcg newSrcg = new Srcg();
     newSrcg.setTerminals(oldSrcg.getTerminals());
     newSrcg.setVariables(oldSrcg.getVariables());
-    newSrcg.setStartSymbol(oldSrcg.getStartSymbol());
+    newSrcg.setStartSymbol(oldSrcg.getStartSymbol() + "^<1>");
     ArrayList<String> newNonterminals = new ArrayList<String>();
     for (Clause clause : oldSrcg.getClauses()) {
       newSrcg.addClause(getClauseWithPositionVectors(clause, newNonterminals));
