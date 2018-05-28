@@ -13,6 +13,7 @@ import chartparsing.ParsingSchema;
 import chartparsing.converter.LcfrsToDeductionRulesConverter;
 import common.GrammarParser;
 import common.TestGrammarLibrary;
+import common.lcfrs.util.Order;
 
 public class SrcgTest {
 
@@ -47,12 +48,30 @@ public class SrcgTest {
     assertTrue(!TestGrammarLibrary.unorderedSrcg().isOrdered());
     Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrderedSrcg();
     assertTrue(srcgOrd.isOrdered());
-    assertEquals("G = <N, T, V, P, S>\n" + "N = {S^<1>, A^<1,2>, A^<2,1>}\n"
-      + "T = {a, b}\n" + "V = {X, Y}\n"
-      + "P = {S^<1>(X Y) -> A^<1,2>(X,Y), A^<1,2>(X,Y) -> A^<2,1>(X,Y), "
-      + "A^<1,2>(a X,b Y) -> A^<1,2>(X,Y), A^<1,2>(a,b) -> ε, "
-      + "A^<2,1>(Y,X) -> A^<1,2>(Y,X), A^<2,1>(b Y,a X) -> A^<2,1>(Y,X), "
-      + "A^<2,1>(b,a) -> ε}\n" + "S = S^<1>\n", srcgOrd.toString());
+    assertEquals(
+      "G = <N, T, V, P, S>\n" + "N = {S^" + Order.ORDER_MARKING_LEFT + "1"
+        + Order.ORDER_MARKING_RIGHT + ", A^" + Order.ORDER_MARKING_LEFT + "1,2"
+        + Order.ORDER_MARKING_RIGHT + ", A^" + Order.ORDER_MARKING_LEFT + "2,1"
+        + Order.ORDER_MARKING_RIGHT + "}\n" + "T = {a, b}\n" + "V = {X, Y}\n"
+        + "P = {S^" + Order.ORDER_MARKING_LEFT + "1" + Order.ORDER_MARKING_RIGHT
+        + "(X Y) -> A^" + Order.ORDER_MARKING_LEFT + "1,2"
+        + Order.ORDER_MARKING_RIGHT + "(X,Y), A^" + Order.ORDER_MARKING_LEFT
+        + "1,2" + Order.ORDER_MARKING_RIGHT + "(X,Y) -> A^"
+        + Order.ORDER_MARKING_LEFT + "2,1" + Order.ORDER_MARKING_RIGHT
+        + "(X,Y), " + "A^" + Order.ORDER_MARKING_LEFT + "1,2"
+        + Order.ORDER_MARKING_RIGHT + "(a X,b Y) -> A^"
+        + Order.ORDER_MARKING_LEFT + "1,2" + Order.ORDER_MARKING_RIGHT
+        + "(X,Y), A^" + Order.ORDER_MARKING_LEFT + "1,2"
+        + Order.ORDER_MARKING_RIGHT + "(a,b) -> ε, " + "A^"
+        + Order.ORDER_MARKING_LEFT + "2,1" + Order.ORDER_MARKING_RIGHT
+        + "(Y,X) -> A^" + Order.ORDER_MARKING_LEFT + "1,2"
+        + Order.ORDER_MARKING_RIGHT + "(Y,X), A^" + Order.ORDER_MARKING_LEFT
+        + "2,1" + Order.ORDER_MARKING_RIGHT + "(b Y,a X) -> A^"
+        + Order.ORDER_MARKING_LEFT + "2,1" + Order.ORDER_MARKING_RIGHT
+        + "(Y,X), " + "A^" + Order.ORDER_MARKING_LEFT + "2,1"
+        + Order.ORDER_MARKING_RIGHT + "(b,a) -> ε}\n" + "S = S^"
+        + Order.ORDER_MARKING_LEFT + "1" + Order.ORDER_MARKING_RIGHT + "\n",
+      srcgOrd.toString());
   }
 
   @Test public void testSrcgRemoveEmptyProductions() throws ParseException {

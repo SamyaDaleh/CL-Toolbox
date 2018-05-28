@@ -1,6 +1,6 @@
 package common.lcfrs.util;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import common.ArrayUtils;
@@ -24,7 +24,7 @@ public class UselessRules {
    * whose rhs is empty or whose rhs only constists of terminating nonterminals.
    */
   private static List<String> getNonterminatingSymbols(Srcg srcg) {
-    List<String> terminatingSymbols = new LinkedList<String>();
+    List<String> terminatingSymbols = new ArrayList<String>();
     for (Clause clause : srcg.getClauses()) {
       String nt = clause.getLhs().getNonterminal();
       if (clause.getRhs().size() == 0 && !terminatingSymbols.contains(nt)) {
@@ -51,7 +51,7 @@ public class UselessRules {
         }
       }
     }
-    List<String> nonterminatingSymbols = new LinkedList<String>();
+    List<String> nonterminatingSymbols = new ArrayList<String>();
     for (String nt : srcg.getNonterminals()) {
       if (!terminatingSymbols.contains(nt)) {
         nonterminatingSymbols.add(nt);
@@ -69,7 +69,7 @@ public class UselessRules {
   }
 
   private static List<String> getNonreachableSymbols(Srcg srcg) {
-    List<String> reachableSymbols = new LinkedList<String>();
+    List<String> reachableSymbols = new ArrayList<String>();
     reachableSymbols.add(srcg.getStartSymbol());
     boolean changed = true;
     while (changed) {
@@ -87,7 +87,7 @@ public class UselessRules {
         }
       }
     }
-    List<String> nonreachableSymbols = new LinkedList<String>();
+    List<String> nonreachableSymbols = new ArrayList<String>();
     for (String nt : srcg.getNonterminals()) {
       if (!reachableSymbols.contains(nt)) {
         nonreachableSymbols.add(nt);
@@ -122,8 +122,8 @@ public class UselessRules {
     }
     Srcg newSrcg = new Srcg();
     newSrcg.setStartSymbol(srcg.getStartSymbol());
-    List<String> usedVariables = new LinkedList<String>();
-    List<String> usedTerminals = new LinkedList<String>();
+    List<String> usedVariables = new ArrayList<String>();
+    List<String> usedTerminals = new ArrayList<String>();
     // nonterminals
     for (Clause clause : srcg.getClauses()) {
       Predicate lhsPred = clause.getLhs();
@@ -150,7 +150,7 @@ public class UselessRules {
         }
       }
     }
-    List<String> nonterminals = new LinkedList<String>();
+    List<String> nonterminals = new ArrayList<String>();
     for (String nt : srcg.getNonterminals()) {
       if(!uselessNonterminals.contains(nt)) {
         nonterminals.add(nt);

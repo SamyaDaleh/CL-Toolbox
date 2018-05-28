@@ -148,7 +148,9 @@ All rules with an empty right hand side are removed. If it was the only rule of 
 
 ##### CFG Removal of Left Recursion
 
-Currently the algorithm removes only direct left recursion. It treats every rule where the first symbol on the right hand side is the same as the one on the left hand side except if it is a unary production. For each nonterminal that is the left hand side of a left recursive rule it adds a new nonterminal appended to the rules without left recursion. For instance a grammar has the rules `S -> S a` which is left recursive and `S -> b` which is not. Then for each terminating rule a new rule like `S -> b S1` using a new nonterminal symbol is added, also `S1 -> ε`. For each recursive rule a new like `S1 -> a S1` is added. The former left recursive rules are removed. If a nonterminal is associated with only left recursive rules, an error message is printed and no conversion is performed.
+The algorithm removes both direct and indirect left recursion. For direct recursion it treats every rule where the first symbol on the right hand side is the same as the one on the left hand side except if it is a unary production. For each nonterminal that is the left hand side of a left recursive rule it adds a new nonterminal appended to the rules without left recursion. For instance a grammar has the rules `S -> S a` which is left recursive and `S -> b` which is not. Then for each terminating rule a new rule like `S -> b S1` using a new nonterminal symbol is added, also `S1 -> ε`. For each recursive rule a new like `S1 -> a S1` is added. The former left recursive rules are removed. If a nonterminal is associated with only left recursive rules, an error message is printed and no conversion is performed.
+
+For removing indirect left recursion epsilon productions have to be removed first. The algorithm assumes an order between the nonterminals. For each nonterminal, that is the lhs of a rule whose first rhs symbol is a previous nonterminal, it is replaced by all rhs of rules with those nonterminal as lhs. For example a grammar has the rules `S -> A a, S -> b, A -> S a` where the declared order of nonterminals is `[S, A]`. `S` is declared before `A`, hence rule `A -> S a` is handled and removed. The rhs without  the nonterminal, in this case `a`´, is appended to the rhs' of S-productions to form the new rules `A -> A a a, A -> b a`. One nonterminal is handled like this until the rules don't change anymore. Afterwards remaining direct left recursive rules are removed for that nonterminal. 
 
 ##### CFG have either one terminal or nonterminals on the Right Hand Side
 
@@ -306,7 +308,7 @@ Kallmeyer, Laura: A* Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [
 
 ### CFG: Removing left recursion
 
-Left Recursion. Wikipedia, 2017. URL [https://en.wikipedia.org/wiki/Left_recursion#Removing_direct_left_recursion](https://en.wikipedia.org/wiki/Left_recursion#Removing_direct_left_recursion) – last checked 2017-27-05 
+Left Recursion. Wikipedia, 2017. URL [https://en.wikipedia.org/wiki/Left_recursion#Removing_all_left_recursion](https://en.wikipedia.org/wiki/Left_recursion#Removing_all_left_recursion) – last checked 2018-05-28 
 
 ### CFG: Removing useless symbols, Removing epsilon productions, removing unary productions, replacing terminals, removing chain rules
 

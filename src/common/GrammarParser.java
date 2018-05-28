@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +30,7 @@ public class GrammarParser {
 
   /** Parses a CFG from a file and returns it as Cfg. */
   public static Cfg parseCfgFile(String grammarFile) throws IOException {
-    errors = new LinkedList<Exception>();
+    errors = new ArrayList<Exception>();
     Cfg cfg = new Cfg();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
@@ -139,7 +138,7 @@ public class GrammarParser {
 
   /** Parses a PCFG from a file and returns it as Pcfg. */
   public static Pcfg parsePcfgFile(String grammarFile) throws IOException {
-    errors = new LinkedList<Exception>();
+    errors = new ArrayList<Exception>();
     Pcfg pcfg = new Pcfg();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
@@ -250,7 +249,7 @@ public class GrammarParser {
 
   /** Parses a TAG from a text file and returns it as a Tag object. */
   public static Tag parseTagFile(String grammarFile) throws IOException {
-    errors = new LinkedList<Exception>();
+    errors = new ArrayList<Exception>();
     Tag tag = new Tag();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
@@ -424,7 +423,7 @@ public class GrammarParser {
 
   /** Parses a sRCG from a file and returns it as Srcg. */
   public static Srcg parseSrcgFile(String grammarFile) throws IOException {
-    errors = new LinkedList<Exception>();
+    errors = new ArrayList<Exception>();
     Srcg srcg = new Srcg();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();

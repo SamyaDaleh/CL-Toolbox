@@ -26,16 +26,25 @@ import chartparsing.cfg.unger.CfgUngerScan;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
 
-/** Generates different parsing schemes. Based on the slides from Laura
- * Kallmeyer about Parsing as Deduction. */
+/**
+ * Generates different parsing schemes. Based on the slides from Laura Kallmeyer
+ * about Parsing as Deduction.
+ */
 public class CfgToDeductionRulesConverter {
 
-  /** Converts a cfg to a parsing scheme for Topdown parsing. Based on
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
+  /**
+   * Converts a cfg to a parsing scheme for Topdown parsing. Based on
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
+   */
   public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out
         .println("CFG must not contain empty productions for TopDown parsing.");
+      return null;
+    }
+    if (cfg.hasLeftRecursion()) {
+      System.out.println(
+        "CFG must not contain left recursion for TopDown parsing.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -56,8 +65,10 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Converts a cfg to a parsing scheme for ShiftReduce parsing. Based on
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf */
+  /**
+   * Converts a cfg to a parsing scheme for ShiftReduce parsing. Based on
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf
+   */
   public static ParsingSchema cfgToShiftReduceRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out.println(
@@ -83,8 +94,10 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Converts a cfg to a parsing scheme for Earley parsing. Based n
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf */
+  /**
+   * Converts a cfg to a parsing scheme for Earley parsing. Based n
+   * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf
+   */
   public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w) {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -122,9 +135,11 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
+  /**
+   * Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
-   * to be used. */
+   * to be used.
+   */
   public static ParsingSchema cfgToLeftCornerRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
       System.out.println(
@@ -157,9 +172,11 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Converts a cfg to a parsing scheme for LeftCorner parsing, chart version.
+  /**
+   * Converts a cfg to a parsing scheme for LeftCorner parsing, chart version.
    * Based on https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the
-   * moment to be used. */
+   * moment to be used.
+   */
   public static ParsingSchema cfgToLeftCornerChartRules(Cfg cfg, String w) {
     ParsingSchema schema = new ParsingSchema();
     String[] wSplit = w.split(" ");
@@ -227,9 +244,11 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Like CYK parsing, but with an additional deduction rule for chain rules,
+  /**
+   * Like CYK parsing, but with an additional deduction rule for chain rules,
    * hence grammar needs only to be in Canonical Two Form. Source: Giogio Satta,
-   * ESSLLI 2013 */
+   * ESSLLI 2013
+   */
   public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w) {
     if (!cfg.isInCanonicalTwoForm()) {
       System.out.println("Grammar has to be in Canonical Two Form.");

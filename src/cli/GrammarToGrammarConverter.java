@@ -14,7 +14,7 @@ class GrammarToGrammarConverter {
     this.please = please;
   }
 
-  Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm) {
+  Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm) throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
       return getCfgForTopDown(cfg);
@@ -41,7 +41,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm) {
+  Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm)
+    throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToCfg(cfg, algorithm);
   }
@@ -225,8 +226,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForLeftCorner(Cfg cfg) {
-    if (cfg.hasEpsilonProductions() || cfg.hasDirectLeftRecursion()) {
+  private Cfg getCfgForLeftCorner(Cfg cfg) throws ParseException {
+    if (cfg.hasEpsilonProductions() || cfg.hasLeftRecursion()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions().getCfgWithoutLeftRecursion()
           .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()

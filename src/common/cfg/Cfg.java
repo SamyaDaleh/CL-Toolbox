@@ -164,11 +164,28 @@ public class Cfg extends AbstractCfg {
     return LeftRecursion.hasDirectLeftRecursion(this);
   }
 
+  /** Returns true if CFG has one rule with direct left recursion, of the form A
+   * -> A.... Remove epsilon productions to make sure no indirect left recursion
+   * is left. */
+  public boolean hasLeftRecursion() {
+    return LeftRecursion.hasLeftRecursion(this);
+  }
+
   /** Removes direct left recursion. S -> S is ignored. S -> S a | b are
    * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
    * and maybe chain rules. Remove empty productions first to make sure grammar
-   * does not contain indirect left recursion. */
-  public Cfg getCfgWithoutLeftRecursion() {
+   * does not contain indirect left recursion. 
+   * @throws ParseException */
+  public Cfg getCfgWithoutDirectLeftRecursion() throws ParseException {
+    return LeftRecursion.removeDirectLeftRecursion(this);
+  }
+
+  /** Removes left recursion. S -> S is ignored. S -> S a | b are
+   * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
+   * and maybe chain rules. Remove empty productions first to make sure grammar
+   * does not contain indirect left recursion. 
+   * @throws ParseException */
+  public Cfg getCfgWithoutLeftRecursion() throws ParseException {
     return LeftRecursion.removeLeftRecursion(this);
   }
 

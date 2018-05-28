@@ -1,16 +1,21 @@
 package common.cfg.util;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import common.ArrayUtils;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
 
 public class LeftRecursion {
 
-  /** Returns true if CFG has one rule with direct left recursion, of the form A
+  /**
+   * Returns true if CFG has one rule with direct left recursion, of the form A
    * -> A.... Remove epsilon productions to make sure no indirect left recursion
-   * is left. */
+   * is left.
+   */
   public static boolean hasDirectLeftRecursion(Cfg cfg) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (hasDirectLeftRecursion(rule)) {
@@ -25,18 +30,20 @@ public class LeftRecursion {
     return rule.getLhs().equals(rule.getRhs()[0]) && rule.getRhs().length > 1;
   }
 
-  /** Removes direct left recursion. S -> S is ignored. S -> S a | b are
-   * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
-   * and maybe chain rules. Remove empty productions first to make sure grammar
-   * does not contain indirect left recursion. */
-  public static Cfg removeLeftRecursion(Cfg cfgOld) {
+  /**
+   * Removes direct left recursion. S -> S is ignored. S -> S a | b are replaced
+   * by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar and
+   * maybe chain rules. Remove empty productions first to make sure grammar does
+   * not contain indirect left recursion.
+   */
+  public static Cfg removeDirectLeftRecursion(Cfg cfgOld) {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
     ArrayList<String> newNts = new ArrayList<String>();
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (String nt : cfgOld.getNonterminals()) {
-      if (!nonterminalIsLhsOfLeftRecursion(cfgOld, nt)) {
+      if (!nonterminalIsLhsOfDirectLeftRecursion(cfgOld, nt)) {
         continue;
       } else if (!nonterminalIsLhsOfTermination(cfgOld, nt)) {
         System.err
@@ -51,17 +58,134 @@ public class LeftRecursion {
         i++;
       }
       newNts.add(newNt);
-      cfg.getProductionRules()
-        .add(new CfgProductionRule(newNt, new String[] {""}));
-      doRemoveLeftRecursion(cfg, nt, newNt, cfgOld);
+      doRemoveDirectLeftRecursion(cfg, nt, newNt, cfgOld);
     }
     cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
     return cfg;
   }
 
-  /** Returns true if in this grammar there is any not left recursive rule with
+  /**
+   * Removes any kind of left recursion including direct and indirect one,
+   * but epsilon productions have to be removed first.
+   */
+  public static Cfg removeLeftRecursion(Cfg cfgOld) throws ParseException {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(cfgOld.getTerminals());
+    cfg.setStartSymbol(cfgOld.getStartSymbol());
+    ArrayList<String> newNts = new ArrayList<String>();
+    Collections.addAll(newNts, cfgOld.getNonterminals());
+    for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+      cfg.addProductionRule(rule.toString());
+    }
+    for (int i = 0; i < cfgOld.getNonterminals().length; i++) {
+      String nt = cfgOld.getNonterminals()[i];
+      if (!nonterminalIsLhsOfLeftRecursion(cfgOld, nt)) {
+        continue;
+      } else if (!nonterminalIsLhsOfTermination(cfgOld, nt)) {
+        System.err
+          .println(nt + " has left recursive rule but no termination rule.");
+        return null;
+      }
+      boolean change = true;
+      while (change) {
+        change = false;
+        for (int k = cfg.getProductionRules().size() - 1; k >= 0; k--) {
+          CfgProductionRule rule = cfg.getProductionRules().get(k);
+          if (rule.getLhs().equals(nt)) {
+            String nt2 = rule.getRhs()[0];
+            for (int j = 0; j < i && j < newNts.size(); j++) {
+              if (nt2.equals(newNts.get(j))) {
+                change = true;
+                String[] bi = ArrayUtils.getSubSequenceAsArray(rule.getRhs(), 1,
+                  rule.getRhs().length);
+                cfg.getProductionRules().remove(k);
+                List<String> newRules = new ArrayList<String>();
+                for (CfgProductionRule rule2 : cfg.getProductionRules()) {
+                  if (rule2.getLhs().equals(nt2)) {
+                    newRules.add(nt + " -> " + String.join(" ", rule2.getRhs())
+                      + " " + String.join(" ", bi));
+                  }
+                }
+                for (String newRule : newRules) {
+                  cfg.getProductionRules().add(new CfgProductionRule(newRule));
+                }
+              }
+            }
+          }
+        }
+      }
+      if (nonterminalIsLhsOfDirectLeftRecursion(cfg, nt)) {
+        int l = 1;
+        String newNt = nt + String.valueOf(l);
+        while (newNts.contains(newNt) || cfg.terminalsContain(newNt)) {
+          newNt = nt + String.valueOf(l);
+          l++;
+        }
+        newNts.add(newNt);
+        List<CfgProductionRule> rulesCopy = new ArrayList<CfgProductionRule>();
+        for(CfgProductionRule rule : cfg.getProductionRules()) {
+          if(rule.getLhs().equals(nt)) {
+          rulesCopy.add(new CfgProductionRule(rule.toString()));
+          }
+        }
+        doRemoveDirectLeftRecursion(cfg, nt, newNt, cfg);
+        for (int k = cfg.getProductionRules().size() - 1; k >= 0; k--) {
+          String ruleString = cfg.getProductionRules().get(k).toString();
+          for (int m = rulesCopy.size()-1; m >=0 ; m--) {
+            if(rulesCopy.get(m).toString().equals(ruleString)) {
+              cfg.getProductionRules().remove(k);
+              rulesCopy.remove(m);
+            }
+          }
+        }
+      }
+    }
+    cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+    return cfg;
+  }
+
+  /**
+   * Returns true if nonterminal can be derived to itself by any kind of left
+   * recursion including indirect one.
+   */
+  private static boolean nonterminalIsLhsOfLeftRecursion(Cfg cfg, String nt) {
+    boolean change = true;
+    List<String> transitiveClosure = new ArrayList<String>();
+    transitiveClosure.add(nt);
+    List<String> epsilonNts = EmptyProductions.getEliminateable(cfg);
+    while (change) {
+      change = false;
+      for (CfgProductionRule rule : cfg.getProductionRules()) {
+        if (transitiveClosure.contains(rule.getLhs())) {
+          List<String> consider = new ArrayList<String>();
+          int i = 0;
+          String considerNt;
+          do {
+            considerNt = rule.getRhs()[i];
+            consider.add(considerNt);
+            i++;
+          } while (epsilonNts.contains(considerNt) && i < rule.getRhs().length);
+          if (consider.contains(nt)) {
+            return true;
+          }
+          for (String considerThis : consider) {
+            if (cfg.nonterminalsContain(considerThis)
+              && !transitiveClosure.contains(considerThis)) {
+              change = true;
+              transitiveClosure.add(considerThis);
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if in this grammar there is any not left recursive rule with
    * this nonterminals as left hand side. Does not really check for termination,
-   * remove useless symbols first. */
+   * remove useless symbols first.
+   */
   private static boolean nonterminalIsLhsOfTermination(Cfg cfg, String nt) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getLhs().equals(nt) && !hasDirectLeftRecursion(rule)) {
@@ -71,9 +195,12 @@ public class LeftRecursion {
     return false;
   }
 
-  /** Returns true if in this grammar there is any left recursive rule with this
-   * nonterminals as left hand side. */
-  private static boolean nonterminalIsLhsOfLeftRecursion(Cfg cfg, String nt) {
+  /**
+   * Returns true if in this grammar there is any left recursive rule with this
+   * nonterminals as left hand side.
+   */
+  private static boolean nonterminalIsLhsOfDirectLeftRecursion(Cfg cfg,
+    String nt) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getLhs().equals(nt) && hasDirectLeftRecursion(rule)) {
         return true;
@@ -82,11 +209,17 @@ public class LeftRecursion {
     return false;
   }
 
-  /** Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 | ε where nt is
-   * the old nonterminal and newnt is S1 in this example. */
-  private static void doRemoveLeftRecursion(Cfg cfg, String nt, String newNt,
-    Cfg cfgOld) {
-    for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+  /**
+   * Actually replaces S -> S a | b by S -> b S1, S1 -> a S1 | ε where nt is the
+   * old nonterminal and newnt is S1 in this example. Actually it's not removing
+   * but not copying to new cfg.
+   */
+  private static void doRemoveDirectLeftRecursion(Cfg cfg, String nt,
+    String newNt, Cfg cfgOld) {
+    cfg.getProductionRules()
+      .add(new CfgProductionRule(newNt, new String[] {""}));
+    for (int k = cfgOld.getProductionRules().size() - 1; k >= 0; k--) {
+      CfgProductionRule rule = cfgOld.getProductionRules().get(k);
       if (rule.getLhs().equals(nt)) {
         if (rule.getRhs()[0].equals(nt) && rule.getRhs().length > 1) {
           String[] newRhs = new String[rule.getRhs().length];
@@ -107,5 +240,17 @@ public class LeftRecursion {
         }
       }
     }
+  }
+
+  /**
+   * Returns true if grammar contains any direct or indirect left recursion.
+   */
+  public static boolean hasLeftRecursion(Cfg cfg) {
+    for (String nt : cfg.getNonterminals()) {
+      if (nonterminalIsLhsOfLeftRecursion(cfg, nt)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

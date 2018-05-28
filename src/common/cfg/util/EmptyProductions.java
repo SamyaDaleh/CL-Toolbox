@@ -2,6 +2,7 @@ package common.cfg.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import common.ArrayUtils;
 import common.cfg.Cfg;
@@ -9,9 +10,10 @@ import common.cfg.CfgProductionRule;
 
 public class EmptyProductions {
 
-  /** Returns true if there is at least one rule with an empty right side,
-   * except it's a start symbol rule and the start symbol never occurs on any
-   * rhs. */
+  /**
+   * Returns true if there is at least one rule with an empty right side, except
+   * it's a start symbol rule and the start symbol never occurs on any rhs.
+   */
   public static boolean hasEpsilonProductions(Cfg cfg) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (!rule.getRhs()[0].equals("")) {
@@ -33,9 +35,11 @@ public class EmptyProductions {
     return false;
   }
 
-  /** Returns an equivalent CFG without empty productions, only S -> ε is
-   * allowed in which case it is removed from all rhs'. May leaves non
-   * generating symbols behind. */
+  /**
+   * Returns an equivalent CFG without empty productions, only S -> ε is allowed
+   * in which case it is removed from all rhs'. May leaves non generating
+   * symbols behind.
+   */
   public static Cfg removeEmptyProductions(Cfg cfgOld) {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
@@ -44,7 +48,7 @@ public class EmptyProductions {
     ArrayList<String> newNt = new ArrayList<String>();
     Collections.addAll(newNt, cfgOld.getNonterminals());
     cfg.getProductionRules().addAll(cfgOld.getProductionRules());
-    ArrayList<String> eliminateable = getEliminateable(cfgOld);
+    List<String> eliminateable = getEliminateable(cfgOld);
     doEliminateEmptyProductions(cfg, newNt, eliminateable, cfgOld);
     for (int i = cfg.getProductionRules().size() - 1; i >= 0; i--) {
       if (ifEmptyProductionShouldBeRemoved(cfg, i)) {
@@ -56,19 +60,23 @@ public class EmptyProductions {
     return cfg;
   }
 
-  /** Returns true if production derives to the empty string and doesn't have
-   * the start symbol as lhs. */
+  /**
+   * Returns true if production derives to the empty string and doesn't have the
+   * start symbol as lhs.
+   */
   private static boolean ifEmptyProductionShouldBeRemoved(Cfg cfg, int i) {
     return cfg.getProductionRules().get(i).getRhs().length == 1
       && cfg.getProductionRules().get(i).getRhs()[0].equals("")
       && !cfg.getProductionRules().get(i).getLhs().equals(cfg.getStartSymbol());
   }
 
-  /** Removes all empty productions except if epsilon can be derived from the
+  /**
+   * Removes all empty productions except if epsilon can be derived from the
    * start symbol, in which case if the start symbol appears in a rhs, a new
-   * start symbol is added. */
-  private static void doEliminateEmptyProductions(Cfg cfg,
-    ArrayList<String> newNt, ArrayList<String> eliminateable, Cfg cfgOld) {
+   * start symbol is added.
+   */
+  private static void doEliminateEmptyProductions(Cfg cfg, List<String> newNt,
+    List<String> eliminateable, Cfg cfgOld) {
     for (String nt : eliminateable) {
       for (int j = 0; j < cfg.getProductionRules().size(); j++) {
         CfgProductionRule rule = cfg.getProductionRules().get(j);
@@ -97,7 +105,7 @@ public class EmptyProductions {
   }
 
   /** Gets all nonterminals where a derivation =>* ε is possible. */
-  private static ArrayList<String> getEliminateable(Cfg cfg) {
+  static List<String> getEliminateable(Cfg cfg) {
     ArrayList<String> eliminateable = new ArrayList<String>();
     boolean changed = true;
     while (changed) {

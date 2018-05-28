@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 
 import common.TestGrammarLibrary;
@@ -20,6 +22,13 @@ public class CfgTest {
     assertTrue(TestGrammarLibrary.epsCfg().hasEpsilonProductions());
     Cfg epsfree = TestGrammarLibrary.epsCfg().getCfgWithoutEmptyProductions();
     assertTrue(!epsfree.hasEpsilonProductions());
+    assertEquals(
+      "G = <N, T, S, P>\n" + "N = {S, A, B, C, S1}\n" + "T = {a, b}\n"
+        + "S = S1\n"
+        + "P = {S -> b A a S b C, A -> a, A -> b B, B -> b, S -> b a S b C,"
+        + " S -> b A a b C, S -> b a b C, S1 -> S, S1 -> ε, S -> b A a S b,"
+        + " S -> b a S b, S -> b A a b, S -> b a b}\n" + "",
+      epsfree.toString());
   }
 
   @Test public void testRemoveChainRules() {
@@ -63,16 +72,38 @@ public class CfgTest {
       .isInCanonicalTwoForm());
   }
 
-  @Test public void testRemoveLeftRecursion() {
-    Cfg cfgwlr =
-      TestGrammarLibrary.leftRecursionCfg().getCfgWithoutLeftRecursion();
+  @Test public void testRemoveDirectLeftRecursion() throws ParseException {
+    Cfg cfgwlr = TestGrammarLibrary.directLeftRecursionCfg()
+      .getCfgWithoutDirectLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
-        + "P = {S1 -> ε, S -> a S1, S -> b S1, S -> c S1, S -> d S1}\n",
+        + "P = {S1 -> ε, S -> d S1, S -> c S1, S -> b S1, S -> a S1}\n",
       cfgwlr.toString());
   }
 
-  @Test public void testRemoveLeftRecursionNoTermination() {
+  @Test public void testRemoveDirectLeftRecursion2() throws ParseException {
+    Cfg cfgwlr =
+      TestGrammarLibrary.directLeftRecursionCfg().getCfgWithoutLeftRecursion();
+    assertEquals(
+      "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
+        + "P = {S1 -> ε, S -> d S1, S -> c S1, S -> b S1, S -> a S1}\n",
+      cfgwlr.toString());
+  }
+
+  @Test public void testRemoveIndirectLeftRecursion() throws ParseException {
+    Cfg cfgwlr = TestGrammarLibrary.indirectLeftRecursionCfg()
+      .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+      .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
+    assertEquals("G = <N, T, S, P>\n" + 
+      "N = {S, A, A1}\n" + 
+      "T = {a, b}\n" + 
+      "S = S\n" + 
+      "P = {S -> A a, S -> b, A1 -> ε, A -> b a A1, A -> a a A1}\n" + 
+      "", cfgwlr.toString());
+  }
+
+  @Test public void testRemoveLeftRecursionNoTermination()
+    throws ParseException {
     Cfg cfgwlr = TestGrammarLibrary.leftRecursionNoTerminationCfg()
       .getCfgWithoutLeftRecursion();
     assertNull(cfgwlr);
@@ -90,7 +121,7 @@ public class CfgTest {
       .getCfgWithoutNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
-    
+
     assertNull(TestGrammarLibrary.noUsefulNonterminalCfg()
       .getCfgWithoutNonGeneratingSymbols());
   }

@@ -145,7 +145,7 @@ public class TestGrammarLibrary {
     }
   }
 
-  public static Cfg leftRecursionCfg() {
+  public static Cfg directLeftRecursionCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c", "d"});
     cfg.setNonterminals(new String[] {"S"});
@@ -155,6 +155,22 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("S -> S b");
       cfg.addProductionRule("S -> c");
       cfg.addProductionRule("S -> d");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public static Cfg indirectLeftRecursionCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S", "A"});
+    try {
+      cfg.addProductionRule("S -> A a");
+      cfg.addProductionRule("A -> S a");
+      cfg.addProductionRule("S -> b");
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {

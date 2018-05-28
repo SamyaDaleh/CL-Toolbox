@@ -1,7 +1,7 @@
 package common.cfg.util;
 
 import java.text.ParseException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.Deduction;
@@ -36,8 +36,8 @@ public class GrammarSearcher {
    * is reached.
    */
   public static void evolutionarySearch() throws ParseException {
-    List<Cfg> population = new LinkedList<Cfg>();
-    List<Float> scores = new LinkedList<Float>();
+    List<Cfg> population = new ArrayList<Cfg>();
+    List<Float> scores = new ArrayList<Float>();
     int generation = 0;
     for (int i = 0; i < populationSize; i++) {
       Cfg newCfg = Random.getRandomCfg();
@@ -127,7 +127,7 @@ public class GrammarSearcher {
     if (decision == 2) {
       if (r.nextBoolean()) {
         String newNt = "N" + child.getNonterminals().length;
-        List<String> newNts = new LinkedList<String>();
+        List<String> newNts = new ArrayList<String>();
         for (String oldNt : child.getNonterminals()) {
           newNts.add(oldNt);
         }
@@ -135,7 +135,7 @@ public class GrammarSearcher {
         child.setNonterminals(newNts.toArray(new String[newNts.size()]));
       } else {
         String newT = "t" + child.getTerminals().length;
-        List<String> newTs = new LinkedList<String>();
+        List<String> newTs = new ArrayList<String>();
         for (String oldT : child.getTerminals()) {
           newTs.add(oldT);
         }
@@ -208,7 +208,7 @@ public class GrammarSearcher {
    * first cfg are added, then from the second one.
    */
   private static List<String> recombineRules(Cfg m1, Cfg m2) {
-    List<String> newRules = new LinkedList<String>();
+    List<String> newRules = new ArrayList<String>();
     int splitPoint = 1;
     if (m1.getProductionRules().size() > 1) {
       splitPoint = r.nextInt(m1.getProductionRules().size() - 1) + 1;
@@ -285,56 +285,79 @@ public class GrammarSearcher {
     float maxScore = 0;
     int tdLength = 0;
     int lcLength = 0;
-  //  int srLength = 0;
+    // int srLength = 0;
 
     maxScore++;
-    if (cfg.hasGeneratingSymbols()) {
-      actualScore++;
-    }
+    actualScore = propertyHasGeneratingSymbols(cfg, actualScore);
 
     maxScore++;
-    if (!cfg.hasDirectLeftRecursion()) {
-      actualScore++;
-
-      try {
-        schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-topdown");
-        maxScore++;
-        if (deduction.doParse(schema, false)) {
-          actualScore++;
-        }
-        tdLength =deduction.getChart().size();
-      } catch (NullPointerException e) {
-        // no points
-      }
-    }
+    actualScore = propertyHasNoDirectLeftRecursion(cfg, actualScore);
 
     maxScore++;
-    if (!cfg.hasEpsilonProductions()) {
-      actualScore++;
-    }
+    actualScore = propertyCfgTopdownParseable(cfg, actualScore);
+    tdLength = deduction.getChart().size();
 
-  /*  maxScore++;
-    schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-shiftreduce");
-    if (deduction.doParse(schema, false)) {
-      actualScore++;
-    }
-    srLength = deduction.getChart().size(); //*/
-    
     maxScore++;
-    schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-leftcorner");
-    if (deduction.doParse(schema, false)) {
-      actualScore++;
-    }
+    actualScore = propertyHasNoEpsilonProductions(cfg, actualScore);
+
+    /* maxScore++; actualScore = propertyCfgShiftReduceParseable(cfg,
+     * actualScore); srLength = deduction.getChart().size(); // */
+
+    maxScore++;
+    actualScore = propertyCfgLeftCornerParseable(cfg, actualScore);
     lcLength = deduction.getChart().size();
 
     maxScore++;
     if (lcLength < tdLength) {
       actualScore++;
-      if(actualScore > 4) {
-        System.out.println("");
-      }
     }
     // must not fulfill any criteria that leads to Exception
     return actualScore / maxScore;
+  }
+
+  private static float propertyHasNoDirectLeftRecursion(Cfg cfg,
+    float actualScore) {
+    if (!cfg.hasDirectLeftRecursion()) {
+      actualScore++;
+    }
+    return actualScore;
+  }
+
+  private static float propertyCfgTopdownParseable(Cfg cfg, float actualScore) {
+    schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-topdown");
+    if (deduction.doParse(schema, false)) {
+      actualScore++;
+    }
+    return actualScore;
+  }
+
+  /* private static float propertyCfgShiftReduceParseable(Cfg cfg, float
+   * actualScore) { schema = gdrc.convertToSchema(cfg, "t0 t1",
+   * "cfg-shiftreduce"); if (deduction.doParse(schema, false)) { actualScore++;
+   * } return actualScore; } // */
+
+  private static float propertyCfgLeftCornerParseable(Cfg cfg,
+    float actualScore) {
+    schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-leftcorner");
+    if (deduction.doParse(schema, false)) {
+      actualScore++;
+    }
+    return actualScore;
+  }
+
+  private static float propertyHasNoEpsilonProductions(Cfg cfg,
+    float actualScore) {
+    if (!cfg.hasEpsilonProductions()) {
+      actualScore++;
+    }
+    return actualScore;
+  }
+
+  private static Float propertyHasGeneratingSymbols(Cfg cfg,
+    Float actualScore) {
+    if (cfg.hasGeneratingSymbols()) {
+      actualScore++;
+    }
+    return actualScore;
   }
 }
