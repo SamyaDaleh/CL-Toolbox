@@ -292,7 +292,7 @@ public class Tree {
 
   /** Returns the max width of the subtree below node p, that is the most nodes
    * in one layer where all nodes are dominated by p. */
-  public int getWidthBelowNode(Vertex p) {
+  public int getWidthBelowNodeInNodes(Vertex p) {
     int width = 0;
     int nodes = 1;
     for (int i = p.getGornAddress().split("[.]").length + 1; nodes != 0; i++) {

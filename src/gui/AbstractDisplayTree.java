@@ -118,7 +118,7 @@ abstract class AbstractDisplayTree {
     List<Vertex> children = dti.getTree().getChildren(p);
     ArrayList<Integer> widths = new ArrayList<Integer>();
     for (Vertex child : children) {
-      int width = dti.getTree().getWidthBelowNode(child);
+      int width = dti.getTree().getWidthBelowNodeInNodes(child);
       if (width == 0) {
         widthSum += 1;
         widths.add(1);
@@ -168,12 +168,18 @@ abstract class AbstractDisplayTree {
     }
     drawSubTree(dti, dti.getTree().getNodeByGornAdress(""), 60, 0,
       dti.getWidth());
+    int overallLeafLabelWidth = 2;
+    for (String gorn : dti.getTree().getLeafGorns()) {
+      overallLeafLabelWidth +=
+        dti.getTree().getNodeByGornAdress(gorn).getLabel().length() + 1;
+    }
+    int labelWidthUsed = 2;
     for (int i = 0; i < dti.getTree().getLeafOrder().size(); i++) {
       int index = dti.getTree().getLeafOrder().indexOf(String.valueOf(i));
       Vertex p = dti.getTree()
         .getNodeByGornAdress(dti.getTree().getLeafGorns().get(index));
-      int nodex =
-        (i + 1) * dti.getWidth() / (dti.getTree().getLeafOrder().size() + 1);
+      int nodex = labelWidthUsed * dti.getWidth() / overallLeafLabelWidth;
+      labelWidthUsed += p.getLabel().length() + 1;
       int height = dti.getHeight() - 50;
       dti.drawText(p.getLabel(), nodex, height);
       Integer[] xyParent = dti.getNodesDrawn().get(p.getGornAddressOfParent());
