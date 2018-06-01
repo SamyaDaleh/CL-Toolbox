@@ -113,6 +113,18 @@ public class SrcgTest {
       + "S = S\n", binarizedSrcg.toString());
   }
 
+  @Test public void testSrcgOptimostBinarize() throws ParseException {
+    assertTrue(!TestGrammarLibrary.testOptimostBinarizationSrcg().isBinarized());
+    Srcg binarizedSrcg =
+      TestGrammarLibrary.testOptimostBinarizationSrcg().getBinarizedSrcg();
+    assertTrue(binarizedSrcg.isBinarized());
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C, D, AB1, AB11}\n"
+      + "T = {a, b, c, d}\n" + "V = {X, Y, V, U}\n"
+      + "P = {S(X Y) -> A(X,Y), A(U,X) -> AB1(X) AB11(U), "
+      + "AB1(X Y) -> C(X) D(Y), AB11(U V) -> A(U) B(V), A(a) -> ε, B(b) -> ε,"
+      + " C(c) -> ε, D(d) -> ε}\n" + "S = S\n", binarizedSrcg.toString());
+  }
+
   @Test public void testRemoveEmptyProductionsForEarley()
     throws IOException, ParseException {
     Srcg srcg =

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import common.ArrayUtils;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 import common.lcfrs.Srcg;
@@ -41,30 +43,46 @@ public class Binarization {
         newSrcg.addClause(clause);
       } else {
         ArrayList<Clause> r = new ArrayList<Clause>();
-        Clause clauseToBeFurtherReduced = clause;
-        while (clauseToBeFurtherReduced.getRhs().size() > 2) {
-          int k = getBestCharacteristicStringPos(oldSrcg.getVariables(),
-            clauseToBeFurtherReduced);
-          String nonterminalToDeriveFrom =
-            clauseToBeFurtherReduced.getRhs().get(k).getNonterminal();
-          String newNt = getNewNonterminal(oldSrcg, nonterminalToDeriveFrom);
+        List<Clause> clausesToBeFurtherReduced = new LinkedList<Clause>();
+        clausesToBeFurtherReduced.add(clause);
+        while (clausesToBeFurtherReduced.size() > 0) {
+          if (clausesToBeFurtherReduced.get(0).getRhs().size() <= 2) {
+            r.add(clausesToBeFurtherReduced.get(0));
+            clausesToBeFurtherReduced.remove(0);
+            continue;
+          }
+          Integer[] k = getBestCharacteristicStringPos(oldSrcg.getVariables(),
+            clausesToBeFurtherReduced.get(0));
+          StringBuilder nonterminaltoDeriveFrom = new StringBuilder();
+          for (int entry : k) {
+            nonterminaltoDeriveFrom.append(clausesToBeFurtherReduced.get(0)
+              .getRhs().get(entry).getNonterminal());
+          }
+          String newNt =
+            getNewNonterminal(oldSrcg, nonterminaltoDeriveFrom.toString());
           newNonterminals.add(newNt);
-          Clause clauseCandidate = getReducedClause(clauseToBeFurtherReduced, k,
-            newNt, clause.getLhs(), oldSrcg);
-          r.add(clauseCandidate);
-          List<Predicate> clauseRhs = clauseToBeFurtherReduced.getRhs();
-          List<Predicate> lastCreatedRhs = r.get(r.size() - 1).getRhs();
-          Predicate lastNewPredicate = lastCreatedRhs.get(1);
+          Clause clauseCandidate =
+            getReducedClause(clausesToBeFurtherReduced.get(0), k, newNt,
+              clause.getLhs(), oldSrcg);
+          if (clauseCandidate.getRhs().size() <= 2) {
+            r.add(clauseCandidate);
+          } else {
+            clausesToBeFurtherReduced.add(clauseCandidate);
+          }
+          List<Predicate> clauseRhs = clausesToBeFurtherReduced.get(0).getRhs();
+          List<Predicate> lastCreatedRhs = clauseCandidate.getRhs();
+          Predicate lastNewPredicate =
+            lastCreatedRhs.get(lastCreatedRhs.size() - 1);
           StringBuilder newClause =
             new StringBuilder(lastNewPredicate + " -> ");
+          clausesToBeFurtherReduced.remove(0);
           for (int l = 0; l < clauseRhs.size(); l++) {
-            if (l != k) {
+            if (!ArrayUtils.contains(k, l)) {
               newClause.append(clauseRhs.get(l));
             }
           }
-          clauseToBeFurtherReduced = new Clause(newClause.toString());
+          clausesToBeFurtherReduced.add(new Clause(newClause.toString()));
         }
-        r.add(clauseToBeFurtherReduced);
         for (Clause rbar : r) {
           newSrcg.addClause(getClauseReplaceLongRhsArguments(rbar));
         }
@@ -87,18 +105,34 @@ public class Binarization {
     return newNt;
   }
 
-  private static int getBestCharacteristicStringPos(String[] variables,
+  private static Integer[] getBestCharacteristicStringPos(String[] variables,
     Clause clause) {
-    int posBest = 0;
+    Integer[] posBest = new Integer[] {0};
     int bestArityAndVars = Integer.MAX_VALUE;
     for (int i = 0; i < clause.getRhs().size(); i++) {
-      String characteristicString = getCharacteristicString(clause, i);
+      String characteristicString =
+        getCharacteristicString(clause, new int[] {i});
       int arity =
         getArityOfCharacteristicString(variables, characteristicString);
       int dim = clause.getRhs().get(i).getDim();
       if (arity + dim < bestArityAndVars) {
-        posBest = i;
+        posBest = new Integer[] {i};;
         bestArityAndVars = arity + dim;
+      }
+    }
+    if (clause.getRhs().size() > 3) {
+      for (int i = 0; i < clause.getRhs().size(); i++) {
+        for (int j = i + 1; j < clause.getRhs().size(); j++) {
+          String characteristicString =
+            getCharacteristicString(clause, new int[] {i, j});
+          int arity =
+            getArityOfCharacteristicString(variables, characteristicString);
+          int dim = clause.getRhs().get(i).getDim();
+          if (arity + dim < bestArityAndVars) {
+            posBest = new Integer[] {i, j};
+            bestArityAndVars = arity + dim;
+          }
+        }
       }
     }
     return posBest;
@@ -122,7 +156,7 @@ public class Binarization {
     return arity;
   }
 
-  private static String getCharacteristicString(Clause clause, int l) {
+  private static String getCharacteristicString(Clause clause, int[] l) {
     StringBuilder characteristicString = new StringBuilder();
     Predicate lhs = clause.getLhs();
     for (int i = 0; i < lhs.getDim(); i++) {
@@ -130,7 +164,10 @@ public class Binarization {
         characteristicString.append(' ').append('$');
       }
       for (String symbol : lhs.getArgumentByIndex(i + 1)) {
-        int[] pos = clause.getRhs().get(l).find(symbol);
+        int[] pos = new int[] {-1, -1};
+        for (int j = 0; j < l.length && pos[0] == -1; j++) {
+          pos = clause.getRhs().get(l[j]).find(symbol);
+        }
         if (pos[0] == -1) {
           characteristicString.append(' ').append(symbol);
         } else {
@@ -165,7 +202,7 @@ public class Binarization {
             break;
           }
         }
-        if(!found) {
+        if (!found) {
           newClause.append(interestingSymbol);
         }
       }
@@ -185,14 +222,19 @@ public class Binarization {
     return new Clause(newClause.toString());
   }
 
-  private static Clause getReducedClause(Clause clause, int j, String newNt,
-    Predicate predicate, Srcg srcg) throws ParseException {
-    String newClause =
-      String.valueOf(predicate) + " -> " + clause.getRhs().get(j).toString()
-        + ' ' + newNt + '(' + getVectorLhsReducedByRhsPredAsString(predicate,
-          clause.getRhs().get(j), srcg)
-        + ')';
-    return new Clause(newClause);
+  private static Clause getReducedClause(Clause clause, Integer[] j,
+    String newNt, Predicate predicate, Srcg srcg) throws ParseException {
+    StringBuilder newClause =
+      new StringBuilder(String.valueOf(predicate) + " ->");
+    List<Predicate> rhsPredToReduceBy = new LinkedList<Predicate>();
+    for (int entry : j) {
+      newClause.append(' ').append(clause.getRhs().get(entry).toString());
+      rhsPredToReduceBy.add(clause.getRhs().get(entry));
+    }
+    newClause.append(' ').append(newNt).append('(').append(
+      getVectorLhsReducedByRhsPredAsString(predicate, rhsPredToReduceBy, srcg))
+      .append(')');
+    return new Clause(newClause.toString());
   }
 
   /**
@@ -204,13 +246,16 @@ public class Binarization {
    * by <X2> = <X1, X3> example: <a X1 X2 b X3> reduced by <X2> = <X1, X3>
    */
   private static String getVectorLhsReducedByRhsPredAsString(Predicate lhs,
-    Predicate rhs, Srcg srcg) {
+    List<Predicate> rhss, Srcg srcg) {
     StringBuilder vector = new StringBuilder();
     boolean cut = false;
     for (int i = 0; i < lhs.getDim(); i++) {
       for (int j = 0; j < lhs.getArgumentByIndex(i + 1).length; j++) {
         String interestingSymbol = lhs.getSymAt(i + 1, j);
-        int[] indices = rhs.find(interestingSymbol);
+        int[] indices = new int[] {-1, -1};
+        for (int k = 0; k < rhss.size() && indices[0] == -1; k++) {
+          indices = rhss.get(k).find(interestingSymbol);
+        }
         if (cut) {
           cut = false;
           if (vector.length() > 0

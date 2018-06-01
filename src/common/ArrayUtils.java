@@ -103,9 +103,10 @@ public class ArrayUtils {
 
   /**
    * Returns true if the element is to be found somewhere in the array.
+   * @param <T>
    */
-  public static boolean contains(String[] array, String element) {
-    for (String el : array) {
+  public static <T> boolean contains(T[] array, T element) {
+    for (T el : array) {
       if (el.equals(element)) {
         return true;
       }
