@@ -93,12 +93,24 @@ public class SrcgTest {
       TestGrammarLibrary.testBinarizationSrcg().getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
     assertEquals(
-      "G = <N, T, V, P, S>\n" + "N = {S, A, B, C, C1}\n" + "T = {a, b, c}\n"
+      "G = <N, T, V, P, S>\n" + "N = {S, A, B, C, A1}\n" + "T = {a, b, c}\n"
         + "V = {X, Y, Z, U, V, W}\n"
-        + "P = {S(X Y U V) -> A(X,U) C1(Y,V), C1(Y Z,V W) -> B(Y,V) C(Z,W), "
+        + "P = {S(X Y U V) -> A(X,U) A1(Y,V), A1(Y Z,V W) -> B(Y,V) C(Z,W), "
         + "A(a X,a Y) -> A(X,Y), B(b X,b Y) -> B(X,Y), C(c X,c Y) -> C(X,Y), "
         + "A(a,a) -> ε, B(b,b) -> ε, C(c,c) -> ε}\n" + "S = S\n",
       binarizedSrcg.toString());
+  }
+
+  @Test public void testSrcgOptimalBinarize() throws ParseException {
+    assertTrue(!TestGrammarLibrary.testOptimalBinarizationSrcg().isBinarized());
+    Srcg binarizedSrcg =
+      TestGrammarLibrary.testOptimalBinarizationSrcg().getBinarizedSrcg();
+    assertTrue(binarizedSrcg.isBinarized());
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C, D, D1}\n"
+      + "T = {a, c, d}\n" + "V = {X, Y, Z, U}\n"
+      + "P = {S(X Y Z) -> A(X,Y,Z), A(a X,c Z,d U) -> D(U) D1(X,Z), "
+      + "D1(X Y,Z) -> B(X) C(Y,Z), B(a) -> ε, C(c,c) -> ε, D(d) -> ε}\n"
+      + "S = S\n", binarizedSrcg.toString());
   }
 
   @Test public void testRemoveEmptyProductionsForEarley()

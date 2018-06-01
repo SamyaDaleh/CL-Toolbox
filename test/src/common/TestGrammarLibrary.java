@@ -374,6 +374,20 @@ public class TestGrammarLibrary {
     return srcg;
   }
 
+  public static Srcg testOptimalBinarizationSrcg() throws ParseException {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[] {"S", "A", "B", "C", "D"});
+    srcg.setTerminals(new String[] {"a", "c", "d"});
+    srcg.setVariables(new String[] {"X", "Y", "Z", "U"});
+    srcg.addClause("S(X Y Z) -> A(X, Y, Z)");
+    srcg.addClause("A(a X Y, c Z, d U) -> B(X) C(Y, Z) D(U)");
+    srcg.addClause("B(a) -> ε");
+    srcg.addClause("C(c, c) -> ε");
+    srcg.addClause("D(d) -> ε");
+    srcg.setStartSymbol("S");
+    return srcg;
+  }
+
   public static Srcg testSrcgWUselessRules() throws ParseException {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
