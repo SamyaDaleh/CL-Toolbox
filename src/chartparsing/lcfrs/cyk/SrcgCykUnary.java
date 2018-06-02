@@ -32,14 +32,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
         for (String[] argument : clause.getLhs().getSymbols()) {
           ArrayList<String> vectorRanges = new ArrayList<String>();
           for (String element : argument) {
-            int[] indices = clause.getRhs().get(0).find(element);
-            if (indices[0] == -1) {
-              vectorRanges.add("?");
-              vectorRanges.add("?");
-            } else {
-              vectorRanges.add(itemForm[(indices[0] - 1) * 2 + 1]);
-              vectorRanges.add(itemForm[(indices[0] - 1) * 2 + 2]);
-            }
+            addVectorRangeForElement(itemForm, vectorRanges, element);
           }
           int i = 0;
           for (; i * 2 < vectorRanges.size(); i++) {
@@ -91,6 +84,18 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
 
     }
     return this.consequences;
+  }
+
+  private void addVectorRangeForElement(String[] itemForm,
+    ArrayList<String> vectorRanges, String element) {
+    int[] indices = clause.getRhs().get(0).find(element);
+    if (indices[0] == -1) {
+      vectorRanges.add("?");
+      vectorRanges.add("?");
+    } else {
+      vectorRanges.add(itemForm[(indices[0] - 1) * 2 + 1]);
+      vectorRanges.add(itemForm[(indices[0] - 1) * 2 + 2]);
+    }
   }
 
   @Override public String toString() {

@@ -116,7 +116,7 @@ public class Binarization {
         getArityOfCharacteristicString(variables, characteristicString);
       int dim = clause.getRhs().get(i).getDim();
       if (arity + dim < bestArityAndVars) {
-        posBest = new Integer[] {i};;
+        posBest = new Integer[] {i};
         bestArityAndVars = arity + dim;
       }
     }

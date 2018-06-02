@@ -66,6 +66,18 @@ public class Tag {
     }
   }
 
+  /**
+   * Parses a tree representation that includes name, colon before tree string.
+   */
+  public void addInitialTree(String treeDec) throws ParseException {
+    if (!treeDec.contains(":")) {
+      throw new ParseException(
+        "Separator : missing in tree declaration " + treeDec, 0);
+    }
+    String[] treeSplit = treeDec.split(":", 2);
+    addInitialTree(treeSplit[0].trim(), treeSplit[1].trim());
+  }
+
   /** Returns a set of all names of inital trees. */
   public Set<String> getInitialTreeNames() {
     return this.initialTrees.keySet();
@@ -99,6 +111,18 @@ public class Tag {
           "Terminal nodes are not allowed to have children", 0);
       }
     }
+  }
+
+  /**
+   * Parses a tree representation that includes name, colon before tree string.
+   */
+  public void addAuxiliaryTree(String treeDec) throws ParseException {
+    if (!treeDec.contains(":")) {
+      throw new ParseException(
+        "Separator : missing in tree declaration " + treeDec, 0);
+    }
+    String[] treeSplit = treeDec.split(":", 2);
+    addAuxiliaryTree(treeSplit[0].trim(), treeSplit[1].trim());
   }
 
   /** Returns true if root node and foot node of an auxiliary tree have the same
@@ -229,29 +253,5 @@ public class Tag {
     builder.append("}\n");
     builder.append("S = ").append(startSymbol).append("\n");
     return builder.toString();
-  }
-
-  /**
-   * Parses a tree representation that includes name, colon before tree string.
-   */
-  public void addAuxiliaryTree(String treeDec) throws ParseException {
-    if (!treeDec.contains(":")) {
-      throw new ParseException(
-        "Separator : missing in tree declaration " + treeDec, 0);
-    }
-    String[] treeSplit = treeDec.split(":", 2);
-    addAuxiliaryTree(treeSplit[0].trim(), treeSplit[1].trim());
-  }
-
-  /**
-   * Parses a tree representation that includes name, colon before tree string.
-   */
-  public void addInitialTree(String treeDec) throws ParseException {
-    if (!treeDec.contains(":")) {
-      throw new ParseException(
-        "Separator : missing in tree declaration " + treeDec, 0);
-    }
-    String[] treeSplit = treeDec.split(":", 2);
-    addInitialTree(treeSplit[0].trim(), treeSplit[1].trim());
   }
 }

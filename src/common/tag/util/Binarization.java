@@ -29,7 +29,7 @@ public class Binarization {
     ArrayList<String> newNonterminals = new ArrayList<String>();
     newNonterminals.addAll(Arrays.asList(oldTag.getNonterminals()));
     for (String treeName : oldTag.getInitialTreeNames()) {
-      Tree tree = oldTag.getTree(treeName);
+      Tree tree = oldTag.getInitialTree(treeName);
       if (tree.isBinarized()) {
         newTag.addInitialTree(treeName, tree.toString());
       } else {
@@ -46,7 +46,7 @@ public class Binarization {
       }
     }
     for (String treeName : oldTag.getAuxiliaryTreeNames()) {
-      Tree tree = oldTag.getTree(treeName);
+      Tree tree = oldTag.getAuxiliaryTree(treeName);
       if (tree.isBinarized()) {
         newTag.addInitialTree(treeName, tree.toString());
       } else {

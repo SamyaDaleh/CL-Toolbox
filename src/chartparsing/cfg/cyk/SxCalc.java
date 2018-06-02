@@ -20,33 +20,43 @@ public class SxCalc {
       for (String nt : cfg.getNonterminals()) {
         for (int l = 1; l <= n; l++) {
           if (l == 1) {
-            for (PcfgProductionRule rule : cfg.getProductionRules()) {
-              String[] vars = rule.getRhs();
-              Double logp = -Math.log(rule.getP());
-              if (rule.getLhs().equals(nt) && vars.length == 1
-                && logp < insides.get(getInsideKey(nt, l))) {
-                insides.put(getInsideKey(nt, l), logp);
-              }
-            }
+            calculateInsidesForLengthOne(cfg, insides, nt, l);
           } else {
-            for (int l1 = 1; l1 <= l - 1; l1++) {
-              for (PcfgProductionRule rule : cfg.getProductionRules()) {
-                String[] vars = rule.getRhs();
-                if (nt.equals(rule.getLhs()) && vars.length == 2) {
-                  Double newp = -Math.log(rule.getP());
-                  newp += insides.get(getInsideKey(vars[0], l1));
-                  newp += insides.get(getInsideKey(vars[1], l - l1));
-                  if (newp < insides.get(getInsideKey(nt, l))) {
-                    insides.replace(getInsideKey(nt, l), newp);
-                  }
-                }
-              }
-            }
+            calculateInsidesForLengthGreaterThanOne(cfg, insides, nt, l);
           }
         }
       }
     }
     return insides;
+  }
+
+  private static void calculateInsidesForLengthGreaterThanOne(Pcfg cfg,
+    Map<String, Double> insides, String nt, int l) {
+    for (int l1 = 1; l1 <= l - 1; l1++) {
+      for (PcfgProductionRule rule : cfg.getProductionRules()) {
+        String[] vars = rule.getRhs();
+        if (nt.equals(rule.getLhs()) && vars.length == 2) {
+          Double newp = -Math.log(rule.getP());
+          newp += insides.get(getInsideKey(vars[0], l1));
+          newp += insides.get(getInsideKey(vars[1], l - l1));
+          if (newp < insides.get(getInsideKey(nt, l))) {
+            insides.replace(getInsideKey(nt, l), newp);
+          }
+        }
+      }
+    }
+  }
+
+  private static void calculateInsidesForLengthOne(Pcfg cfg,
+    Map<String, Double> insides, String nt, int l) {
+    for (PcfgProductionRule rule : cfg.getProductionRules()) {
+      String[] vars = rule.getRhs();
+      Double logp = -Math.log(rule.getP());
+      if (rule.getLhs().equals(nt) && vars.length == 1
+        && logp < insides.get(getInsideKey(nt, l))) {
+        insides.put(getInsideKey(nt, l), logp);
+      }
+    }
   }
 
   /** Generates a string that is used as key for inside probabilities in a human

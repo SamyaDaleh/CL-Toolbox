@@ -82,22 +82,31 @@ public class SrcgEarleyResume extends AbstractDynamicDeductionRule {
           }
         }
         for (Predicate rhs : clause1Parsed.getRhs()) {
-          int[] indices = rhs.find(mayV1);
-          boolean dotIsAtArgEnd = clause2Parsed.getLhs().ifSymExists(iInt2, 0)
-            && jInt2 == clause2Parsed.getLhs().getSymbols()[iInt2 - 1].length;
-          if (indices[0] == iInt2 + 1 && isVar1 && !mayV1FirstArg
-            && dotIsAtArgEnd
-            && clause2Parsed.getLhs().ifSymExists(iInt2 + 1, 0)) {
-            boolean vectorsmatch =
-              SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause1Parsed,
-                itemForm1, rhs, iInt1, clause2Parsed, itemForm2);
-            if (vectorsmatch) {
-              consequences.add(new SrcgEarleyActiveItem(itemForm2[0], posInt1,
-                iInt2 + 1, 0, ArrayUtils.getSubSequenceAsList(itemForm2, 4,
-                  itemForm2.length)));
-            }
-          }
+          handleRhsPredicate(itemForm1, itemForm2, clause1Parsed, posInt1,
+            iInt1, clause2Parsed, iInt2, jInt2, mayV1FirstArg, isVar1, mayV1,
+            rhs);
         }
+      }
+    }
+  }
+
+  private void handleRhsPredicate(String[] itemForm1, String[] itemForm2,
+    Clause clause1Parsed, int posInt1, int iInt1, Clause clause2Parsed,
+    int iInt2, int jInt2, boolean mayV1FirstArg, boolean isVar1, String mayV1,
+    Predicate rhs) {
+    int[] indices = rhs.find(mayV1);
+    boolean dotIsAtArgEnd = clause2Parsed.getLhs().ifSymExists(iInt2, 0)
+      && jInt2 == clause2Parsed.getLhs().getSymbols()[iInt2 - 1].length;
+    if (indices[0] == iInt2 + 1 && isVar1 && !mayV1FirstArg
+      && dotIsAtArgEnd
+      && clause2Parsed.getLhs().ifSymExists(iInt2 + 1, 0)) {
+      boolean vectorsmatch =
+        SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause1Parsed,
+          itemForm1, rhs, iInt1, clause2Parsed, itemForm2);
+      if (vectorsmatch) {
+        consequences.add(new SrcgEarleyActiveItem(itemForm2[0], posInt1,
+          iInt2 + 1, 0, ArrayUtils.getSubSequenceAsList(itemForm2, 4,
+            itemForm2.length)));
       }
     }
   }

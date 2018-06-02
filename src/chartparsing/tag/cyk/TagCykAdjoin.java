@@ -23,45 +23,37 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemform();
       String[] itemForm2 = antecedences.get(1).getItemform();
-      String treeName1 = itemForm1[0];
-      String treeName2 = itemForm2[0];
-      String node1 = itemForm1[1];
-      String node2 = itemForm2[1];
-      String i = itemForm1[2];
-      String f12 = itemForm2[2];
-      String f11 = itemForm1[3];
-      String f21 = itemForm1[4];
-      String f1b = itemForm2[3];
-      String f2b = itemForm2[4];
-      String j = itemForm1[5];
-      String f22 = itemForm2[5];
-      if (!f11.equals("-") && f11.equals(f12) && !f21.equals("-")
-        && f21.equals(f22)
-        && tag.isAdjoinable(treeName1, treeName2,
-          node2.substring(0, node2.length() - 1))
-        && node1.equals("⊤") && node2.endsWith("⊥")) {
-        consequences.add(new DeductionItem(treeName2,
-          node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j));
-        String node2Name =
-          (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
-        this.name =
-          "adjoin " + treeName2 + "[" + node2Name + "," + treeName1 + "]";
-      } else if (!f1b.equals("-") && f1b.equals(i) && !f2b.equals("-")
-        && f2b.equals(j)
-        && tag.isAdjoinable(treeName2, treeName1,
-          node1.substring(0, node1.length() - 1))
-        && node2.equals("⊤") && node1.endsWith("⊥")) {
-        // the other way around
-        String node1Name =
-          (node1.length() > 1) ? node1.substring(0, node1.length() - 1) : "ε";
-        this.name =
-          "adjoin " + treeName1 + "[" + node1Name + "," + treeName2 + "]";
-        consequences.add(new DeductionItem(treeName1,
-          node1.substring(0, node1.length() - 1) + "⊤", f12, f11, f21, f22));
-      }
-
+      calculateConsequences(itemForm1, itemForm2);
+      calculateConsequences(itemForm2, itemForm1);
     }
     return consequences;
+  }
+
+  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+    String treeName1 = itemForm1[0];
+    String treeName2 = itemForm2[0];
+    String node1 = itemForm1[1];
+    String node2 = itemForm2[1];
+    String i = itemForm1[2];
+    String f12 = itemForm2[2];
+    String f11 = itemForm1[3];
+    String f21 = itemForm1[4];
+    String f1b = itemForm2[3];
+    String f2b = itemForm2[4];
+    String j = itemForm1[5];
+    String f22 = itemForm2[5];
+    if (!f11.equals("-") && f11.equals(f12) && !f21.equals("-")
+      && f21.equals(f22)
+      && tag.isAdjoinable(treeName1, treeName2,
+        node2.substring(0, node2.length() - 1))
+      && node1.equals("⊤") && node2.endsWith("⊥")) {
+      consequences.add(new DeductionItem(treeName2,
+        node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j));
+      String node2Name =
+        (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
+      this.name =
+        "adjoin " + treeName2 + "[" + node2Name + "," + treeName1 + "]";
+    }
   }
 
   @Override public String toString() {

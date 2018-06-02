@@ -96,52 +96,62 @@ public class LeftRecursion {
             for (int j = 0; j < i && j < newNts.size(); j++) {
               if (nt2.equals(newNts.get(j))) {
                 change = true;
-                String[] bi = ArrayUtils.getSubSequenceAsArray(rule.getRhs(), 1,
-                  rule.getRhs().length);
-                cfg.getProductionRules().remove(k);
-                List<String> newRules = new ArrayList<String>();
-                for (CfgProductionRule rule2 : cfg.getProductionRules()) {
-                  if (rule2.getLhs().equals(nt2)) {
-                    newRules.add(nt + " -> " + String.join(" ", rule2.getRhs())
-                      + " " + String.join(" ", bi));
-                  }
-                }
-                for (String newRule : newRules) {
-                  cfg.getProductionRules().add(new CfgProductionRule(newRule));
-                }
+                removeIndirectLeftRecursion(cfg, nt, k, rule, nt2);
               }
             }
           }
         }
       }
       if (nonterminalIsLhsOfDirectLeftRecursion(cfg, nt)) {
-        int l = 1;
-        String newNt = nt + String.valueOf(l);
-        while (newNts.contains(newNt) || cfg.terminalsContain(newNt)) {
-          newNt = nt + String.valueOf(l);
-          l++;
-        }
-        newNts.add(newNt);
-        List<CfgProductionRule> rulesCopy = new ArrayList<CfgProductionRule>();
-        for(CfgProductionRule rule : cfg.getProductionRules()) {
-          if(rule.getLhs().equals(nt)) {
-          rulesCopy.add(new CfgProductionRule(rule.toString()));
-          }
-        }
-        doRemoveDirectLeftRecursion(cfg, nt, newNt, cfg);
-        for (int k = cfg.getProductionRules().size() - 1; k >= 0; k--) {
-          String ruleString = cfg.getProductionRules().get(k).toString();
-          for (int m = rulesCopy.size()-1; m >=0 ; m--) {
-            if(rulesCopy.get(m).toString().equals(ruleString)) {
-              cfg.getProductionRules().remove(k);
-              rulesCopy.remove(m);
-            }
-          }
-        }
+        removeDirectLeftRecursion(cfg, newNts, nt);
       }
     }
     cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
     return cfg;
+  }
+
+  private static void removeIndirectLeftRecursion(Cfg cfg, String nt, int k,
+    CfgProductionRule rule, String nt2) throws ParseException {
+    String[] bi = ArrayUtils.getSubSequenceAsArray(rule.getRhs(), 1,
+      rule.getRhs().length);
+    cfg.getProductionRules().remove(k);
+    List<String> newRules = new ArrayList<String>();
+    for (CfgProductionRule rule2 : cfg.getProductionRules()) {
+      if (rule2.getLhs().equals(nt2)) {
+        newRules.add(nt + " -> " + String.join(" ", rule2.getRhs())
+          + " " + String.join(" ", bi));
+      }
+    }
+    for (String newRule : newRules) {
+      cfg.getProductionRules().add(new CfgProductionRule(newRule));
+    }
+  }
+
+  private static void removeDirectLeftRecursion(Cfg cfg,
+    ArrayList<String> newNts, String nt) throws ParseException {
+    int l = 1;
+    String newNt = nt + String.valueOf(l);
+    while (newNts.contains(newNt) || cfg.terminalsContain(newNt)) {
+      newNt = nt + String.valueOf(l);
+      l++;
+    }
+    newNts.add(newNt);
+    List<CfgProductionRule> rulesCopy = new ArrayList<CfgProductionRule>();
+    for(CfgProductionRule rule : cfg.getProductionRules()) {
+      if(rule.getLhs().equals(nt)) {
+      rulesCopy.add(new CfgProductionRule(rule.toString()));
+      }
+    }
+    doRemoveDirectLeftRecursion(cfg, nt, newNt, cfg);
+    for (int k = cfg.getProductionRules().size() - 1; k >= 0; k--) {
+      String ruleString = cfg.getProductionRules().get(k).toString();
+      for (int m = rulesCopy.size()-1; m >=0 ; m--) {
+        if(rulesCopy.get(m).toString().equals(ruleString)) {
+          cfg.getProductionRules().remove(k);
+          rulesCopy.remove(m);
+        }
+      }
+    }
   }
 
   /**

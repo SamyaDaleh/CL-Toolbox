@@ -89,22 +89,28 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
                 SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1Parsed,
                   itemForm1, rhsPred, iInt1, clause2Parsed, itemForm2);
               if (vectorsMatch) {
-                ArrayList<String> newVector;
-                newVector = new ArrayList<String>(Arrays.asList(ArrayUtils
-                  .getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
-                int indabspos =
-                  clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
-                newVector.set(indabspos * 2, pos2);
-                newVector.set(indabspos * 2 + 1, pos1);
-                consequences.add(
-                  new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1,
-                    newVector));
+                addNewConsequence(itemForm2, pos1, posInt1, clause2,
+                  clause2Parsed, pos2, iInt2, jInt2);
               }
             }
           }
         }
       }
     }
+  }
+
+  private void addNewConsequence(String[] itemForm2, String pos1, int posInt1,
+    String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2) {
+    ArrayList<String> newVector;
+    newVector = new ArrayList<String>(Arrays.asList(ArrayUtils
+      .getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
+    int indabspos =
+      clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
+    newVector.set(indabspos * 2, pos2);
+    newVector.set(indabspos * 2 + 1, pos1);
+    consequences.add(
+      new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1,
+        newVector));
   }
 
   @Override public String toString() {

@@ -31,57 +31,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
   @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
     if (antecedences.size() == antNeeded) {
       Predicate lhs = clause.getLhs();
-      List<List<String>> solutionRangesList = new ArrayList<List<String>>();
-      for (int i = 0; i < lhs.getDim(); i++) {
-        for (int j = 0; j < lhs.getArgumentByIndex(i + 1).length; j++) {
-          String mayV = lhs.getSymAt(i + 1, j);
-          String nt = getNonterminalOfPredicateContainingSymbol(mayV, clause);
-          if (nt == null) {
-            addTerminalVectors(solutionRangesList, i, mayV);
-            continue;
-          }
-          List<List<String>> newsolutionRangesList =
-            new ArrayList<List<String>>();
-          for (Item item : antecedences) {
-            if (!nt.equals(item.getItemform()[0])) {
-              continue;
-            }
-            if (i == 0 && j == 0) {
-              for (Predicate rhsPred : clause.getRhs()) {
-                int[] indices = rhsPred.find(mayV);
-                if (indices[0] == -1) {
-                  continue;
-                }
-                int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
-                solutionRangesList.add(new ArrayList<String>());
-                solutionRangesList.get(solutionRangesList.size() - 1)
-                  .add(item.getItemform()[absPos * 2 + 1]);
-                solutionRangesList.get(solutionRangesList.size() - 1)
-                  .add(item.getItemform()[absPos * 2 + 2]);
-                break;
-              }
-            } else {
-              for (Predicate rhsPred : clause.getRhs()) {
-                int[] indices = rhsPred.find(mayV);
-                if (indices[0] == -1) {
-                  continue;
-                }
-                int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
-                for (List<String> solutionRangeVector : solutionRangesList) {
-                  List<String> newList = new ArrayList<String>();
-                  newList.addAll(solutionRangeVector);
-                  newList.add(item.getItemform()[absPos * 2 + 1]);
-                  newList.add(item.getItemform()[absPos * 2 + 2]);
-                  newsolutionRangesList.add(newList);
-                }
-              }
-            }
-          }
-          if (!newsolutionRangesList.isEmpty()) {
-            solutionRangesList = newsolutionRangesList;
-          }
-        }
-      }
+      List<List<String>> solutionRangesList =
+        matchLhsWithAntecedencesReturnSolutionRanges(lhs);
       for (List<String> solutionRangeVector : solutionRangesList) {
         if (solutionRangeVector.size() < this.rangesNeeded * 2) {
           continue;
@@ -111,7 +62,6 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         if (!vectorsMatch) {
           continue;
         }
-
         List<Integer> rangeOverArguments = (List<Integer>) SrcgDeductionUtils
           .getRangesForArguments(rangeOverElements, clause.getLhs());
         if (rangesAreOverlapping(rangeOverArguments)) {
@@ -122,6 +72,73 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
       }
     }
     return this.consequences;
+  }
+
+  private List<List<String>>
+    matchLhsWithAntecedencesReturnSolutionRanges(Predicate lhs) {
+    List<List<String>> solutionRangesList = new ArrayList<List<String>>();
+    for (int i = 0; i < lhs.getDim(); i++) {
+      for (int j = 0; j < lhs.getArgumentByIndex(i + 1).length; j++) {
+        String mayV = lhs.getSymAt(i + 1, j);
+        String nt = getNonterminalOfPredicateContainingSymbol(mayV, clause);
+        if (nt == null) {
+          addTerminalVectors(solutionRangesList, i, mayV);
+          continue;
+        }
+        List<List<String>> newsolutionRangesList =
+          new ArrayList<List<String>>();
+        for (Item item : antecedences) {
+          if (!nt.equals(item.getItemform()[0])) {
+            continue;
+          }
+          if (i == 0 && j == 0) {
+            handleFirstSymbol(solutionRangesList, mayV, item);
+          } else {
+            handleSubsequentSymbol(solutionRangesList, mayV,
+              newsolutionRangesList, item);
+          }
+        }
+        if (!newsolutionRangesList.isEmpty()) {
+          solutionRangesList = newsolutionRangesList;
+        }
+      }
+    }
+    return solutionRangesList;
+  }
+
+  private void handleSubsequentSymbol(List<List<String>> solutionRangesList,
+    String mayV, List<List<String>> newsolutionRangesList, Item item) {
+    for (Predicate rhsPred : clause.getRhs()) {
+      int[] indices = rhsPred.find(mayV);
+      if (indices[0] == -1) {
+        continue;
+      }
+      int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
+      for (List<String> solutionRangeVector : solutionRangesList) {
+        List<String> newList = new ArrayList<String>();
+        newList.addAll(solutionRangeVector);
+        newList.add(item.getItemform()[absPos * 2 + 1]);
+        newList.add(item.getItemform()[absPos * 2 + 2]);
+        newsolutionRangesList.add(newList);
+      }
+    }
+  }
+
+  private void handleFirstSymbol(List<List<String>> solutionRangesList,
+    String mayV, Item item) {
+    for (Predicate rhsPred : clause.getRhs()) {
+      int[] indices = rhsPred.find(mayV);
+      if (indices[0] == -1) {
+        continue;
+      }
+      int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
+      solutionRangesList.add(new ArrayList<String>());
+      solutionRangesList.get(solutionRangesList.size() - 1)
+        .add(item.getItemform()[absPos * 2 + 1]);
+      solutionRangesList.get(solutionRangesList.size() - 1)
+        .add(item.getItemform()[absPos * 2 + 2]);
+      break;
+    }
   }
 
   private boolean rangesAreOverlapping(List<Integer> rangeOverArguments) {
@@ -174,10 +191,18 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
     return null;
   }
 
-  @Override public String toString() { // TODO update or remove, it's wrong
-    return "[" + clause.getRhs().get(0).toString() + ",ρ_B], ["
-      + clause.getRhs().get(1).toString() + ",ρ_C]" + "\n______ \n" + "["
-      + clause.getLhs().toString() + ",ρ_A]";
+  @Override public String toString() {
+    StringBuilder stringRep = new StringBuilder();
+    for (int i = 0; i < clause.getRhs().size(); i++) {
+      if (i > 0) {
+        stringRep.append(", ");
+      }
+      stringRep.append('[').append(clause.getRhs().get(i).toString())
+        .append(",ρ_").append(i + 1).append(']');
+    }
+    stringRep.append("\n______ \n[").append(clause.getLhs().toString())
+      .append(",ρ]");
+    return stringRep.toString();
   }
 
 }

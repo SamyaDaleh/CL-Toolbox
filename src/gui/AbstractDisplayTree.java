@@ -127,7 +127,13 @@ abstract class AbstractDisplayTree {
         widths.add(width);
       }
     }
+    callDrawingOfChildren(dti, height, widthFrom, widthDelta, widthSum,
+      children, widths);
+  }
 
+  private static void callDrawingOfChildren(DisplayTreeInterface dti,
+    int height, int widthFrom, int widthDelta, int widthSum,
+    List<Vertex> children, ArrayList<Integer> widths) {
     int drawWidth = widthFrom;
     for (int i = 0; i < children.size(); i++) {
       if (widthSum > 0) {

@@ -44,20 +44,7 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
       for (String[] argument : clause.getLhs().getSymbols()) {
         ArrayList<String> vectorRanges = new ArrayList<String>();
         for (String element : argument) {
-          int[] indices = clause.getRhs().get(0).find(element);
-          if (indices[0] == -1) {
-            indices = clause.getRhs().get(1).find(element);
-            if (indices[0] == -1) {
-              vectorRanges.add("?");
-              vectorRanges.add("?");
-            } else {
-              vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 1]);
-              vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 2]);
-            }
-          } else {
-            vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 1]);
-            vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 2]);
-          }
+          addVectorRangeForElement(itemForm2, itemForm1, vectorRanges, element);
         }
         int i = (vectorRanges.lastIndexOf("?") + 1) / 2;
         int prevnum = Integer.parseInt(vectorRanges.get(i * 2));
@@ -96,6 +83,24 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
           .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVector));
         this.name = "complete " + clause.toString();
       }
+    }
+  }
+
+  private void addVectorRangeForElement(String[] itemForm2, String[] itemForm1,
+    ArrayList<String> vectorRanges, String element) {
+    int[] indices = clause.getRhs().get(0).find(element);
+    if (indices[0] == -1) {
+      indices = clause.getRhs().get(1).find(element);
+      if (indices[0] == -1) {
+        vectorRanges.add("?");
+        vectorRanges.add("?");
+      } else {
+        vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 1]);
+        vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 2]);
+      }
+    } else {
+      vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 1]);
+      vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 2]);
     }
   }
 

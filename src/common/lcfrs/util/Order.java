@@ -109,51 +109,64 @@ public class Order {
           int pos1 = newNt.toString().indexOf('^');
           int pos2 = newNt.toString().indexOf('^', pos1 + 1);
           if (pos2 != -1) {
-            StringBuilder newestNt = new StringBuilder();
-            newestNt.append(newNt.substring(0, pos1))
-              .append("^" + ORDER_MARKING_LEFT);
-            String[] vec1 = newNt.substring(pos1 + 2, pos2 - 1).split(",");
-            String[] vec2 =
-              newNt.substring(pos2 + 2, newNt.length() - 1).split(",");
-            for (int k = 1; k <= vec1.length; k++) {
-              for (int l = 0; l < vec1.length; l++) {
-                if (Integer.parseInt(vec2[l]) == k) {
-                  if (k > 1) {
-                    newestNt.append(',');
-                  }
-                  newestNt.append(vec1[l]);
-                  break;
-                }
-              }
-            }
-            newestNt.append(ORDER_MARKING_RIGHT);
-            newNt = newestNt;
+            newNt = handleSecondReordering(newNt, pos1, pos2);
           }
-
+          String newNtString = newNt.toString();
           clause.getRhs().set(i,
-            orderedPredicate(rhsPred, newNt.toString(), orderVector));
+            orderedPredicate(rhsPred, newNtString, orderVector));
           if (newSrcg.nonTerminalsContain(newNt.toString())) {
             continue;
           }
           ArrayList<String> newNts = new ArrayList<String>();
           Collections.addAll(newNts, newSrcg.getNonterminals());
-          newNts.add(newNt.toString());
+          newNts.add(newNtString);
           newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
-          for (int l = 0; l < newSrcg.getClauses().size(); l++) {
-            Clause clause2 = newSrcg.getClauses().get(l);
-            if (clause2.getLhs().getNonterminal().equals(oldNt)) {
-              String clause2String = clause2.toString();
-              int ibrack = clause2String.indexOf(')');
-              String newClause = orderedPredicate(clause2.getLhs(),
-                newNt.toString(), orderVector)
-                + clause2String.substring(ibrack + 1, clause2String.length());
-              newSrcg.addClause(newClause);
-            }
-          }
+          replaceUnorderedPredicateInAllLhs(newSrcg, oldNt, orderVector,
+            newNtString);
         }
       }
     }
     return newSrcg;
+  }
+
+  private static StringBuilder handleSecondReordering(StringBuilder newNt,
+    int pos1, int pos2) {
+    StringBuilder newestNt = new StringBuilder();
+    newestNt.append(newNt.substring(0, pos1))
+      .append("^" + ORDER_MARKING_LEFT);
+    String[] vec1 = newNt.substring(pos1 + 2, pos2 - 1).split(",");
+    String[] vec2 =
+      newNt.substring(pos2 + 2, newNt.length() - 1).split(",");
+    for (int k = 1; k <= vec1.length; k++) {
+      for (int l = 0; l < vec1.length; l++) {
+        if (Integer.parseInt(vec2[l]) == k) {
+          if (k > 1) {
+            newestNt.append(',');
+          }
+          newestNt.append(vec1[l]);
+          break;
+        }
+      }
+    }
+    newestNt.append(ORDER_MARKING_RIGHT);
+    newNt = newestNt;
+    return newNt;
+  }
+
+  private static void replaceUnorderedPredicateInAllLhs(Srcg newSrcg,
+    String oldNt, ArrayList<Integer> orderVector, String newNtString)
+    throws ParseException {
+    for (int l = 0; l < newSrcg.getClauses().size(); l++) {
+      Clause clause2 = newSrcg.getClauses().get(l);
+      if (clause2.getLhs().getNonterminal().equals(oldNt)) {
+        String clause2String = clause2.toString();
+        int ibrack = clause2String.indexOf(')');
+        String newClause = orderedPredicate(clause2.getLhs(),
+          newNtString, orderVector)
+          + clause2String.substring(ibrack + 1, clause2String.length());
+        newSrcg.addClause(newClause);
+      }
+    }
   }
 
   /**
