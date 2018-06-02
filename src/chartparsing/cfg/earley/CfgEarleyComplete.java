@@ -1,33 +1,23 @@
 package chartparsing.cfg.earley;
 
-import java.util.List;
-
-import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
-import chartparsing.Item;
 import common.ArrayUtils;
 
-/** If in one item a dot is before a nonterminal and the other item is a rule
+/**
+ * If in one item a dot is before a nonterminal and the other item is a rule
  * with that nonterminal as lhs and the dot at the end, move the dot over the
- * nonterminal. */
-public class CfgEarleyComplete extends AbstractDynamicDeductionRule {
+ * nonterminal.
+ */
+public class CfgEarleyComplete
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public CfgEarleyComplete() {
     this.name = "complete";
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String stack1 = itemForm1[0];
     String[] stackSplit1 = stack1.split(" ");
     int i1 = Integer.parseInt(itemForm1[1]);

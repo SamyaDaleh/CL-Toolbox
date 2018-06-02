@@ -4,12 +4,10 @@ import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
-import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 import common.tag.Tag;
 
-public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule
-  implements DynamicDeductionRule {
+public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 

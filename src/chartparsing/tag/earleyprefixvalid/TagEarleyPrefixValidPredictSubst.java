@@ -4,13 +4,12 @@ import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
-import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 import common.tag.Tag;
 import common.tag.Vertex;
 
 public class TagEarleyPrefixValidPredictSubst
-  extends AbstractDynamicDeductionRule implements DynamicDeductionRule {
+  extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
   private final String iniTreeName;

@@ -3,19 +3,20 @@ package chartparsing.lcfrs.earley;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import chartparsing.AbstractDynamicDeductionRule;
-import chartparsing.Item;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.lcfrs.SrcgDeductionUtils;
 import common.ArrayUtils;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 
-/** Whenever we arrive at the end of an argument that is not the last argument,
+/**
+ * Whenever we arrive at the end of an argument that is not the last argument,
  * we suspend the processing of this rule and we go back to the item that we
- * used to predict it. */
-public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
+ * used to predict it.
+ */
+public class SrcgEarleySuspend
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final String[] variables;
 
@@ -26,17 +27,7 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return this.consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       String clause1 = itemForm1[0];
       Clause clause1Parsed;
@@ -102,15 +93,13 @@ public class SrcgEarleySuspend extends AbstractDynamicDeductionRule {
   private void addNewConsequence(String[] itemForm2, String pos1, int posInt1,
     String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2) {
     ArrayList<String> newVector;
-    newVector = new ArrayList<String>(Arrays.asList(ArrayUtils
-      .getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
-    int indabspos =
-      clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
+    newVector = new ArrayList<String>(Arrays.asList(
+      ArrayUtils.getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
+    int indabspos = clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
     newVector.set(indabspos * 2, pos2);
     newVector.set(indabspos * 2 + 1, pos1);
     consequences.add(
-      new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1,
-        newVector));
+      new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1, newVector));
   }
 
   @Override public String toString() {

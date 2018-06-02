@@ -1,16 +1,12 @@
 package chartparsing.tag.earleyprefixvalid;
 
-import java.util.List;
-
-import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
-import chartparsing.DynamicDeductionRule;
-import chartparsing.Item;
 import common.tag.Tag;
 import common.tag.Vertex;
 
-public class TagEarleyPrefixValidSubstitute extends AbstractDynamicDeductionRule
-  implements DynamicDeductionRule {
+public class TagEarleyPrefixValidSubstitute
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -20,17 +16,7 @@ public class TagEarleyPrefixValidSubstitute extends AbstractDynamicDeductionRule
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
     String pos1 = itemForm1[2];

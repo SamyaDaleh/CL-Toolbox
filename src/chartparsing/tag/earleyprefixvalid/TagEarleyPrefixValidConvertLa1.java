@@ -4,11 +4,10 @@ import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
-import chartparsing.DynamicDeductionRule;
 import chartparsing.Item;
 
-public class TagEarleyPrefixValidConvertLa1 extends AbstractDynamicDeductionRule
-  implements DynamicDeductionRule {
+public class TagEarleyPrefixValidConvertLa1
+  extends AbstractDynamicDeductionRule {
 
   public TagEarleyPrefixValidConvertLa1() {
     this.name = "convert la1";

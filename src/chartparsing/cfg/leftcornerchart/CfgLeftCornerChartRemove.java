@@ -1,32 +1,22 @@
 package chartparsing.cfg.leftcornerchart;
 
-import java.util.List;
-
-import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
-import chartparsing.Item;
 import common.ArrayUtils;
 
-/** If topmost symbol on stacks completed and predicted are the same, remove
- * both. */
-public class CfgLeftCornerChartRemove extends AbstractDynamicDeductionRule {
+/**
+ * If topmost symbol on stacks completed and predicted are the same, remove
+ * both.
+ */
+public class CfgLeftCornerChartRemove
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public CfgLeftCornerChartRemove() {
     this.name = "remove";
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String[] mayDottedRuleSplit = itemForm1[0].split(" ");
     for (int k = 0; k < mayDottedRuleSplit.length; k++) {
       if (mayDottedRuleSplit[k].startsWith("•")) {

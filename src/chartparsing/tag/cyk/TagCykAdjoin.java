@@ -1,14 +1,11 @@
 package chartparsing.tag.cyk;
 
-import java.util.List;
-
-import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
-import chartparsing.Item;
 import common.tag.Tag;
 
 /** Adjoin an auxiliary tree into an appropriate node in any other tree. */
-public class TagCykAdjoin extends AbstractDynamicDeductionRule {
+public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -19,17 +16,7 @@ public class TagCykAdjoin extends AbstractDynamicDeductionRule {
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String treeName1 = itemForm1[0];
     String treeName2 = itemForm2[0];
     String node1 = itemForm1[1];

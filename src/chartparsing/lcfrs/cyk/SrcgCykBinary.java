@@ -3,15 +3,16 @@ package chartparsing.lcfrs.cyk;
 import java.util.ArrayList;
 import java.util.List;
 
-import chartparsing.AbstractDynamicDeductionRule;
-import chartparsing.Item;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.lcfrs.SrcgDeductionUtils;
 import common.lcfrs.Clause;
 
-/** Similar to the binary complete rule in CYK for CFG. If there is a clause and
+/**
+ * Similar to the binary complete rule in CYK for CFG. If there is a clause and
  * the vectors of two items that represent the rhs match, combine them to a new
- * item that represents the lhs with span over both. */
-public class SrcgCykBinary extends AbstractDynamicDeductionRule {
+ * item that represents the lhs with span over both.
+ */
+public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Clause clause;
   private final String[] wSplit;
@@ -23,17 +24,7 @@ public class SrcgCykBinary extends AbstractDynamicDeductionRule {
     this.wSplit = wSplit;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return this.consequences;
-  }
-
-  @SuppressWarnings("unchecked") private void
+  @SuppressWarnings("unchecked") protected void
     calculateConsequences(String[] itemForm2, String[] itemForm1) {
     String nt1 = itemForm1[0];
     String nt2 = itemForm2[0];

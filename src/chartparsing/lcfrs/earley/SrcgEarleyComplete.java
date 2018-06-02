@@ -2,37 +2,27 @@ package chartparsing.lcfrs.earley;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
 
-import chartparsing.AbstractDynamicDeductionRule;
-import chartparsing.Item;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 
-/** Whenever we have a passive B item we can use it to move the dot over the
+/**
+ * Whenever we have a passive B item we can use it to move the dot over the
  * variable of the last argument of B in a parent A-rule that was used to
- * predict it. */
-public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
-  
+ * predict it.
+ */
+public class SrcgEarleyComplete
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
+
   public SrcgEarleyComplete() {
     this.name = "complete";
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return this.consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     if (!itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       String nt = itemForm1[0];
-
       String clause2 = itemForm2[0];
       Clause clause2Parsed;
       try {
@@ -65,11 +55,11 @@ public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
 
         String nt2 = rhsPred.getNonterminal();
         if (vectorsMatch && itemForm1[itemForm1.length - 2].equals(pos2)
-          && nt.equals(nt2) ) {
+          && nt.equals(nt2)) {
           String posB = itemForm1[itemForm1.length - 1];
           int posBInt = Integer.parseInt(posB);
           ArrayList<String> newVector = new ArrayList<String>();
-          for (int k = 0; k < (itemForm2.length-4 ) / 2; k++) {
+          for (int k = 0; k < (itemForm2.length - 4) / 2; k++) {
             newVector.add(itemForm2[k * 2 + 4]);
             newVector.add(itemForm2[k * 2 + 5]);
           }
@@ -78,17 +68,17 @@ public class SrcgEarleyComplete extends AbstractDynamicDeductionRule {
             return;
           }
           newVector.set(IndexOfFirstQuestionMark, pos2);
-          newVector.set(IndexOfFirstQuestionMark+1, posB);
+          newVector.set(IndexOfFirstQuestionMark + 1, posB);
           consequences.add(new SrcgEarleyActiveItem(clause2, posBInt, iInt2,
             jInt2 + 1, newVector));
         }
       }
-    } 
+    }
   }
 
   @Override public String toString() {
     return "[B,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]" + "\n______ \n"
-        + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
+      + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
   }
 
 }

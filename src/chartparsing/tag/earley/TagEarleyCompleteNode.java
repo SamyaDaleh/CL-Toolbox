@@ -1,37 +1,29 @@
 package chartparsing.tag.earley;
 
-import java.util.List;
-
-import chartparsing.AbstractDynamicDeductionRule;
+import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
-import chartparsing.Item;
 import common.tag.Tag;
 
-/** If you have one item in a node la and another matching in the same node in
- * rb, you can put both together. */
-public class TagEarleyCompleteNode extends AbstractDynamicDeductionRule {
+/**
+ * If you have one item in a node la and another matching in the same node in
+ * rb, you can put both together.
+ */
+public class TagEarleyCompleteNode
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
-  /** Constructor needs the grammar to retrieve information about the
-   * antecedences. */
+  /**
+   * Constructor needs the grammar to retrieve information about the
+   * antecedences.
+   */
   public TagEarleyCompleteNode(Tag tag) {
     this.tag = tag;
     this.name = "complete node";
     this.antNeeded = 2;
   }
 
-  @Override public List<Item> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
     String pos1 = itemForm1[2];
@@ -47,8 +39,7 @@ public class TagEarleyCompleteNode extends AbstractDynamicDeductionRule {
     String j = itemForm2[4];
     String k = itemForm2[5];
     String l = itemForm2[6];
-    String label =
-      tag.getTree(treeName1).getNodeByGornAdress(node1).getLabel();
+    String label = tag.getTree(treeName1).getNodeByGornAdress(node1).getLabel();
     if (treeName1.equals(treeName2) && node1.equals(node2)
       && tag.isInNonterminals(label)) {
       if (pos1.equals("la") && pos2.equals("rb") && i1.equals(i2)
