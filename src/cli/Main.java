@@ -1,5 +1,8 @@
 package cli;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import chartparsing.Deduction;
 import chartparsing.ParsingSchema;
 import chartparsing.converter.ChartToTreeConverter;
@@ -211,30 +214,32 @@ class Main { // NO_UCD (test only)
     Tag tag, Deduction deduction, boolean javafx, JfxWindowHolder jwc)
     throws Exception {
     String[] algorithmSplit = algorithm.split("-");
-    Tree derivedTree = null;
+    List<Tree> derivedTrees = new ArrayList<Tree>();
     switch (algorithmSplit[0]) {
     case "cfg":
-      derivedTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+      derivedTrees = ChartToTreeConverter.cfgToDerivatedTree(deduction,
         schema.getGoals(), algorithm.substring(4));
       break;
     case "tag":
-      derivedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
+      derivedTrees = ChartToTreeConverter.tagToDerivatedTree(deduction,
         schema.getGoals(), tag);
       break;
     case "srcg":
-      derivedTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
+      derivedTrees = ChartToTreeConverter.srcgToDerivatedTree(deduction,
         schema.getGoals(), algorithm.substring(5));
       break;
     default:
       System.out.println("Unknown formalism " + algorithmSplit[0]
         + ", can not retrieve derivated tree.");
     }
-    if (derivedTree != null) {
+    for (int i = 0; i <derivedTrees.size(); i++) {
+      Tree derivedTree = derivedTrees.get(i);
       if (javafx) {
         jwc.setArgs(new String[] {derivedTree.toString()});
         jwc.showDisplayTreeFx();
       } else {
         new DisplayTree(new String[] {derivedTree.toString()});
+      
       }
     }
   }

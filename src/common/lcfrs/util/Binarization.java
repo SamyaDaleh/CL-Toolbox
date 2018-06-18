@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +42,7 @@ public class Binarization {
         newSrcg.addClause(clause);
       } else {
         ArrayList<Clause> r = new ArrayList<Clause>();
-        List<Clause> clausesToBeFurtherReduced = new LinkedList<Clause>();
+        List<Clause> clausesToBeFurtherReduced = new ArrayList<Clause>();
         clausesToBeFurtherReduced.add(clause);
         while (clausesToBeFurtherReduced.size() > 0) {
           if (clausesToBeFurtherReduced.get(0).getRhs().size() <= 2) {
@@ -226,7 +225,7 @@ public class Binarization {
     String newNt, Predicate predicate, Srcg srcg) throws ParseException {
     StringBuilder newClause =
       new StringBuilder(String.valueOf(predicate) + " ->");
-    List<Predicate> rhsPredToReduceBy = new LinkedList<Predicate>();
+    List<Predicate> rhsPredToReduceBy = new ArrayList<Predicate>();
     for (int entry : j) {
       newClause.append(' ').append(clause.getRhs().get(entry).toString());
       rhsPredToReduceBy.add(clause.getRhs().get(entry));

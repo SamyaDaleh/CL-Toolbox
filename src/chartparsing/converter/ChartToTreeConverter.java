@@ -13,79 +13,91 @@ import common.cfg.CfgProductionRule;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 
-/** Collection of functions that take a chart and a list of goal items and
- * return one tree that represents the successful parse. */
+/**
+ * Collection of functions that take a chart and a list of goal items and return
+ * one tree that represents the successful parse.
+ */
 public class ChartToTreeConverter {
 
   /** Returns the first possible tree that spans the whole input string. */
-  public static Tree tagToDerivatedTree(Deduction deduction, List<Item> goals,
-    Tag tag) {
-    Tree derivatedTree = null;
+  public static List<Tree> tagToDerivatedTree(Deduction deduction,
+    List<Item> goals, Tag tag) {
+    List<Tree> derivatedTrees = new ArrayList<Tree>();
     for (Item goal : goals) {
       for (int i = 0; i < deduction.getChart().size(); i++) {
         if (deduction.getChart().get(i).equals(goal)) {
-          ArrayList<String> steps =
+          List<List<String>> stepss =
             retrieveSteps(i, deduction, new String[] {"subst", "adjoin"});
-          for (int j = steps.size() - 1; j >= 0; j--) {
-            derivatedTree = applyStep(tag, derivatedTree, steps, j);
+          for (int k = 0; k < stepss.size(); k++) {
+            List<String> steps = stepss.get(k);
+            Tree derivatedTree = null;
+            for (int j = steps.size() - 1; j >= 0; j--) {
+              derivatedTree = applyStep(tag, derivatedTree, steps, j);
+            }
+            if (derivatedTree != null) {
+              derivatedTrees.add(derivatedTree);
+            }
           }
-          return derivatedTree;
         }
       }
     }
-    return null;
+    return derivatedTrees;
   }
 
-  public static Tree srcgToDerivatedTree(Deduction deduction, List<Item> goals,
-    String algorithm) throws ParseException {
-    Tree derivatedTree = null;
+  public static List<Tree> srcgToDerivatedTree(Deduction deduction,
+    List<Item> goals, String algorithm) throws ParseException {
+    List<Tree> derivatedTrees = new ArrayList<Tree>();
     for (Item goal : goals) {
       for (int i = 0; i < deduction.getChart().size(); i++) {
         if (deduction.getChart().get(i).equals(goal)) {
-          ArrayList<Item> items = null;
+          List<List<Item>> itemss = null;
           if (algorithm.equals("earley")) {
-            items = retrieveItems(i, deduction,
+            itemss = retrieveItems(i, deduction,
               new String[] {"complete", "scan"}, true);
           } else if (algorithm.equals("cyk")
             || algorithm.equals("cyk-extended")) {
-            items = retrieveItems(i, deduction,
+            itemss = retrieveItems(i, deduction,
               new String[] {"complete", "scan"}, false);
           }
           if (algorithm.equals("earley")) {
-            for (int j = 0; j < items.size(); j++) {
-              Item item = items.get(j);
-              String clauseString = item.getItemform()[0];
-              if (j == 0) {
-                derivatedTree =
-                  new Tree(getCfgRuleRepresentationOfSrcgClauseString(item));
-              } else {
-                String derivatedTreeString = derivatedTree.toString();
-                String itemTreeString;
-                if (item.getItemform()[0].endsWith("ε")) {
-                  itemTreeString = new Tree(
-                    getCfgRuleRepresentationOfSrcgEpsilonClauseString(item))
-                      .toString();
+            for (int k = 0; k < itemss.size(); k++) {
+              Tree derivatedTree = null;
+              List<Item> items = itemss.get(k);
+              for (int j = 0; j < items.size(); j++) {
+                Item item = items.get(j);
+                String clauseString = item.getItemform()[0];
+                if (j == 0) {
+                  derivatedTree =
+                    new Tree(getCfgRuleRepresentationOfSrcgClauseString(item));
                 } else {
-                  itemTreeString =
-                    new Tree(getCfgRuleRepresentationOfSrcgClauseString(item))
-                      .toString();
+                  String derivatedTreeString = derivatedTree.toString();
+                  String itemTreeString;
+                  if (item.getItemform()[0].endsWith("ε")) {
+                    itemTreeString = new Tree(
+                      getCfgRuleRepresentationOfSrcgEpsilonClauseString(item))
+                        .toString();
+                  } else {
+                    itemTreeString =
+                      new Tree(getCfgRuleRepresentationOfSrcgClauseString(item))
+                        .toString();
+                  }
+                  String lhsNt =
+                    clauseString.substring(0, clauseString.indexOf('('));
+                  derivatedTree = new Tree(derivatedTreeString.substring(0,
+                    derivatedTreeString.lastIndexOf("(" + lhsNt + " )"))
+                    + itemTreeString
+                    + derivatedTreeString.substring(
+                      derivatedTreeString.lastIndexOf("(" + lhsNt + " )")
+                        + lhsNt.length() + 3));
                 }
-                String lhsNt =
-                  clauseString.substring(0, clauseString.indexOf('('));
-                derivatedTree = new Tree(derivatedTreeString.substring(0,
-                  derivatedTreeString.lastIndexOf("(" + lhsNt + " )"))
-                  + itemTreeString
-                  + derivatedTreeString.substring(
-                    derivatedTreeString.lastIndexOf("(" + lhsNt + " )")
-                      + lhsNt.length() + 3));
               }
+              derivatedTrees.add(derivatedTree);
             }
-            return derivatedTree;
           }
         }
       }
     }
-    return null;
+    return derivatedTrees;
   }
 
   private static CfgProductionRule
@@ -96,10 +108,9 @@ public class ChartToTreeConverter {
     extractedRule.append(clause.getLhs().getNonterminal()).append(" ->");
     String[] lhsSyms = clause.getLhs().getSymbolsAsPlainArray();
     for (int i = 0; i < lhsSyms.length; i++) {
-        extractedRule.append(' ')
-          .append(lhsSyms[i]).append('<');
-        extractedRule.append(item.getItemform()[i * 2 + 4]);
-        extractedRule.append('>');
+      extractedRule.append(' ').append(lhsSyms[i]).append('<');
+      extractedRule.append(item.getItemform()[i * 2 + 4]);
+      extractedRule.append('>');
     }
     return new CfgProductionRule(extractedRule.toString());
   }
@@ -154,30 +165,34 @@ public class ChartToTreeConverter {
     return found;
   }
 
-  public static Tree cfgToDerivatedTree(Deduction deduction, List<Item> goals,
-    String algorithm) throws ParseException {
-    Tree derivatedTree = null;
+  public static List<Tree> cfgToDerivatedTree(Deduction deduction,
+    List<Item> goals, String algorithm) throws ParseException {
+    List<Tree> derivatedTrees = new ArrayList<Tree>();
     for (Item goal : goals) {
       for (int i = 0; i < deduction.getChart().size(); i++) {
         if (deduction.getChart().get(i).equals(goal)) {
-          ArrayList<String> steps =
+          List<List<String>> stepss =
             getDerivationStepsForAlgorithm(deduction, algorithm, i);
+          Tree derivatedTree = null;
           if (algorithm.equals("earley")) {
             derivatedTree = new Tree(new CfgProductionRule(goal.getItemform()[0]
               .substring(0, goal.getItemform()[0].length() - 2)));
           }
-          derivatedTree =
-            getTreeDerivedFromCfgSteps(algorithm, derivatedTree, steps);
-          return derivatedTree;
+          for (int k = 0; k < stepss.size(); k++) {
+            List<String> steps = stepss.get(k);
+            derivatedTree =
+              getTreeDerivedFromCfgSteps(algorithm, derivatedTree, steps);
+            derivatedTrees.add(derivatedTree);
+          }
         }
       }
     }
-    return null;
+    return derivatedTrees;
   }
 
-  private static ArrayList<String> getDerivationStepsForAlgorithm(
+  private static List<List<String>> getDerivationStepsForAlgorithm(
     Deduction deduction, String algorithm, int i) {
-    ArrayList<String> steps = null;
+    List<List<String>> steps = new ArrayList<List<String>>();
     switch (algorithm) {
     case "topdown":
     case "earley":
@@ -197,7 +212,7 @@ public class ChartToTreeConverter {
   }
 
   private static Tree getTreeDerivedFromCfgSteps(String algorithm,
-    Tree derivatedTree, ArrayList<String> steps) throws ParseException {
+    Tree derivatedTree, List<String> steps) throws ParseException {
     if (algorithm.equals("topdown")) {
       for (int j = steps.size() - 1; j >= 0; j--) {
         String step = steps.get(j);
@@ -263,11 +278,13 @@ public class ChartToTreeConverter {
     return derivatedTree;
   }
 
-  /** Applies a single derivation step, either creating a new tree with
+  /**
+   * Applies a single derivation step, either creating a new tree with
    * adjunction or substitution if it is the first step or using the previous
-   * one. */
-  private static Tree applyStep(Tag tag, Tree derivatedTree,
-    ArrayList<String> steps, int j) {
+   * one.
+   */
+  private static Tree applyStep(Tag tag, Tree derivatedTree, List<String> steps,
+    int j) {
     String step = steps.get(j);
     String treeName1 = step.substring(step.indexOf(" ") + 1, step.indexOf("["));
     String node1 = step.substring(step.indexOf("[") + 1, step.indexOf(","));
@@ -293,67 +310,147 @@ public class ChartToTreeConverter {
     return derivatedTree;
   }
 
-  /** Retrieves a list of steps starting with one of the given prefixes that
-   * lead to the goal item. */
-  private static ArrayList<String> retrieveSteps(int i, Deduction deduction,
+  /**
+   * Retrieves a list of lists of steps starting with one of the given prefixes
+   * that lead to the goal item.
+   */
+  private static List<List<String>> retrieveSteps(int i, Deduction deduction,
     String[] prefixes) {
-    ArrayList<String> steps = new ArrayList<String>();
-    ArrayList<Integer> idAgenda = new ArrayList<Integer>();
-    ArrayList<Integer> allIds = new ArrayList<Integer>();
-    idAgenda.add(i);
-    while (idAgenda.size() > 0) {
-      int currentId = idAgenda.get(0);
-      idAgenda.remove(0);
-      for (String prefix : prefixes) {
-        if (deduction.getAppliedRules().get(currentId).get(0)
-          .startsWith(prefix)) {
-          steps.add(deduction.getAppliedRules().get(currentId).get(0));
-        }
-      }
-      for (Integer pointer : deduction.getBackpointers().get(currentId)
-        .get(0)) {
-        if (!allIds.contains(pointer)) {
-          idAgenda.add(pointer);
-          allIds.add(pointer);
-        }
-      }
-    }
-    return steps;
-  }
-
-  /** Retrieves a list of items that lead to the goal item and where the rules
-   * start with the given prefix. */
-  private static ArrayList<Item> retrieveItems(int i, Deduction deduction,
-    String[] prefixes, boolean dotEnd) {
-    ArrayList<Item> items = new ArrayList<Item>();
-    ArrayList<Integer> idAgenda = new ArrayList<Integer>();
-    ArrayList<Integer> allIds = new ArrayList<Integer>();
-    idAgenda.add(i);
-    while (idAgenda.size() > 0) {
-      int currentid = idAgenda.get(0);
-      idAgenda.remove(0);
-      for (String prefix : prefixes) {
-        if (deduction.getAppliedRules().get(currentid).get(0)
-          .startsWith(prefix)) {
-          if (dotEnd) {
-            String itemRepresentation =
-              deduction.getChart().get(currentid).toString();
-            if (itemRepresentation.contains(" •)")) {
-              items.add(deduction.getChart().get(currentid));
-            }
-          } else {
-            items.add(deduction.getChart().get(currentid));
+    List<List<String>> stepss = new ArrayList<List<String>>();
+    List<List<Integer>> idAgendas = new ArrayList<List<Integer>>();
+    List<List<Integer>> allIdss = new ArrayList<List<Integer>>();
+    stepss.add(new ArrayList<String>());
+    idAgendas.add(new ArrayList<Integer>());
+    allIdss.add(new ArrayList<Integer>());
+    idAgendas.get(0).add(i);
+    for (int j = 0; j < idAgendas.size(); j++) {
+      List<Integer> idAgenda = idAgendas.get(j);
+      List<String> steps = stepss.get(j);
+      List<Integer> allIds = allIdss.get(j);
+      while (idAgenda.size() > 0) {
+        int currentId = idAgenda.get(0);
+        idAgenda.remove(0);
+        int setPos = 0;
+        List<Integer> idAgendaCopy = new ArrayList<Integer>();
+        idAgendaCopy.addAll(idAgenda);
+        List<String> stepsCopy = new ArrayList<String>();
+        stepsCopy.addAll(steps);
+        List<Integer> allIdsCopy = new ArrayList<Integer>();
+        allIdsCopy.addAll(allIds);
+        handleAppliedRulesAndBackPointersForPos(deduction, prefixes, idAgenda,
+          steps, allIds, currentId, setPos);
+        if (deduction.getAppliedRules().get(currentId).size() > 1) {
+          for (int k = 1; k < deduction.getAppliedRules().get(currentId)
+            .size(); k++) {
+            List<Integer> newIdAgenda = new ArrayList<Integer>();
+            newIdAgenda.addAll(idAgendaCopy);
+            List<String> newSteps = new ArrayList<String>();
+            newSteps.addAll(stepsCopy);
+            List<Integer> newAllIds = new ArrayList<Integer>();
+            newAllIds.addAll(allIdsCopy);
+            handleAppliedRulesAndBackPointersForPos(deduction, prefixes,
+              newAllIds, newSteps, newAllIds, currentId, k);
+            stepss.add(newSteps);
+            idAgendas.add(newIdAgenda);
+            allIdss.add(newAllIds);
           }
         }
       }
-      for (Integer pointer : deduction.getBackpointers().get(currentid)
-        .get(0)) {
-        if (!allIds.contains(pointer)) {
-          idAgenda.add(pointer);
-          allIds.add(pointer);
+    }
+    return stepss;
+  }
+
+  private static void handleAppliedRulesAndBackPointersForPos(
+    Deduction deduction, String[] prefixes, List<Integer> idAgenda,
+    List<String> steps, List<Integer> allIds, int currentId, int setPos) {
+    for (String prefix : prefixes) {
+      if (deduction.getAppliedRules().get(currentId).get(setPos)
+        .startsWith(prefix)) {
+        steps.add(deduction.getAppliedRules().get(currentId).get(setPos));
+      }
+    }
+    for (Integer pointer : deduction.getBackpointers().get(currentId)
+      .get(setPos)) {
+      if (!allIds.contains(pointer)) {
+        idAgenda.add(pointer);
+        allIds.add(pointer);
+      }
+    }
+  }
+
+  /**
+   * Retrieves a list of lists of items that lead to the goal item and where the
+   * rules start with the given prefix.
+   */
+  private static List<List<Item>> retrieveItems(int i, Deduction deduction,
+    String[] prefixes, boolean dotEnd) {
+    List<List<Item>> itemss = new ArrayList<List<Item>>();
+    List<List<Integer>> idAgendas = new ArrayList<List<Integer>>();
+    List<List<Integer>> allIdss = new ArrayList<List<Integer>>();
+    itemss.add(new ArrayList<Item>());
+    allIdss.add(new ArrayList<Integer>());
+    idAgendas.add(new ArrayList<Integer>());
+    idAgendas.get(0).add(i);
+    for (int j = 0; j < idAgendas.size(); j++) {
+      List<Item> items = itemss.get(j);
+      List<Integer> idAgenda = idAgendas.get(j);
+      List<Integer> allIds = allIdss.get(j);
+      while (idAgenda.size() > 0) {
+        int currentId = idAgenda.get(0);
+        idAgenda.remove(0);
+        int setPos = 0;
+        List<Item> itemsCopy = new ArrayList<Item>();
+        itemsCopy.addAll(items);
+        List<Integer> idAgendaCopy = new ArrayList<Integer>();
+        idAgendaCopy.addAll(idAgenda);
+        List<Integer> allIdsCopy = new ArrayList<Integer>();
+        allIdsCopy.addAll(allIds);
+        handleAppliedRulesAndBackPointersForPos(deduction, prefixes, dotEnd,
+          items, idAgenda, allIds, currentId, setPos);
+        if (deduction.getBackpointers().get(currentId).size() > 1) {
+          for (int k = 1; k < deduction.getAppliedRules().get(currentId)
+            .size(); k++) {
+            List<Integer> newIdAgenda = new ArrayList<Integer>();
+            newIdAgenda.addAll(idAgendaCopy);
+            List<Item> newItems = new ArrayList<Item>();
+            newItems.addAll(itemsCopy);
+            List<Integer> newAllIds = new ArrayList<Integer>();
+            newAllIds.addAll(allIdsCopy);
+            handleAppliedRulesAndBackPointersForPos(deduction, prefixes, dotEnd,
+              newItems, newIdAgenda, newAllIds, currentId, setPos);
+            itemss.add(newItems);
+            idAgendas.add(newIdAgenda);
+            allIdss.add(newAllIds);
+          }
         }
       }
     }
-    return items;
+    return itemss;
+  }
+
+  private static void handleAppliedRulesAndBackPointersForPos(
+    Deduction deduction, String[] prefixes, boolean dotEnd, List<Item> items,
+    List<Integer> idAgenda, List<Integer> allIds, int currentid, int setPos) {
+    for (String prefix : prefixes) {
+      if (deduction.getAppliedRules().get(currentid).get(setPos)
+        .startsWith(prefix)) {
+        if (dotEnd) {
+          String itemRepresentation =
+            deduction.getChart().get(currentid).toString();
+          if (itemRepresentation.contains(" •)")) {
+            items.add(deduction.getChart().get(currentid));
+          }
+        } else {
+          items.add(deduction.getChart().get(currentid));
+        }
+      }
+    }
+    for (Integer pointer : deduction.getBackpointers().get(currentid)
+      .get(setPos)) {
+      if (!allIds.contains(pointer)) {
+        idAgenda.add(pointer);
+        allIds.add(pointer);
+      }
+    }
   }
 }

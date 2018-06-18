@@ -3,6 +3,7 @@ package chartparsing.converter;
 import static org.junit.Assert.assertEquals;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,9 +21,10 @@ public class ChartToTreeConverterTest {
       .tagToCykExtendedRules(TestGrammarLibrary.gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
-      schema.getGoals(), TestGrammarLibrary.gentag());
-    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
+    List<Tree> derivatedTrees = ChartToTreeConverter.tagToDerivatedTree(
+      deduction, schema.getGoals(), TestGrammarLibrary.gentag());
+    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))",
+      derivatedTrees.get(0).toString());
   }
 
   @Test public void testTagEarleyToDerivatedTree() throws ParseException {
@@ -31,9 +33,10 @@ public class ChartToTreeConverterTest {
       .tagToEarleyRules(TestGrammarLibrary.gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
-      schema.getGoals(), TestGrammarLibrary.gentag());
-    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))", derivatedTree.toString());
+    List<Tree> derivatedTrees = ChartToTreeConverter.tagToDerivatedTree(
+      deduction, schema.getGoals(), TestGrammarLibrary.gentag());
+    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))",
+      derivatedTrees.get(0).toString());
   }
 
   @Ignore("waits to get fixed") public void testTagUnusedItemsToDerivedTree()
@@ -43,9 +46,10 @@ public class ChartToTreeConverterTest {
       .tagToEarleyRules(TestGrammarLibrary.acbTag(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivatedTree = ChartToTreeConverter.tagToDerivatedTree(deduction,
-      schema.getGoals(), TestGrammarLibrary.acbTag());
-    assertEquals("(S (A (a ))(S (c ))(B (b )))", derivatedTree.toString());
+    List<Tree> derivatedTrees = ChartToTreeConverter.tagToDerivatedTree(
+      deduction, schema.getGoals(), TestGrammarLibrary.acbTag());
+    assertEquals("(S (A (a ))(S (c ))(B (b )))",
+      derivatedTrees.get(0).toString());
   }
 
   @Test public void testCfgTopdownToDerivationTree() throws ParseException {
@@ -54,19 +58,20 @@ public class ChartToTreeConverterTest {
       .cfgToTopDownRules(TestGrammarLibrary.gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-      schema.getGoals(), "topdown");
-    assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
+    List<Tree> derivationTrees = ChartToTreeConverter
+      .cfgToDerivatedTree(deduction, schema.getGoals(), "topdown");
+    assertEquals("(S (A (a ))(S (c ))(B (b )))",
+      derivationTrees.get(0).toString());
 
     w = "a a a b b b";
     schema = CfgToDeductionRulesConverter
       .cfgToTopDownRules(TestGrammarLibrary.gen_cfgdedtest(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
-    derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+    derivationTrees = ChartToTreeConverter.cfgToDerivatedTree(deduction,
       schema.getGoals(), "topdown");
     assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
-      derivationTree.toString());
+      derivationTrees.get(0).toString());
   }
 
   @Test public void testCfgEarleyToDerivationTree() throws ParseException {
@@ -75,19 +80,20 @@ public class ChartToTreeConverterTest {
       .cfgToEarleyRules(TestGrammarLibrary.gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-      schema.getGoals(), "earley");
-    assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
+    List<Tree> derivationTrees = ChartToTreeConverter
+      .cfgToDerivatedTree(deduction, schema.getGoals(), "earley");
+    assertEquals("(S (A (a ))(S (c ))(B (b )))",
+      derivationTrees.get(0).toString());
 
     w = "a a a b b b";
     schema = CfgToDeductionRulesConverter
       .cfgToEarleyRules(TestGrammarLibrary.gen_cfgdedtest(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
-    derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+    derivationTrees = ChartToTreeConverter.cfgToDerivatedTree(deduction,
       schema.getGoals(), "earley");
     assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
-      derivationTree.toString());
+      derivationTrees.get(0).toString());
   }
 
   @Test public void testCfgShiftReduceToDerivationTree() throws ParseException {
@@ -96,9 +102,10 @@ public class ChartToTreeConverterTest {
       .cfgToShiftReduceRules(TestGrammarLibrary.gencfg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-      schema.getGoals(), "shiftreduce");
-    assertEquals("(S (A (a ))(S (c ))(B (b )))", derivationTree.toString());
+    List<Tree> derivationTrees = ChartToTreeConverter
+      .cfgToDerivatedTree(deduction, schema.getGoals(), "shiftreduce");
+    assertEquals("(S (A (a ))(S (c ))(B (b )))",
+      derivationTrees.get(0).toString());
   }
 
   @Test public void testCfgUngerToDerivationTree() throws ParseException {
@@ -107,10 +114,10 @@ public class ChartToTreeConverterTest {
       .cfgToUngerRules(TestGrammarLibrary.gen_cfgdedtest(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-      schema.getGoals(), "unger");
+    List<Tree> derivationTrees = ChartToTreeConverter
+      .cfgToDerivatedTree(deduction, schema.getGoals(), "unger");
     assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
-      derivationTree.toString());
+      derivationTrees.get(0).toString());
   }
 
   @Ignore public void testSrcgCykExtendedToDerivatiobTree()
@@ -120,10 +127,10 @@ public class ChartToTreeConverterTest {
       .srcgToCykExtendedRules(TestGrammarLibrary.snbmcndmSrcg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
-      schema.getGoals(), "cyk");
+    List<Tree> derivationTrees = ChartToTreeConverter
+      .srcgToDerivatedTree(deduction, schema.getGoals(), "cyk");
     assertEquals("(S (a )(S (a )(S (a )(b ))(b ))(b ))",
-      derivationTree.toString());
+      derivationTrees.get(0).toString());
   }
 
   @Test public void testSrcgEarleyToDerivationTree() throws ParseException {
@@ -132,20 +139,20 @@ public class ChartToTreeConverterTest {
       .srcgToEarleyRules(TestGrammarLibrary.snbmcndmSrcg(), w);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    Tree derivationTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
-      schema.getGoals(), "earley");
+    List<Tree> derivationTrees = ChartToTreeConverter
+      .srcgToDerivatedTree(deduction, schema.getGoals(), "earley");
     assertEquals("(S (A (a<0> )(c<2> ))(B (b<1> )(d<3> )))",
-      derivationTree.toString());
+      derivationTrees.get(0).toString());
 
     w = "a a b b c c d d";
     schema = LcfrsToDeductionRulesConverter
       .srcgToEarleyRules(TestGrammarLibrary.snbmcndmSrcg(), w);
     deduction = new Deduction();
     deduction.doParse(schema, false);
-    derivationTree = ChartToTreeConverter.srcgToDerivatedTree(deduction,
+    derivationTrees = ChartToTreeConverter.srcgToDerivatedTree(deduction,
       schema.getGoals(), "earley");
     assertEquals(
       "(S (A (a<0> )(A (a<1> )(c<5> ))(c<4> ))(B (b<2> )(B (b<3> )(d<7> ))(d<6> )))",
-      derivationTree.toString());
+      derivationTrees.get(0).toString());
   }
 }
