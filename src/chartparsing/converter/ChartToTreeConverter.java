@@ -41,7 +41,7 @@ public class ChartToTreeConverter {
         }
       }
     }
-    return derivatedTrees;
+    return removeDuplicates(derivatedTrees);
   }
 
   public static List<Tree> srcgToDerivatedTree(Deduction deduction,
@@ -97,7 +97,7 @@ public class ChartToTreeConverter {
         }
       }
     }
-    return derivatedTrees;
+    return removeDuplicates(derivatedTrees);
   }
 
   private static CfgProductionRule
@@ -173,21 +173,22 @@ public class ChartToTreeConverter {
         if (deduction.getChart().get(i).equals(goal)) {
           List<List<String>> stepss =
             getDerivationStepsForAlgorithm(deduction, algorithm, i);
-          Tree derivatedTree = null;
+          Tree initialDerivatedTree = null;
           if (algorithm.equals("earley")) {
-            derivatedTree = new Tree(new CfgProductionRule(goal.getItemform()[0]
-              .substring(0, goal.getItemform()[0].length() - 2)));
+            initialDerivatedTree =
+              new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
+                goal.getItemform()[0].length() - 2)));
           }
           for (int k = 0; k < stepss.size(); k++) {
             List<String> steps = stepss.get(k);
-            derivatedTree =
-              getTreeDerivedFromCfgSteps(algorithm, derivatedTree, steps);
+            Tree derivatedTree = getTreeDerivedFromCfgSteps(algorithm,
+              initialDerivatedTree, steps);
             derivatedTrees.add(derivatedTree);
           }
         }
       }
     }
-    return derivatedTrees;
+    return removeDuplicates(derivatedTrees);
   }
 
   private static List<List<String>> getDerivationStepsForAlgorithm(
@@ -349,7 +350,7 @@ public class ChartToTreeConverter {
             List<Integer> newAllIds = new ArrayList<Integer>();
             newAllIds.addAll(allIdsCopy);
             handleAppliedRulesAndBackPointersForPos(deduction, prefixes,
-              newAllIds, newSteps, newAllIds, currentId, k);
+              newIdAgenda, newSteps, newAllIds, currentId, k);
             stepss.add(newSteps);
             idAgendas.add(newIdAgenda);
             allIdss.add(newAllIds);
@@ -452,5 +453,21 @@ public class ChartToTreeConverter {
         allIds.add(pointer);
       }
     }
+  }
+
+  /**
+   * Removes duplicates based on their string representation.
+   */
+  private static List<Tree> removeDuplicates(List<Tree> derivatedTrees) {
+    for (int i = derivatedTrees.size() - 1; i >= 0; i--) {
+      for (int j = 0; j < i; j++) {
+        if (derivatedTrees.get(i).toString()
+          .equals(derivatedTrees.get(j).toString())) {
+          derivatedTrees.remove(i);
+          break;
+        }
+      }
+    }
+    return derivatedTrees;
   }
 }
