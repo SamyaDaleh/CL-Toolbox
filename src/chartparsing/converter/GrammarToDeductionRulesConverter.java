@@ -19,6 +19,8 @@ public class GrammarToDeductionRulesConverter {
       return CfgToDeductionRulesConverter.cfgToShiftReduceRules(cfg, w);
     case "cfg-earley":
       return CfgToDeductionRulesConverter.cfgToEarleyRules(cfg, w);
+    case "cfg-earley-passive":
+      return CfgToDeductionRulesConverter.cfgToEarleyPassiveRules(cfg, w);
     case "cfg-leftcorner":
       return CfgToDeductionRulesConverter.cfgToLeftCornerRules(cfg, w);
     case "cfg-leftcorner-chart":

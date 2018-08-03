@@ -14,11 +14,12 @@ import org.junit.runners.Parameterized.Parameters;
 
   @Parameters public static Collection<String[]> browsers() {
     return Arrays.asList(new String[][] {{"cfg-neverheardofthis"},
-      {"cfg-topdown"}, {"cfg-shiftreduce"}, {"cfg-earley"}, {"cfg-leftcorner"},
-      {"cfg-leftcorner-chart"}, {"cfg-cyk"}, {"cfg-cyk-extended"},
-      {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"}, {"pcfg-cyk"},
-      {"tag-earley"}, {"tag-cyk-extended"}, {"tag-earley-prefixvalid"},
-      {"srcg-cyk-extended"}, {"srcg-cyk-general"}, {"srcg-earley"}});
+      {"cfg-topdown"}, {"cfg-shiftreduce"}, {"cfg-earley"}, {"cfg-passive"},
+      {"cfg-leftcorner"}, {"cfg-leftcorner-chart"}, {"cfg-cyk"},
+      {"cfg-cyk-extended"}, {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"},
+      {"pcfg-cyk"}, {"tag-earley"}, {"tag-cyk-extended"},
+      {"tag-earley-prefixvalid"}, {"srcg-cyk-extended"}, {"srcg-cyk-general"},
+      {"srcg-earley"}});
   }
 
   public MainTest(String algorithm) {

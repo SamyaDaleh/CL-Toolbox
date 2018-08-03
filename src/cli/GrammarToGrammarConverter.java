@@ -21,6 +21,7 @@ class GrammarToGrammarConverter {
     case "cfg-shiftreduce":
       return getCfgForShiftReduce(cfg);
     case "cfg-earley":
+    case "cfg-earley-passive":
       return cfg;
     case "cfg-leftcorner":
       return getCfgForLeftCorner(cfg);
