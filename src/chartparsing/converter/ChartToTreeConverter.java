@@ -176,9 +176,9 @@ public class ChartToTreeConverter {
           Tree initialDerivatedTree = null;
           if (algorithm.equals("earley")) {
             initialDerivatedTree =
-              new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
-                goal.getItemform()[0].length() - 2)));
-          }
+                new Tree(new CfgProductionRule(goal.getItemform()[0].substring(0,
+                  goal.getItemform()[0].length() - 2)));
+            }
           for (int k = 0; k < stepss.size(); k++) {
             List<String> steps = stepss.get(k);
             Tree derivatedTree = getTreeDerivedFromCfgSteps(algorithm,
@@ -225,8 +225,8 @@ public class ChartToTreeConverter {
           derivatedTree = applyStep(derivatedTree, step, false);
         }
       }
-    } else if (algorithm.equals("earley") || algorithm.equals("shiftreduce")
-      || algorithm.equals("unger") || algorithm.equals("earley-passive")) {
+    } else if (algorithm.equals("shiftreduce") || algorithm.equals("unger")
+      || algorithm.equals("earley-passive")) {
       for (int j = 0; j < steps.size(); j++) {
         String step = steps.get(j);
         switch (algorithm) {

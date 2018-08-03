@@ -106,7 +106,7 @@ public class GrammarParser {
       }
       for (String rhsSym : rule.getRhs()) {
         if (!contains(cfg.getTerminals(), rhsSym)
-          && !contains(cfg.getNonterminals(), rhsSym)) {
+          && !contains(cfg.getNonterminals(), rhsSym) && !rhsSym.equals("")) {
           errors.add(new ParseException(rhsSym + " in rule " + rule.toString()
             + " is neither declared as terminal nor as nonterminal.", 0));
         }
@@ -217,7 +217,7 @@ public class GrammarParser {
       }
       for (String rhsSym : rule.getRhs()) {
         if (!contains(pcfg.getTerminals(), rhsSym)
-          && !contains(pcfg.getNonterminals(), rhsSym)) {
+          && !contains(pcfg.getNonterminals(), rhsSym) && !rhsSym.equals("")) {
           errors.add(new ParseException(rhsSym + " in rule " + rule.toString()
             + " is neither declared as terminal nor as nonterminal.", 0));
         }

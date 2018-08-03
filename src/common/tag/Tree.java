@@ -126,7 +126,10 @@ public class Tree {
 
   /** Creates a tree from a cfg rule. Hence S -> A B would become (S A B). */
   public Tree(CfgProductionRule rule) throws ParseException {
-    this("(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")");
+    this("(" + rule.getLhs() + " "
+      + String.join(" ",
+        ("".equals(rule.getRhs()[0]) ? new String[] {"ε"} : rule.getRhs()))
+      + ")");
   }
 
   private Tree() {

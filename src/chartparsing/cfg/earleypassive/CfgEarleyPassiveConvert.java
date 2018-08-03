@@ -21,7 +21,7 @@ public class CfgEarleyPassiveConvert extends AbstractDynamicDeductionRule {
   @Override public List<Item> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
-      if (itemForm[0].contains("•")) {
+      if (itemForm[0].endsWith("•")) {
         String lhsSym = itemForm[0].split(" ")[0];
         consequences.add(new DeductionItem(lhsSym, itemForm[1], itemForm[2]));
       }
