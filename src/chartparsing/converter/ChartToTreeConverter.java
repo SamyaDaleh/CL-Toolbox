@@ -197,6 +197,7 @@ public class ChartToTreeConverter {
     switch (algorithm) {
     case "topdown":
     case "earley":
+    case "earley-passive":
       steps = retrieveSteps(i, deduction, new String[] {"predict"});
       break;
     case "shiftreduce":
@@ -225,7 +226,7 @@ public class ChartToTreeConverter {
         }
       }
     } else if (algorithm.equals("earley") || algorithm.equals("shiftreduce")
-      || algorithm.equals("unger")) {
+      || algorithm.equals("unger") || algorithm.equals("earley-passive")) {
       for (int j = 0; j < steps.size(); j++) {
         String step = steps.get(j);
         switch (algorithm) {
@@ -233,6 +234,7 @@ public class ChartToTreeConverter {
           derivatedTree = applyStep(derivatedTree, step, false);
           break;
         case "unger":
+        case "earley-passive":
           if (j == 0) {
             derivatedTree = new Tree(
               new CfgProductionRule(step.substring(step.indexOf(" ") + 1)));

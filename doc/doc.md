@@ -212,6 +212,10 @@ CYK General works similar to the previously mentioned CYK algorithms, but it can
 
 The early algorithm does not demand any properties of the grammar. It follows a top-down approach where it predicts derivations and tries to match the symbols with the input starting from the beginning. It has a predict rule to try out production rules, a scan rule to match predicted terminals with symbols from the input string and a complete rule that matches the nonterminal of a rule whose right hand side has been completely seen with the nonterminal in another right hand side yet to see. Its items encode the rule where a dot marks up until which point the right hand side has been seen, an index saying where this item starts and another index saying where the dot is located regarding the input string.
 
+##### CFG Earley Passive
+
+This works like Earley with the difference that it uses passive items that are complete items that don't care which rule they are derived from. They are used in a new complete rule instead if the item with the dot at the end. Also this algorithm has a new convert rule that converts items with a dot at the end into passive items.
+
 ##### CFG Left Corner
 
 For this version of left corner the grammar must not contain empty productions or loops, also called recursions. It combines a top-down with a bottom-up approach. Its items contain the symbols that are left to be bottom-up completed, starting with the input string, a second stack with symbols that are left for top-down predictions containing the remaining right hand sides without the left corners, starting with the start symbols and a third stack of left hand sides that are waiting to be completed, starting empty. A reduce step can be applied when the first symbol on the right hand side of a rule is the leftmost symbol of the first stack. The symbol is removed, the remaining symbol of the right hand side are put onto the second stack and the left hand side symbol is put onto the third stack. Whenever symbols of a new production rule are added to the second step a dollar symbol is added first, which separates different right hand sides from each other.  A reduce step removes the topmost symbols on first and second stack if they both are the same. A move step can be applied when a dollar sign is on top or better to say leftmost on the second stack, that means a complete right hand side of a rule has been seen and the left hand side nonterminal which is on top of the third stack is moved to the first stack.
@@ -299,6 +303,32 @@ Currently the graphical output consists of two classes: The ParsingTraceTable di
 #### DisplayTree
 
 This class takes a tree in bracket format as parameter and draws it on the canvas of a new window. Based on the number of brackets the highest depth of the tree is determined, which is used for a rough estimate of the window size. The tree object is parsed from the string representation. It starts to draw the tree with the root on top in the middle of the canvas. For each drawn node the coordinates where it was drawn are stored. For each child node of the current node the max width, that is the greatest number of nodes in one level below that node are retrieved and the horizontal space is divided according to this. Roughly speaking that means if a node has one child with 9 children itself (and no grand children) and one other child with one child, the first one gets 9/10 of the horizontal space, is drawn in the middle of that 9/10 and the remaining horizontal space is divided in the same way between its children. While the second child gets the remaining 1/10 of space. The vertical space is divided equally between the levels of the tree. When the position of a node that is not the root has been determined and its label was drawn, a line is drawn from above the label to below the parent node, which coordinates have already been stored. The trees of TAG rules are drawn in the same way, but along with their tree representation the string representation of their item is passed as second parameter. From the item form additional information is retrieved and drawn: Start and end indices of that item are displayed left and right of the canvas. Foot node indices are written below. A dot indicating a position in the tree is drawn at the respective node label, roughly considering the size of the label: For the CYK algorithm the dot can be below or above a node and for the Earley algorithms it can be at one of the four corners around a node label. For the derived tree of a sRCG algorithm which can have crossing edges the drawing of the tree is slightly different. If a leaf is encountered, it is not yet drawn, instead all leaves are drawn at last on the bottom level in the order their indices determine and lines are drawn from them to their parent. Because for the other nodes the space between them has been divided according to the widths of the subtrees below them, the changed order of the leaves may leave skewed trees behind.
+
+## Development
+
+This chapter mentions the steps necessary to extend different parts of the Toolbox.
+
+### Adding a new Parsing Algorithm
+
+How to add a new parsing algorithm to the Toolbox:
+1. You might need to create a grammar parser first if you use a new formalism. For this you need to make up your mind about grammar format and internal data structure. The data structure shall closely resemble the definition and use its vocabulary.
+2. Create deduction rule classes (without axioms):
+    1. Create a new package for the algorithm at a reasonable position within `chartparsing` to keep the Toolbox well-structured.
+    2. Create new classes:
+        1. They must extent `AbstractDynamicDeductionRule` in one or the other way.
+        2. If the rule has two antecendences prefer to extend `AbstractDynamicDecutionRuleTwoAntecedences` instead.
+        3. Create a public constructor. It must set `name` to identify the rule and `antNeeded` to tell the calling deduction class how many antecendes this rule needs. You can pass the constructor more data that the rule needs.
+        4. Implement `getConsequences()`, this shall calculate the consequence items based on the antecedences the rule currently has. The consequences will be an empty list when `getConsequences()` is called, so if no consequences can be calculated return those empty list.
+        5. If the rule needs several antecendences, prefer to implement `calculateConsequences()` that takes items as arguments and can be called by `getConsequences()` several times with different item order. If you implement `AbstractDynamicDecutionRuleTwoAntecedences` this is already done for you and you just need to implement `calculateConsequences()` that stores generated consequences in the `consequences` list.
+        6. Override `public String toString()` to include the definition of the rule. This is very useful in debug mode where you can directly see what the rule does instead of an abstract memory pointer. Also it might help you when you implement the calculation of consequences, so feel free to add actual information the rule has to its string representation, like the production rule it handles.
+        7. If you create the consequence items create objects of type `DeductionItem` for symbolic parsing and `PItem` for probabilistic parsing.
+2. In the respective `ToDeductionRulesConverter` create a method that takes your grammar formalism and the input string as input and returns a `ParsingSchema` object. Create `DynamicDeductionRule` objects and add them as rules. Create `StaticDeductionRule` objects, give them a name and add them as axioms. Add an Item as Goal.
+3. Add the new algorithm to `GrammarToDeductionRulesConverter` with a name it should be callable in the command line interface.
+4. Add the algorithm with the same name to `GrammarToGrammarConverter`. If there are restrictions on the grammar format check for them here and add a conversion strategy for the please-switch.
+5. In `Main` if you implemented a new formalism add a call to the grammar parser and calls to the respective convert methods here. In any case update the `printHelp()` method to inform the user about the new option.
+6. In `MainTest` add a call to the new algorithm.
+7. If possible add a handle to `ChartToTreeConverter` for your new algorithm, but it works fine without.
+
 
 ## References
 

@@ -248,13 +248,14 @@ class Main { // NO_UCD (test only)
     System.out.println(
       "Please pass at least 3 parameters: [grammar file] [input string] "
         + "[parsing algorithm] [<optional parameters>]");
-    System.out.println("Parsing algorithm can be one of: \n   cfg-cyk"
-      + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
-      + "\n   cfg-leftcorner" + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
-      + "\n   cfg-shiftreduce" + "\n   cfg-unger" + "\n   pcfg-astar"
-      + "\n   tag-cyk-extended" + "\n   tag-earley"
-      + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk-extended"
-      + "\n   srcg-cyk-general" + "\n   srcg-earley");
+    System.out.println(
+      "Parsing algorithm can be one of: \n   cfg-cyk" + "\n   cfg-cyk-extended"
+        + "\n   cfg-cyk-general" + "\n   cfg-earley" + "\n   cfg-earley-passive"
+        + "\n   cfg-leftcorner" + "\n   cfg-leftcorner-chart"
+        + "\n   cfg-topdown" + "\n   cfg-shiftreduce" + "\n   cfg-unger"
+        + "\n   pcfg-astar" + "\n   tag-cyk-extended" + "\n   tag-earley"
+        + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk-extended"
+        + "\n   srcg-cyk-general" + "\n   srcg-earley");
     System.out.println(
       "Optional parameters can be: \n   --success : prints a trace only of items "
         + "that lead to a goal item."
@@ -262,6 +263,7 @@ class Main { // NO_UCD (test only)
         + "algorithm, ask me to convert it. No promises."
         + "\n   --javafx : display graphics with javafx instead of awt.");
     System.out.println(
-      "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg \"a a b b\" cfg-topdown --success");
+      "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg "
+        + "\"a a b b\" cfg-topdown --success");
   }
 }
