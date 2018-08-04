@@ -38,8 +38,10 @@ public class TagEarleyPrefixValidPredictSubst
         && i.equals("~") && j.equals("~") && k.equals("~") && !l.equals("~")
         && tag.isSubstitutionNode(p, treeName)
         && p.getLabel().equals(tag.getTree(iniTreeName).getRoot().getLabel())) {
-        consequences.add(
-          new DeductionItem(iniTreeName, "", "la", l, l, "-", "-", l, "0"));
+        Item consequence =
+          new DeductionItem(iniTreeName, "", "la", l, l, "-", "-", l, "0");
+        consequence.setTree(tag.getInitialTree(iniTreeName));
+        consequences.add(consequence);
       }
     }
     return consequences;

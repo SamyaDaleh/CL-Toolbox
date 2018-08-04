@@ -1,5 +1,6 @@
 package chartparsing;
 
+import java.text.ParseException;
 import java.util.List;
 
 /** Interface that defines any kind of rule used for deduction. */
@@ -9,7 +10,7 @@ interface DeductionRule {
 
   void setAntecedences(List<Item> antecedences);
 
-  List<Item> getConsequences();
+  List<Item> getConsequences() throws ParseException;
 
   String getName();
 

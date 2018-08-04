@@ -6,6 +6,7 @@ import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 
 public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
 
@@ -70,8 +71,21 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
       && pos3.equals("la") && iGamma3.equals("~") && i3.equals("~")
       && j3.equals("~") && k3.equals("~") && iGamma1.equals(l3)
       && adj3.equals("0")) {
-      consequences.add(new DeductionItem(treeName2, node2, "rb", "~", iGamma1,
-        j2, k2, l1, "1"));
+      Item consequence = new DeductionItem(treeName2, node2, "rb", "~", iGamma1,
+        j2, k2, l1, "1");
+      Tree derivedTree;
+      if (antecedences.get(0).getItemform().equals(itemForm1)) {
+        derivedTree = antecedences.get(1).getTree().adjoin(node2,
+          antecedences.get(0).getTree());
+      } else if (antecedences.get(1).getItemform().equals(itemForm1)) {
+        derivedTree = antecedences.get(0).getTree().adjoin(node2,
+          antecedences.get(1).getTree());
+      } else {
+        derivedTree = antecedences.get(0).getTree().adjoin(node2,
+          antecedences.get(2).getTree());
+      }
+      consequence.setTree(derivedTree);
+      consequences.add(consequence);
       this.name = "adjoin " + treeName2 + "[" + node2 + "," + treeName1 + "]";
     }
 

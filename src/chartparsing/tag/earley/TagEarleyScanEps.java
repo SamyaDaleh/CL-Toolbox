@@ -12,8 +12,10 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
-  /** Constructor needs the grammar to retrieve information about the
-   * antecedence. */
+  /**
+   * Constructor needs the grammar to retrieve information about the
+   * antecedence.
+   */
   public TagEarleyScanEps(Tag tag) {
     this.tag = tag;
     this.name = "scan epsilon";
@@ -33,8 +35,10 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
       String adj = itemForm[7];
       if (pos.equals("la") && adj.equals("0") && tag.getTree(treeName)
         .getNodeByGornAdress(node).getLabel().equals("")) {
-        consequences
-          .add(new DeductionItem(treeName, node, "ra", i, j, k, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, node, "ra", i, j, k, l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

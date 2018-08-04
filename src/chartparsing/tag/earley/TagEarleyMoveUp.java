@@ -12,8 +12,10 @@ public class TagEarleyMoveUp extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
-  /** Constructor needs the grammar to retrieve information about the
-   * antecedence. */
+  /**
+   * Constructor needs the grammar to retrieve information about the
+   * antecedence.
+   */
   public TagEarleyMoveUp(Tag tag) {
     this.tag = tag;
     this.name = "move up";
@@ -37,8 +39,10 @@ public class TagEarleyMoveUp extends AbstractDynamicDeductionRule {
         && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
         String parentGorn = tag.getTree(treeName).getNodeByGornAdress(node)
           .getGornAddressOfParent();
-        consequences
-          .add(new DeductionItem(treeName, parentGorn, "rb", i, j, k, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, parentGorn, "rb", i, j, k, l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

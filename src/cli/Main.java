@@ -1,6 +1,5 @@
 package cli;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.Deduction;
@@ -20,8 +19,10 @@ import gui.ParsingTraceTable;
 /** Entry point into toolbox for the calls by command line */
 class Main { // NO_UCD (test only)
 
-  /** Command line arguments are passed here. Call without arguments displays
-   * help about the what arguments to use. */
+  /**
+   * Command line arguments are passed here. Call without arguments displays
+   * help about the what arguments to use.
+   */
   public static void main(String[] args) throws Exception {
     if (args.length < 3) {
       printHelp();
@@ -206,40 +207,40 @@ class Main { // NO_UCD (test only)
       }
     }
     if (schema != null) {
-      drawDerivationTree(algorithm, schema, tag, deduction, javafx, jwh);
+      drawDerivedTree(algorithm, schema, tag, deduction, javafx, jwh);
     }
   }
 
-  private static void drawDerivationTree(String algorithm, ParsingSchema schema,
+  private static void drawDerivedTree(String algorithm, ParsingSchema schema,
     Tag tag, Deduction deduction, boolean javafx, JfxWindowHolder jwc)
     throws Exception {
+    List<Tree> derivedTrees = deduction.getDerivedTrees();
     String[] algorithmSplit = algorithm.split("-");
-    List<Tree> derivedTrees = new ArrayList<Tree>();
-    switch (algorithmSplit[0]) {
-    case "cfg":
-      derivedTrees = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-        schema.getGoals(), algorithm.substring(4));
-      break;
-    case "tag":
-      derivedTrees = ChartToTreeConverter.tagToDerivatedTree(deduction,
-        schema.getGoals(), tag);
-      break;
-    case "srcg":
-      derivedTrees = ChartToTreeConverter.srcgToDerivatedTree(deduction,
-        schema.getGoals(), algorithm.substring(5));
-      break;
-    default:
-      System.out.println("Unknown formalism " + algorithmSplit[0]
-        + ", can not retrieve derivated tree.");
+    if (derivedTrees == null || derivedTrees.size() == 0) {
+      switch (algorithmSplit[0]) {
+      case "cfg":
+        if ("shiftreduce".equals(algorithmSplit[1])) {
+          derivedTrees = ChartToTreeConverter.cfgToDerivatedTree(deduction,
+            schema.getGoals(), algorithm.substring(4));
+        }
+        break;
+      case "srcg":
+        derivedTrees = ChartToTreeConverter.srcgToDerivatedTree(deduction,
+          schema.getGoals(), algorithm.substring(5));
+        break;
+      default:
+        System.out.println("Unknown formalism " + algorithmSplit[0]
+          + ", can not retrieve derivated tree.");
+      }
     }
-    for (int i = 0; i <derivedTrees.size(); i++) {
+    for (int i = 0; i < derivedTrees.size(); i++) {
       Tree derivedTree = derivedTrees.get(i);
       if (javafx) {
         jwc.setArgs(new String[] {derivedTree.toString()});
         jwc.showDisplayTreeFx();
       } else {
         new DisplayTree(new String[] {derivedTree.toString()});
-      
+
       }
     }
   }

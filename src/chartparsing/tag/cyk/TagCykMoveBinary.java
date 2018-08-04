@@ -2,6 +2,7 @@ package chartparsing.tag.cyk;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 
 /** From a two sibling nodes move up to the parent node. */
 public class TagCykMoveBinary
@@ -37,8 +38,10 @@ public class TagCykMoveBinary
         String parentNode = node1.substring(0, node1.length() - 3) + "⊥";
         String f1New = (f1.equals("-")) ? f1b : f1;
         String f2New = (f2.equals("-")) ? f2b : f2;
-        consequences
-          .add(new DeductionItem(treeName1, parentNode, i, f1New, f2New, j));
+        Item consequence =
+          new DeductionItem(treeName1, parentNode, i, f1New, f2New, j);
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
   }

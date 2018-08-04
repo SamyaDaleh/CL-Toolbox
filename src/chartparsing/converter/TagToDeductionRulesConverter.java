@@ -4,6 +4,7 @@ import java.util.Set;
 
 import chartparsing.DeductionItem;
 import chartparsing.DynamicDeductionRule;
+import chartparsing.Item;
 import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
 import chartparsing.tag.cyk.TagCykAdjoin;
@@ -44,10 +45,11 @@ import common.tag.Tag;
 import common.tag.Tree;
 import common.tag.Vertex;
 
-/** Convertes Tree adjoining grammars to parsing schemes for the respective
+/**
+ * Convertes Tree adjoining grammars to parsing schemes for the respective
  * parsing algorithms. Based on the slides from Laura Kallmeyer about TAG
- * Parsing
- * https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf */
+ * Parsing https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf
+ */
 public class TagToDeductionRulesConverter {
 
   /** Returns a parsing schema for CYK parsing of the given input w with tag. */
@@ -76,22 +78,26 @@ public class TagToDeductionRulesConverter {
         for (Vertex p : tag.getTree(treeName).getVertexes()) {
           if (p.getLabel().equals(wSplit[i])) {
             StaticDeductionRule lexScan = new StaticDeductionRule();
-            lexScan.addConsequence(
-                new DeductionItem(treeName, p.getGornAddress() + "⊤",
-                    String.valueOf(i), "-", "-", String.valueOf(i + 1)));
+            Item consequence =
+              new DeductionItem(treeName, p.getGornAddress() + "⊤",
+                String.valueOf(i), "-", "-", String.valueOf(i + 1));
+            consequence.setTree(tag.getTree(treeName));
+            lexScan.addConsequence(consequence);
             lexScan.setName("lex-scan " + wSplit[i]);
             schema.addAxiom(lexScan);
           } else if (p.getLabel().equals("")) {
             StaticDeductionRule epsScan = new StaticDeductionRule();
-            epsScan.addConsequence(
-                new DeductionItem(treeName, p.getGornAddress() + "⊤",
-                    String.valueOf(i), "-", "-", String.valueOf(i)));
+            Item consequence =
+              new DeductionItem(treeName, p.getGornAddress() + "⊤",
+                String.valueOf(i), "-", "-", String.valueOf(i));
+            consequence.setTree(tag.getTree(treeName));
+            epsScan.addConsequence(consequence);
             epsScan.setName("eps-scan");
             schema.addAxiom(epsScan);
           }
           if (tag.isSubstitutionNode(p, treeName)) {
             DynamicDeductionRule substitute =
-                new TagCykSubstitute(treeName, p.getGornAddress(), tag);
+              new TagCykSubstitute(treeName, p.getGornAddress(), tag);
             schema.addRule(substitute);
           }
         }
@@ -101,7 +107,7 @@ public class TagToDeductionRulesConverter {
         Tree iniTree = tag.getInitialTree(iniTreeName);
         if (iniTree.getRoot().getLabel().equals(tag.getStartSymbol())) {
           schema.addGoal(new DeductionItem(iniTreeName, "⊤", "0", "-", "-",
-              String.valueOf(wSplit.length)));
+            String.valueOf(wSplit.length)));
         }
       }
 
@@ -109,10 +115,12 @@ public class TagToDeductionRulesConverter {
         for (String auxTree : auxTreesNameSet) {
           StaticDeductionRule footPredict = new StaticDeductionRule();
           String footGorn =
-              tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
-          footPredict.addConsequence(
-              new DeductionItem(auxTree, footGorn + "⊤", String.valueOf(i),
-                  String.valueOf(i), String.valueOf(j), String.valueOf(j)));
+            tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
+          Item consequence =
+            new DeductionItem(auxTree, footGorn + "⊤", String.valueOf(i),
+              String.valueOf(i), String.valueOf(j), String.valueOf(j));
+          consequence.setTree(tag.getAuxiliaryTree(auxTree));
+          footPredict.addConsequence(consequence);
           footPredict.setName("foot-predict");
           schema.addAxiom(footPredict);
         }
@@ -122,8 +130,9 @@ public class TagToDeductionRulesConverter {
     return schema;
   }
 
-  /** Returns a parsing schema for Earley parsing of the given input w with
-   * tag. */
+  /**
+   * Returns a parsing schema for Earley parsing of the given input w with tag.
+   */
   public static ParsingSchema tagToEarleyRules(Tag tag, String w) {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -152,18 +161,18 @@ public class TagToDeductionRulesConverter {
 
     for (String auxTreeName : auxTreesNameSet) {
       DynamicDeductionRule predictAdjoinable =
-          new TagEarleyPredictAdjoinable(auxTreeName, tag);
+        new TagEarleyPredictAdjoinable(auxTreeName, tag);
       schema.addRule(predictAdjoinable);
     }
 
     for (String treeName : treesNameSet) {
       for (Vertex p : tag.getTree(treeName).getVertexes()) {
         DynamicDeductionRule predictAdjoined =
-            new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
+          new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
         schema.addRule(predictAdjoined);
         if (tag.isSubstitutionNode(p, treeName)) {
           DynamicDeductionRule substitute =
-              new TagEarleySubstitute(treeName, p.getGornAddress(), tag);
+            new TagEarleySubstitute(treeName, p.getGornAddress(), tag);
           schema.addRule(substitute);
         }
       }
@@ -171,18 +180,20 @@ public class TagToDeductionRulesConverter {
 
     for (String iniTreeName : iniTreesNameSet) {
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
-          .equals(tag.getStartSymbol())) {
+        .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        initialize.addConsequence(
-            new DeductionItem(iniTreeName, "", "la", "0", "-", "-", "0", "0"));
+        Item consequence =
+          new DeductionItem(iniTreeName, "", "la", "0", "-", "-", "0", "0");
+        consequence.setTree(tag.getInitialTree(iniTreeName));
+        initialize.addConsequence(consequence);
         initialize.setName("initialize");
         schema.addAxiom(initialize);
         schema.addGoal(new DeductionItem(iniTreeName, "", "ra", "0", "-", "-",
-            String.valueOf(wSplit.length), "0"));
+          String.valueOf(wSplit.length), "0"));
       }
 
       DynamicDeductionRule predictSubst =
-          new TagEarleyPredictSubst(iniTreeName, tag);
+        new TagEarleyPredictSubst(iniTreeName, tag);
       schema.addRule(predictSubst);
     }
     return schema;
@@ -202,8 +213,10 @@ public class TagToDeductionRulesConverter {
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
         .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        initialize.addConsequence(new DeductionItem(iniTreeName, "", "la", "0",
-          "0", "-", "-", "0", "0"));
+        Item consequence = new DeductionItem(iniTreeName, "", "la", "0", "0",
+          "-", "-", "0", "0");
+        consequence.setTree(tag.getInitialTree(iniTreeName));
+        initialize.addConsequence(consequence);
         initialize.setName("initialize");
         schema.addAxiom(initialize);
         schema.addGoal(new DeductionItem(iniTreeName, "", "ra", "0", "0", "-",

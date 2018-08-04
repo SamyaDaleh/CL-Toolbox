@@ -6,9 +6,11 @@ import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.cfg.CfgProductionRule;
+import common.tag.Tree;
 
-/** If the top o the stack matches the rhs of a rule, replace it with the
- * lhs. */
+/**
+ * If the top o the stack matches the rhs of a rule, replace it with the lhs.
+ */
 public class CfgUngerComplete extends AbstractDynamicDeductionRule {
 
   private final CfgProductionRule rule;
@@ -44,8 +46,16 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
           }
         }
         if (prevIjPlusOne.equals(mayLhsItem.getItemform()[2])) {
-          consequences.add(new DeductionItem(rule.getLhs() + "•",
-            mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]));
+          Tree derivedTree;
+          if (antecedences.get(0).equals(mayLhsItem)) {
+            derivedTree = antecedences.get(1).getTree();
+          } else {
+            derivedTree = antecedences.get(0).getTree();
+          }
+          Item consequence = new DeductionItem(rule.getLhs() + "•",
+            mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]);
+          consequence.setTree(derivedTree);
+          consequences.add(consequence);
         }
       }
     }

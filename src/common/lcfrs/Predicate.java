@@ -112,6 +112,10 @@ public class Predicate {
     return repr.toString();
   }
 
+  /**
+   * Returns from argument i the js symbol. According to the definition the
+   * indices for i start at 1.
+   */
   public String getSymAt(int i, int j) {
     return this.symbols[i - 1][j];
   }

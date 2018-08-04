@@ -1,8 +1,5 @@
 package chartparsing.converter;
 
-import common.tag.Tag;
-import common.tag.Tree;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,37 +9,13 @@ import chartparsing.Item;
 import common.cfg.CfgProductionRule;
 import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
+import common.tag.Tree;
 
 /**
  * Collection of functions that take a chart and a list of goal items and return
  * one tree that represents the successful parse.
  */
 public class ChartToTreeConverter {
-
-  /** Returns the first possible tree that spans the whole input string. */
-  public static List<Tree> tagToDerivatedTree(Deduction deduction,
-    List<Item> goals, Tag tag) {
-    List<Tree> derivatedTrees = new ArrayList<Tree>();
-    for (Item goal : goals) {
-      for (int i = 0; i < deduction.getChart().size(); i++) {
-        if (deduction.getChart().get(i).equals(goal)) {
-          List<List<String>> stepss =
-            retrieveSteps(i, deduction, new String[] {"subst", "adjoin"});
-          for (int k = 0; k < stepss.size(); k++) {
-            List<String> steps = stepss.get(k);
-            Tree derivatedTree = null;
-            for (int j = steps.size() - 1; j >= 0; j--) {
-              derivatedTree = applyStep(tag, derivatedTree, steps, j);
-            }
-            if (derivatedTree != null) {
-              derivatedTrees.add(derivatedTree);
-            }
-          }
-        }
-      }
-    }
-    return removeDuplicates(derivatedTrees);
-  }
 
   public static List<Tree> srcgToDerivatedTree(Deduction deduction,
     List<Item> goals, String algorithm) throws ParseException {
@@ -277,38 +250,6 @@ public class ChartToTreeConverter {
         derTreeString.substring(0, derTreeString.indexOf("(" + lhs + " )"))
           + newRuleTree.toString() + derTreeString.substring(
             derTreeString.indexOf("(" + lhs + " )") + lhs.length() + 3));
-    }
-    return derivatedTree;
-  }
-
-  /**
-   * Applies a single derivation step, either creating a new tree with
-   * adjunction or substitution if it is the first step or using the previous
-   * one.
-   */
-  private static Tree applyStep(Tag tag, Tree derivatedTree, List<String> steps,
-    int j) {
-    String step = steps.get(j);
-    String treeName1 = step.substring(step.indexOf(" ") + 1, step.indexOf("["));
-    String node1 = step.substring(step.indexOf("[") + 1, step.indexOf(","));
-    if (node1.equals("ε")) {
-      node1 = "";
-    }
-    String treeName2 = step.substring(step.indexOf(",") + 1, step.indexOf("]"));
-    if (step.startsWith("adjoin")) {
-      if (j == steps.size() - 1) {
-        derivatedTree =
-          tag.getTree(treeName1).adjoin(node1, tag.getAuxiliaryTree(treeName2));
-      } else {
-        derivatedTree = tag.getTree(treeName1).adjoin(node1, derivatedTree);
-      }
-    } else if (step.startsWith("subst")) {
-      if (j == steps.size() - 1) {
-        derivatedTree = tag.getTree(treeName1).substitute(node1,
-          tag.getInitialTree(treeName2));
-      } else {
-        derivatedTree = tag.getTree(treeName1).substitute(node1, derivatedTree);
-      }
     }
     return derivatedTree;
   }

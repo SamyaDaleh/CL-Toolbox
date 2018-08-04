@@ -15,43 +15,6 @@ import common.tag.Tree;
 
 public class ChartToTreeConverterTest {
 
-  @Test public void testTagCykToDerivatedTree() throws ParseException {
-    String w2 = "a a c b";
-    ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToCykExtendedRules(TestGrammarLibrary.gentag(), w2);
-    Deduction deduction = new Deduction();
-    deduction.doParse(schema, false);
-    List<Tree> derivatedTrees = ChartToTreeConverter.tagToDerivatedTree(
-      deduction, schema.getGoals(), TestGrammarLibrary.gentag());
-    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))",
-      derivatedTrees.get(0).toString());
-  }
-
-  @Test public void testTagEarleyToDerivatedTree() throws ParseException {
-    String w2 = "a a c b";
-    ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToEarleyRules(TestGrammarLibrary.gentag(), w2);
-    Deduction deduction = new Deduction();
-    deduction.doParse(schema, false);
-    List<Tree> derivatedTrees = ChartToTreeConverter.tagToDerivatedTree(
-      deduction, schema.getGoals(), TestGrammarLibrary.gentag());
-    assertEquals("(S (T (a )(T (a )(T (c ))))(b ))",
-      derivatedTrees.get(0).toString());
-  }
-
-  @Ignore("waits to get fixed") public void testTagUnusedItemsToDerivedTree()
-    throws ParseException {
-    String w = "a c b";
-    ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToEarleyRules(TestGrammarLibrary.acbTag(), w);
-    Deduction deduction = new Deduction();
-    deduction.doParse(schema, false);
-    List<Tree> derivatedTrees = ChartToTreeConverter.tagToDerivatedTree(
-      deduction, schema.getGoals(), TestGrammarLibrary.acbTag());
-    assertEquals("(S (A (a ))(S (c ))(B (b )))",
-      derivatedTrees.get(0).toString());
-  }
-
   @Test public void testCfgTopdownToDerivationTree() throws ParseException {
     String w = "a c b";
     ParsingSchema schema = CfgToDeductionRulesConverter

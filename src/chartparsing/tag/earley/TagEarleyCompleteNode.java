@@ -2,6 +2,7 @@ package chartparsing.tag.earley;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.tag.Tag;
 
 /**
@@ -46,8 +47,10 @@ public class TagEarleyCompleteNode
         && adj1.equals("0")) {
         String f1 = (g.equals("-")) ? j : g;
         String f2 = (h.equals("-")) ? k : h;
-        consequences
-          .add(new DeductionItem(treeName1, node1, "ra", f, f1, f2, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName1, node1, "ra", f, f1, f2, l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
   }

@@ -1,9 +1,11 @@
 package chartparsing.converter;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.DynamicDeductionRule;
+import chartparsing.Item;
 import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
 import chartparsing.lcfrs.SrcgDeductionUtils;
@@ -22,23 +24,37 @@ import common.lcfrs.Clause;
 import common.lcfrs.Predicate;
 import common.lcfrs.RangeVector;
 import common.lcfrs.Srcg;
+import common.tag.Tree;
 
-/** Generates different parsing schemes. Based on the slides from Laura
- * Kallmeyer about Parsing as Deduction. */
+/**
+ * Generates different parsing schemes. Based on the slides from Laura Kallmeyer
+ * about Parsing as Deduction.
+ */
 public class LcfrsToDeductionRulesConverter {
 
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
-    Clause clause) {
+    Clause clause) throws ParseException {
     for (List<Integer> ranges : getAllRanges(clause.getLhs(), wsplit)) {
       StaticDeductionRule scan = new StaticDeductionRule();
-      scan.addConsequence(
-        new SrcgCykItem(clause.getLhs().getNonterminal(), ranges));
+      Item consequence =
+        new SrcgCykItem(clause.getLhs().getNonterminal(), ranges);
+      StringBuilder treeString =
+        new StringBuilder("( " + clause.getLhs().getNonterminal() + " ");
+      for (int i = 0; i * 2 < ranges.size(); i++) {
+        treeString.append(clause.getLhs().getSymAt(i + 1, 0)).append('<')
+          .append(ranges.get(2 * i)).append(',').append(ranges.get(2 * i + 1))
+          .append("> ");
+      }
+      treeString.append(")");
+      consequence.setTree(new Tree(treeString.toString()));
+      scan.addConsequence(consequence);
       scan.setName("scan " + clause.toString());
       schema.addAxiom(scan);
     }
   }
 
-  public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w) {
+  public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w)
+    throws ParseException {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
@@ -66,7 +82,8 @@ public class LcfrsToDeductionRulesConverter {
     return schema;
   }
 
-  public static ParsingSchema srcgToCykGeneralRules(Srcg srcg, String w) {
+  public static ParsingSchema srcgToCykGeneralRules(Srcg srcg, String w)
+    throws ParseException {
     if (srcg.hasEpsilonProductions()) {
       System.out.println(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
@@ -87,10 +104,12 @@ public class LcfrsToDeductionRulesConverter {
     return schema;
   }
 
-  /** If lhs is a lhs Predicate of a clause and and wsplit is the splitted input
+  /**
+   * If lhs is a lhs Predicate of a clause and and wsplit is the splitted input
    * string this returns a list of all possible (non overlapping) ranges the
    * arguments could have over parts of the input. All symbols in the Predicate
-   * have to be terminals. */
+   * have to be terminals.
+   */
   @SuppressWarnings("unchecked") private static List<List<Integer>>
     getAllRanges(Predicate lhs, String[] wSplit) {
     ArrayList<List<Integer>> ranges = new ArrayList<List<Integer>>();

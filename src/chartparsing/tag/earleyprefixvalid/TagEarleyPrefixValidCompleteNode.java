@@ -2,11 +2,13 @@ package chartparsing.tag.earleyprefixvalid;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 import common.tag.Vertex;
 
-public class TagEarleyPrefixValidCompleteNode extends
-  AbstractDynamicDecutionRuleTwoAntecedences {
+public class TagEarleyPrefixValidCompleteNode
+  extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -37,14 +39,22 @@ public class TagEarleyPrefixValidCompleteNode extends
     Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
     if (treeName1.equals(treeName2) && node1.equals(node2) && pos1.equals("la")
       && pos2.equals("rb") && !iGamma1.equals("~") && !i1.equals("~")
-      && !j1.equals("~") && !k1.equals("~") && !l1.equals("~")
+      && !j1.equals("~") && !k1.equals("~") && !l1.equals("~") && l1.equals(i2)
       && adj1.equals("0") && iGamma2.equals("~") && !i2.equals("~")
       && !j2.equals("~") && !k2.equals("~") && !l2.equals("~")
       && tag.isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;
-      consequences.add(new DeductionItem(treeName1, node1, "ra", iGamma1, i1,
-        f1, f2, l2, "0"));
+      Item consequence =
+        new DeductionItem(treeName1, node1, "ra", iGamma1, i1, f1, f2, l2, "0");
+      Tree derivedTree;
+      if (itemForm1.equals(antecedences.get(0).getItemform())) {
+        derivedTree = antecedences.get(1).getTree();
+      } else {
+        derivedTree = antecedences.get(0).getTree();
+      }
+      consequence.setTree(derivedTree);
+      consequences.add(consequence);
     }
   }
 

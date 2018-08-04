@@ -33,8 +33,10 @@ public class TagEarleyPrefixValidPredictNoAdj
       if (pos.equals("la") && adj.equals("0") && !iGamma.equals("~")
         && !i.equals("~") && !j.equals("~") && !k.equals("~")
         && !tag.getTree(treeName).isInOA(node)) {
-        consequences.add(
-          new DeductionItem(treeName, node, "lb", iGamma, i, j, k, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, node, "lb", iGamma, l, "-", "-", l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

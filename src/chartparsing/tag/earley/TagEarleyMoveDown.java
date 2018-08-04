@@ -33,8 +33,10 @@ public class TagEarleyMoveDown extends AbstractDynamicDeductionRule {
       String adj = itemForm[7];
       if (pos.equals("lb") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
-        consequences
-          .add(new DeductionItem(treeName, node + ".1", "la", i, j, k, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, node + ".1", "la", i, j, k, l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

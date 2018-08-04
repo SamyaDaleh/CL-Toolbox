@@ -1,8 +1,13 @@
 package chartparsing.cfg.cyk;
 
+import java.text.ParseException;
+
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
+import common.TreeUtils;
 import common.cfg.CfgProductionRule;
+import common.tag.Tree;
 
 /**
  * If two items match the rhs of a rule, get a new item that represents the lhs.
@@ -17,7 +22,8 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
+    throws ParseException {
     String nt1 = itemForm1[0];
     String i1 = itemForm1[1];
     int i1int = Integer.parseInt(i1);
@@ -30,8 +36,22 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
     int j2int = Integer.parseInt(j2);
     if (nt1.equals(rule.getRhs()[0]) && nt2.equals(rule.getRhs()[1])
       && i1int + j1int == i2int) {
-      this.consequences.add(new DeductionItem(rule.getLhs(),
-        String.valueOf(i1int), String.valueOf(j1int + j2int)));
+      Item consequence = new DeductionItem(rule.getLhs(), String.valueOf(i1int),
+        String.valueOf(j1int + j2int));
+      Tree derivedTree = new Tree(rule);
+      if (i1.equals(antecedences.get(0).getItemform()[1])) {
+        derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+          antecedences.get(0).getTree());
+        derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+          antecedences.get(1).getTree());
+      } else {
+        derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+          antecedences.get(1).getTree());
+        derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+          antecedences.get(0).getTree());
+      }
+      consequence.setTree(derivedTree);
+      this.consequences.add(consequence);
     }
   }
 

@@ -2,6 +2,7 @@ package chartparsing.cfg.earleypassive;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.ArrayUtils;
 
 /**
@@ -33,8 +34,10 @@ public class CfgEarleyPassiveComplete
               + " " + itemForm2[0] + " •" + ArrayUtils
                 .getSubSequenceAsString(stackSplit1, l + 1, stackSplit1.length);
           }
-          consequences
-            .add(new DeductionItem(newStack, itemForm1[1], itemForm2[2]));
+          Item consequence =
+            new DeductionItem(newStack, itemForm1[1], itemForm2[2]);
+          consequence.setTree(antecedences.get(0).getTree());
+          consequences.add(consequence);
           break;
         }
       }

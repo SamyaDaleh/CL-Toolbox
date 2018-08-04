@@ -47,8 +47,10 @@ public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
       if (substNode && pos.equals("lb") && i1.equals(i2) && f1.equals("-")
         && f2.equals("-") && adj.equals("0")
         && substNodeLabel.equals(iniTreeRootLabel)) {
-        consequences
-          .add(new DeductionItem(iniTreeName, "", "la", i1, "-", "-", i1, "0"));
+        Item consequence =
+          new DeductionItem(iniTreeName, "", "la", i1, "-", "-", i1, "0");
+        consequence.setTree(tag.getInitialTree(iniTreeName));
+        consequences.add(consequence);
       }
     }
     return consequences;

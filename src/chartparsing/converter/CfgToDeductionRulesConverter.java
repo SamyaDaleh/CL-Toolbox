@@ -1,7 +1,10 @@
 package chartparsing.converter;
 
+import java.text.ParseException;
+
 import chartparsing.DeductionItem;
 import chartparsing.DynamicDeductionRule;
+import chartparsing.Item;
 import chartparsing.ParsingSchema;
 import chartparsing.StaticDeductionRule;
 import chartparsing.cfg.CfgBottomUpReduce;
@@ -27,6 +30,7 @@ import chartparsing.cfg.unger.CfgUngerPredict;
 import chartparsing.cfg.unger.CfgUngerScan;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
+import common.tag.Tree;
 
 /**
  * Generates different parsing schemes. Based on the slides from Laura Kallmeyer
@@ -99,8 +103,10 @@ public class CfgToDeductionRulesConverter {
   /**
    * Converts a cfg to a parsing scheme for Earley parsing. Based n
    * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf
+   * @throws ParseException
    */
-  public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w)
+    throws ParseException {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
@@ -114,12 +120,16 @@ public class CfgToDeductionRulesConverter {
       if (rule.getLhs().equals(cfg.getStartSymbol())) {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
-          axiom.addConsequence(
-            new DeductionItem(cfg.getStartSymbol() + " -> •", "0", "0"));
+          Item consequence =
+            new DeductionItem(cfg.getStartSymbol() + " -> •", "0", "0");
+          consequence.setTree(new Tree(rule));
+          axiom.addConsequence(consequence);
         } else {
-          axiom.addConsequence(new DeductionItem(
+          Item consequence = new DeductionItem(
             cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
-            "0", "0"));
+            "0", "0");
+          consequence.setTree(new Tree(rule));
+          axiom.addConsequence(consequence);
         }
         axiom.setName("axiom");
         schema.addAxiom(axiom);
@@ -263,8 +273,12 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  /** Converts grammar into rules for CYK parsing for CNF. */
-  public static ParsingSchema cfgToCykRules(Cfg cfg, String w) {
+  /**
+   * Converts grammar into rules for CYK parsing for CNF.
+   * @throws ParseException
+   */
+  public static ParsingSchema cfgToCykRules(Cfg cfg, String w)
+    throws ParseException {
     if (!cfg.isInChomskyNormalForm()) {
       System.out.println("Grammar has to be in Chomsky Normal Form.");
       return null;
@@ -277,8 +291,10 @@ public class CfgToDeductionRulesConverter {
         for (int i = 0; i < wSplit.length; i++) {
           if (wSplit[i].equals(rule.getRhs()[0])) {
             StaticDeductionRule scan = new StaticDeductionRule();
-            scan.addConsequence(
-              new DeductionItem(rule.getLhs(), String.valueOf(i), "1"));
+            Item consequence =
+              new DeductionItem(rule.getLhs(), String.valueOf(i), "1");
+            consequence.setTree(new Tree(rule));
+            scan.addConsequence(consequence);
             scan.setName("scan " + rule.toString());
             schema.addAxiom(scan);
           }
@@ -297,8 +313,10 @@ public class CfgToDeductionRulesConverter {
    * Like CYK parsing, but with an additional deduction rule for chain rules,
    * hence grammar needs only to be in Canonical Two Form. Source: Giogio Satta,
    * ESSLLI 2013
+   * @throws ParseException
    */
-  public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w)
+    throws ParseException {
     if (!cfg.isInCanonicalTwoForm()) {
       System.out.println("Grammar has to be in Canonical Two Form.");
       return null;
@@ -312,8 +330,10 @@ public class CfgToDeductionRulesConverter {
           for (int i = 0; i < wSplit.length; i++) {
             if (wSplit[i].equals(rule.getRhs()[0])) {
               StaticDeductionRule scan = new StaticDeductionRule();
-              scan.addConsequence(
-                new DeductionItem(rule.getLhs(), String.valueOf(i), "1"));
+              Item consequence =
+                new DeductionItem(rule.getLhs(), String.valueOf(i), "1");
+              consequence.setTree(new Tree(rule));
+              scan.addConsequence(consequence);
               scan.setName("scan " + rule.toString());
               schema.addAxiom(scan);
             }

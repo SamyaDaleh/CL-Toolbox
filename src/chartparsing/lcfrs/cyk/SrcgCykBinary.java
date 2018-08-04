@@ -1,11 +1,15 @@
 package chartparsing.lcfrs.cyk;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
+import chartparsing.Item;
 import chartparsing.lcfrs.SrcgDeductionUtils;
+import common.TreeUtils;
 import common.lcfrs.Clause;
+import common.tag.Tree;
 
 /**
  * Similar to the binary complete rule in CYK for CFG. If there is a clause and
@@ -24,8 +28,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
     this.wSplit = wSplit;
   }
 
-  @SuppressWarnings("unchecked") protected void
-    calculateConsequences(String[] itemForm2, String[] itemForm1) {
+  @SuppressWarnings("unchecked") protected void calculateConsequences(
+    String[] itemForm2, String[] itemForm1) throws ParseException {
     String nt1 = itemForm1[0];
     String nt2 = itemForm2[0];
     if (nt2.equals(clause.getRhs().get(0).getNonterminal())
@@ -70,8 +74,22 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
       if (looksGood && overallRanges.size() > 0) {
         List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
           .getRangesForArguments(overallRanges, clause.getLhs());
-        consequences
-          .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVector));
+        Item consequence =
+          new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
+        Tree derivedTree = TreeUtils.getTreeforSrcgClause(clause);
+       /* if (itemForm1.equals(antecedences.get(0).getItemform())) {
+          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+            antecedences.get(0).getTree());
+          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+            antecedences.get(1).getTree());
+        } else {
+          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+            antecedences.get(1).getTree());
+          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+            antecedences.get(0).getTree());
+        } //*/
+        consequence.setTree(derivedTree);
+        consequences.add(consequence);
         this.name = "complete " + clause.toString();
       }
     }

@@ -35,8 +35,10 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
       if (lInt < wSplit.length && pos.equals("la") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node).getLabel()
           .equals(wSplit[lInt])) {
-        consequences.add(new DeductionItem(treeName, node, "ra", iGamma, i, j,
-          k, String.valueOf(lInt + 1), "0"));
+        Item consequence = new DeductionItem(treeName, node, "ra", iGamma, i, j,
+          k, String.valueOf(lInt + 1), "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

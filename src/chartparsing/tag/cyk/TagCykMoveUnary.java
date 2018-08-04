@@ -12,8 +12,10 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
-  /** Constructor needs the grammar to retrieve information about the
-   * antecedences. */
+  /**
+   * Constructor needs the grammar to retrieve information about the
+   * antecedences.
+   */
   public TagCykMoveUnary(Tag tag) {
     this.tag = tag;
     this.name = "move-unary";
@@ -35,8 +37,10 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
           .getGornAddressOfPotentialRightSibling();
         if (tag.getTree(treeName).getNodeByGornAdress(nodeSib) == null) {
           String parentNode = node.substring(0, node.length() - 3) + "⊥";
-          consequences
-            .add(new DeductionItem(treeName, parentNode, i, f1, f2, j));
+          Item consequence =
+            new DeductionItem(treeName, parentNode, i, f1, f2, j);
+          consequence.setTree(antecedences.get(0).getTree());
+          consequences.add(consequence);
         }
       }
     }

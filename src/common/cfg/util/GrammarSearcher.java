@@ -279,8 +279,9 @@ public class GrammarSearcher {
   /**
    * Return the fitness score of the passed grammar according to the current
    * search criteria.
+   * @throws ParseException
    */
-  private static float evaluateGrammar(Cfg cfg) {
+  private static float evaluateGrammar(Cfg cfg) throws ParseException {
     float actualScore = 0;
     float maxScore = 0;
     int tdLength = 0;
@@ -323,7 +324,8 @@ public class GrammarSearcher {
     return actualScore;
   }
 
-  private static float propertyCfgTopdownParseable(Cfg cfg, float actualScore) {
+  private static float propertyCfgTopdownParseable(Cfg cfg, float actualScore)
+    throws ParseException {
     schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-topdown");
     if (deduction.doParse(schema, false)) {
       actualScore++;
@@ -337,7 +339,7 @@ public class GrammarSearcher {
    * } return actualScore; } // */
 
   private static float propertyCfgLeftCornerParseable(Cfg cfg,
-    float actualScore) {
+    float actualScore) throws ParseException {
     schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-leftcorner");
     if (deduction.doParse(schema, false)) {
       actualScore++;

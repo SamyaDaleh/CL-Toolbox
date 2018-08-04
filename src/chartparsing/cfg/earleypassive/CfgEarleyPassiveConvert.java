@@ -23,15 +23,16 @@ public class CfgEarleyPassiveConvert extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemform();
       if (itemForm[0].endsWith("•")) {
         String lhsSym = itemForm[0].split(" ")[0];
-        consequences.add(new DeductionItem(lhsSym, itemForm[1], itemForm[2]));
+        Item consequence = new DeductionItem(lhsSym, itemForm[1], itemForm[2]);
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;
   }
 
   @Override public String toString() {
-    return "[B → γ•, j, k]\n" + "_________\n"
-      + "[B, j, k]";
+    return "[B → γ•, j, k]\n" + "_________\n" + "[B, j, k]";
   }
 
 }

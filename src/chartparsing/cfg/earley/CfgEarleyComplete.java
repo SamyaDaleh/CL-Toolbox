@@ -2,6 +2,7 @@ package chartparsing.cfg.earley;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.ArrayUtils;
 
 /**
@@ -40,8 +41,10 @@ public class CfgEarleyComplete
               + " " + stackSplit2[0] + " •" + ArrayUtils
                 .getSubSequenceAsString(stackSplit1, l + 1, stackSplit1.length);
           }
-          consequences.add(new DeductionItem(newStack, String.valueOf(i1),
-            String.valueOf(k2)));
+          Item consequence =
+            new DeductionItem(newStack, String.valueOf(i1), String.valueOf(k2));
+          consequence.setTree(antecedences.get(0).getTree());
+          consequences.add(consequence);
           break;
         }
       }

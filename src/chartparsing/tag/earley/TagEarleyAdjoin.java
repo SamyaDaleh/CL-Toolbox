@@ -2,7 +2,9 @@ package chartparsing.tag.earley;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 
 /**
  * Combines an auxiliary tree with another tree to get a new item in which has
@@ -42,8 +44,18 @@ public class TagEarleyAdjoin
     if (adj1.equals("0") && adj2.equals("0")) {
       if (adjoinable1 && node1.equals("") && pos1.equals("ra")
         && pos2.equals("rb") && j1.equals(j2)) {
-        consequences
-          .add(new DeductionItem(treeName2, node2, "rb", i, g, h, l, "1"));
+        Item consequence =
+          new DeductionItem(treeName2, node2, "rb", i, g, h, l, "1");
+        Tree derivedTree;
+        if (antecedences.get(0).getItemform().equals(itemForm1)) {
+          derivedTree = antecedences.get(1).getTree().adjoin(node2,
+            antecedences.get(0).getTree());
+        } else {
+          derivedTree = antecedences.get(0).getTree().adjoin(node2,
+            antecedences.get(1).getTree());
+        }
+        consequence.setTree(derivedTree);
+        consequences.add(consequence);
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name =
           "adjoin " + treeName2 + "[" + node2name + "," + treeName1 + "]";

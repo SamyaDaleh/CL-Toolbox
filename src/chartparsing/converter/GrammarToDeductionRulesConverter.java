@@ -1,5 +1,7 @@
 package chartparsing.converter;
 
+import java.text.ParseException;
+
 import chartparsing.ParsingSchema;
 import common.cfg.Cfg;
 import common.cfg.Pcfg;
@@ -10,8 +12,10 @@ public class GrammarToDeductionRulesConverter {
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
+   * @throws ParseException
    */
-  public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm) {
+  public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm)
+    throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToDeductionRulesConverter.cfgToTopDownRules(cfg, w);
@@ -60,8 +64,10 @@ public class GrammarToDeductionRulesConverter {
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
+   * @throws ParseException
    */
-  public ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm) {
+  public ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm)
+    throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
       return LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcg, w);

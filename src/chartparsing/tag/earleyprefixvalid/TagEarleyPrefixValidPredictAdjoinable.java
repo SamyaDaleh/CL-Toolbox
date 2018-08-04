@@ -35,8 +35,10 @@ public class TagEarleyPrefixValidPredictAdjoinable
       if (pos.equals("la") && adj.equals("0") && iGamma.equals("~")
         && i.equals("~") && j.equals("~") && k.equals("~") && !l.equals("~")
         && tag.isAdjoinable(auxTreeName, treeName, node)) {
-        consequences.add(
-          new DeductionItem(auxTreeName, "", "la", l, l, "-", "-", l, "0"));
+        Item consequence =
+          new DeductionItem(auxTreeName, "", "la", l, l, "-", "-", l, "0");
+        consequence.setTree(tag.getAuxiliaryTree(auxTreeName));
+        consequences.add(consequence);
       }
     }
     return consequences;

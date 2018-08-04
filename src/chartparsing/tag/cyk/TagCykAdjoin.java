@@ -2,7 +2,9 @@ package chartparsing.tag.cyk;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 
 /** Adjoin an auxiliary tree into an appropriate node in any other tree. */
 public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
@@ -34,8 +36,20 @@ public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
       && tag.isAdjoinable(treeName1, treeName2,
         node2.substring(0, node2.length() - 1))
       && node1.equals("⊤") && node2.endsWith("⊥")) {
-      consequences.add(new DeductionItem(treeName2,
-        node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j));
+      Item consequence = new DeductionItem(treeName2,
+        node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j);
+      Tree derivatedTree;
+      if (itemForm1.equals(antecedences.get(0).getItemform())) {
+        derivatedTree = antecedences.get(1).getTree().adjoin(
+          node2.substring(0, node2.length() - 1),
+          antecedences.get(0).getTree());
+      } else {
+        derivatedTree = antecedences.get(0).getTree().adjoin(
+          node2.substring(0, node2.length() - 1),
+          antecedences.get(1).getTree());
+      }
+      consequence.setTree(derivatedTree);
+      consequences.add(consequence);
       String node2Name =
         (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
       this.name =

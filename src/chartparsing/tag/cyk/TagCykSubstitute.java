@@ -7,8 +7,10 @@ import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
-/** Tries to substitute a given initial tree into the node of the tree it
- * remembers. */
+/**
+ * Tries to substitute a given initial tree into the node of the tree it
+ * remembers.
+ */
 public class TagCykSubstitute extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
@@ -32,8 +34,11 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
       String i = itemForm[2];
       String j = itemForm[5];
       if (tag.getInitialTree(treeName) != null && node.equals("⊤")) {
-        consequences.add(new DeductionItem(this.treeName, this.nodeGorn + "⊤",
-          i, "-", "-", j));
+        Item consequence =
+          new DeductionItem(this.treeName, this.nodeGorn + "⊤", i, "-", "-", j);
+        consequence.setTree(tag.getTree(this.treeName).substitute(this.nodeGorn,
+          antecedences.get(0).getTree()));
+        consequences.add(consequence);
         this.name = "substitute " + this.treeName + "[" + this.nodeGorn + ","
           + treeName + "]";
       }

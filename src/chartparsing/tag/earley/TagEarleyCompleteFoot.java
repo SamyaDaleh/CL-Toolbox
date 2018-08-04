@@ -2,7 +2,9 @@ package chartparsing.tag.earley;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 
 /**
  * If there is an auxiliary tree and another tree where the aux tree can adjoin
@@ -44,8 +46,16 @@ public class TagEarleyCompleteFoot
         && i21.equals(i22) && f12.equals("-") && f22.equals("-")
         && tag.getAuxiliaryTree(treeName2).getFoot().getGornAddress()
           .equals(node2)) {
-        consequences
-          .add(new DeductionItem(treeName2, node2, "rb", i1, i1, l, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName2, node2, "rb", i1, i1, l, l, "0");
+        Tree derivedTree;
+        if (itemForm1.equals(antecedences.get(0).getItemform())) {
+          derivedTree = antecedences.get(1).getTree();
+        } else {
+          derivedTree = antecedences.get(0).getTree();
+        }
+        consequence.setTree(derivedTree);
+        consequences.add(consequence);
       }
     }
   }

@@ -28,8 +28,10 @@ public class TagEarleyPrefixValidConvertLa2
       String adj = itemForm[8];
       if (pos.equals("la") && adj.equals("0") && !iGamma.equals("~")
         && !i.equals("~") && !j.equals("~") && !k.equals("~")) {
-        consequences.add(
-          new DeductionItem(treeName, node, "la", "~", "~", "~", "~", l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, node, "la", "~", "~", "~", "~", l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

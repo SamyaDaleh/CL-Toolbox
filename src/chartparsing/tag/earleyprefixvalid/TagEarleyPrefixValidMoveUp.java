@@ -36,8 +36,10 @@ public class TagEarleyPrefixValidMoveUp extends AbstractDynamicDeductionRule {
         && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
         String parentGorn = tag.getTree(treeName).getNodeByGornAdress(node)
           .getGornAddressOfParent();
-        consequences.add(
-          new DeductionItem(treeName, parentGorn, "rb", "~", i, j, k, l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, parentGorn, "rb", "~", i, j, k, l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

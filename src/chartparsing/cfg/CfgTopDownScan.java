@@ -26,9 +26,11 @@ public class CfgTopDownScan extends AbstractDynamicDeductionRule {
       String[] stackSplit = stack.split(" ");
       int i = Integer.parseInt(itemForm[1]);
       if (i < wsplit.length && stackSplit[0].equals(wsplit[i])) {
-        consequences.add(new DeductionItem(
+        Item consequence = new DeductionItem(
           ArrayUtils.getSubSequenceAsString(stackSplit, 1, stackSplit.length),
-          String.valueOf(i + 1)));
+          String.valueOf(i + 1));
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

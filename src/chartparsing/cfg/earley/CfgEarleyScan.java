@@ -39,8 +39,10 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
               .append(ArrayUtils.getSubSequenceAsString(stackSplit, k + 1,
                 stackSplit.length));
           }
-          consequences.add(new DeductionItem(newStack.toString(),
-            String.valueOf(i), String.valueOf(j + 1)));
+          Item consequence = new DeductionItem(newStack.toString(),
+            String.valueOf(i), String.valueOf(j + 1));
+          consequence.setTree(antecedences.get(0).getTree());
+          consequences.add(consequence);
         }
       }
     }

@@ -2,7 +2,9 @@ package chartparsing.tag.earleyprefixvalid;
 
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 
 public class TagEarleyPrefixValidPredictAdjoined
   extends AbstractDynamicDecutionRuleTwoAntecedences {
@@ -39,9 +41,17 @@ public class TagEarleyPrefixValidPredictAdjoined
         .getGornAddress().equals(node1);
       if (isFootNode && pos1.equals("la") && pos2.equals("la") && j1.equals("-")
         && k1.equals("-") && iGamma1.equals(k2) && j2.equals("~")
-        && g.equals("~") && h.equals("~")) {
-        consequences.add(new DeductionItem(treeName2, node2, "lb", iGamma2, m,
-          "-", "-", m, "0"));
+        && g.equals("~") && h.equals("~") && !iGamma2.equals("~")) {
+        Item consequence = new DeductionItem(treeName2, node2, "lb", iGamma2, m,
+          "-", "-", m, "0");
+        Tree derivedTree;
+        if (antecedences.get(0).getItemform().equals(itemForm1)) {
+          derivedTree = antecedences.get(1).getTree();
+        } else {
+          derivedTree = antecedences.get(0).getTree();
+        }
+        consequence.setTree(derivedTree);
+        consequences.add(consequence);
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name = "predict adjoined " + treeName2 + "[" + node2name + ","
           + treeName1 + "]";

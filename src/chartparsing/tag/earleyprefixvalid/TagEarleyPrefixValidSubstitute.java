@@ -1,8 +1,13 @@
 package chartparsing.tag.earleyprefixvalid;
 
+import java.text.ParseException;
+
 import chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import chartparsing.DeductionItem;
+import chartparsing.Item;
+import common.TreeUtils;
 import common.tag.Tag;
+import common.tag.Tree;
 import common.tag.Vertex;
 
 public class TagEarleyPrefixValidSubstitute
@@ -16,7 +21,8 @@ public class TagEarleyPrefixValidSubstitute
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
+    throws ParseException {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
     String pos1 = itemForm1[2];
@@ -43,8 +49,18 @@ public class TagEarleyPrefixValidSubstitute
       && node2.equals("") && tag.isSubstitutionNode(p, treeName1)
       && p.getLabel().equals(tag.getInitialTree(treeName2).getRoot().getLabel())
       && pos2.equals("ra") && adj2.equals("0")) {
-      consequences.add(
-        new DeductionItem(treeName1, node1, "rb", "~", l1, "-", "-", l2, "0"));
+      Item consequence =
+        new DeductionItem(treeName1, node1, "rb", "~", l1, "-", "-", l2, "0");
+      Tree derivedTree;
+      if (itemForm1.equals(antecedences.get(0).getItemform())) {
+        derivedTree = TreeUtils.performLeftmostSubstitution(
+          antecedences.get(0).getTree(), antecedences.get(1).getTree());
+      } else {
+        derivedTree = TreeUtils.performLeftmostSubstitution(
+          antecedences.get(1).getTree(), antecedences.get(0).getTree());
+      }
+      consequence.setTree(derivedTree);
+      consequences.add(consequence);
       this.name =
         "substitute " + treeName1 + "[" + node1 + "," + treeName2 + "]";
     }

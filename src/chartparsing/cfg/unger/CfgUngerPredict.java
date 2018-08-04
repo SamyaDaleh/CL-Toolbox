@@ -1,13 +1,16 @@
 package chartparsing.cfg.unger;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
+import common.TreeUtils;
 import common.cfg.Cfg;
 import common.cfg.CfgProductionRule;
+import common.tag.Tree;
 
 /** Predict all possible separations of the rhs of a rule. */
 public class CfgUngerPredict extends AbstractDynamicDeductionRule {
@@ -22,7 +25,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
     this.cfg = cfg;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<Item> getConsequences() throws ParseException {
     if (antecedences.size() == this.antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String from = itemForm[1];
@@ -30,8 +33,18 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
       int fromInt = Integer.parseInt(from);
       int toInt = Integer.parseInt(to);
       if (itemForm[0].substring(1).equals(rule.getLhs())) {
+        Tree derivedTree = antecedences.get(0).getTree();
+        if (derivedTree == null) {
+          derivedTree = new Tree(rule);
+        } else {
+          derivedTree =
+            TreeUtils.performLeftmostSubstitution(derivedTree, new Tree(rule));
+        }
         if (rule.getRhs().length == 1) {
-          consequences.add(new DeductionItem("•" + rule.getRhs()[0], from, to));
+          Item consequence =
+            new DeductionItem("•" + rule.getRhs()[0], from, to);
+          consequence.setTree(derivedTree);
+          consequences.add(consequence);
         } else {
           for (ArrayList<Integer> sequence : getAllSeparations(fromInt, toInt,
             rule.getRhs().length - 1)) {
@@ -54,16 +67,22 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
               && toInt - sequence.get(sequence.size() - 1) > 1) {
               continue;
             }
-            consequences.add(new DeductionItem("•" + rule.getRhs()[0], from,
-              String.valueOf(sequence.get(0))));
+            Item consequence = new DeductionItem("•" + rule.getRhs()[0], from,
+              String.valueOf(sequence.get(0)));
+            consequence.setTree(derivedTree);
+            consequences.add(consequence);
             for (int i = 1; i < sequence.size(); i++) {
-              consequences.add(new DeductionItem("•" + rule.getRhs()[i],
+              consequence = new DeductionItem("•" + rule.getRhs()[i],
                 String.valueOf(sequence.get(i - 1)),
-                String.valueOf(sequence.get(i))));
+                String.valueOf(sequence.get(i)));
+              consequence.setTree(derivedTree);
+              consequences.add(consequence);
             }
-            consequences.add(
+            consequence =
               new DeductionItem("•" + rule.getRhs()[rule.getRhs().length - 1],
-                String.valueOf(sequence.get(sequence.size() - 1)), to));
+                String.valueOf(sequence.get(sequence.size() - 1)), to);
+            consequence.setTree(derivedTree);
+            consequences.add(consequence);
           }
         }
       }
@@ -71,8 +90,10 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
     return consequences;
   }
 
-  /** Returns all sequences of length integers between (exclusive) from and to,
-   * where every integer is greater than the previous one. */
+  /**
+   * Returns all sequences of length integers between (exclusive) from and to,
+   * where every integer is greater than the previous one.
+   */
   private ArrayList<ArrayList<Integer>> getAllSeparations(int from, int to,
     int length) {
     if (length == 1) {

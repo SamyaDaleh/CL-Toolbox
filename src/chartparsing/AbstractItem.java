@@ -2,11 +2,13 @@ package chartparsing;
 
 import chartparsing.Item;
 import common.ArrayUtils;
+import common.tag.Tree;
 
 /** Abstract class that holds the functions commonly used by all items. */
 public abstract class AbstractItem implements Item {
 
   protected String[] itemForm;
+  protected Tree tree;
 
   @Override public String[] getItemform() {
     return this.itemForm;
@@ -31,6 +33,14 @@ public abstract class AbstractItem implements Item {
 
   @Override public String toString() {
     return ArrayUtils.toString(this.itemForm);
+  }
+
+  @Override public Tree getTree() {
+    return this.tree;
+  }
+
+  @Override public void setTree(Tree tree) {
+    this.tree = tree;
   }
 
 }

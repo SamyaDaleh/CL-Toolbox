@@ -37,7 +37,9 @@ public class TagCykNullAdjoin extends AbstractDynamicDeductionRule {
       String j = itemForm[5];
       if (node.endsWith("⊥") && !obligatoryAdjoin) {
         String newNode = node.substring(0, node.length() - 1) + "⊤";
-        consequences.add(new DeductionItem(treeName, newNode, i, f1, f2, j));
+        Item consequence = new DeductionItem(treeName, newNode, i, f1, f2, j);
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

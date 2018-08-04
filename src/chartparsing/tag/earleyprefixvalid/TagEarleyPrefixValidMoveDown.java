@@ -32,8 +32,10 @@ public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule {
       if (pos.equals("lb") && !iGamma.equals("~") && !i.equals("~")
         && !j.equals("~") && !k.equals("~") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
-        consequences.add(new DeductionItem(treeName, node + ".1", "la", iGamma,
-          i, j, k, l, "0"));
+        Item consequence = new DeductionItem(treeName, node + ".1", "la",
+          iGamma, i, j, k, l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;

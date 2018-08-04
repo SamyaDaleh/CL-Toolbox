@@ -7,15 +7,19 @@ import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
 
-/** If the dot is at a node where adjunction is possible, predict the auxiliary
- * tree that can be adjoined into that node. */
+/**
+ * If the dot is at a node where adjunction is possible, predict the auxiliary
+ * tree that can be adjoined into that node.
+ */
 public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
 
   private final String auxTreeName;
   private final Tag tag;
 
-  /** Constructor takes an auxiliary tree for the items the rule shall derive,
-   * also needs the grammar to retrieve information about the antecedence. */
+  /**
+   * Constructor takes an auxiliary tree for the items the rule shall derive,
+   * also needs the grammar to retrieve information about the antecedence.
+   */
   public TagEarleyPredictAdjoinable(String auxTreeName, Tag tag) {
     this.auxTreeName = auxTreeName;
     this.tag = tag;
@@ -31,8 +35,10 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
       String l = itemForm[6];
       boolean adjoinable = tag.isAdjoinable(auxTreeName, treeName, node);
       if (adjoinable && itemForm[2].equals("la") && itemForm[7].equals("0")) {
-        consequences
-          .add(new DeductionItem(auxTreeName, "", "la", l, "-", "-", l, "0"));
+        Item consequence =
+          new DeductionItem(auxTreeName, "", "la", l, "-", "-", l, "0");
+        consequence.setTree(tag.getAuxiliaryTree(auxTreeName));
+        consequences.add(consequence);
       }
     }
     return consequences;

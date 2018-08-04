@@ -1,14 +1,19 @@
 package chartparsing.cfg.cyk;
 
+import java.text.ParseException;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
+import common.TreeUtils;
 import common.cfg.CfgProductionRule;
+import common.tag.Tree;
 
-/** If the item matches the rhs of a chain rule, get a new item that represents
- * the lhs. */
+/**
+ * If the item matches the rhs of a chain rule, get a new item that represents
+ * the lhs.
+ */
 public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
 
   private final CfgProductionRule rule;
@@ -19,7 +24,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<Item> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemform();
       String nt1 = itemForm1[0];
@@ -29,8 +34,12 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
       int j1int = Integer.parseInt(j1);
 
       if (nt1.equals(rule.getRhs()[0])) {
-        this.consequences.add(new DeductionItem(rule.getLhs(),
-          String.valueOf(i1int), String.valueOf(j1int)));
+        Item consequence = new DeductionItem(rule.getLhs(),
+          String.valueOf(i1int), String.valueOf(j1int));
+        Tree derivedTree = TreeUtils.performLeftmostSubstitution(new Tree(rule),
+          antecedences.get(0).getTree());
+        consequence.setTree(derivedTree);
+        this.consequences.add(consequence);
       }
     }
     return this.consequences;

@@ -14,7 +14,7 @@ import common.TestGrammarLibrary;
 
 public class DeductionTest {
 
-  @Test public void testCfgTopdown() {
+  @Test public void testCfgTopdown() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToTopDownRules(TestGrammarLibrary.anBnCfg(), w);
@@ -23,7 +23,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgShiftreduce() {
+  @Test public void testCfgShiftreduce() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToShiftReduceRules(TestGrammarLibrary.anBnCfg(), w);
@@ -32,7 +32,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgEarley() {
+  @Test public void testCfgEarley() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToEarleyRules(TestGrammarLibrary.anBnCfg(), w);
@@ -41,7 +41,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgLeftcorner() {
+  @Test public void testCfgLeftcorner() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToLeftCornerRules(TestGrammarLibrary.anBnCfg(), w);
@@ -50,7 +50,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgLeftcornerBreak() {
+  @Test public void testCfgLeftcornerBreak() throws ParseException {
     String w = "a b c d e f g h i";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToLeftCornerRules(TestGrammarLibrary.leftCornerBreak(), w);
@@ -59,7 +59,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgLeftcornerChart() {
+  @Test public void testCfgLeftcornerChart() throws ParseException {
     String w = "a b c b a";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToLeftCornerChartRules(TestGrammarLibrary.wwRCfg(), w);
@@ -68,7 +68,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgCyk() {
+  @Test public void testCfgCyk() throws ParseException {
 
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
@@ -78,7 +78,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgCykExtended() {
+  @Test public void testCfgCykExtended() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToCykExtendedRules(TestGrammarLibrary.anbnC2fCfg(), w);
@@ -111,7 +111,7 @@ public class DeductionTest {
   @Test public void testTagEarleyPrefixValid() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToEarleyPrefixValidRules(TestGrammarLibrary.anCBTag(), w2);
+      .tagToEarleyRules(TestGrammarLibrary.anCBTag(), w2);
     Deduction deduction = new Deduction();
     try {
       assertTrue(deduction.doParse(schema, false));
@@ -174,7 +174,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgUnger() {
+  @Test public void testCfgUnger() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToUngerRules(TestGrammarLibrary.anBnCfg(), w);
@@ -183,7 +183,7 @@ public class DeductionTest {
     deduction.printTrace();
   }
 
-  @Test public void testCfgCykGeneral() {
+  @Test public void testCfgCykGeneral() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToDeductionRulesConverter
       .cfgToCykGeneralRules(TestGrammarLibrary.anBnCfg(), w);

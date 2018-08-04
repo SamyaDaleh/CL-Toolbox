@@ -1,10 +1,12 @@
 package chartparsing.tag.earley;
 
+import java.text.ParseException;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
+import common.TreeUtils;
 import common.tag.Tag;
 
 /** If a potential initial tree is complete, substitute it if possible. */
@@ -26,7 +28,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<Item> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -37,15 +39,17 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
       String f2 = itemForm[5];
       String j = itemForm[6];
       String adj = itemForm[7];
-      String iniTreeRootLabel =
-        tag.getTree(treeName).getRoot().getLabel();
+      String iniTreeRootLabel = tag.getTree(treeName).getRoot().getLabel();
       String substNodeLabel =
         tag.getTree(outTreeName).getNodeByGornAdress(outNode).getLabel();
       if (tag.getInitialTree(treeName) != null && node.equals("")
         && f1.equals("-") && f2.equals("-") && adj.equals("0")
         && pos.equals("ra") && iniTreeRootLabel.equals(substNodeLabel)) {
-        consequences.add(
-          new DeductionItem(outTreeName, outNode, "rb", i, "-", "-", j, "0"));
+        Item consequence =
+          new DeductionItem(outTreeName, outNode, "rb", i, "-", "-", j, "0");
+        consequence.setTree(TreeUtils.performLeftmostSubstitution(
+          tag.getTree(outTreeName), antecedences.get(0).getTree()));
+        consequences.add(consequence);
         // imagine a tree with 1 node where you would substitute into the root
         // ...
         String outNodeName = outNode.length() == 0 ? "ε" : outNode;

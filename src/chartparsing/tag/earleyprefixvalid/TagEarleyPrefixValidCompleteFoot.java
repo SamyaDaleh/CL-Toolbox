@@ -6,6 +6,7 @@ import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.tag.Tag;
+import common.tag.Tree;
 import common.tag.Vertex;
 
 public class TagEarleyPrefixValidCompleteFoot
@@ -73,8 +74,18 @@ public class TagEarleyPrefixValidCompleteFoot
         && node1.equals(node3) && pos3.equals("la") && iGamma3.equals("~")
         && i3.equals("~") && j3.equals("~") && k3.equals("~")
         && adj3.equals("0") && tag.isAdjoinable(treeName2, treeName1, node1)) {
-        consequences.add(
-          new DeductionItem(treeName2, node2, "rb", "~", i2, i1, l1, l1, "0"));
+        Item consequence =
+          new DeductionItem(treeName2, node2, "rb", "~", i1, i1, l1, l1, "0");
+        Tree derivedTree;
+        if (itemForm2.equals(antecedences.get(0).getItemform())) {
+          derivedTree = antecedences.get(0).getTree();
+        } else if (itemForm2.equals(antecedences.get(1).getItemform())) {
+          derivedTree = antecedences.get(1).getTree();
+        } else {
+          derivedTree = antecedences.get(2).getTree();
+        }
+        consequence.setTree(derivedTree);
+        consequences.add(consequence);
       }
     }
 

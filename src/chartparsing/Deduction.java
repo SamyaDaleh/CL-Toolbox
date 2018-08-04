@@ -1,40 +1,60 @@
 package chartparsing;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** A deduction system that derives consequences from antecendence items and
+import common.tag.Tree;
+
+/**
+ * A deduction system that derives consequences from antecendence items and
  * tries to generate a goal item. Based on the slides from Laura Kallmeyer about
  * Parsing as Deduction
- * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf */
+ * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
+ */
 public class Deduction {
   /** All items derived in the process. */
   private List<Item> chart;
   /** Items waiting to be used for further derivation. */
   private List<Item> agenda;
-  /** List of the same length of chart, elements at same indexes belong to each
+  /**
+   * List of the same length of chart, elements at same indexes belong to each
    * other. Contains lists of lists of backpointers. One item can be derived in
-   * different ways from different antecedence items. */
+   * different ways from different antecedence items.
+   */
   private ArrayList<ArrayList<ArrayList<Integer>>> deductedFrom;
-  /** Indexes correspond to entries of chart and deductedfrom. Collects the
-   * names of the rules that were applied to retrieve new items. */
+  /**
+   * Indexes correspond to entries of chart and deductedfrom. Collects the names
+   * of the rules that were applied to retrieve new items.
+   */
   private ArrayList<ArrayList<String>> appliedRule;
   /** When true print only items that lead to a goal. */
   private boolean successfulTrace = false;
   /** Markers if items lead to goal */
   private boolean[] usefulItem;
-  /** Specify if new items shall replace same existing items in the chart. If
+  /**
+   * Specify if new items shall replace same existing items in the chart. If
    * null, don't replace. If h, replace by items with higher value (like
    * probabilities). If l, replace by items with lower value (like weights). If
    * - don't replace and add new backpointers to the list, commonly used for
-   * items without value. */
+   * items without value.
+   */
   private char replace = '-';
+  /**
+   * When checking the goal items this stores the trees retrieved from them,
+   * representing the result of the syntactic analysis..
+   */
+  private List<Tree> derivedTrees;
 
-  /** Takes a parsing schema, generates items from axiom rules and applies rules
+  /**
+   * Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
-   * derived. */
-  public boolean doParse(ParsingSchema schema, boolean success) {
+   * derived.
+   * @throws ParseException
+   */
+  public boolean doParse(ParsingSchema schema, boolean success)
+    throws ParseException {
     successfulTrace = success;
     chart = new ArrayList<Item>();
     agenda = new ArrayList<Item>();
@@ -54,16 +74,20 @@ public class Deduction {
     }
     boolean goalfound = false;
     usefulItem = new boolean[chart.size()];
+    derivedTrees = new ArrayList<Tree>();
     for (Item goal : schema.getGoals()) {
-      if (checkForGoal(goal) >= 0)
+      if (checkForGoal(goal) >= 0) {
         goalfound = true;
+      }
     }
     return goalfound;
   }
 
-  /** Prints the trace to the command line. If only the useful items shall be
+  /**
+   * Prints the trace to the command line. If only the useful items shall be
    * retrieved, it checks all items if they lead to a goal. Returns the printed
-   * chart data as string array with columns: Id, Item, Rules, Backpointers. */
+   * chart data as string array with columns: Id, Item, Rules, Backpointers.
+   */
   public String[][] printTrace() {
     markUsefulItems();
     ArrayList<String[]> chartData = new ArrayList<String[]>();
@@ -139,20 +163,28 @@ public class Deduction {
     return pointerList;
   }
 
-  /** Takes a goal item and compares it with all items in the chart. Returns its
-   * index if one was found. */
+  /**
+   * Takes a goal item and compares it with all items in the chart. Returns its
+   * index if one was found.
+   */
   private int checkForGoal(Item goal) {
     for (int i = 0; i < chart.size(); i++) {
       if (chart.get(i).equals(goal)) {
         usefulItem[i] = true;
+        Tree tree = chart.get(i).getTree();
+        if (tree != null) {
+          derivedTrees.add(tree);
+        }
         return i;
       }
     }
     return -1;
   }
 
-  /** Applies an axiom rule, that is a rule without antecedence items and adds
-   * the consequence items to chart and agenda. */
+  /**
+   * Applies an axiom rule, that is a rule without antecedence items and adds
+   * the consequence items to chart and agenda.
+   */
   @SuppressWarnings("serial") private void
     applyAxiomRule(StaticDeductionRule rule) {
     for (Item item : rule.consequences) {
@@ -174,11 +206,15 @@ public class Deduction {
     }
   }
 
-  /** Tries to apply a deduction rule by using the passed item as one of the
+  /**
+   * Tries to apply a deduction rule by using the passed item as one of the
    * antecendence items. Looks through the chart to find the other needed items
    * and adds new consequence items to chart and agenda if all antecedences were
-   * found. */
-  private void applyRule(Item item, DynamicDeductionRule rule) {
+   * found.
+   * @throws ParseException
+   */
+  private void applyRule(Item item, DynamicDeductionRule rule)
+    throws ParseException {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() < itemsNeeded) {
       return;
@@ -197,8 +233,10 @@ public class Deduction {
     }
   }
 
-  /** Returns itemsNeeded items from the chart. All items appear only once per
-   * list, no list is the permutation of another one. */
+  /**
+   * Returns itemsNeeded items from the chart. All items appear only once per
+   * list, no list is the permutation of another one.
+   */
   private List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList,
     int i, int itemsNeeded) {
     if (itemsNeeded == 0) {
@@ -270,9 +308,10 @@ public class Deduction {
     }
   }
 
-  /** Pretty-prints rows of the parsing process by filling up all columns up to
-   * a specific length with spaces. Returns the data it prints as string
-   * array. */
+  /**
+   * Pretty-prints rows of the parsing process by filling up all columns up to a
+   * specific length with spaces. Returns the data it prints as string array.
+   */
   private static String[] prettyPrint(int i, String item,
     ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers,
     int column1, int column2, int column3) {
@@ -297,8 +336,10 @@ public class Deduction {
       backpointersRep};
   }
 
-  /** Returns a string representation of a list of rules in a human friendly
-   * form. */
+  /**
+   * Returns a string representation of a list of rules in a human friendly
+   * form.
+   */
   private static String rulesToString(ArrayList<String> rules) {
     if (rules.size() == 0)
       return "";
@@ -311,8 +352,10 @@ public class Deduction {
     return builder.toString();
   }
 
-  /** Returns a string representation of a list of lists of backpointers in a
-   * human friendly form. */
+  /**
+   * Returns a string representation of a list of lists of backpointers in a
+   * human friendly form.
+   */
   private static String
     backpointersToString(ArrayList<ArrayList<Integer>> backpointers) {
     if (backpointers.size() == 0)
@@ -346,5 +389,9 @@ public class Deduction {
 
   public void setReplace(char replace) {
     this.replace = replace;
+  }
+
+  public List<Tree> getDerivedTrees() {
+    return this.derivedTrees;
   }
 }

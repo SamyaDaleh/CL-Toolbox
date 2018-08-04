@@ -1,15 +1,20 @@
 package chartparsing.cfg.earley;
 
+import java.text.ParseException;
 import java.util.List;
 
 import chartparsing.AbstractDynamicDeductionRule;
 import chartparsing.DeductionItem;
 import chartparsing.Item;
 import common.ArrayUtils;
+import common.TreeUtils;
 import common.cfg.CfgProductionRule;
+import common.tag.Tree;
 
-/** If the next symbol after the dot is a nonterminal, for a rule with that
- * symbol as lhs predict a new item. */
+/**
+ * If the next symbol after the dot is a nonterminal, for a rule with that
+ * symbol as lhs predict a new item.
+ */
 public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
   private final CfgProductionRule rule;
@@ -20,7 +25,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<Item> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String stack = itemForm[0];
@@ -37,8 +42,17 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
             newStack =
               rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
           }
-          consequences.add(
-            new DeductionItem(newStack, String.valueOf(j), String.valueOf(j)));
+          Item consequence =
+            new DeductionItem(newStack, String.valueOf(j), String.valueOf(j));
+          Tree derivedTree = antecedences.get(0).getTree();
+          if (derivedTree == null) {
+            derivedTree = new Tree(rule);
+          } else {
+            derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
+              new Tree(rule));
+          }
+          consequence.setTree(derivedTree);
+          consequences.add(consequence);
           break;
         }
       }

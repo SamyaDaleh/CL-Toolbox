@@ -12,8 +12,10 @@ public class TagEarleyPredictNoAdj extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
-  /** Constructor needs the grammar to retrieve information about the
-   * antecedence. */
+  /**
+   * Constructor needs the grammar to retrieve information about the
+   * antecedence.
+   */
   public TagEarleyPredictNoAdj(Tag tag) {
     this.tag = tag;
     this.name = "predict no adjoin";
@@ -29,8 +31,10 @@ public class TagEarleyPredictNoAdj extends AbstractDynamicDeductionRule {
       boolean obligatoryAdjoin = tag.getTree(treeName).isInOA(node);
       if (!obligatoryAdjoin && itemForm[2].equals("la")
         && itemForm[7].equals("0")) {
-        consequences
-          .add(new DeductionItem(treeName, node, "lb", l, "-", "-", l, "0"));
+        Item consequence =
+          new DeductionItem(treeName, node, "lb", l, "-", "-", l, "0");
+        consequence.setTree(antecedences.get(0).getTree());
+        consequences.add(consequence);
       }
     }
     return consequences;
