@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox prefHeight="517.0" prefWidth="756.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="417.0" prefWidth="449.0">
+         <children>
+            <Label prefHeight="76.0" prefWidth="373.0" text="Perform top-down parsing with the given input and grammar." wrapText="true">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TableView prefHeight="396.0" prefWidth="373.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Id" />
+                <TableColumn prefWidth="75.0" text="Item" />
+                  <TableColumn prefWidth="75.0" text="Rule" />
+                  <TableColumn prefWidth="76.0" text="Backpointers" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+      <VBox prefHeight="517.0" prefWidth="316.0">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <MenuButton mnemonicParsing="false" text="New">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Easy" />
+                      <MenuItem mnemonicParsing="false" text="Intermediate" />
+                        <MenuItem mnemonicParsing="false" text="Hard" />
+                        <MenuItem mnemonicParsing="false" text="Custom" />
+                    </items>
+                  </MenuButton>
+                  <MenuButton mnemonicParsing="false" text="Help">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Instructions" />
+                      <MenuItem mnemonicParsing="false" text="Hint" />
+                        <MenuItem mnemonicParsing="false" text="Solve Next Step" />
+                        <MenuItem mnemonicParsing="false" text="Solve Whole Task" />
+                    </items>
+                  </MenuButton>
+                  <Button mnemonicParsing="false" text="Check" />
+               </children>
+            </HBox>
+            <TextArea prefHeight="147.0" prefWidth="244.0" text="w = a b c d&#10;G= &lt;N, T, P, S&gt; ..." />
+            <TextArea editable="false" prefHeight="371.0" prefWidth="354.0" text="Axiom: _________&#10;               [S, 0]&#10;&#10;               [aα, i]&#10;Scan:   ______   wi+1 = a&#10;              [α, i + 1]&#10;&#10;                [Aα, i]&#10;Predict:  ______A → γ ∈ P, |γα| ≤ n − i&#10;                [γα, i]" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</HBox>

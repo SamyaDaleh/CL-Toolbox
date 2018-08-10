@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.media.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="502.0" prefWidth="595.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox prefHeight="424.0" prefWidth="595.0" BorderPane.alignment="CENTER">
+         <children>
+            <SplitPane dividerPositions="0.08293838862559241" orientation="VERTICAL" prefHeight="438.0" prefWidth="595.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="108.0" prefWidth="593.0">
+                     <children>
+                        <BorderPane prefHeight="36.0" prefWidth="595.0">
+                           <left>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Index" BorderPane.alignment="CENTER" />
+                           </left>
+                           <right>
+                              <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Hyperlink text="Options" />
+                                    <Hyperlink prefHeight="35.0" prefWidth="62.0" text="About" />
+                                 </children>
+                              </HBox>
+                           </right>
+                        </BorderPane>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="144.0" prefWidth="593.0">
+                     <children>
+                        <StackPane id="optionsPane" prefHeight="390.0" prefWidth="595.0">
+                           <children>
+                              <VBox id="homePane" prefHeight="353.0" prefWidth="585.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Parsing as Deduction" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Context-Free Languages" />
+                                    <Hyperlink text="Top-Down" />
+                                    <Hyperlink text="Shift-Reduce" />
+                                    <Hyperlink text="Left-Corner" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tree-Adjoining Languages" />
+                                    <Hyperlink text="CYK" />
+                                    <Hyperlink text="Earley" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linear Context-Free Rewriting Languages" />
+                                    <Hyperlink text="CYK" />
+                                    <Hyperlink text="Earley" />
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" visible="false">
+                                 <children>
+                                    <Label text="Language" />
+                                    <RadioButton mnemonicParsing="false" selected="true" text="English" />
+                                    <RadioButton mnemonicParsing="false" text="German" />
+                                    <Label text="Logging" />
+                                    <CheckBox mnemonicParsing="false" text="No I don't want to support science even if it doesn't cost me a thing." />
+                                 </children>
+                              </VBox>
+                              <VBox id="aboutPane" disable="true" prefHeight="200.0" prefWidth="100.0" visible="false">
+                                 <children>
+                                    <TextArea prefHeight="392.0" prefWidth="595.0" text="This is a tool that generates tasks so you can train parsing-as-deduction. The tool evaluates how good you are in solving and might give you harder or easier tasks based on that, even in the same difficulty level. However, it doesn't remember you and your session data is lost if you leave the site.&#10;&#10;It logs and stores usage data for science, including:&#10;- where you click (just inside this application)&#10;- when you click&#10;- the tasks you're given along with their estimated difficulty&#10;- sometimes you're asked for the parse tree, this is also stored&#10;- no personal information, no IP or browser data or something&#10;- however, if you still don't like your clicks to be tracked and you don't care for the greater scientific good, you can deactivate logging in the options, which will store a cookie about your choice on your drive. Task difficulty will still scale with your performance." wrapText="true" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </children>
+      </VBox>
+   </left>
+   <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button mnemonicParsing="false" text="Home" />
+        </items>
+      </ToolBar>
+   </top>
+   <bottom>
+      <Pane prefHeight="23.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Shows useful information" />
+         </children>
+      </Pane>
+   </bottom>
+</BorderPane>

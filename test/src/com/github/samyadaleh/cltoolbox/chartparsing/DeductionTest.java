@@ -1,0 +1,236 @@
+package com.github.samyadaleh.cltoolbox.chartparsing;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.text.ParseException;
+
+import org.junit.Test;
+
+import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
+import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.CfgToDeductionRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.LcfrsToDeductionRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.PcfgToDeductionRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.TagToDeductionRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
+
+public class DeductionTest {
+
+  @Test public void testCfgTopdown() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToTopDownRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgShiftreduce() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToShiftReduceRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgEarley() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToEarleyRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgLeftcorner() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToLeftCornerRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgLeftcornerBreak() throws ParseException {
+    String w = "a b c d e f g h i";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToLeftCornerRules(TestGrammarLibrary.leftCornerBreak(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgLeftcornerChart() throws ParseException {
+    String w = "a b c b a";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToLeftCornerChartRules(TestGrammarLibrary.wwRCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TDOD activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgCyk() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToCykRules(TestGrammarLibrary.anbnCnfCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (A (a ))(X1 (S (A (a ))(B (b )))(B (b ))))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgCykExtended() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToCykExtendedRules(TestGrammarLibrary.anbnC2fCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (A (C (a )))(X1 (S (A (C (a )))(B (b )))(B (b ))))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testTagCyk() throws ParseException {
+    String w2 = "a c b";
+    ParsingSchema schema = TagToDeductionRulesConverter
+      .tagToCykExtendedRules(TestGrammarLibrary.anCBTag(), w2);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (T (a )(T (c )))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testTagEarley() throws ParseException {
+    String w2 = "a c b";
+    ParsingSchema schema = TagToDeductionRulesConverter
+      .tagToEarleyRules(TestGrammarLibrary.anCBTag(), w2);
+    Deduction deduction = new Deduction();
+    try {
+      assertTrue(deduction.doParse(schema, false));
+    } finally {
+      deduction.printTrace();
+      assertEquals("(S (T (a )(T (c )))(b ))",
+        deduction.getDerivedTrees().get(0).toString());
+    }
+  }
+
+  @Test public void testTagEarleyPrefixValid() throws ParseException {
+    String w2 = "a c b";
+    ParsingSchema schema = TagToDeductionRulesConverter
+      .tagToEarleyRules(TestGrammarLibrary.anCBTag(), w2);
+    Deduction deduction = new Deduction();
+    try {
+      assertTrue(deduction.doParse(schema, false));
+    } finally {
+      deduction.printTrace();
+      assertEquals("(S (T (a )(T (c )))(b ))",
+        deduction.getDerivedTrees().get(0).toString());
+    }
+  }
+
+  @Test public void testSrcgCykUnary() throws ParseException {
+    String w3 = "a a b b";
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .srcgToCykExtendedRules(TestGrammarLibrary.anBnSrcg(), w3);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testSrcgCykBinary() throws ParseException {
+    String w = "a a b b a c b b a c";
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .srcgToCykExtendedRules(TestGrammarLibrary.longStringsSrcg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testSrcgCykGeneral() throws ParseException {
+    String w = "a a b b a c b b a c";
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .srcgToCykGeneralRules(TestGrammarLibrary.longStringsSrcg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testSrcgEarley() throws ParseException {
+    String w3 = "a a b b";
+    ParsingSchema schema = LcfrsToDeductionRulesConverter
+      .srcgToEarleyRules(TestGrammarLibrary.anBnSrcg(), w3);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testPcfgAstar() throws ParseException {
+    String w = "red nice ugly car";
+    ParsingSchema schema = PcfgToDeductionRulesConverter
+      .pcfgToAstarRules(TestGrammarLibrary.niceUglyCarPcfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    // TODO activate when implemented
+    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testPcfgCyk() throws ParseException {
+    String w = "red nice ugly car";
+    ParsingSchema schema = PcfgToDeductionRulesConverter
+      .pcfgToCykRules(TestGrammarLibrary.niceUglyCarPcfg(), w);
+    Deduction deduction = new Deduction();
+    deduction.setReplace('l');
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(N (A (red ))(N (A (nice ))(N (A (ugly ))(N (car )))))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgUnger() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToUngerRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgCykGeneral() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToCykGeneralRules(TestGrammarLibrary.anBnCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+      deduction.getDerivedTrees().get(0).toString()); 
+  }
+
+}
