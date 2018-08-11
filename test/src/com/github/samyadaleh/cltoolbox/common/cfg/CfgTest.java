@@ -78,7 +78,7 @@ public class CfgTest {
       .getCfgWithoutDirectLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
-        + "P = {S1 -> ε, S -> d S1, S -> c S1, S -> b S1, S -> a S1}\n",
+        + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
       cfgwlr.toString());
   }
 
@@ -87,7 +87,7 @@ public class CfgTest {
       TestGrammarLibrary.directLeftRecursionCfg().getCfgWithoutLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
-        + "P = {S1 -> ε, S -> d S1, S -> c S1, S -> b S1, S -> a S1}\n",
+        + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
       cfgwlr.toString());
   }
 
@@ -99,7 +99,7 @@ public class CfgTest {
       "N = {S, A, A1}\n" + 
       "T = {a, b}\n" + 
       "S = S\n" + 
-      "P = {S -> A a, S -> b, A1 -> ε, A -> b a A1, A -> a a A1}\n" + 
+      "P = {S -> A a, S -> b, A1 -> ε, A -> b a A1, A1 -> a a A1}\n" + 
       "", cfgwlr.toString());
   }
 

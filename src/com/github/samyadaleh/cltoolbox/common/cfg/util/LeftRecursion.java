@@ -236,7 +236,7 @@ public class LeftRecursion {
           System.arraycopy(rule.getRhs(), 1, newRhs, 0,
             rule.getRhs().length - 1);
           newRhs[newRhs.length - 1] = newNt;
-          cfg.getProductionRules().add(new CfgProductionRule(nt, newRhs));
+          cfg.getProductionRules().add(new CfgProductionRule(newNt, newRhs));
         } else if (!rule.getRhs()[0].equals(nt)) {
           if (rule.getRhs()[0].equals("")) {
             cfg.getProductionRules()
