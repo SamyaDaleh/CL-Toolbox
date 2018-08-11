@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
-import com.github.samyadaleh.cltoolbox.chartparsing.converter.ChartToTreeConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.GrammarParser;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
@@ -215,34 +214,13 @@ class Main { // NO_UCD (test only)
     Tag tag, Deduction deduction, boolean javafx, JfxWindowHolder jwc)
     throws Exception {
     List<Tree> derivedTrees = deduction.getDerivedTrees();
-    String[] algorithmSplit = algorithm.split("-");
-    if (derivedTrees == null || derivedTrees.size() == 0) {
-      switch (algorithmSplit[0]) {
-      case "cfg":
-        if ("shiftreduce".equals(algorithmSplit[1])) {
-          derivedTrees = ChartToTreeConverter.cfgToDerivatedTree(deduction,
-            schema.getGoals(), algorithm.substring(4));
-        }
-        break;
-      case "srcg":
-        derivedTrees = ChartToTreeConverter.srcgToDerivatedTree(deduction,
-          schema.getGoals(), algorithm.substring(5));
-        break;
-      default:
-        System.out.println("Unknown formalism " + algorithmSplit[0]
-          + ", can not retrieve derivated tree.");
-      }
-    }
-    if (derivedTrees != null && derivedTrees.size() > 0
-      && derivedTrees.get(0) != null) {
-      for (int i = 0; i < derivedTrees.size(); i++) {
-        Tree derivedTree = derivedTrees.get(i);
-        if (javafx) {
-          jwc.setArgs(new String[] {derivedTree.toString()});
-          jwc.showDisplayTreeFx();
-        } else {
-          new DisplayTree(new String[] {derivedTree.toString()});
-        }
+    for (int i = 0; i < derivedTrees.size(); i++) {
+      Tree derivedTree = derivedTrees.get(i);
+      if (javafx) {
+        jwc.setArgs(new String[] {derivedTree.toString()});
+        jwc.showDisplayTreeFx();
+      } else {
+        new DisplayTree(new String[] {derivedTree.toString()});
       }
     }
   }

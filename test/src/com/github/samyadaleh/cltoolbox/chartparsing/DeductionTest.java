@@ -35,8 +35,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testCfgEarley() throws ParseException {
@@ -58,7 +58,8 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
     // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    // assertEquals("(S (a )(S (a )(b ))(b ))",
+    // deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testCfgLeftcornerBreak() throws ParseException {
@@ -151,8 +152,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S (A (a<0> )(A (a<1> )(b<3> ))(b<2> )))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testSrcgCykBinary() throws ParseException {
@@ -162,8 +163,9 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals(
+      "(S (A (A (a<0> )(a<4> )(a<8> ))(C (a<1> )(c<5> )(c<9> )))(B (B (b<3> )(b<6> ))(B (b<2> )(b<7> ))))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testSrcgCykGeneral() throws ParseException {
@@ -173,8 +175,11 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertTrue(
+      "(S (A (A (a<0> )(a<4> )(a<8> ))(C (a<1> )(c<5> )(c<9> )))(B (B (b<2> )(b<6> ))(B (b<3> )(b<7> ))))"
+        .equals(deduction.getDerivedTrees().get(0).toString())
+        || "(S (A (A (a<0> )(a<4> )(a<8> ))(C (a<1> )(c<5> )(c<9> )))(B (B (b<2> )(b<7> ))(B (b<3> )(b<6> ))))"
+          .equals(deduction.getDerivedTrees().get(0).toString()));
   }
 
   @Test public void testSrcgEarley() throws ParseException {
@@ -184,8 +189,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S (A (A (a<1> )(b<2> ))(a<0> )(b<3> )))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testPcfgAstar() throws ParseException {
@@ -193,10 +198,11 @@ public class DeductionTest {
     ParsingSchema schema = PcfgToDeductionRulesConverter
       .pcfgToAstarRules(TestGrammarLibrary.niceUglyCarPcfg(), w);
     Deduction deduction = new Deduction();
+    deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(N (A (red ))(N (A (nice ))(N (A (ugly ))(N (car )))))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testPcfgCyk() throws ParseException {
@@ -230,7 +236,7 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
     assertEquals("(S (a )(S (a )(b ))(b ))",
-      deduction.getDerivedTrees().get(0).toString()); 
+      deduction.getDerivedTrees().get(0).toString());
   }
 
 }

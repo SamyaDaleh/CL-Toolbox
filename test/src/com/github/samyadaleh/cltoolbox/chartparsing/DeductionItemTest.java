@@ -9,23 +9,23 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 
 public class DeductionItemTest {
   @Test public void testItemOperations() {
-    Item item1 = new DeductionItem("S", "0");
-    Item item2 = new DeductionItem("S", "0");
+    ChartItemInterface item1 = new DeductionChartItem("S", "0");
+    ChartItemInterface item2 = new DeductionChartItem("S", "0");
 
     assertTrue(item1.equals(item2));
     // test set contains item
-    Set<Item> itemset = new HashSet<Item>();
+    Set<ChartItemInterface> itemset = new HashSet<ChartItemInterface>();
     itemset.add(item1);
 
-    List<Item> itemssetlist = new ArrayList<Item>(itemset);
+    List<ChartItemInterface> itemssetlist = new ArrayList<ChartItemInterface>(itemset);
     assertTrue(itemssetlist.contains(item2));
     // test list contains Item
-    List<Item> itemlist = new ArrayList<Item>();
+    List<ChartItemInterface> itemlist = new ArrayList<ChartItemInterface>();
     itemlist.add(item1);
     assertTrue(itemlist.contains(item2));
   }

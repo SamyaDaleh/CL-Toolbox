@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
@@ -23,7 +23,7 @@ public class TagEarleyPrefixValidPredictSubst
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -40,8 +40,8 @@ public class TagEarleyPrefixValidPredictSubst
         && i.equals("~") && j.equals("~") && k.equals("~") && !l.equals("~")
         && tag.isSubstitutionNode(p, treeName)
         && p.getLabel().equals(tag.getTree(iniTreeName).getRoot().getLabel())) {
-        Item consequence =
-          new DeductionItem(iniTreeName, "", "la", l, l, "-", "-", l, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(iniTreeName, "", "la", l, l, "-", "-", l, "0");
         List<Tree> derivedTrees = new ArrayList<Tree>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);

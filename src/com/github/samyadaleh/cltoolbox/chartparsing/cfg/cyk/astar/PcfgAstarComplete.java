@@ -1,8 +1,9 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
@@ -14,20 +15,26 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 /**
  * Similar to the complete rule for CYK, but used for a PCFG and with weights
- * for probabilistic CYK parsing.
+ * for astar parsing.
  */
-public class PcfgCykComplete implements DynamicDeductionRuleInterface {
+public class PcfgAstarComplete implements DynamicDeductionRuleInterface {
 
   private List<ProbabilisticChartItemInterface> antecedences = new ArrayList<ProbabilisticChartItemInterface>();
   private List<ProbabilisticChartItemInterface> consequences = new ArrayList<ProbabilisticChartItemInterface>();
   private String name = null;
 
   private final PcfgProductionRule pRule;
+  private final Map<String, Double> outsides;
+
+  private final int n;
 
   private final int antneeded = 2;
 
-  public PcfgCykComplete(PcfgProductionRule pRule) {
+  public PcfgAstarComplete(PcfgProductionRule pRule,
+    Map<String, Double> outsides, int n) {
+    this.n = n;
     this.pRule = pRule;
+    this.outsides = outsides;
     this.name = "complete " + pRule.toString();
   }
 
@@ -51,6 +58,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
       String[] itemForm2 = antecedences.get(1).getItemform();
       calculateConsequences(itemForm1, itemForm2);
       calculateConsequences(itemForm2, itemForm1);
+
     }
     List<ChartItemInterface> outcon = new ArrayList<ChartItemInterface>();
     outcon.addAll(this.consequences);
@@ -64,19 +72,39 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
     int i1Int = Integer.parseInt(i1);
     String j1 = itemForm1[2];
     int j1Int = Integer.parseInt(j1);
-    Double x1 = antecedences.get(0).getProbability();
+    Double w1 = antecedences.get(0).getProbability();
+
+    String outKey1 = SxCalc.getOutsideKey(nt1, i1Int, j1Int - i1Int, n - j1Int);
+    if (!outsides.containsKey(outKey1)) {
+      return;
+    }
+    Double x1 = w1 - outsides
+      .get(SxCalc.getOutsideKey(nt1, i1Int, j1Int - i1Int, n - j1Int));
 
     String nt2 = itemForm2[0];
     String i2 = itemForm2[1];
     int i2Int = Integer.parseInt(i2);
     String j2 = itemForm2[2];
     int j2Int = Integer.parseInt(j2);
-    Double x2 = antecedences.get(1).getProbability();
+    Double w2 = antecedences.get(1).getProbability();
+
+    String outkey2 = SxCalc.getOutsideKey(nt2, i2Int, j2Int - i2Int, n - j2Int);
+    if (!outsides.containsKey(outkey2)) {
+      return;
+    }
+    Double x2 = w2 - outsides
+      .get(SxCalc.getOutsideKey(nt2, i2Int, j2Int - i2Int, n - j2Int));
 
     if (nt1.equals(pRule.getRhs()[0]) && nt2.equals(pRule.getRhs()[1])
       && j1Int == i2Int) {
-      ProbabilisticChartItemInterface consequence = new PcfgCykItem(x1 + x2 + -Math.log(pRule.getP()),
-        pRule.getLhs(), i1Int, j2Int);
+      String outKey3 =
+        SxCalc.getOutsideKey(pRule.getLhs(), i1Int, j2Int - i1Int, n - j2Int);
+      if (!outsides.containsKey(outKey3)) {
+        return;
+      }
+      Double newOutP = outsides.get(outKey3);
+      ProbabilisticChartItemInterface consequence = new PcfgAstarItem(x1 + x2 + -Math.log(pRule.getP()),
+        newOutP, pRule.getLhs(), i1Int, j2Int);
       Tree derivedTreeBase =
         new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs()));
       List<Tree> derivedTrees = new ArrayList<Tree>();
@@ -115,9 +143,11 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   @Override public String toString() {
-    return "x1 : [" + pRule.getRhs()[0] + ", i, j], x2 : [" + pRule.getRhs()[1]
-      + ", j, k]" + "\n______ \n" + "x1 + x2 + |log("
-      + String.valueOf(pRule.getP()) + ")| : [" + pRule.getLhs() + ", i, k]";
+    return "x1 + out(" + pRule.getRhs()[0] + ", i, j - i, n - j) : ["
+      + pRule.getRhs()[0] + ",i,j], x2 + out(" + pRule.getRhs()[1]
+      + ", j, k - j, n - k) : [" + pRule.getRhs()[1] + ", j, k]" + "\n______ \n"
+      + "x1 + x2 + |log(" + String.valueOf(pRule.getP()) + ")| + out("
+      + pRule.getLhs() + ", i, k - i, n - k) : [" + pRule.getLhs() + ", i, k]";
   }
 
   @Override public void clearItems() {

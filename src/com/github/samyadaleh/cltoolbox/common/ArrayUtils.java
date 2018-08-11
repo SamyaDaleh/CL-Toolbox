@@ -6,8 +6,10 @@ import java.util.List;
 /** Open collection of functions to work with arrays. */
 public class ArrayUtils {
 
-  /** Retrieves the subsequence of an array from (inclusive) index to
-   * (exclusive) index and returns it as string. */
+  /**
+   * Retrieves the subsequence of an array from (inclusive) index to (exclusive)
+   * index and returns it as string, entries separated by space.
+   */
   public static String getSubSequenceAsString(String[] sequence, int from,
     int to) {
     StringBuilder subSeq = new StringBuilder();
@@ -19,8 +21,10 @@ public class ArrayUtils {
     return subSeq.toString();
   }
 
-  /** Retrieves a subsequence of an array from (inclusive) to (excusive) and
-   * returns it as array. */
+  /**
+   * Retrieves a subsequence of an array from (inclusive) to (excusive) and
+   * returns it as array.
+   */
   public static String[] getSubSequenceAsArray(String[] sequence, int from,
     int to) {
     ArrayList<String> newSequence = new ArrayList<String>();
@@ -30,8 +34,10 @@ public class ArrayUtils {
     return newSequence.toArray(new String[newSequence.size()]);
   }
 
-  /** Retrieves a subsequence of an array from (inclusive) to (excusive) and
-   * returns it as list. */
+  /**
+   * Retrieves a subsequence of an array from (inclusive) to (excusive) and
+   * returns it as list.
+   */
   public static List<String> getSubSequenceAsList(String[] sequence, int from,
     int to) {
     ArrayList<String> newSequence = new ArrayList<String>();
@@ -41,9 +47,11 @@ public class ArrayUtils {
     return newSequence;
   }
 
-  /** Returns true if the arrays are equal, that means all strings at the same
+  /**
+   * Returns true if the arrays are equal, that means all strings at the same
    * index have to be equal. Also the special character '?' is equal to
-   * everything. */
+   * everything.
+   */
   public static boolean match(String[] itemForm1, String[] itemForm2) {
     if (itemForm1.length != itemForm2.length) {
       return false;
@@ -75,8 +83,10 @@ public class ArrayUtils {
     return representation.toString();
   }
 
-  /** If seqsplit ends with rhs, the first part of seqsplit without rhs is
-   * returned, else null. */
+  /**
+   * If seqsplit ends with rhs, the first part of seqsplit without rhs is
+   * returned, else null.
+   */
   public static String getStringHeadIfEndsWith(String[] seqSplit,
     String[] rhs) {
     if (seqSplit.length < rhs.length)

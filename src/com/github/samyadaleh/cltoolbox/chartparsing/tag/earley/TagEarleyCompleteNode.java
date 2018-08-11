@@ -1,8 +1,8 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 /**
@@ -47,8 +47,8 @@ public class TagEarleyCompleteNode
         && adj1.equals("0")) {
         String f1 = (g.equals("-")) ? j : g;
         String f2 = (h.equals("-")) ? k : h;
-        Item consequence =
-          new DeductionItem(treeName1, node1, "ra", f, f1, f2, l, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(treeName1, node1, "ra", f, f1, f2, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         consequences.add(consequence);
       }

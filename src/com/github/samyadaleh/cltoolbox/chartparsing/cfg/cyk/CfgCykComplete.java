@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -38,7 +38,7 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
     int j2int = Integer.parseInt(j2);
     if (nt1.equals(rule.getRhs()[0]) && nt2.equals(rule.getRhs()[1])
       && i1int + j1int == i2int) {
-      Item consequence = new DeductionItem(rule.getLhs(), String.valueOf(i1int),
+      ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(), String.valueOf(i1int),
         String.valueOf(j1int + j2int));
       Tree derivedTreeBase = new Tree(rule);
       List<Tree> derivedTrees = new ArrayList<Tree>();

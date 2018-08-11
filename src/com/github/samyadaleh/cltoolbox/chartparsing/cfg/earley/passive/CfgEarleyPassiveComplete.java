@@ -1,8 +1,8 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earleypassive;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /**
@@ -34,8 +34,8 @@ public class CfgEarleyPassiveComplete
               + " " + itemForm2[0] + " •" + ArrayUtils
                 .getSubSequenceAsString(stackSplit1, l + 1, stackSplit1.length);
           }
-          Item consequence =
-            new DeductionItem(newStack, itemForm1[1], itemForm2[2]);
+          ChartItemInterface consequence =
+            new DeductionChartItem(newStack, itemForm1[1], itemForm2[2]);
           consequence.setTrees(antecedences.get(0).getTrees());
           consequences.add(consequence);
           break;

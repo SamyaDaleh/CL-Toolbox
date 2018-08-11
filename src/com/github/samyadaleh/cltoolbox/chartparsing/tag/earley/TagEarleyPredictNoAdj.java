@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 /** If the dot is at a node where adjunction is not obligatory, just skip it. */
@@ -22,7 +22,7 @@ public class TagEarleyPredictNoAdj extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -31,8 +31,8 @@ public class TagEarleyPredictNoAdj extends AbstractDynamicDeductionRule {
       boolean obligatoryAdjoin = tag.getTree(treeName).isInOA(node);
       if (!obligatoryAdjoin && itemForm[2].equals("la")
         && itemForm[7].equals("0")) {
-        Item consequence =
-          new DeductionItem(treeName, node, "lb", l, "-", "-", l, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(treeName, node, "lb", l, "-", "-", l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         consequences.add(consequence);
       }

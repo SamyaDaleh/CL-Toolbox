@@ -5,7 +5,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing;
  * generate the consequences on runtime. The deduction system needs to know
  * how many antecedences to set.
  */
-public interface DynamicDeductionRule extends DeductionRule{
+public interface DynamicDeductionRuleInterface extends DeductionRuleInterface{
   int getAntecedencesNeeded();
   void clearItems();
 }

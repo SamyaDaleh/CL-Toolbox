@@ -1,10 +1,10 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcornerchart;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart;
 
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
@@ -18,13 +18,13 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String i = itemForm[1];
       String l = itemForm[2];
       if (itemForm[0].equals(rule.getRhs()[0])) {
-        consequences.add(new DeductionItem(
+        consequences.add(new DeductionChartItem(
           rule.getLhs() + " -> " + rule.getRhs()[0] + " •" + ArrayUtils
             .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length),
           i, l));

@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /** The scan rule for topdown removes a terminal if it is the next input
@@ -19,7 +19,7 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String stack = itemForm[0];
@@ -39,7 +39,7 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
               .append(ArrayUtils.getSubSequenceAsString(stackSplit, k + 1,
                 stackSplit.length));
           }
-          Item consequence = new DeductionItem(newStack.toString(),
+          ChartItemInterface consequence = new DeductionChartItem(newStack.toString(),
             String.valueOf(i), String.valueOf(j + 1));
           consequence.setTrees(antecedences.get(0).getTrees());
           consequences.add(consequence);

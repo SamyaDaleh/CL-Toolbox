@@ -5,24 +5,24 @@ import java.util.List;
 
 /** Static deduction rule that stores a set of antecedences and consequences.
  * Used as axiom. */
-public class StaticDeductionRule implements DeductionRule{
-  private List<Item> antecedences = new ArrayList<Item>();
-  final List<Item> consequences = new ArrayList<Item>();
+public class StaticDeductionRule implements DeductionRuleInterface{
+  private List<ChartItemInterface> antecedences = new ArrayList<ChartItemInterface>();
+  final List<ChartItemInterface> consequences = new ArrayList<ChartItemInterface>();
   private String name = null;
 
-  public void addConsequence(Item item) {
+  public void addConsequence(ChartItemInterface item) {
     consequences.add(item);
   }
 
-  public List<Item> getAntecedences() {
+  public List<ChartItemInterface> getAntecedences() {
     return antecedences;
   }
 
-  public void setAntecedences(List<Item> antecedences) {
+  public void setAntecedences(List<ChartItemInterface> antecedences) {
     this.antecedences = antecedences;
   }
 
-  public List<Item> getConsequences() {
+  public List<ChartItemInterface> getConsequences() {
     return consequences;
   }
 
@@ -36,11 +36,11 @@ public class StaticDeductionRule implements DeductionRule{
 
   @Override public String toString() {
     StringBuilder representation = new StringBuilder();
-    for (Item rule : antecedences) {
+    for (ChartItemInterface rule : antecedences) {
       representation.append(rule.toString());
     }
     representation.append("\n______\n");
-    for (Item rule : consequences) {
+    for (ChartItemInterface rule : consequences) {
       representation.append(rule.toString());
     }
     return representation.toString();

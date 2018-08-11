@@ -1,10 +1,10 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce;
 
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 
 /** Moves the next input symbol onto the stack */
 public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
@@ -17,18 +17,21 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String stack = itemForm[0];
       int i = Integer.parseInt(itemForm[1]);
       if (i < wSplit.length) {
+        ChartItemInterface consequence;
         if (stack.length() == 0) {
-          consequences.add(new DeductionItem(wSplit[i], String.valueOf(i + 1)));
+          consequence = new DeductionChartItem(wSplit[i], String.valueOf(i + 1));
         } else {
-          consequences.add(
-            new DeductionItem(stack + " " + wSplit[i], String.valueOf(i + 1)));
+          consequence =
+            new DeductionChartItem(stack + " " + wSplit[i], String.valueOf(i + 1));
         }
+        consequence.setTrees(antecedences.get(0).getTrees());
+        consequences.add(consequence);
       }
     }
     return consequences;

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk.TagCykAdjoin;
@@ -66,13 +66,13 @@ public class TagToDeductionRulesConverter {
     Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
     Set<String> treesNameSet = tag.getTreeNames();
 
-    DynamicDeductionRule moveUnary = new TagCykMoveUnary(tag);
+    DynamicDeductionRuleInterface moveUnary = new TagCykMoveUnary(tag);
     schema.addRule(moveUnary);
-    DynamicDeductionRule moveBinary = new TagCykMoveBinary();
+    DynamicDeductionRuleInterface moveBinary = new TagCykMoveBinary();
     schema.addRule(moveBinary);
-    DynamicDeductionRule nullAdjoin = new TagCykNullAdjoin(tag);
+    DynamicDeductionRuleInterface nullAdjoin = new TagCykNullAdjoin(tag);
     schema.addRule(nullAdjoin);
-    DynamicDeductionRule adjoin = new TagCykAdjoin(tag);
+    DynamicDeductionRuleInterface adjoin = new TagCykAdjoin(tag);
     schema.addRule(adjoin);
 
     for (int i = 0; i < wSplit.length; i++) {
@@ -80,8 +80,8 @@ public class TagToDeductionRulesConverter {
         for (Vertex p : tag.getTree(treeName).getVertexes()) {
           if (p.getLabel().equals(wSplit[i])) {
             StaticDeductionRule lexScan = new StaticDeductionRule();
-            Item consequence =
-              new DeductionItem(treeName, p.getGornAddress() + "⊤",
+            ChartItemInterface consequence =
+              new DeductionChartItem(treeName, p.getGornAddress() + "⊤",
                 String.valueOf(i), "-", "-", String.valueOf(i + 1));
             List<Tree> derivedTrees = new ArrayList<Tree>();
             derivedTrees.add(tag.getTree(treeName));
@@ -91,8 +91,8 @@ public class TagToDeductionRulesConverter {
             schema.addAxiom(lexScan);
           } else if (p.getLabel().equals("")) {
             StaticDeductionRule epsScan = new StaticDeductionRule();
-            Item consequence =
-              new DeductionItem(treeName, p.getGornAddress() + "⊤",
+            ChartItemInterface consequence =
+              new DeductionChartItem(treeName, p.getGornAddress() + "⊤",
                 String.valueOf(i), "-", "-", String.valueOf(i));
             List<Tree> derivedTrees = new ArrayList<Tree>();
             derivedTrees.add(tag.getTree(treeName));
@@ -102,7 +102,7 @@ public class TagToDeductionRulesConverter {
             schema.addAxiom(epsScan);
           }
           if (tag.isSubstitutionNode(p, treeName)) {
-            DynamicDeductionRule substitute =
+            DynamicDeductionRuleInterface substitute =
               new TagCykSubstitute(treeName, p.getGornAddress(), tag);
             schema.addRule(substitute);
           }
@@ -112,7 +112,7 @@ public class TagToDeductionRulesConverter {
       for (String iniTreeName : iniTreesNameSet) {
         Tree iniTree = tag.getInitialTree(iniTreeName);
         if (iniTree.getRoot().getLabel().equals(tag.getStartSymbol())) {
-          schema.addGoal(new DeductionItem(iniTreeName, "⊤", "0", "-", "-",
+          schema.addGoal(new DeductionChartItem(iniTreeName, "⊤", "0", "-", "-",
             String.valueOf(wSplit.length)));
         }
       }
@@ -122,8 +122,8 @@ public class TagToDeductionRulesConverter {
           StaticDeductionRule footPredict = new StaticDeductionRule();
           String footGorn =
             tag.getAuxiliaryTree(auxTree).getFoot().getGornAddress();
-          Item consequence =
-            new DeductionItem(auxTree, footGorn + "⊤", String.valueOf(i),
+          ChartItemInterface consequence =
+            new DeductionChartItem(auxTree, footGorn + "⊤", String.valueOf(i),
               String.valueOf(i), String.valueOf(j), String.valueOf(j));
           List<Tree> derivedTrees = new ArrayList<Tree>();
           derivedTrees.add(tag.getAuxiliaryTree(auxTree));
@@ -148,38 +148,38 @@ public class TagToDeductionRulesConverter {
     Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
     Set<String> treesNameSet = tag.getTreeNames();
 
-    DynamicDeductionRule scanTerm = new TagEarleyScanTerm(wSplit, tag);
+    DynamicDeductionRuleInterface scanTerm = new TagEarleyScanTerm(wSplit, tag);
     schema.addRule(scanTerm);
-    DynamicDeductionRule scanEps = new TagEarleyScanEps(tag);
+    DynamicDeductionRuleInterface scanEps = new TagEarleyScanEps(tag);
     schema.addRule(scanEps);
-    DynamicDeductionRule predictNoAdj = new TagEarleyPredictNoAdj(tag);
+    DynamicDeductionRuleInterface predictNoAdj = new TagEarleyPredictNoAdj(tag);
     schema.addRule(predictNoAdj);
-    DynamicDeductionRule completeFoot = new TagEarleyCompleteFoot(tag);
+    DynamicDeductionRuleInterface completeFoot = new TagEarleyCompleteFoot(tag);
     schema.addRule(completeFoot);
-    DynamicDeductionRule completeNode = new TagEarleyCompleteNode(tag);
+    DynamicDeductionRuleInterface completeNode = new TagEarleyCompleteNode(tag);
     schema.addRule(completeNode);
-    DynamicDeductionRule adjoin = new TagEarleyAdjoin(tag);
+    DynamicDeductionRuleInterface adjoin = new TagEarleyAdjoin(tag);
     schema.addRule(adjoin);
-    DynamicDeductionRule moveDown = new TagEarleyMoveDown(tag);
+    DynamicDeductionRuleInterface moveDown = new TagEarleyMoveDown(tag);
     schema.addRule(moveDown);
-    DynamicDeductionRule moveRight = new TagEarleyMoveRight(tag);
+    DynamicDeductionRuleInterface moveRight = new TagEarleyMoveRight(tag);
     schema.addRule(moveRight);
-    DynamicDeductionRule moveUp = new TagEarleyMoveUp(tag);
+    DynamicDeductionRuleInterface moveUp = new TagEarleyMoveUp(tag);
     schema.addRule(moveUp);
 
     for (String auxTreeName : auxTreesNameSet) {
-      DynamicDeductionRule predictAdjoinable =
+      DynamicDeductionRuleInterface predictAdjoinable =
         new TagEarleyPredictAdjoinable(auxTreeName, tag);
       schema.addRule(predictAdjoinable);
     }
 
     for (String treeName : treesNameSet) {
       for (Vertex p : tag.getTree(treeName).getVertexes()) {
-        DynamicDeductionRule predictAdjoined =
+        DynamicDeductionRuleInterface predictAdjoined =
           new TagEarleyPredictAdjoined(treeName, p.getGornAddress(), tag);
         schema.addRule(predictAdjoined);
         if (tag.isSubstitutionNode(p, treeName)) {
-          DynamicDeductionRule substitute =
+          DynamicDeductionRuleInterface substitute =
             new TagEarleySubstitute(treeName, p.getGornAddress(), tag);
           schema.addRule(substitute);
         }
@@ -190,19 +190,19 @@ public class TagToDeductionRulesConverter {
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
         .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        Item consequence =
-          new DeductionItem(iniTreeName, "", "la", "0", "-", "-", "0", "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(iniTreeName, "", "la", "0", "-", "-", "0", "0");
         List<Tree> derivedTrees = new ArrayList<Tree>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
         initialize.addConsequence(consequence);
         initialize.setName("initialize");
         schema.addAxiom(initialize);
-        schema.addGoal(new DeductionItem(iniTreeName, "", "ra", "0", "-", "-",
+        schema.addGoal(new DeductionChartItem(iniTreeName, "", "ra", "0", "-", "-",
           String.valueOf(wSplit.length), "0"));
       }
 
-      DynamicDeductionRule predictSubst =
+      DynamicDeductionRuleInterface predictSubst =
         new TagEarleyPredictSubst(iniTreeName, tag);
       schema.addRule(predictSubst);
     }
@@ -223,7 +223,7 @@ public class TagToDeductionRulesConverter {
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()
         .equals(tag.getStartSymbol())) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        Item consequence = new DeductionItem(iniTreeName, "", "la", "0", "0",
+        ChartItemInterface consequence = new DeductionChartItem(iniTreeName, "", "la", "0", "0",
           "-", "-", "0", "0");
         List<Tree> derivedTrees = new ArrayList<Tree>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
@@ -231,53 +231,53 @@ public class TagToDeductionRulesConverter {
         initialize.addConsequence(consequence);
         initialize.setName("initialize");
         schema.addAxiom(initialize);
-        schema.addGoal(new DeductionItem(iniTreeName, "", "ra", "0", "0", "-",
+        schema.addGoal(new DeductionChartItem(iniTreeName, "", "ra", "0", "0", "-",
           "-", String.valueOf(wSplit.length), "0"));
       }
 
-      DynamicDeductionRule predictSubst =
+      DynamicDeductionRuleInterface predictSubst =
         new TagEarleyPrefixValidPredictSubst(iniTreeName, tag);
       schema.addRule(predictSubst);
     }
 
     for (String auxTreeName : auxTreeNames) {
-      DynamicDeductionRule predictAdjoinable =
+      DynamicDeductionRuleInterface predictAdjoinable =
         new TagEarleyPrefixValidPredictAdjoinable(auxTreeName, tag);
       schema.addRule(predictAdjoinable);
     }
 
-    DynamicDeductionRule scanTerm =
+    DynamicDeductionRuleInterface scanTerm =
       new TagEarleyPrefixValidScanTerm(wSplit, tag);
     schema.addRule(scanTerm);
-    DynamicDeductionRule scanEps = new TagEarleyPrefixValidScanEps(tag);
+    DynamicDeductionRuleInterface scanEps = new TagEarleyPrefixValidScanEps(tag);
     schema.addRule(scanEps);
-    DynamicDeductionRule convertRb = new TagEarleyPrefixValidConvertRb();
+    DynamicDeductionRuleInterface convertRb = new TagEarleyPrefixValidConvertRb();
     schema.addRule(convertRb);
-    DynamicDeductionRule convertLa1 = new TagEarleyPrefixValidConvertLa1();
+    DynamicDeductionRuleInterface convertLa1 = new TagEarleyPrefixValidConvertLa1();
     schema.addRule(convertLa1);
-    DynamicDeductionRule convertLa2 = new TagEarleyPrefixValidConvertLa2();
+    DynamicDeductionRuleInterface convertLa2 = new TagEarleyPrefixValidConvertLa2();
     schema.addRule(convertLa2);
-    DynamicDeductionRule predictNoAdj =
+    DynamicDeductionRuleInterface predictNoAdj =
       new TagEarleyPrefixValidPredictNoAdj(tag);
     schema.addRule(predictNoAdj);
-    DynamicDeductionRule predictAdjoined =
+    DynamicDeductionRuleInterface predictAdjoined =
       new TagEarleyPrefixValidPredictAdjoined(tag);
     schema.addRule(predictAdjoined);
-    DynamicDeductionRule completeFoot =
+    DynamicDeductionRuleInterface completeFoot =
       new TagEarleyPrefixValidCompleteFoot(tag);
     schema.addRule(completeFoot);
-    DynamicDeductionRule adjoin = new TagEarleyPrefixValidAdjoin(tag);
+    DynamicDeductionRuleInterface adjoin = new TagEarleyPrefixValidAdjoin(tag);
     schema.addRule(adjoin);
-    DynamicDeductionRule completeNode =
+    DynamicDeductionRuleInterface completeNode =
       new TagEarleyPrefixValidCompleteNode(tag);
     schema.addRule(completeNode);
-    DynamicDeductionRule moveDown = new TagEarleyPrefixValidMoveDown(tag);
+    DynamicDeductionRuleInterface moveDown = new TagEarleyPrefixValidMoveDown(tag);
     schema.addRule(moveDown);
-    DynamicDeductionRule moveRight = new TagEarleyPrefixValidMoveRight(tag);
+    DynamicDeductionRuleInterface moveRight = new TagEarleyPrefixValidMoveRight(tag);
     schema.addRule(moveRight);
-    DynamicDeductionRule moveUp = new TagEarleyPrefixValidMoveUp(tag);
+    DynamicDeductionRuleInterface moveUp = new TagEarleyPrefixValidMoveUp(tag);
     schema.addRule(moveUp);
-    DynamicDeductionRule substitute = new TagEarleyPrefixValidSubstitute(tag);
+    DynamicDeductionRuleInterface substitute = new TagEarleyPrefixValidSubstitute(tag);
     schema.addRule(substitute);
 
     return schema;

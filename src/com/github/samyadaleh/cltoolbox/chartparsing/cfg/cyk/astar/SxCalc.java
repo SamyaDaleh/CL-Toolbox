@@ -1,4 +1,4 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar;
 
 import java.util.HashMap;
 import java.util.Map;

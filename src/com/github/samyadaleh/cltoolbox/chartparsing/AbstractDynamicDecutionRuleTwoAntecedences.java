@@ -6,7 +6,7 @@ import java.util.List;
 public abstract class AbstractDynamicDecutionRuleTwoAntecedences
   extends AbstractDynamicDeductionRule {
 
-  @Override public List<Item> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemform();
       String[] itemForm2 = antecedences.get(1).getItemform();

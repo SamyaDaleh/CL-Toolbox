@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -21,16 +21,16 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
     this.name = "complete " + rule.toString();
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == this.antNeeded) {
-      for (Item mayLhsItem : antecedences) {
+      for (ChartItemInterface mayLhsItem : antecedences) {
         if (!mayLhsItem.getItemform()[0].startsWith("•")) {
           continue;
         }
         String prevIjPlusOne = mayLhsItem.getItemform()[1];
         for (int i = 0; i < antNeeded - 1; i++) {
           boolean found = false;
-          for (Item mayRhsItem : antecedences) {
+          for (ChartItemInterface mayRhsItem : antecedences) {
             if (mayRhsItem.getItemform()[0].endsWith("•")
               && mayRhsItem.getItemform()[0]
                 .substring(0, mayRhsItem.getItemform()[0].length() - 1)
@@ -52,7 +52,7 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
           } else {
             derivedTrees = antecedences.get(0).getTrees();
           }
-          Item consequence = new DeductionItem(rule.getLhs() + "•",
+          ChartItemInterface consequence = new DeductionChartItem(rule.getLhs() + "•",
             mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]);
           consequence.setTrees(derivedTrees);
           consequences.add(consequence);

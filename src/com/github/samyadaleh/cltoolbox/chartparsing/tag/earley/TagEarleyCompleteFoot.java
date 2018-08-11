@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -48,8 +48,8 @@ public class TagEarleyCompleteFoot
         && i21.equals(i22) && f12.equals("-") && f22.equals("-")
         && tag.getAuxiliaryTree(treeName2).getFoot().getGornAddress()
           .equals(node2)) {
-        Item consequence =
-          new DeductionItem(treeName2, node2, "rb", i1, i1, l, l, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(treeName2, node2, "rb", i1, i1, l, l, "0");
         List<Tree> derivedTrees;
         if (itemForm1.equals(antecedences.get(0).getItemform())) {
           derivedTrees = antecedences.get(1).getTrees();

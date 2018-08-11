@@ -1,12 +1,12 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.PItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /** Item that stores a weight, which is like the cost of this item (bigger =
  * worse). */
-public class PcfgAstarItem extends AbstractItem implements PItem {
+public class PcfgAstarItem extends AbstractChartItem implements ProbabilisticChartItemInterface {
 
   private final Double ruleW;
   private final Double outW;

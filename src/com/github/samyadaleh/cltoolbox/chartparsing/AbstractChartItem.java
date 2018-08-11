@@ -3,12 +3,12 @@ package com.github.samyadaleh.cltoolbox.chartparsing;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 /** Abstract class that holds the functions commonly used by all items. */
-public abstract class AbstractItem implements Item {
+public abstract class AbstractChartItem implements ChartItemInterface {
 
   protected String[] itemForm;
   protected List<Tree> trees = new ArrayList<Tree>();
@@ -18,7 +18,7 @@ public abstract class AbstractItem implements Item {
   }
 
   @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemForm, ((Item) o).getItemform());
+    return ArrayUtils.match(this.itemForm, ((ChartItemInterface) o).getItemform());
   }
 
   @Override public int hashCode() {

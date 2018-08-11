@@ -2,12 +2,12 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 
 /** Item for CYK for sRCG, consisting of a nonterminal and an arbitrary long
  * range vector of at least length 2*1. */
-public class SrcgCykItem extends AbstractItem implements Item {
+public class SrcgCykItem extends AbstractChartItem implements ChartItemInterface {
 
   public SrcgCykItem(String nt, int i, int j) {
     this.itemForm = new String[3];

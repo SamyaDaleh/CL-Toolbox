@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
@@ -20,7 +20,7 @@ public class TagEarleyPrefixValidCompleteFoot
     this.antNeeded = 3;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemform();
       String[] itemForm2 = antecedences.get(1).getItemform();
@@ -74,8 +74,8 @@ public class TagEarleyPrefixValidCompleteFoot
         && node1.equals(node3) && pos3.equals("la") && iGamma3.equals("~")
         && i3.equals("~") && j3.equals("~") && k3.equals("~")
         && adj3.equals("0") && tag.isAdjoinable(treeName2, treeName1, node1)) {
-        Item consequence =
-          new DeductionItem(treeName2, node2, "rb", "~", i1, i1, l1, l1, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(treeName2, node2, "rb", "~", i1, i1, l1, l1, "0");
         List<Tree> derivedTrees;
         if (itemForm2.equals(antecedences.get(0).getItemform())) {
           derivedTrees = antecedences.get(0).getTrees();

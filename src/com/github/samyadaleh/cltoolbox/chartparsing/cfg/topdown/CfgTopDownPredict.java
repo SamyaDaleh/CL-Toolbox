@@ -1,12 +1,12 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -26,7 +26,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String stack = itemForm[0];
@@ -35,8 +35,8 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       List<Tree> derivedTrees = antecedences.get(0).getTrees();
       if (stackSplit[0].equals(rule.getLhs())) {
         if (stackSplit.length == 1) {
-          Item consequence =
-            new DeductionItem(String.join(" ", rule.getRhs()), i);
+          ChartItemInterface consequence =
+            new DeductionChartItem(String.join(" ", rule.getRhs()), i);
           if (derivedTrees.size() == 0) {
             List<Tree> derivedTreesNew = new ArrayList<Tree>();
             derivedTreesNew.add(new Tree(rule));
@@ -52,8 +52,8 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
           }
           consequences.add(consequence);
         } else {
-          Item consequence =
-            new DeductionItem(String.join(" ", rule.getRhs()) + " " + ArrayUtils
+          ChartItemInterface consequence =
+            new DeductionChartItem(String.join(" ", rule.getRhs()) + " " + ArrayUtils
               .getSubSequenceAsString(stackSplit, 1, stackSplit.length), i);
           if (derivedTrees.size() == 0) {
             derivedTrees.add(new Tree(rule));

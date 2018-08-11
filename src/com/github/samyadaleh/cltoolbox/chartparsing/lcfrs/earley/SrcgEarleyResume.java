@@ -1,12 +1,15 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
 import java.text.ParseException;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 /**
  * Whenever we are left of a variable that is not the first argument of one of
@@ -90,9 +93,17 @@ public class SrcgEarleyResume
         SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause1Parsed,
           itemForm1, rhs, iInt1, clause2Parsed, itemForm2);
       if (vectorsmatch) {
-        consequences
-          .add(new SrcgEarleyActiveItem(itemForm2[0], posInt1, iInt2 + 1, 0,
-            ArrayUtils.getSubSequenceAsList(itemForm2, 4, itemForm2.length)));
+        ChartItemInterface consequence =
+          new SrcgEarleyActiveItem(itemForm2[0], posInt1, iInt2 + 1, 0,
+            ArrayUtils.getSubSequenceAsList(itemForm2, 4, itemForm2.length));
+        List<Tree> derivedTrees;
+        if (antecedences.get(0).getItemform().equals(itemForm1)) {
+          derivedTrees = antecedences.get(0).getTrees();
+        } else {
+          derivedTrees = antecedences.get(1).getTrees();
+        }
+        consequence.setTrees(derivedTrees);
+        consequences.add(consequence);
       }
     }
   }

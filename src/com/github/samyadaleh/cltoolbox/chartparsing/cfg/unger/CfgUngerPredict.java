@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -25,7 +25,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
     this.cfg = cfg;
   }
 
-  @Override public List<Item> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == this.antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String from = itemForm[1];
@@ -45,8 +45,8 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
           }
         }
         if (rule.getRhs().length == 1) {
-          Item consequence =
-            new DeductionItem("•" + rule.getRhs()[0], from, to);
+          ChartItemInterface consequence =
+            new DeductionChartItem("•" + rule.getRhs()[0], from, to);
           consequence.setTrees(derivedTreesNew);
           consequences.add(consequence);
         } else {
@@ -71,19 +71,19 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
               && toInt - sequence.get(sequence.size() - 1) > 1) {
               continue;
             }
-            Item consequence = new DeductionItem("•" + rule.getRhs()[0], from,
+            ChartItemInterface consequence = new DeductionChartItem("•" + rule.getRhs()[0], from,
               String.valueOf(sequence.get(0)));
             consequence.setTrees(derivedTreesNew);
             consequences.add(consequence);
             for (int i = 1; i < sequence.size(); i++) {
-              consequence = new DeductionItem("•" + rule.getRhs()[i],
+              consequence = new DeductionChartItem("•" + rule.getRhs()[i],
                 String.valueOf(sequence.get(i - 1)),
                 String.valueOf(sequence.get(i)));
               consequence.setTrees(derivedTreesNew);
               consequences.add(consequence);
             }
             consequence =
-              new DeductionItem("•" + rule.getRhs()[rule.getRhs().length - 1],
+              new DeductionChartItem("•" + rule.getRhs()[rule.getRhs().length - 1],
                 String.valueOf(sequence.get(sequence.size() - 1)), to);
             consequence.setTrees(derivedTreesNew);
             consequences.add(consequence);

@@ -120,6 +120,9 @@ public class Predicate {
     return this.symbols[i - 1][j];
   }
 
+  /**
+   * According to the definition argument indices start at 1.
+   */
   public String[] getArgumentByIndex(int i) {
     return symbols[i - 1];
   }

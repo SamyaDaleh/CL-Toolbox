@@ -15,9 +15,9 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  */
 public class Deduction {
   /** All items derived in the process. */
-  private List<Item> chart;
+  private List<ChartItemInterface> chart;
   /** Items waiting to be used for further derivation. */
-  private List<Item> agenda;
+  private List<ChartItemInterface> agenda;
   /**
    * List of the same length of chart, elements at same indexes belong to each
    * other. Contains lists of lists of backpointers. One item can be derived in
@@ -61,8 +61,8 @@ public class Deduction {
   public boolean doParse(ParsingSchema schema, boolean success)
     throws ParseException {
     successfulTrace = success;
-    chart = new ArrayList<Item>();
-    agenda = new ArrayList<Item>();
+    chart = new ArrayList<ChartItemInterface>();
+    agenda = new ArrayList<ChartItemInterface>();
     deductedFrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
     appliedRule = new ArrayList<ArrayList<String>>();
     if (schema == null)
@@ -71,16 +71,16 @@ public class Deduction {
       applyAxiomRule(rule);
     }
     while (!agenda.isEmpty()) {
-      Item item = agenda.get(0);
+      ChartItemInterface item = agenda.get(0);
       agenda.remove(0);
-      for (DynamicDeductionRule rule : schema.getRules()) {
+      for (DynamicDeductionRuleInterface rule : schema.getRules()) {
         applyRule(item, rule);
       }
     }
     boolean goalfound = false;
     usefulItem = new boolean[chart.size()];
     derivedTrees = new ArrayList<Tree>();
-    for (Item goal : schema.getGoals()) {
+    for (ChartItemInterface goal : schema.getGoals()) {
       if (checkForGoal(goal) >= 0) {
         goalfound = true;
       }
@@ -172,7 +172,7 @@ public class Deduction {
    * Takes a goal item and compares it with all items in the chart. Returns its
    * index if one was found.
    */
-  private int checkForGoal(Item goal) {
+  private int checkForGoal(ChartItemInterface goal) {
     for (int i = 0; i < chart.size(); i++) {
       if (chart.get(i).equals(goal)) {
         usefulItem[i] = true;
@@ -181,10 +181,10 @@ public class Deduction {
           switch (replace) {
           case 'h':
             if (pGoal == null) {
-              pGoal = ((PItem) chart.get(i)).getProbability();
+              pGoal = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
               derivedTrees = trees;
             } else {
-              Double newP = ((PItem) chart.get(i)).getProbability();
+              Double newP = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
               if (newP > pGoal) {
                 pGoal = newP;
                 derivedTrees = trees;
@@ -193,10 +193,10 @@ public class Deduction {
             break;
           case 'l':
             if (pGoal == null) {
-              pGoal = ((PItem) chart.get(i)).getProbability();
+              pGoal = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
               derivedTrees = trees;
             } else {
-              Double newP = ((PItem) chart.get(i)).getProbability();
+              Double newP = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
               if (newP < pGoal) {
                 pGoal = newP;
                 derivedTrees = trees;
@@ -219,7 +219,7 @@ public class Deduction {
    */
   @SuppressWarnings("serial") private void
     applyAxiomRule(StaticDeductionRule rule) {
-    for (Item item : rule.consequences) {
+    for (ChartItemInterface item : rule.consequences) {
       if (chart.contains(item)) {
         continue;
       }
@@ -245,20 +245,20 @@ public class Deduction {
    * found.
    * @throws ParseException
    */
-  private void applyRule(Item item, DynamicDeductionRule rule)
+  private void applyRule(ChartItemInterface item, DynamicDeductionRuleInterface rule)
     throws ParseException {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() < itemsNeeded) {
       return;
     }
-    List<List<Item>> startList = new ArrayList<List<Item>>();
-    startList.add(new ArrayList<Item>());
+    List<List<ChartItemInterface>> startList = new ArrayList<List<ChartItemInterface>>();
+    startList.add(new ArrayList<ChartItemInterface>());
     startList.get(0).add(item);
-    for (List<Item> tryAntecedences : antecedenceListGenerator(startList, 0,
+    for (List<ChartItemInterface> tryAntecedences : antecedenceListGenerator(startList, 0,
       itemsNeeded - 1)) {
       rule.clearItems();
       rule.setAntecedences(tryAntecedences);
-      List<Item> newItems = rule.getConsequences();
+      List<ChartItemInterface> newItems = rule.getConsequences();
       if (newItems.size() > 0) {
         processNewItems(newItems, rule);
       }
@@ -269,17 +269,17 @@ public class Deduction {
    * Returns itemsNeeded items from the chart. All items appear only once per
    * list, no list is the permutation of another one.
    */
-  private List<List<Item>> antecedenceListGenerator(List<List<Item>> oldList,
+  private List<List<ChartItemInterface>> antecedenceListGenerator(List<List<ChartItemInterface>> oldList,
     int i, int itemsNeeded) {
     if (itemsNeeded == 0) {
       return oldList;
     }
-    List<List<Item>> finalList = new ArrayList<List<Item>>();
+    List<List<ChartItemInterface>> finalList = new ArrayList<List<ChartItemInterface>>();
     for (int j = i; j <= chart.size() - itemsNeeded; j++) {
       if (!chart.get(j).equals(oldList.get(0).get(0))) {
-        List<List<Item>> newList = new ArrayList<List<Item>>();
-        for (List<Item> subList : oldList) {
-          newList.add(new ArrayList<Item>());
+        List<List<ChartItemInterface>> newList = new ArrayList<List<ChartItemInterface>>();
+        for (List<ChartItemInterface> subList : oldList) {
+          newList.add(new ArrayList<ChartItemInterface>());
           newList.get(newList.size() - 1).addAll(subList);
           newList.get(newList.size() - 1).add(chart.get(j));
         }
@@ -291,13 +291,13 @@ public class Deduction {
   }
 
   /** Adds new items to chart and agenda if they are not in the chart yet. */
-  private void processNewItems(List<Item> newItems, DynamicDeductionRule rule) {
+  private void processNewItems(List<ChartItemInterface> newItems, DynamicDeductionRuleInterface rule) {
     ArrayList<Integer> newItemsDeductedFrom = new ArrayList<Integer>();
-    for (Item itemToCheck : rule.getAntecedences()) {
+    for (ChartItemInterface itemToCheck : rule.getAntecedences()) {
       newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
     }
     Collections.sort(newItemsDeductedFrom);
-    for (Item newItem : newItems) {
+    for (ChartItemInterface newItem : newItems) {
       if (chart.contains(newItem)) {
         int oldId = chart.indexOf(newItem);
         switch (replace) {
@@ -309,8 +309,8 @@ public class Deduction {
           }
           break;
         case 'h':
-          Double oldValue = ((PItem) chart.get(oldId)).getProbability();
-          Double newValue = ((PItem) newItem).getProbability();
+          Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId)).getProbability();
+          Double newValue = ((ProbabilisticChartItemInterface) newItem).getProbability();
           if (newValue > oldValue) {
             chart.set(oldId, newItem);
             appliedRule.get(oldId).set(0, rule.getName());
@@ -318,8 +318,8 @@ public class Deduction {
           }
           break;
         case 'l':
-          oldValue = ((PItem) chart.get(oldId)).getProbability();
-          newValue = ((PItem) newItem).getProbability();
+          oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId)).getProbability();
+          newValue = ((ProbabilisticChartItemInterface) newItem).getProbability();
           if (newValue < oldValue) {
             chart.set(oldId, newItem);
             appliedRule.get(oldId).set(0, rule.getName());
@@ -408,7 +408,7 @@ public class Deduction {
     return builder.toString();
   }
 
-  public List<Item> getChart() {
+  public List<ChartItemInterface> getChart() {
     return this.chart;
   }
 

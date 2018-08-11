@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -30,7 +30,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -47,8 +47,8 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
       if (tag.getInitialTree(treeName) != null && node.equals("")
         && f1.equals("-") && f2.equals("-") && adj.equals("0")
         && pos.equals("ra") && iniTreeRootLabel.equals(substNodeLabel)) {
-        Item consequence =
-          new DeductionItem(outTreeName, outNode, "rb", i, "-", "-", j, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(outTreeName, outNode, "rb", i, "-", "-", j, "0");
         Tree derivedTreeBase = tag.getTree(outTreeName);
         List<Tree> derivedTrees = new ArrayList<Tree>();
         for (Tree tree : antecedences.get(0).getTrees()) {

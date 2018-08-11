@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -28,7 +28,7 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -36,8 +36,8 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
       String i = itemForm[2];
       String j = itemForm[5];
       if (tag.getInitialTree(treeName) != null && node.equals("⊤")) {
-        Item consequence =
-          new DeductionItem(this.treeName, this.nodeGorn + "⊤", i, "-", "-", j);
+        ChartItemInterface consequence =
+          new DeductionChartItem(this.treeName, this.nodeGorn + "⊤", i, "-", "-", j);
         Tree derivedTreeBase = tag.getTree(this.treeName);
         List<Tree> derivedTrees = new ArrayList<Tree>();
         for (Tree tree : antecedences.get(0).getTrees()) {

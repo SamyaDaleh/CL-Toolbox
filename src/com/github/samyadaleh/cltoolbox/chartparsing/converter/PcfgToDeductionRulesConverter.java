@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.PItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgAstarComplete;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgAstarItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgCykComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgCykItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.SxCalc;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar.PcfgAstarComplete;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar.PcfgAstarItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar.SxCalc;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
@@ -26,8 +26,10 @@ public class PcfgToDeductionRulesConverter {
   /**
    * Converts a probabilistic CFG to a schema for a star parsing, which is
    * similar to CYK but with weights.
+   * @throws ParseException
    */
-  public static ParsingSchema pcfgToAstarRules(Pcfg pcfg, String w) {
+  public static ParsingSchema pcfgToAstarRules(Pcfg pcfg, String w)
+    throws ParseException {
     if (!(new Cfg(pcfg)).isInChomskyNormalForm()) {
       System.out.println(
         "PCFG must be in Chomsky Normal Form to apply this kind of astar parsing.");
@@ -49,13 +51,18 @@ public class PcfgToDeductionRulesConverter {
           Double rulew = -Math.log(pRule.getP());
           Double outw = outsides.get(
             SxCalc.getOutsideKey(pRule.getLhs(), i, 1, wSplit.length - 1 - i));
-          scan.addConsequence(
-            new PcfgAstarItem(rulew, outw, pRule.getLhs(), i, i + 1));
+          ProbabilisticChartItemInterface conequence =
+            new PcfgAstarItem(rulew, outw, pRule.getLhs(), i, i + 1);
+          List<Tree> derivedTrees = new ArrayList<Tree>();
+          derivedTrees.add(
+            new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs())));
+          conequence.setTrees(derivedTrees);
+          scan.addConsequence(conequence);
           scan.setName("scan " + pRule.toString());
           schema.addAxiom(scan);
         }
       } else {
-        DynamicDeductionRule complete =
+        DynamicDeductionRuleInterface complete =
           new PcfgAstarComplete(pRule, outsides, wSplit.length);
         schema.addRule(complete);
       }
@@ -87,7 +94,7 @@ public class PcfgToDeductionRulesConverter {
           }
           StaticDeductionRule scan = new StaticDeductionRule();
           Double rulep = -Math.log(pRule.getP());
-          PItem consequence = new PcfgCykItem(rulep, pRule.getLhs(), i, i + 1);
+          ProbabilisticChartItemInterface consequence = new PcfgCykItem(rulep, pRule.getLhs(), i, i + 1);
           List<Tree> derivedTrees = new ArrayList<Tree>();
           derivedTrees.add(
             new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs())));
@@ -97,7 +104,7 @@ public class PcfgToDeductionRulesConverter {
           schema.addAxiom(scan);
         }
       } else {
-        DynamicDeductionRule complete = new PcfgCykComplete(pRule);
+        DynamicDeductionRuleInterface complete = new PcfgCykComplete(pRule);
         schema.addRule(complete);
       }
     }

@@ -6,13 +6,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 
-/** Whenever we arrive at the end of the last argument, we convert the item into
- * a passive one. */
+/**
+ * Whenever we arrive at the end of the last argument, we convert the item into
+ * a passive one.
+ */
 public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
 
   public SrcgEarleyConvert() {
@@ -20,7 +22,8 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
+  @SuppressWarnings("unchecked") @Override public List<ChartItemInterface>
+    getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String clause = itemForm[0];
@@ -44,8 +47,10 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
           Predicate lhs = clauseParsed.getLhs();
           List<String> newVector = (List<String>) SrcgDeductionUtils
             .getRangesForArguments(rangesForElements, lhs);
-          consequences.add(new SrcgEarleyPassiveItem(
-            clauseParsed.getLhs().getNonterminal(), newVector));
+          ChartItemInterface consequence = new SrcgEarleyPassiveItem(
+            clauseParsed.getLhs().getNonterminal(), newVector);
+          consequence.setTrees(antecedences.get(0).getTrees());
+          consequences.add(consequence);
         }
       }
     }

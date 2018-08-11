@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -24,11 +24,11 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
     this.antNeeded = rule.getRhs().length;
   }
 
-  @Override public List<Item> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       int minI = Integer.MAX_VALUE;
       int prevItemStart = 0;
-      for (Item mayFirstRhsItem : antecedences) {
+      for (ChartItemInterface mayFirstRhsItem : antecedences) {
         int i = Integer.parseInt(mayFirstRhsItem.getItemform()[1]);
         if (i >= minI) {
           continue;
@@ -41,7 +41,7 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
       derivedTrees.add(new Tree(rule));
       for (int j = 0; j < rule.getRhs().length; j++) {
         boolean found = false;
-        for (Item mayRhsItem : antecedences) {
+        for (ChartItemInterface mayRhsItem : antecedences) {
           int i = Integer.parseInt(mayRhsItem.getItemform()[1]);
           if (i == prevItemStart
             && mayRhsItem.getItemform()[0].equals(rule.getRhs()[j])) {
@@ -68,7 +68,7 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
           return this.consequences;
         }
       }
-      Item consequence = new DeductionItem(rule.getLhs(), String.valueOf(minI),
+      ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(), String.valueOf(minI),
         String.valueOf(lSum));
       consequence.setTrees(derivedTrees);
       consequences.add(consequence);

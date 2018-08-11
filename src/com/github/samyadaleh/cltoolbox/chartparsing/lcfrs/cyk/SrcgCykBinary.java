@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
@@ -74,22 +74,31 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
       if (looksGood && overallRanges.size() > 0) {
         List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
           .getRangesForArguments(overallRanges, clause.getLhs());
-        Item consequence =
+        ChartItemInterface consequence =
           new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
         List<Tree> derivedTrees = new ArrayList<Tree>();
-        derivedTrees.add(TreeUtils.getTreeforSrcgClause(clause));
-        // TODO implement
-       /* if (itemForm1.equals(antecedences.get(0).getItemform())) {
-          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
-            antecedences.get(0).getTree());
-          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
-            antecedences.get(1).getTree());
+        Tree derivedTreeBase = new Tree(
+          TreeUtils.getCfgRuleRepresentationOfSrcgClause(clause, overallRanges));
+        if (itemForm1.equals(antecedences.get(0).getItemform())) {
+          for (Tree tree1 : antecedences.get(0).getTrees()) {
+            for (Tree tree2 : antecedences.get(1).getTrees()) {
+              derivedTreeBase =
+                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+              derivedTreeBase =
+                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+            }
+          }
         } else {
-          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
-            antecedences.get(1).getTree());
-          derivedTree = TreeUtils.performLeftmostSubstitution(derivedTree,
-            antecedences.get(0).getTree());
-        } //*/
+          for (Tree tree1 : antecedences.get(0).getTrees()) {
+            for (Tree tree2 : antecedences.get(1).getTrees()) {
+              derivedTreeBase =
+                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+              derivedTreeBase =
+                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+            }
+          }
+        }
+        derivedTrees.add(derivedTreeBase);
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);
         this.name = "complete " + clause.toString();

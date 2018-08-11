@@ -43,6 +43,10 @@ public class DisplayTree extends JFrame implements DisplayTreeInterface {
     this.g = g;
     AbstractDisplayTree.paint(this);
   }
+  
+  public static void main(String[] args) throws ParseException {
+    new DisplayTree(args);
+  }
 
   @Override public Tree getTree() {
     return this.tree;

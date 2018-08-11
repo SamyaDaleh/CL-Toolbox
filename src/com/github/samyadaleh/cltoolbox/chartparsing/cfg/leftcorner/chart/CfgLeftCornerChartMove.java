@@ -1,10 +1,10 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcornerchart;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart;
 
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 
 /** If the end of a rhs is encountered, move the topmost nonterminal from the
  * stack of lhs to the stack of completed items. */
@@ -15,12 +15,12 @@ public class CfgLeftCornerChartMove extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       if (itemForm[0].length() > 0
         && itemForm[0].charAt(itemForm[0].length() - 1) == '•') {
-        consequences.add(new DeductionItem(itemForm[0].substring(0, 1),
+        consequences.add(new DeductionChartItem(itemForm[0].substring(0, 1),
           itemForm[1], itemForm[2]));
       }
     }

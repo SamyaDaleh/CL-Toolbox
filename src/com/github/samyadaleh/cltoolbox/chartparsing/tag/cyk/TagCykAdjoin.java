@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -39,7 +39,7 @@ public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
       && tag.isAdjoinable(treeName1, treeName2,
         node2.substring(0, node2.length() - 1))
       && node1.equals("⊤") && node2.endsWith("⊥")) {
-      Item consequence = new DeductionItem(treeName2,
+      ChartItemInterface consequence = new DeductionChartItem(treeName2,
         node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j);
       List<Tree> derivatedTrees = new ArrayList<Tree>();
       if (itemForm1.equals(antecedences.get(0).getItemform())) {

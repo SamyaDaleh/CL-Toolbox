@@ -1,13 +1,13 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.PItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /**
  * Probabilistic item used for probabilistic CYK parsing.
  */
-public class PcfgCykItem extends AbstractItem implements PItem {
+public class PcfgCykItem extends AbstractChartItem implements ProbabilisticChartItemInterface {
   
   private final double p;
   

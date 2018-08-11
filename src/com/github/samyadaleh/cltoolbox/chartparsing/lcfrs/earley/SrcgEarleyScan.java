@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
-/** Whenever the next symbol after the dot is the next terminal in the input, we
- * can scan it. */
+/**
+ * Whenever the next symbol after the dot is the next terminal in the input, we
+ * can scan it.
+ */
 public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
 
   private final String[] wSplit;
@@ -21,7 +25,8 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences()
+    throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String clause = itemForm[0];
@@ -51,8 +56,15 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
           }
           newVector.set(place * 2, pos);
           newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
-          consequences.add(new SrcgEarleyActiveItem(clause, posInt + 1, iInt,
-            jInt + 1, newVector));
+          ChartItemInterface consequence = new SrcgEarleyActiveItem(clause,
+            posInt + 1, iInt, jInt + 1, newVector);
+          List<Tree> derivedTrees = new ArrayList<Tree>();
+          for (Tree tree : antecedences.get(0).getTrees()) {
+            derivedTrees.add(
+              TreeUtils.performPositionSubstitution(tree, wSplit[posInt], pos));
+          }
+          consequence.setTrees(derivedTrees);
+          consequences.add(consequence);
         }
       }
     }

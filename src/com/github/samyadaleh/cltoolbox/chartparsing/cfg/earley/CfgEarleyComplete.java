@@ -1,8 +1,8 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /**
@@ -41,8 +41,8 @@ public class CfgEarleyComplete
               + " " + stackSplit2[0] + " •" + ArrayUtils
                 .getSubSequenceAsString(stackSplit1, l + 1, stackSplit1.length);
           }
-          Item consequence =
-            new DeductionItem(newStack, String.valueOf(i1), String.valueOf(k2));
+          ChartItemInterface consequence =
+            new DeductionChartItem(newStack, String.valueOf(i1), String.valueOf(k2));
           consequence.setTrees(antecedences.get(0).getTrees());
           consequences.add(consequence);
           break;

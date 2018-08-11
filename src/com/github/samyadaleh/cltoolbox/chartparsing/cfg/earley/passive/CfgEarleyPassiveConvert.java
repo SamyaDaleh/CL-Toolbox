@@ -1,10 +1,10 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earleypassive;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive;
 
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 
 /**
  * Converts an active item (with a dot) into a passive item that does not care
@@ -18,12 +18,12 @@ public class CfgEarleyPassiveConvert extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       if (itemForm[0].endsWith("•")) {
         String lhsSym = itemForm[0].split(" ")[0];
-        Item consequence = new DeductionItem(lhsSym, itemForm[1], itemForm[2]);
+        ChartItemInterface consequence = new DeductionChartItem(lhsSym, itemForm[1], itemForm[2]);
         consequence.setTrees(antecedences.get(0).getTrees());
         consequences.add(consequence);
       }

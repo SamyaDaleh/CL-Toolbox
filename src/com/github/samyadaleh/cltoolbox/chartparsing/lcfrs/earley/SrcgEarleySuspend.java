@@ -3,12 +3,15 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 /**
  * Whenever we arrive at the end of an argument that is not the last argument,
@@ -81,7 +84,7 @@ public class SrcgEarleySuspend
                   itemForm1, rhsPred, iInt1, clause2Parsed, itemForm2);
               if (vectorsMatch) {
                 addNewConsequence(itemForm2, pos1, posInt1, clause2,
-                  clause2Parsed, pos2, iInt2, jInt2);
+                  clause2Parsed, pos2, iInt2, jInt2, itemForm1);
               }
             }
           }
@@ -91,15 +94,24 @@ public class SrcgEarleySuspend
   }
 
   private void addNewConsequence(String[] itemForm2, String pos1, int posInt1,
-    String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2) {
+    String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2,
+    String[] itemForm1) {
     ArrayList<String> newVector;
     newVector = new ArrayList<String>(Arrays.asList(
       ArrayUtils.getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
     int indabspos = clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
     newVector.set(indabspos * 2, pos2);
     newVector.set(indabspos * 2 + 1, pos1);
-    consequences.add(
-      new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1, newVector));
+    ChartItemInterface consequence =
+      new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1, newVector);
+    List<Tree> derivedTrees;
+    if (antecedences.get(0).getItemform().equals(itemForm1)) {
+      derivedTrees = antecedences.get(0).getTrees();
+    } else {
+      derivedTrees = antecedences.get(1).getTrees();
+    }
+    consequence.setTrees(derivedTrees);
+    consequences.add(consequence);
   }
 
   @Override public String toString() {

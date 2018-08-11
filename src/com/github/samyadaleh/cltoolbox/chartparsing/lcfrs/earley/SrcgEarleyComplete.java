@@ -2,10 +2,13 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 /**
  * Whenever we have a passive B item we can use it to move the dot over the
@@ -69,8 +72,16 @@ public class SrcgEarleyComplete
           }
           newVector.set(IndexOfFirstQuestionMark, pos2);
           newVector.set(IndexOfFirstQuestionMark + 1, posB);
-          consequences.add(new SrcgEarleyActiveItem(clause2, posBInt, iInt2,
-            jInt2 + 1, newVector));
+          ChartItemInterface consequence = new SrcgEarleyActiveItem(clause2,
+            posBInt, iInt2, jInt2 + 1, newVector);
+          List<Tree> derivedTrees;
+          if (itemForm1.equals(antecedences.get(0).getItemform())) {
+            derivedTrees = antecedences.get(0).getTrees();
+          } else {
+            derivedTrees = antecedences.get(1).getTrees();
+          }
+          consequence.setTrees(derivedTrees);
+          consequences.add(consequence);
         }
       }
     }

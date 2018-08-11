@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 /** If a node has a child, move to the fist child. */
@@ -20,7 +20,7 @@ public class TagEarleyMoveDown extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -33,8 +33,8 @@ public class TagEarleyMoveDown extends AbstractDynamicDeductionRule {
       String adj = itemForm[7];
       if (pos.equals("lb") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
-        Item consequence =
-          new DeductionItem(treeName, node + ".1", "la", i, j, k, l, "0");
+        ChartItemInterface consequence =
+          new DeductionChartItem(treeName, node + ".1", "la", i, j, k, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         consequences.add(consequence);
       }

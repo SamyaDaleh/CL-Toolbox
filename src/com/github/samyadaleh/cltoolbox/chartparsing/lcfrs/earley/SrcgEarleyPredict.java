@@ -1,27 +1,33 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
-/** Whenever our dot is left of a variable that is the first argument of some
- * rhs predicate B, we predict new B-rules. */
+/**
+ * Whenever our dot is left of a variable that is the first argument of some rhs
+ * predicate B, we predict new B-rules.
+ */
 public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
-  
+
   private final Clause outClause;
 
   public SrcgEarleyPredict(Clause outclause) {
     this.outClause = outclause;
-    this.name = "predict";
+    this.name = "predict " + outclause.toString();
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences()
+    throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String clause = itemForm[0];
@@ -44,10 +50,24 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
           for (Predicate rhsPred : clauseParsed.getRhs()) {
             if (rhsPred.getSymAt(1, 0).equals(mayV) && rhsPred.getNonterminal()
               .equals(outClause.getLhs().getNonterminal())) {
-              consequences.add(new SrcgEarleyActiveItem(outClause.toString(),
-                posInt, 1, 0, new RangeVector(
-                  outClause.getLhs().getSymbolsAsPlainArray().length)));
-              this.name = "predict " + outClause.toString();
+              ChartItemInterface consequence = new SrcgEarleyActiveItem(
+                outClause.toString(), posInt, 1, 0, new RangeVector(
+                  outClause.getLhs().getSymbolsAsPlainArray().length));
+              List<Tree> derivedTrees = new ArrayList<Tree>();
+              Tree derivedTreeBase = new Tree(
+                TreeUtils.getCfgRuleRepresentationOfSrcgClause(outClause));
+              for (Tree tree : antecedences.get(0).getTrees()) {
+                try {
+                derivedTrees.add(
+                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+                } catch (IndexOutOfBoundsException e) {
+                  // several items with different trees can lead to the same
+                  // item with "predict". It collects all the trees, but they
+                  // can not always be applied in all derivations downstream.
+                }
+              }
+              consequence.setTrees(derivedTrees);
+              consequences.add(consequence);
             }
           }
         }
@@ -58,7 +78,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[A(φ) -> ... B(X,...)...,pos,<i,j>,ρ_A]" + "\n______ φ(i,j) = X\n"
-        + "[" + outClause.toString() + ",pos,<1,0>,ρ_init']";
+      + "[" + outClause.toString() + ",pos,<1,0>,ρ_init']";
   }
 
 }

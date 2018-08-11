@@ -4,29 +4,29 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgBottomUpReduce;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgBottomUpShift;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgTopDownPredict;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgTopDownScan;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykCompleteGeneral;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykCompleteUnary;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyPredict;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyScan;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earleypassive.CfgEarleyPassiveComplete;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earleypassive.CfgEarleyPassiveConvert;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.CfgEarleyPassiveComplete;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.CfgEarleyPassiveConvert;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.CfgLeftCornerMove;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.CfgLeftCornerReduce;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.CfgLeftCornerRemove;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcornerchart.CfgLeftCornerChartMove;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcornerchart.CfgLeftCornerChartReduce;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcornerchart.CfgLeftCornerChartRemove;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart.CfgLeftCornerChartMove;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart.CfgLeftCornerChartReduce;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart.CfgLeftCornerChartRemove;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgBottomUpReduce;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgBottomUpShift;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown.CfgTopDownPredict;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown.CfgTopDownScan;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerPredict;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerScan;
@@ -57,19 +57,19 @@ public class CfgToDeductionRulesConverter {
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    DynamicDeductionRule scan = new CfgTopDownScan(wSplit);
+    DynamicDeductionRuleInterface scan = new CfgTopDownScan(wSplit);
     schema.addRule(scan);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      DynamicDeductionRule predict = new CfgTopDownPredict(rule);
+      DynamicDeductionRuleInterface predict = new CfgTopDownPredict(rule);
       schema.addRule(predict);
     }
 
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(new DeductionItem(cfg.getStartSymbol(), "0"));
+    axiom.addConsequence(new DeductionChartItem(cfg.getStartSymbol(), "0"));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
-    schema.addGoal(new DeductionItem("", String.valueOf(wSplit.length)));
+    schema.addGoal(new DeductionChartItem("", String.valueOf(wSplit.length)));
     return schema;
   }
 
@@ -85,20 +85,20 @@ public class CfgToDeductionRulesConverter {
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    DynamicDeductionRule shift = new CfgBottomUpShift(wSplit);
+    DynamicDeductionRuleInterface shift = new CfgBottomUpShift(wSplit);
     schema.addRule(shift);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      DynamicDeductionRule reduce = new CfgBottomUpReduce(rule);
+      DynamicDeductionRuleInterface reduce = new CfgBottomUpReduce(rule);
       schema.addRule(reduce);
     }
 
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(new DeductionItem("", "0"));
+    axiom.addConsequence(new DeductionChartItem("", "0"));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
     schema.addGoal(
-      new DeductionItem(cfg.getStartSymbol(), String.valueOf(wSplit.length)));
+      new DeductionChartItem(cfg.getStartSymbol(), String.valueOf(wSplit.length)));
     return schema;
   }
 
@@ -112,24 +112,24 @@ public class CfgToDeductionRulesConverter {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
-    DynamicDeductionRule scan = new CfgEarleyScan(wSplit);
+    DynamicDeductionRuleInterface scan = new CfgEarleyScan(wSplit);
     schema.addRule(scan);
 
-    DynamicDeductionRule complete = new CfgEarleyComplete();
+    DynamicDeductionRuleInterface complete = new CfgEarleyComplete();
     schema.addRule(complete);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getLhs().equals(cfg.getStartSymbol())) {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
-          Item consequence =
-            new DeductionItem(cfg.getStartSymbol() + " -> •", "0", "0");
+          ChartItemInterface consequence =
+            new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0");
           List<Tree> derivedTrees = new ArrayList<Tree>();
           derivedTrees.add(new Tree(rule));
           consequence.setTrees(derivedTrees);
           axiom.addConsequence(consequence);
         } else {
-          Item consequence = new DeductionItem(
+          ChartItemInterface consequence = new DeductionChartItem(
             cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
             "0", "0");
           List<Tree> derivedTrees = new ArrayList<Tree>();
@@ -140,16 +140,16 @@ public class CfgToDeductionRulesConverter {
         axiom.setName("axiom");
         schema.addAxiom(axiom);
         if (rule.getRhs()[0].equals("")) {
-          schema.addGoal(new DeductionItem(cfg.getStartSymbol() + " -> •", "0",
+          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
             String.valueOf(wSplit.length)));
         } else {
-          schema.addGoal(new DeductionItem(cfg.getStartSymbol() + " -> "
+          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + " -> "
             + String.join(" ", rule.getRhs()) + " •", "0",
             String.valueOf(wSplit.length)));
         }
       }
 
-      DynamicDeductionRule predict = new CfgEarleyPredict(rule);
+      DynamicDeductionRuleInterface predict = new CfgEarleyPredict(rule);
       schema.addRule(predict);
     }
     return schema;
@@ -163,13 +163,13 @@ public class CfgToDeductionRulesConverter {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
-    DynamicDeductionRule scan = new CfgEarleyScan(wSplit);
+    DynamicDeductionRuleInterface scan = new CfgEarleyScan(wSplit);
     schema.addRule(scan);
 
-    DynamicDeductionRule complete = new CfgEarleyPassiveComplete();
+    DynamicDeductionRuleInterface complete = new CfgEarleyPassiveComplete();
     schema.addRule(complete);
 
-    DynamicDeductionRule convert = new CfgEarleyPassiveConvert();
+    DynamicDeductionRuleInterface convert = new CfgEarleyPassiveConvert();
     schema.addRule(convert);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
@@ -177,24 +177,24 @@ public class CfgToDeductionRulesConverter {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
           axiom.addConsequence(
-            new DeductionItem(cfg.getStartSymbol() + " -> •", "0", "0"));
+            new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0"));
         } else {
-          axiom.addConsequence(new DeductionItem(
+          axiom.addConsequence(new DeductionChartItem(
             cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
             "0", "0"));
         }
         axiom.setName("axiom");
         schema.addAxiom(axiom);
         if (rule.getRhs()[0].equals("")) {
-          schema.addGoal(new DeductionItem(cfg.getStartSymbol() + " -> •", "0",
+          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
             String.valueOf(wSplit.length)));
         } else {
-          schema.addGoal(new DeductionItem(cfg.getStartSymbol(), "0",
+          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
             String.valueOf(wSplit.length)));
         }
       }
 
-      DynamicDeductionRule predict = new CfgEarleyPredict(rule);
+      DynamicDeductionRuleInterface predict = new CfgEarleyPredict(rule);
       schema.addRule(predict);
     }
     return schema;
@@ -218,22 +218,22 @@ public class CfgToDeductionRulesConverter {
     }
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(new DeductionItem(w, cfg.getStartSymbol(), ""));
+    axiom.addConsequence(new DeductionChartItem(w, cfg.getStartSymbol(), ""));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      DynamicDeductionRule reduce = new CfgLeftCornerReduce(rule);
+      DynamicDeductionRuleInterface reduce = new CfgLeftCornerReduce(rule);
       schema.addRule(reduce);
     }
 
-    DynamicDeductionRule remove = new CfgLeftCornerRemove();
+    DynamicDeductionRuleInterface remove = new CfgLeftCornerRemove();
     schema.addRule(remove);
 
-    DynamicDeductionRule move = new CfgLeftCornerMove(cfg.getNonterminals());
+    DynamicDeductionRuleInterface move = new CfgLeftCornerMove(cfg.getNonterminals());
     schema.addRule(move);
 
-    schema.addGoal(new DeductionItem("", "", ""));
+    schema.addGoal(new DeductionChartItem("", "", ""));
     return schema;
   }
 
@@ -249,32 +249,32 @@ public class CfgToDeductionRulesConverter {
     for (int i = 0; i < wSplit.length; i++) {
       StaticDeductionRule axiom = new StaticDeductionRule();
       axiom
-        .addConsequence(new DeductionItem(wSplit[i], String.valueOf(i), "1"));
+        .addConsequence(new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
       axiom.setName("scan " + wSplit[i]);
       schema.addAxiom(axiom);
       axiom = new StaticDeductionRule();
-      axiom.addConsequence(new DeductionItem("", String.valueOf(i), "0"));
+      axiom.addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
       axiom.setName("scan-ε ");
       schema.addAxiom(axiom);
     }
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(
-      new DeductionItem("", String.valueOf(wSplit.length), "0"));
+      new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
     axiom.setName("scan-ε ");
     schema.addAxiom(axiom);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      DynamicDeductionRule reduce = new CfgLeftCornerChartReduce(rule);
+      DynamicDeductionRuleInterface reduce = new CfgLeftCornerChartReduce(rule);
       schema.addRule(reduce);
     }
 
-    DynamicDeductionRule remove = new CfgLeftCornerChartRemove();
+    DynamicDeductionRuleInterface remove = new CfgLeftCornerChartRemove();
     schema.addRule(remove);
 
-    DynamicDeductionRule move = new CfgLeftCornerChartMove();
+    DynamicDeductionRuleInterface move = new CfgLeftCornerChartMove();
     schema.addRule(move);
 
-    schema.addGoal(new DeductionItem(cfg.getStartSymbol(), "0",
+    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
       String.valueOf(wSplit.length)));
     return schema;
   }
@@ -297,8 +297,8 @@ public class CfgToDeductionRulesConverter {
         for (int i = 0; i < wSplit.length; i++) {
           if (wSplit[i].equals(rule.getRhs()[0])) {
             StaticDeductionRule scan = new StaticDeductionRule();
-            Item consequence =
-              new DeductionItem(rule.getLhs(), String.valueOf(i), "1");
+            ChartItemInterface consequence =
+              new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
             List<Tree> derivedTrees = new ArrayList<Tree>();
             derivedTrees.add(new Tree(rule));
             consequence.setTrees(derivedTrees);
@@ -308,11 +308,11 @@ public class CfgToDeductionRulesConverter {
           }
         }
       } else {
-        DynamicDeductionRule complete = new CfgCykComplete(rule);
+        DynamicDeductionRuleInterface complete = new CfgCykComplete(rule);
         schema.addRule(complete);
       }
     }
-    schema.addGoal(new DeductionItem(cfg.getStartSymbol(), "0",
+    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
       String.valueOf(wSplit.length)));
     return schema;
   }
@@ -338,8 +338,8 @@ public class CfgToDeductionRulesConverter {
           for (int i = 0; i < wSplit.length; i++) {
             if (wSplit[i].equals(rule.getRhs()[0])) {
               StaticDeductionRule scan = new StaticDeductionRule();
-              Item consequence =
-                new DeductionItem(rule.getLhs(), String.valueOf(i), "1");
+              ChartItemInterface consequence =
+                new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
               List<Tree> derivedTrees = new ArrayList<Tree>();
               derivedTrees.add(new Tree(rule));
               consequence.setTrees(derivedTrees);
@@ -349,15 +349,15 @@ public class CfgToDeductionRulesConverter {
             }
           }
         } else {
-          DynamicDeductionRule complete = new CfgCykCompleteUnary(rule);
+          DynamicDeductionRuleInterface complete = new CfgCykCompleteUnary(rule);
           schema.addRule(complete);
         }
       } else {
-        DynamicDeductionRule complete = new CfgCykComplete(rule);
+        DynamicDeductionRuleInterface complete = new CfgCykComplete(rule);
         schema.addRule(complete);
       }
     }
-    schema.addGoal(new DeductionItem(cfg.getStartSymbol(), "0",
+    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
       String.valueOf(wSplit.length)));
     return schema;
   }
@@ -368,25 +368,25 @@ public class CfgToDeductionRulesConverter {
 
     for (int i = 0; i < wSplit.length; i++) {
       StaticDeductionRule scan = new StaticDeductionRule();
-      scan.addConsequence(new DeductionItem(wSplit[i], String.valueOf(i), "1"));
+      scan.addConsequence(new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
       scan.setName("scan " + wSplit[i]);
       schema.addAxiom(scan);
       StaticDeductionRule scanEps = new StaticDeductionRule();
-      scanEps.addConsequence(new DeductionItem("", String.valueOf(i), "0"));
+      scanEps.addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
       scanEps.setName("scan ε");
       schema.addAxiom(scanEps);
     }
     StaticDeductionRule scanEps = new StaticDeductionRule();
     scanEps.addConsequence(
-      new DeductionItem("", String.valueOf(wSplit.length), "0"));
+      new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
     scanEps.setName("scan ε");
     schema.addAxiom(scanEps);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      DynamicDeductionRule complete = new CfgCykCompleteGeneral(rule);
+      DynamicDeductionRuleInterface complete = new CfgCykCompleteGeneral(rule);
       schema.addRule(complete);
     }
-    schema.addGoal(new DeductionItem(cfg.getStartSymbol(), "0",
+    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
       String.valueOf(wSplit.length)));
     return schema;
   }
@@ -408,20 +408,20 @@ public class CfgToDeductionRulesConverter {
 
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.setName("axiom");
-    axiom.addConsequence(new DeductionItem("•" + cfg.getStartSymbol(), "0",
+    axiom.addConsequence(new DeductionChartItem("•" + cfg.getStartSymbol(), "0",
       String.valueOf(wSplit.length)));
     schema.addAxiom(axiom);
 
-    schema.addGoal(new DeductionItem(cfg.getStartSymbol() + "•", "0",
+    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + "•", "0",
       String.valueOf(wSplit.length)));
 
-    DynamicDeductionRule scan = new CfgUngerScan(wSplit);
+    DynamicDeductionRuleInterface scan = new CfgUngerScan(wSplit);
     schema.addRule(scan);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      DynamicDeductionRule predict = new CfgUngerPredict(rule, cfg);
+      DynamicDeductionRuleInterface predict = new CfgUngerPredict(rule, cfg);
       schema.addRule(predict);
-      DynamicDeductionRule complete = new CfgUngerComplete(rule);
+      DynamicDeductionRuleInterface complete = new CfgUngerComplete(rule);
       schema.addRule(complete);
     }
     return schema;

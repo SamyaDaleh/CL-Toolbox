@@ -1,7 +1,7 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcornerchart;
+package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /**
@@ -27,12 +27,12 @@ public class CfgLeftCornerChartRemove
         if (mayDottedRuleSplit[k].substring(1).equals(itemForm2[0])
           && i + l1 == j && mayDottedRuleSplit[k].length() > 1) {
           if (k == mayDottedRuleSplit.length - 1) {
-            consequences.add(new DeductionItem(
+            consequences.add(new DeductionChartItem(
               ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
                 + mayDottedRuleSplit[k].substring(1) + " •",
               String.valueOf(i), String.valueOf(l1 + l2)));
           } else {
-            consequences.add(new DeductionItem(
+            consequences.add(new DeductionChartItem(
               ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
                 + mayDottedRuleSplit[k].substring(1) + " •"
                 + ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, k + 1,

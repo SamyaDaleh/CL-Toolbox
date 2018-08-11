@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
@@ -21,7 +21,7 @@ public class CfgLeftCornerReduce extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String stackCompl = itemForm[0];
@@ -48,7 +48,7 @@ public class CfgLeftCornerReduce extends AbstractDynamicDeductionRule {
         } else {
           newLhs = rule.getLhs() + " " + stackLhs;
         }
-        consequences.add(new DeductionItem(newCompl, newPred, newLhs));
+        consequences.add(new DeductionChartItem(newCompl, newPred, newLhs));
       }
     }
     return consequences;

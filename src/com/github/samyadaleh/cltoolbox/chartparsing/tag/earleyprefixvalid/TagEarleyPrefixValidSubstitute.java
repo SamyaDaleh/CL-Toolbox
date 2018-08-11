@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -51,8 +51,8 @@ public class TagEarleyPrefixValidSubstitute
       && node2.equals("") && tag.isSubstitutionNode(p, treeName1)
       && p.getLabel().equals(tag.getInitialTree(treeName2).getRoot().getLabel())
       && pos2.equals("ra") && adj2.equals("0")) {
-      Item consequence =
-        new DeductionItem(treeName1, node1, "rb", "~", l1, "-", "-", l2, "0");
+      ChartItemInterface consequence =
+        new DeductionChartItem(treeName1, node1, "rb", "~", l1, "-", "-", l2, "0");
       List<Tree> derivedTrees = new ArrayList<Tree>();
       if (itemForm1.equals(antecedences.get(0).getItemform())) {
         for (Tree tree1 : antecedences.get(0).getTrees()) {

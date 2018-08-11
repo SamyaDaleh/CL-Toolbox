@@ -1,19 +1,24 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
-/** Similar to the general complete rule in CYK for CFG. If there is a clause
- * and the vectors of all items that represent the rhs match, combine them to a
- * new item that represents the lhs with span over all: // example clause: S^1(X
- * V Y W) -> A^11(X,Y) B^11(V,W) // items: [A^11, (<0,1>, <2,3>)] [B^11, (<1,2>,
- * <3,4>)] // generate: [S^1, (0,4)] */
+/**
+ * Similar to the general complete rule in CYK for CFG. If there is a clause and
+ * the vectors of all items that represent the rhs match, combine them to a new
+ * item that represents the lhs with span over all: // example clause: S^1(X V Y
+ * W) -> A^11(X,Y) B^11(V,W) // items: [A^11, (<0,1>, <2,3>)] [B^11, (<1,2>,
+ * <3,4>)] // generate: [S^1, (0,4)]
+ */
 public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
 
   private final Clause clause;
@@ -28,7 +33,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
     this.rangesNeeded = clause.getLhs().getSymbolsAsPlainArray().length;
   }
 
-  @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
+  @SuppressWarnings("unchecked") @Override public List<ChartItemInterface>
+    getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       Predicate lhs = clause.getLhs();
       List<List<String>> solutionRangesList =
@@ -67,8 +73,31 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         if (rangesAreOverlapping(rangeOverArguments)) {
           continue;
         }
-        consequences.add(new SrcgCykItem(clause.getLhs().getNonterminal(),
-          rangeOverArguments));
+        List<Tree> derivedTrees = new ArrayList<Tree>();
+        derivedTrees.add(new Tree(TreeUtils
+          .getCfgRuleRepresentationOfSrcgClause(clause, rangeOverElements)));
+        for (Predicate rhsPred : clause.getRhs()) {
+          int[] indices = lhs.find(rhsPred.getArgumentByIndex(1)[0]);
+          int pos = lhs.getAbsolutePos(indices[0], indices[1]);
+          String rangeStart = rangeOverElements.get(pos * 2).toString();
+          for (ChartItemInterface item : antecedences) {
+            if (item.getItemform()[1].equals(rangeStart)) {
+              List<Tree> derivedTreesNew = new ArrayList<Tree>();
+              for (Tree tree1 : derivedTrees) {
+                for (Tree tree2 : item.getTrees()) {
+                  derivedTreesNew
+                    .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+                }
+              }
+              derivedTrees = derivedTreesNew;
+              break;
+            }
+          }
+        }
+        ChartItemInterface consequence =
+          new SrcgCykItem(clause.getLhs().getNonterminal(), rangeOverArguments);
+        consequence.setTrees(derivedTrees);
+        consequences.add(consequence);
       }
     }
     return this.consequences;
@@ -87,7 +116,9 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         }
         List<List<String>> newsolutionRangesList =
           new ArrayList<List<String>>();
-        for (Item item : antecedences) {
+        List<List<Tree>> newDerivedAntecedenceTrees =
+          new ArrayList<List<Tree>>();
+        for (ChartItemInterface item : antecedences) {
           if (!nt.equals(item.getItemform()[0])) {
             continue;
           }
@@ -97,6 +128,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
             handleSubsequentSymbol(solutionRangesList, mayV,
               newsolutionRangesList, item);
           }
+          newDerivedAntecedenceTrees.add(item.getTrees());
         }
         if (!newsolutionRangesList.isEmpty()) {
           solutionRangesList = newsolutionRangesList;
@@ -107,7 +139,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
   }
 
   private void handleSubsequentSymbol(List<List<String>> solutionRangesList,
-    String mayV, List<List<String>> newsolutionRangesList, Item item) {
+    String mayV, List<List<String>> newsolutionRangesList,
+    ChartItemInterface item) {
     for (Predicate rhsPred : clause.getRhs()) {
       int[] indices = rhsPred.find(mayV);
       if (indices[0] == -1) {
@@ -125,7 +158,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
   }
 
   private void handleFirstSymbol(List<List<String>> solutionRangesList,
-    String mayV, Item item) {
+    String mayV, ChartItemInterface item) {
     for (Predicate rhsPred : clause.getRhs()) {
       int[] indices = rhsPred.find(mayV);
       if (indices[0] == -1) {
@@ -177,8 +210,10 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
     }
   }
 
-  /** Finds the given symbol in the rhs and returns the nonterminal it belongs
-   * to. If it is not found, it is probably a terminal and null is returned. */
+  /**
+   * Finds the given symbol in the rhs and returns the nonterminal it belongs
+   * to. If it is not found, it is probably a terminal and null is returned.
+   */
   private String getNonterminalOfPredicateContainingSymbol(String symAt,
     Clause clause) {
     for (Predicate rhsPred : clause.getRhs()) {

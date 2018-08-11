@@ -5,19 +5,19 @@ import java.util.List;
 
 /** Class to hold the methods commonly used by all DeductionRules. */
 public abstract class AbstractDynamicDeductionRule
-  implements DynamicDeductionRule {
+  implements DynamicDeductionRuleInterface {
 
-  protected List<Item> antecedences;
-  protected List<Item> consequences;
+  protected List<ChartItemInterface> antecedences;
+  protected List<ChartItemInterface> consequences;
   protected String name;
 
   protected int antNeeded;
 
-  @Override public List<Item> getAntecedences() {
+  @Override public List<ChartItemInterface> getAntecedences() {
     return this.antecedences;
   }
 
-  @Override public void setAntecedences(List<Item> antecedences) {
+  @Override public void setAntecedences(List<ChartItemInterface> antecedences) {
     this.antecedences = antecedences;
   }
 
@@ -30,8 +30,8 @@ public abstract class AbstractDynamicDeductionRule
   }
 
   @Override public void clearItems() {
-    antecedences = new ArrayList<Item>();
-    consequences = new ArrayList<Item>();
+    antecedences = new ArrayList<ChartItemInterface>();
+    consequences = new ArrayList<ChartItemInterface>();
   }
 
 }

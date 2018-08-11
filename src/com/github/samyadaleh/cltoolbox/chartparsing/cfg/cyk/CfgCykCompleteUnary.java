@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -25,7 +25,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemform();
       String nt1 = itemForm1[0];
@@ -35,7 +35,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
       int j1int = Integer.parseInt(j1);
 
       if (nt1.equals(rule.getRhs()[0])) {
-        Item consequence = new DeductionItem(rule.getLhs(),
+        ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(),
           String.valueOf(i1int), String.valueOf(j1int));
         Tree derivedTreeBase = new Tree(rule);
         List<Tree> derivedTrees = new ArrayList<Tree>();

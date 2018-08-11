@@ -3,13 +3,13 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 import java.text.ParseException;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 
 /** Active item that has not been fully seen yet. */
-public class SrcgEarleyActiveItem extends AbstractItem implements Item {
+public class SrcgEarleyActiveItem extends AbstractChartItem implements ChartItemInterface {
 
   private RangeVector p;
 

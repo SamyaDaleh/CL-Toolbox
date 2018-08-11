@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
@@ -47,8 +47,8 @@ public class TagEarleyPrefixValidCompleteNode
       && tag.isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;
-      Item consequence =
-        new DeductionItem(treeName1, node1, "ra", iGamma1, i1, f1, f2, l2, "0");
+      ChartItemInterface consequence =
+        new DeductionChartItem(treeName1, node1, "ra", iGamma1, i1, f1, f2, l2, "0");
       List<Tree> derivedTrees;
       if (itemForm1.equals(antecedences.get(0).getItemform())) {
         derivedTrees = antecedences.get(1).getTrees();

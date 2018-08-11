@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule {
@@ -17,7 +17,7 @@ public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -32,7 +32,7 @@ public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule {
       if (pos.equals("lb") && !iGamma.equals("~") && !i.equals("~")
         && !j.equals("~") && !k.equals("~") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
-        Item consequence = new DeductionItem(treeName, node + ".1", "la",
+        ChartItemInterface consequence = new DeductionChartItem(treeName, node + ".1", "la",
           iGamma, i, j, k, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         consequences.add(consequence);

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.SxCalc;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar.SxCalc;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 
 import static org.junit.Assert.assertTrue;

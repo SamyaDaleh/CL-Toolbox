@@ -1,15 +1,20 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
-/** Similar to the Unary rule in extended CYK for CFG. If there is a chain rule
- * and an item for the rhs, get an lhs item with the same span. */
+/**
+ * Similar to the Unary rule in extended CYK for CFG. If there is a chain rule
+ * and an item for the rhs, get an lhs item with the same span.
+ */
 public class SrcgCykUnary extends AbstractDynamicDeductionRule {
 
   private final Clause clause;
@@ -22,7 +27,8 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     this.wSplit = wSplit;
   }
 
-  @SuppressWarnings("unchecked") @Override public List<Item> getConsequences() {
+  @SuppressWarnings("unchecked") @Override public List<ChartItemInterface> getConsequences()
+    throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String nt = itemForm[0];
@@ -73,11 +79,19 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
           // you want it.
         }
         if (overallRanges.size() > 0) {
-          List<Integer> newVector = (List<Integer>) SrcgDeductionUtils.getRangesForArguments(
-            overallRanges,
-            clause.getLhs());
-          consequences
-            .add(new SrcgCykItem(clause.getLhs().getNonterminal(), newVector));
+          List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
+            .getRangesForArguments(overallRanges, clause.getLhs());
+          Tree derivedTreeBase = new Tree(
+            TreeUtils.getCfgRuleRepresentationOfSrcgClause(clause, overallRanges));
+          List<Tree> derivedTrees = new ArrayList<Tree>();
+          for (Tree tree : antecedences.get(0).getTrees()) {
+            derivedTrees.add(
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
+          }
+          ChartItemInterface consequence =
+            new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
+          consequence.setTrees(derivedTrees);
+          consequences.add(consequence);
           this.name = "complete " + clause.toString();
         }
       }

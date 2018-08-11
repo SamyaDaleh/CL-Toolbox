@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 /** From a single-child node move up to the parent node. */
@@ -22,7 +22,7 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String treeName = itemForm[0];
@@ -37,8 +37,8 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
           .getGornAddressOfPotentialRightSibling();
         if (tag.getTree(treeName).getNodeByGornAdress(nodeSib) == null) {
           String parentNode = node.substring(0, node.length() - 3) + "⊥";
-          Item consequence =
-            new DeductionItem(treeName, parentNode, i, f1, f2, j);
+          ChartItemInterface consequence =
+            new DeductionChartItem(treeName, parentNode, i, f1, f2, j);
           consequence.setTrees(antecedences.get(0).getTrees());
           consequences.add(consequence);
         }

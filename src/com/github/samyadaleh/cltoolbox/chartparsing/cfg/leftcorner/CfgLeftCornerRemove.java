@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.Item;
+import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /** If topmost symbol on stacks completed and predicted are the same, remove
@@ -16,7 +16,7 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<Item> getConsequences() {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemform();
       String stackCompl = itemForm[0];
@@ -30,7 +30,7 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
           stackComplSplit.length);
         String newPred = ArrayUtils.getSubSequenceAsString(stackPredSplit, 1,
           stackPredSplit.length);
-        consequences.add(new DeductionItem(newCompl, newPred, stackLhs));
+        consequences.add(new DeductionChartItem(newCompl, newPred, stackLhs));
       }
     }
     return consequences;

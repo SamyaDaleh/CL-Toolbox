@@ -10,22 +10,22 @@ import java.util.Set;
  * with help of the rules. */
 public class ParsingSchema {
   private final Set<StaticDeductionRule> axioms = new HashSet<StaticDeductionRule>();
-  private final Set<DynamicDeductionRule> rules = new HashSet<DynamicDeductionRule>();
-  private final List<Item> goal = new ArrayList<Item>();
+  private final Set<DynamicDeductionRuleInterface> rules = new HashSet<DynamicDeductionRuleInterface>();
+  private final List<ChartItemInterface> goal = new ArrayList<ChartItemInterface>();
   
   public void addAxiom(StaticDeductionRule rule) {
     axioms.add(rule);
   }
 
-  public void addRule(DynamicDeductionRule rule) {
+  public void addRule(DynamicDeductionRuleInterface rule) {
     rules.add(rule);
   }
 
-  public void addGoal(Item item) {
+  public void addGoal(ChartItemInterface item) {
     this.goal.add(item);
   }
 
-  public Set<DynamicDeductionRule> getRules() {
+  public Set<DynamicDeductionRuleInterface> getRules() {
     return this.rules;
   }
 
@@ -33,7 +33,7 @@ public class ParsingSchema {
     return this.axioms;
   }
 
-  public List<Item> getGoals() {
+  public List<ChartItemInterface> getGoals() {
     return this.goal;
   }
 }
