@@ -272,21 +272,9 @@ This algorithm works the same as the previous one except that it handles any gra
 
 Unlike the previously seen Earley algorithms this implementation can not handle empty productions and assumes that the grammar is ordered. Despite that it still works top-down matching the input string starting at the beginning, with the difference that an item has to be suspended whenever the end of an argument is reached, so the string in between can be parsed before the next argument. There are two kinds of items: active and passive ones. Active items consist of a clause where a dot in the left hand side marks up to which position the arguments have been matched with the input string. One index says how much of the input has been matched. Two more indices say where the dot is located in the lhs. After that a range vector which is as long as the number of elements in the lhs times 2 say for each lhs element which span it has. Passive items consist of a nonterminal whose span has fully been seen and two indices per argument give the span for each argument. As usual the chart is initialized with every rule that has the start symbol as lhs nonterminal with the dot located at the beginning and no ranges are known. If a dot is located before a variable a predict step triggers a new item for each production rule whose lhs nonterminal is the same as for the rhs predicate where the variable belongs to. If the dot is located before a terminal, a scan step moves the dot over the terminal and updates the respective indices. If the dot reaches the end of an argument that is not the last one, the item is suspended and the parsing process returns to the clause that triggered the prediction, moving the dot over the variable that has been matched with the input. A resume step with both the suspended item and the one that now wants to process the variable returns to the next argument in the lower item. If a dot reaches the end of the last argument of a lhs, the items has been fully seen and is converted to a passive item while the spans for each element are converted to spans for each argument. Finally a complete step combines a passive item with an active item to move the dot over the last missing variable belonging to that nonterminal.
 
-### ChartToTreeConverter
+### Graphical output
 
-The ChartToTreeConverter retrieves the derivated trees from a Deduction object. Currently not from every parsing trace the derivation tree can be retrieved. In general the converter searches for the goal items and retrieves the steps that lead to this goal, while considering all sets of backpointers and removes duplicate trees at the end, so all derivated trees are displayed. Because the search starts with the goal items the steps are retrieved in reversed order. Depending on the algorithm the steps are considered either in the given or in reversed (hence flipped again) order. The names of the steps contain the applied rule. The rules are converted to trees and applied to each other in the respective order, in this way the whole derivated trees are build up and returned in a list of bracket formated string.
-
-#### CFG
-
-For every algorithm basically the steps are considered top down. Each rule is coverted into its respective tree. Each nonterminal leaf is replaced by the tree of the next rule that expands those nonterminal. This process repeats for every used rule and results in the full tree for an input string.
-
-#### TAG
-
-Under construction ...
-
-#### SRCG
-
-For sRCG the process nearly works the same as for CFG: Every used rule is converted into its string representation using only its nonterminals. Terminal strings are added as children after the nonterminals has been considered, this is because no generalization about the order of nonterminal and terminal children is possible. To each terminal string its index is extracted from the range vector and added in pointed brackets. This results in a full tree for the whole sentence in the bracket tree format described below.
+Currently the graphical output consists of two classes: The ParsingTraceTable displays the same information that has been printed to the command line. It is a table containing all chart items, backpointers and applied rules' names, but contrary to the command line it can be resized and scrolled no matter the length. There is one feature for outputs of TAG algorithms only: If the cursor hovers a chart item, the corresponding tree rules is displayed with the same class that is used for the overall derived trees.
 
 #### Tree format
 
@@ -295,10 +283,6 @@ The same tree class that was created to represent the trees of a TAG is also use
 (S (Comp (dat<0> ))(VP (NP (Jan<1> ))(VP (NP (Piet<2> ))(VP (NP (de-kinderen<3> ))(V (zwemmen<6> )))(V (helpen<5> )))(V (zag<4> ))))
 ```
 This format is similar to the first one, but each leaf is appended by an index in pointed brackets that indicate the real order of the leaf nodes. Hence the representation of crossing edges is limited to the lowest level. 
-
-### Graphical output
-
-Currently the graphical output consists of two classes: The ParsingTraceTable displays the same information that has been printed to the command line. It is a table containing all chart items, backpointers and applied rules' names, but contrary to the command line it can be resized and scrolled no matter the length. There is one feature for outputs of TAG algorithms only: If the cursor hovers a chart item, the corresponding tree rules is displayed with the same class that is used for the overall derived trees.
 
 #### DisplayTree
 
@@ -321,13 +305,13 @@ How to add a new parsing algorithm to the Toolbox:
         4. Implement `getConsequences()`, this shall calculate the consequence items based on the antecedences the rule currently has. The consequences will be an empty list when `getConsequences()` is called, so if no consequences can be calculated return those empty list.
         5. If the rule needs several antecendences, prefer to implement `calculateConsequences()` that takes items as arguments and can be called by `getConsequences()` several times with different item order. If you implement `AbstractDynamicDecutionRuleTwoAntecedences` this is already done for you and you just need to implement `calculateConsequences()` that stores generated consequences in the `consequences` list.
         6. Override `public String toString()` to include the definition of the rule. This is very useful in debug mode where you can directly see what the rule does instead of an abstract memory pointer. Also it might help you when you implement the calculation of consequences, so feel free to add actual information the rule has to its string representation, like the production rule it handles.
-        7. If you create the consequence items create objects of type `DeductionItem` for symbolic parsing and `PItem` for probabilistic parsing.
+        7. If you create the consequence items create any objects of type `ChartItemInterface`. `DeductionChartItem` is an alrounder for symbolic parsing and `PcfgCykItem` is currently the only implementation of `ProbabilisticChartItemInterface` for probabilistic parsing.
 2. In the respective `ToDeductionRulesConverter` create a method that takes your grammar formalism and the input string as input and returns a `ParsingSchema` object. Create `DynamicDeductionRule` objects and add them as rules. Create `StaticDeductionRule` objects, give them a name and add them as axioms. Add an Item as Goal.
 3. Add the new algorithm to `GrammarToDeductionRulesConverter` with a name it should be callable in the command line interface.
 4. Add the algorithm with the same name to `GrammarToGrammarConverter`. If there are restrictions on the grammar format check for them here and add a conversion strategy for the please-switch.
 5. In `Main` if you implemented a new formalism add a call to the grammar parser and calls to the respective convert methods here. In any case update the `printHelp()` method to inform the user about the new option.
 6. In `MainTest` add a call to the new algorithm.
-7. If possible add a handle to `ChartToTreeConverter` for your new algorithm, but it works fine without.
+7. If possible extend items to keep track of the trees derived so far. Deduction still works withou them, but you will not see a derived tree at the end.
 
 
 ## References
