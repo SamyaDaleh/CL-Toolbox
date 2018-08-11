@@ -2,6 +2,8 @@ package com.github.samyadaleh.cltoolbox.common;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -171,5 +173,20 @@ public class TreeUtils {
       + "<" + pos + ">" + derivedTreeString
         .substring(index + searchFor.length(), derivedTreeString.length()));
     return newTree;
+  }
+
+  public static Tree performSecondLeftmostSubstitution(Tree derivedTree,
+    Tree tree) throws ParseException {
+    String derivedTreeString = derivedTree.toString();
+    Pattern pattern = Pattern.compile("\\(\\w+ \\)");
+    Matcher matcher = pattern.matcher(derivedTreeString);
+    matcher.find();
+    int firstChild = matcher.start();
+    int pos = derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )",
+      firstChild + 1);
+    Tree newDerivatedTree = new Tree(
+      derivedTreeString.substring(0, pos) + tree.toString() + derivedTreeString
+        .substring(pos + tree.getRoot().getLabel().length() + 3));
+    return newDerivatedTree;
   }
 }

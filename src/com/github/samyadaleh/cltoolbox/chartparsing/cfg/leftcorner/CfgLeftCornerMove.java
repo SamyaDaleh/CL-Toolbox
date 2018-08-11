@@ -7,8 +7,10 @@ import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
-/** If the end of a rhs is encountered, move the topmost nonterminal from the
- * stack of lhs to the stack of completed items. */
+/**
+ * If the end of a rhs is encountered, move the topmost nonterminal from the
+ * stack of lhs to the stack of completed items.
+ */
 public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
 
   private final String[] nonterminals;
@@ -41,7 +43,10 @@ public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
               1, stackPredSplit.length);
             String newLhs = ArrayUtils.getSubSequenceAsString(stackLhsSplit, 1,
               stackLhsSplit.length);
-            consequences.add(new DeductionChartItem(newCompl, newPred, newLhs));
+            ChartItemInterface consequence =
+              new DeductionChartItem(newCompl, newPred, newLhs);
+            consequence.setTrees(antecedences.get(0).getTrees());
+            consequences.add(consequence);
             break;
           }
         }

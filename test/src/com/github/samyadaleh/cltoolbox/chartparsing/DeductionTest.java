@@ -57,9 +57,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("(S (a )(S (a )(b ))(b ))",
-    // deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testCfgLeftcornerBreak() throws ParseException {
@@ -69,8 +68,9 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TODO activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals(
+      "(S (A (D (a ))(E (b ))(F (c )))(B (G (d ))(H (e ))(I (f )))(C (J (g ))(K (h ))(L (i ))))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testCfgLeftcornerChart() throws ParseException {
@@ -80,8 +80,20 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
-    // TDOD activate when implemented
-    // assertEquals("", deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S (a )(S (b )(S (c ))(b ))(a ))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgLeftcornerChartBreak() throws ParseException {
+    String w = "a b c d e f g h i";
+    ParsingSchema schema = CfgToDeductionRulesConverter
+      .cfgToLeftCornerChartRules(TestGrammarLibrary.leftCornerBreak(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals(
+      "(S (A (D (a ))(E (b ))(F (c )))(B (G (d ))(H (e ))(I (f )))(C (J (g ))(K (h ))(L (i ))))",
+      deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testCfgCyk() throws ParseException {
