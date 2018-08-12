@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,48 +35,44 @@ public class GrammarParser {
   public static Cfg parseCfgFile(String grammarFile) throws IOException {
     Cfg cfg = new Cfg();
     errors = new ArrayList<Exception>();
-    BufferedReader in = new BufferedReader(new FileReader(grammarFile));
-    String line = in.readLine().trim();
-    while (line != null) {
-      String lineTrim = line.trim();
-      int quotes = lineTrim.length() - lineTrim.replace("\"", "").length();
-      if (quotes % 2 > 0) {
-        errors.add(
-          new ParseException("Uneven number of quotes in line " + lineTrim, 0));
-      }
-      String[] splitEquals = lineTrim.split("=");
-      if (splitEquals.length == 1) {
-        errors.add(
-          new ParseException("No equals symbol found in line " + lineTrim, 0));
-      }
-      switch (lineTrim.charAt(0)) {
-      case 'N':
+    Map<String, List<String>> declarations = parseDeclarations(grammarFile);
+    for (Entry<String, List<String>> entry : declarations.entrySet()) {
+      switch (entry.getKey()) {
+      case "N":
         if (cfg.getNonterminals() != null) {
           errors.add(new ParseException("N was declared twice.", 0));
-          break;
+          continue;
         }
-        cfg.setNonterminals(parseNT(lineTrim));
+        String[] nts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        cfg.setNonterminals(nts);
         break;
-      case 'T':
+      case "T":
         if (cfg.getTerminals() != null) {
           errors.add(new ParseException("T was declared twice.", 0));
-          break;
+          continue;
         }
-        cfg.setTerminals(parseNT(lineTrim));
+        String[] ts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        cfg.setTerminals(ts);
         break;
-      case 'S':
+      case "S":
         if (cfg.getStartSymbol() != null) {
           errors.add(new ParseException("S was declared twice.", 0));
-          break;
+          continue;
         }
-        cfg.setStartSymbol(parseS(lineTrim));
+        if (entry.getValue().size() > 1) {
+          errors.add(new ParseException("Too many start symbols declared", 0));
+          continue;
+        }
+        cfg.setStartSymbol(entry.getValue().get(0));
         break;
-      case 'P':
+      case "P":
         if (cfg.getProductionRules().size() > 0) {
           errors.add(new ParseException("P was declared twice.", 0));
           break;
         }
-        for (String rule : parseNT(lineTrim)) {
+        for (String rule : entry.getValue()) {
           try {
             cfg.addProductionRule(rule);
           } catch (ParseException e) {
@@ -81,16 +80,14 @@ public class GrammarParser {
           }
         }
         break;
-      case 'G':
+      case "G":
         System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
         errors.add(new ParseException(
-          "Unknown declaration symbol: " + lineTrim.charAt(0), 0));
+          "Unknown declaration symbol: " + entry.getKey(), 0));
       }
-      line = in.readLine();
     }
-    in.close();
     for (String nt : cfg.getNonterminals()) {
       for (String t : cfg.getTerminals()) {
         if (t.equals(nt)) {
@@ -136,10 +133,10 @@ public class GrammarParser {
     return cfg;
   }
 
-  /** Parses a PCFG from a file and returns it as Pcfg. */
-  public static Pcfg parsePcfgFile(String grammarFile) throws IOException {
-    Pcfg pcfg = new Pcfg();
-    errors = new ArrayList<Exception>();
+  private static Map<String, List<String>> parseDeclarations(String grammarFile)
+    throws IOException {
+    Map<String, List<String>> declarations =
+      new LinkedHashMap<String, List<String>>();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
     while (line != null) {
@@ -153,39 +150,61 @@ public class GrammarParser {
       if (splitEquals.length == 1) {
         errors.add(
           new ParseException("No equals symbol found in line " + lineTrim, 0));
+        continue;
       }
-      switch (lineTrim.charAt(0)) {
-      case 'N':
+      String symbol = splitEquals[0].trim();
+      if (declarations.containsKey(symbol)) {
+        errors.add(new ParseException(symbol + " was declared twice.", 0));
+      }
+      declarations.put(symbol, parseNT(lineTrim));
+      line = in.readLine();
+    }
+    in.close();
+    return declarations;
+  }
+
+  /** Parses a PCFG from a file and returns it as Pcfg. */
+  public static Pcfg parsePcfgFile(String grammarFile) throws IOException {
+    Pcfg pcfg = new Pcfg();
+    errors = new ArrayList<Exception>();
+    Map<String, List<String>> declarations = parseDeclarations(grammarFile);
+    for (Entry<String, List<String>> entry : declarations.entrySet()) {
+      switch (entry.getKey()) {
+      case "N":
         if (pcfg.getNonterminals() != null) {
           errors.add(new ParseException("N was declared twice.", 0));
-          in.close();
-          return null;
+          continue;
         }
-        pcfg.setNonterminals(parseNT(lineTrim));
+        String[] nts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        pcfg.setNonterminals(nts);
         break;
-      case 'T':
+      case "T":
         if (pcfg.getTerminals() != null) {
           errors.add(new ParseException("T was declared twice.", 0));
-          in.close();
-          return null;
+          continue;
         }
-        pcfg.setTerminals(parseNT(lineTrim));
+        String[] ts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        pcfg.setTerminals(ts);
         break;
-      case 'S':
+      case "S":
         if (pcfg.getStartSymbol() != null) {
           errors.add(new ParseException("S was declared twice.", 0));
-          in.close();
-          return null;
+          continue;
         }
-        pcfg.setStartSymbol(parseS(lineTrim));
+        if (entry.getValue().size() > 1) {
+          errors.add(new ParseException("Too many start symbols declared", 0));
+          continue;
+        }
+        pcfg.setStartSymbol(entry.getValue().get(0));
         break;
-      case 'P':
+      case "P":
         if (pcfg.getProductionRules().size() > 0) {
           errors.add(new ParseException("P was declared twice.", 0));
-          in.close();
-          return null;
+          continue;
         }
-        for (String rule : parseNT(lineTrim)) {
+        for (String rule : entry.getValue()) {
           try {
             pcfg.addProductionRule(rule);
           } catch (ParseException e) {
@@ -193,15 +212,14 @@ public class GrammarParser {
           }
         }
         break;
-      case 'G':
+      case "G":
         System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
-        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
+        errors.add(new ParseException(
+          "Unknown declaration symbol: " + entry.getKey(), 0));
       }
-      line = in.readLine();
     }
-    in.close();
     for (String nt : pcfg.getNonterminals()) {
       for (String t : pcfg.getTerminals()) {
         if (t.equals(nt)) {
@@ -251,52 +269,49 @@ public class GrammarParser {
   public static Tag parseTagFile(String grammarFile) throws IOException {
     Tag tag = new Tag();
     errors = new ArrayList<Exception>();
-    BufferedReader in = new BufferedReader(new FileReader(grammarFile));
-    String line = in.readLine().trim();
-    while (line != null) {
-      String lineTrim = line.trim();
-      int quotes = lineTrim.length() - lineTrim.replace("\"", "").length();
-      if (quotes % 2 > 0) {
-        errors.add(
-          new ParseException("Uneven number of quotes in line " + lineTrim, 0));
-      }
-      String[] splitEquals = lineTrim.split("=");
-      if (splitEquals.length == 1) {
-        errors.add(
-          new ParseException("No equals symbol found in line " + lineTrim, 0));
-      }
-      switch (lineTrim.charAt(0)) {
-      case 'N':
+    Map<String, List<String>> declarations = parseDeclarations(grammarFile);
+    for (Entry<String, List<String>> entry : declarations.entrySet()) {
+      switch (entry.getKey()) {
+      case "N":
         if (tag.getNonterminals() != null) {
-          System.out.println("Declaring N twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring N twice is not allowed", 0));
+          continue;
         }
-        tag.setNonterminals(parseNT(lineTrim));
+        String[] nts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        tag.setNonterminals(nts);
         break;
-      case 'T':
+      case "T":
         if (tag.getTerminals() != null) {
-          System.out.println("Declaring T twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring T twice is not allowed", 0));
+          continue;
         }
-        tag.setTerminals(parseNT(lineTrim));
+        String[] ts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        tag.setTerminals(ts);
         break;
-      case 'S':
+      case "S":
         if (tag.getStartSymbol() != null) {
-          System.out.println("Declaring S twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring S twice is not allowed", 0));
+          continue;
         }
-        tag.setStartSymbol(parseS(lineTrim));
+        if (entry.getValue().size() > 1) {
+          errors.add(new ParseException("Too many start symbols declared", 0));
+          continue;
+        }
+        tag.setStartSymbol(entry.getValue().get(0));
         break;
-      case 'I':
-        if (tag.getInitialTreeNames().size() > 0) {
-          System.out.println("Declaring I twice is not allowed");
-          in.close();
-          return null;
+      case "I":
+        if (tag.getTerminals() == null) {
+          errors.add(new ParseException(
+            "You have to declare terminals before trees can be parsed.", 0));
+          continue;
         }
-        for (String treeDec : parseNT(lineTrim)) {
+        if (tag.getInitialTreeNames().size() > 0) {
+          errors.add(new ParseException("Declaring I twice is not allowed", 0));
+          continue;
+        }
+        for (String treeDec : entry.getValue()) {
           try {
             tag.addInitialTree(treeDec);
           } catch (ParseException e) {
@@ -304,13 +319,17 @@ public class GrammarParser {
           }
         }
         break;
-      case 'A':
-        if (tag.getAuxiliaryTreeNames().size() > 0) {
-          System.out.println("Declaring A twice is not allowed");
-          in.close();
-          return null;
+      case "A":
+        if (tag.getTerminals() == null) {
+          errors.add(new ParseException(
+            "You have to declare terminals before trees can be parsed.", 0));
+          continue;
         }
-        for (String treeDec : parseNT(lineTrim)) {
+        if (tag.getAuxiliaryTreeNames().size() > 0) {
+          errors.add(new ParseException("Declaring A twice is not allowed", 0));
+          continue;
+        }
+        for (String treeDec : entry.getValue()) {
           try {
             tag.addAuxiliaryTree(treeDec);
           } catch (ParseException e) {
@@ -318,15 +337,14 @@ public class GrammarParser {
           }
         }
         break;
-      case 'G':
+      case "G":
         System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
-        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
+        errors.add(new ParseException(
+          "Unknown declaration symbol: " + entry.getKey(), 0));
       }
-      line = in.readLine();
     }
-    in.close();
     for (String nt : tag.getNonterminals()) {
       for (String t : tag.getTerminals()) {
         if (t.equals(nt)) {
@@ -348,7 +366,7 @@ public class GrammarParser {
               + treeName + " is neither declared nonterminal nor terminal "
               + "and is not epsilon.", 0));
         }
-        if (tree.getNodeByGornAdress(v.getGornAddress()+ ".1") != null
+        if (tree.getNodeByGornAdress(v.getGornAddress() + ".1") != null
           && contains(tag.getTerminals(), v.getLabel())) {
           errors.add(new ParseException("Node with gorn address "
             + v.getGornAddress() + " in tree " + treeName
@@ -399,86 +417,67 @@ public class GrammarParser {
    * For a line like "A", "S" it gets the content of each quote and makes each
    * an element of the returned array.
    */
-  private static String[] parseNT(String lineTrim) {
+  private static List<String> parseNT(String lineTrim) {
     Matcher m = p.matcher(lineTrim);
-    ArrayList<String> nList = new ArrayList<String>();
+    List<String> nList = new ArrayList<String>();
     while (m.find()) {
       String n = m.group();
       nList.add(n.substring(1, n.length() - 1));
     }
-    return nList.toArray(new String[nList.size()]);
-  }
-
-  /** Takes a line like "S" and returns the string inside the quotes. */
-  private static String parseS(String lineTrim) {
-    Matcher m = p.matcher(lineTrim);
-    if (m.find()) {
-      String s = m.group();
-      return s.substring(1, s.length() - 1);
-    }
-    errors.add(new ParseException(
-      "No declaration of start symbol found in line " + lineTrim, 0));
-    return null;
+    return nList;
   }
 
   /** Parses a sRCG from a file and returns it as Srcg. */
   public static Srcg parseSrcgFile(String grammarFile) throws IOException {
     Srcg srcg = new Srcg();
     errors = new ArrayList<Exception>();
-    BufferedReader in = new BufferedReader(new FileReader(grammarFile));
-    String line = in.readLine().trim();
-    while (line != null) {
-      String lineTrim = line.trim();
-      int quotes = lineTrim.length() - lineTrim.replace("\"", "").length();
-      if (quotes % 2 > 0) {
-        errors.add(
-          new ParseException("Uneven number of quotes in line " + lineTrim, 0));
-      }
-      String[] splitEquals = lineTrim.split("=");
-      if (splitEquals.length == 1) {
-        errors.add(
-          new ParseException("No equals symbol found in line " + lineTrim, 0));
-      }
-      switch (lineTrim.charAt(0)) {
-      case 'N':
+    Map<String, List<String>> declarations = parseDeclarations(grammarFile);
+    for (Entry<String, List<String>> entry : declarations.entrySet()) {
+      switch (entry.getKey()) {
+      case "N":
         if (srcg.getNonterminals() != null) {
-          System.out.println("Declaring N twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring N twice is not allowed", 0));
+          continue;
         }
-        srcg.setNonterminals(parseNT(lineTrim));
+        String[] nts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        srcg.setNonterminals(nts);
         break;
-      case 'V':
+      case "V":
         if (srcg.getVariables() != null) {
-          System.out.println("Declaring V twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring V twice is not allowed", 0));
+          continue;
         }
-        srcg.setVariables(parseNT(lineTrim));
+        String[] vs =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        srcg.setVariables(vs);
         break;
-      case 'T':
+      case "T":
         if (srcg.getTerminals() != null) {
-          System.out.println("Declaring T twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring T twice is not allowed", 0));
+          continue;
         }
-        srcg.setTerminals(parseNT(lineTrim));
+        String[] ts =
+          entry.getValue().toArray(new String[entry.getValue().size()]);
+        srcg.setTerminals(ts);
         break;
-      case 'S':
+      case "S":
         if (srcg.getStartSymbol() != null) {
-          System.out.println("Declaring S twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring S twice is not allowed", 0));
+          continue;
         }
-        srcg.setStartSymbol(parseS(lineTrim));
+        if (entry.getValue().size() > 1) {
+          errors.add(new ParseException("Too many start symbols declared", 0));
+          continue;
+        }
+        srcg.setStartSymbol(entry.getValue().get(0));
         break;
-      case 'P':
+      case "P":
         if (srcg.getClauses().size() > 0) {
-          System.out.println("Declaring P twice is not allowed");
-          in.close();
-          return null;
+          errors.add(new ParseException("Declaring P twice is not allowed", 0));
+          continue;
         }
-        for (String clauseDec : parseNT(lineTrim)) {
+        for (String clauseDec : entry.getValue()) {
           try {
             srcg.addClause(clauseDec);
           } catch (ParseException e) {
@@ -486,15 +485,14 @@ public class GrammarParser {
           }
         }
         break;
-      case 'G':
+      case "G":
         System.out.println("Grammar declaration detected. Nothing to do.");
         break;
       default:
-        System.err.println("Unknown declaration symbol: " + lineTrim.charAt(0));
+        errors.add(new ParseException(
+          "Unknown declaration symbol: " + entry.getKey(), 0));
       }
-      line = in.readLine();
     }
-    in.close();
     for (String nt : srcg.getVariables()) {
       for (String t : srcg.getTerminals()) {
         if (t.equals(nt)) {

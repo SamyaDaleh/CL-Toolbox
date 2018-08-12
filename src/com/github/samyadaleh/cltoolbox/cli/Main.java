@@ -48,19 +48,7 @@ class Main { // NO_UCD (test only)
       System.out.println("Using tag-cyk-extended instead.");
       algorithm = "tag-cyk-extended";
     }
-    success = false;
-    please = false;
-    javafx = false;
-    for (int i = 3; i < args.length; i++) {
-      if (args[i].equals("--success")) {
-        success = true;
-      } else if (args[i].equals("--please")) {
-        please = true;
-      }
-      if (args[i].equals("--javafx")) {
-        javafx = true;
-      }
-    }
+    handleOptionalParameters(args);
     JfxWindowHolder jwh = new JfxWindowHolder();
     parseGrammarFileAndConvertToParsingSchema(grammarFile, w, algorithm);
     Deduction deduction = new Deduction();
@@ -91,6 +79,22 @@ class Main { // NO_UCD (test only)
     }
     if (schema != null) {
       drawDerivedTree(algorithm, schema, tag, deduction, javafx, jwh);
+    }
+  }
+
+  private static void handleOptionalParameters(String[] args) {
+    success = false;
+    please = false;
+    javafx = false;
+    for (int i = 3; i < args.length; i++) {
+      if (args[i].equals("--success")) {
+        success = true;
+      } else if (args[i].equals("--please")) {
+        please = true;
+      }
+      if (args[i].equals("--javafx")) {
+        javafx = true;
+      }
     }
   }
 
