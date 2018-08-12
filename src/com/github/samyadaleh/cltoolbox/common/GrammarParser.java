@@ -88,6 +88,19 @@ public class GrammarParser {
           "Unknown declaration symbol: " + entry.getKey(), 0));
       }
     }
+    checkForGrammarProblems(cfg);
+    if (errors.size() > 0) {
+      System.err.println(
+        "The following errors occurred while reading the grammar file:");
+      for (Exception e : errors) {
+        System.err.println(e.getMessage());
+      }
+      return null;
+    }
+    return cfg;
+  }
+
+  private static void checkForGrammarProblems(Cfg cfg) {
     for (String nt : cfg.getNonterminals()) {
       for (String t : cfg.getTerminals()) {
         if (t.equals(nt)) {
@@ -122,15 +135,6 @@ public class GrammarParser {
       errors
         .add(new ParseException("No production rules declared in grammar.", 0));
     }
-    if (errors.size() > 0) {
-      System.err.println(
-        "The following errors occurred while reading the grammar file:");
-      for (Exception e : errors) {
-        System.err.println(e.getMessage());
-      }
-      return null;
-    }
-    return cfg;
   }
 
   private static Map<String, List<String>> parseDeclarations(String grammarFile)
@@ -220,6 +224,19 @@ public class GrammarParser {
           "Unknown declaration symbol: " + entry.getKey(), 0));
       }
     }
+    checkForGrammarProblems(pcfg);
+    if (errors.size() > 0) {
+      System.err.println(
+        "The following errors occurred while reading the grammar file:");
+      for (Exception e : errors) {
+        System.err.println(e.getMessage());
+      }
+      return null;
+    }
+    return pcfg;
+  }
+
+  private static void checkForGrammarProblems(Pcfg pcfg) {
     for (String nt : pcfg.getNonterminals()) {
       for (String t : pcfg.getTerminals()) {
         if (t.equals(nt)) {
@@ -254,15 +271,6 @@ public class GrammarParser {
       errors
         .add(new ParseException("No production rules declared in grammar.", 0));
     }
-    if (errors.size() > 0) {
-      System.err.println(
-        "The following errors occurred while reading the grammar file:");
-      for (Exception e : errors) {
-        System.err.println(e.getMessage());
-      }
-      return null;
-    }
-    return pcfg;
   }
 
   /** Parses a TAG from a text file and returns it as a Tag object. */
@@ -345,6 +353,19 @@ public class GrammarParser {
           "Unknown declaration symbol: " + entry.getKey(), 0));
       }
     }
+    checkForGrammarProblems(tag);
+    if (errors.size() > 0) {
+      System.err.println(
+        "The following errors occurred while reading the grammar file:");
+      for (Exception e : errors) {
+        System.err.println(e.getMessage());
+      }
+      return null;
+    }
+    return tag;
+  }
+
+  private static void checkForGrammarProblems(Tag tag) {
     for (String nt : tag.getNonterminals()) {
       for (String t : tag.getTerminals()) {
         if (t.equals(nt)) {
@@ -402,15 +423,6 @@ public class GrammarParser {
       errors.add(
         new ParseException("No initial trees rules declared in grammar.", 0));
     }
-    if (errors.size() > 0) {
-      System.err.println(
-        "The following errors occurred while reading the grammar file:");
-      for (Exception e : errors) {
-        System.err.println(e.getMessage());
-      }
-      return null;
-    }
-    return tag;
   }
 
   /**
@@ -493,6 +505,19 @@ public class GrammarParser {
           "Unknown declaration symbol: " + entry.getKey(), 0));
       }
     }
+    checkForGrammarProblems(srcg);
+    if (errors.size() > 0) {
+      System.err.println(
+        "The following errors occurred while reading the grammar file:");
+      for (Exception e : errors) {
+        System.err.println(e.getMessage());
+      }
+      return null;
+    }
+    return srcg;
+  }
+
+  private static void checkForGrammarProblems(Srcg srcg) {
     for (String nt : srcg.getVariables()) {
       for (String t : srcg.getTerminals()) {
         if (t.equals(nt)) {
@@ -523,15 +548,6 @@ public class GrammarParser {
     if (srcg.getClauses() == null) {
       errors.add(new ParseException("No clauses declared in grammar.", 0));
     }
-    if (errors.size() > 0) {
-      System.err.println(
-        "The following errors occurred while reading the grammar file:");
-      for (Exception e : errors) {
-        System.err.println(e.getMessage());
-      }
-      return null;
-    }
-    return srcg;
   }
 
   private static void checkPredicateFormat(Srcg srcg, Clause clause,
