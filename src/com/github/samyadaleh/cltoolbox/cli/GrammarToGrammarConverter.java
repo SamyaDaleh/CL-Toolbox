@@ -8,33 +8,29 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 class GrammarToGrammarConverter {
-  private final boolean please;
 
-  GrammarToGrammarConverter(boolean please) {
-    this.please = please;
-  }
-
-  Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm) throws ParseException {
+  static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm, boolean please)
+    throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
-      return getCfgForTopDown(cfg);
+      return getCfgForTopDown(cfg, please);
     case "cfg-shiftreduce":
-      return getCfgForShiftReduce(cfg);
+      return getCfgForShiftReduce(cfg, please);
     case "cfg-earley":
     case "cfg-earley-passive":
       return cfg;
     case "cfg-leftcorner":
-      return getCfgForLeftCorner(cfg);
+      return getCfgForLeftCorner(cfg, please);
     case "cfg-leftcorner-chart":
       return cfg;
     case "cfg-cyk":
-      return getCfgForCyk(cfg);
+      return getCfgForCyk(cfg, please);
     case "cfg-cyk-extended":
-      return getCfgForCykExtended(cfg);
+      return getCfgForCykExtended(cfg, please);
     case "cfg-cyk-general":
       return cfg;
     case "cfg-unger":
-      return getCfgForLeftCorner(cfg);
+      return getCfgForLeftCorner(cfg, please);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -42,13 +38,14 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm)
-    throws ParseException {
+  static Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm,
+    boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
-    return checkAndMayConvertToCfg(cfg, algorithm);
+    return checkAndMayConvertToCfg(cfg, algorithm, please);
   }
 
-  Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm) {
+  static Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm,
+    boolean please) {
     switch (algorithm) {
     case "pcfg-astar":
     case "pcfg-cyk":
@@ -75,7 +72,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm) {
+  static Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm,
+    boolean please) {
     switch (algorithm) {
     case "pcfg-astar":
     case "pcfg-cyk":
@@ -99,15 +97,15 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm)
-    throws ParseException {
+  static Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm,
+    boolean please) throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
-      return getSrcgForEarley(cfg);
+      return getSrcgForEarley(cfg, please);
     case "srcg-cyk-extended":
-      return getSrcgForCykExtended(cfg);
+      return getSrcgForCykExtended(cfg, please);
     case "srcg-cyk-general":
-      return getSrcgForCykGeneral(cfg);
+      return getSrcgForCykGeneral(cfg, please);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -115,15 +113,15 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm)
-    throws ParseException {
+  static Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm,
+    boolean please) throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
-      return getSrcgForEarley(srcg);
+      return getSrcgForEarley(srcg, please);
     case "srcg-cyk-extended":
-      return getSrcgForCykExtended(srcg);
+      return getSrcgForCykExtended(srcg, please);
     case "srcg-cyk-general":
-      return getSrcgForCykGeneral(srcg);
+      return getSrcgForCykGeneral(srcg, please);
     default:
       System.out.println(
         "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -131,13 +129,14 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm)
-    throws ParseException {
+  static Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm,
+    boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
-    return checkAndMayConvertToSrcg(cfg, algorithm);
+    return checkAndMayConvertToSrcg(cfg, algorithm, please);
   }
 
-  Tag checkAndMayConvertToTag(Tag tag, String algorithm) throws ParseException {
+  static Tag checkAndMayConvertToTag(Tag tag, String algorithm, boolean please)
+    throws ParseException {
     switch (algorithm) {
     case "tag-cyk-extended":
       if (!tag.isBinarized()) {
@@ -161,7 +160,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Tag checkAndMayConvertToTag(Cfg cfg, String algorithm) throws ParseException {
+  static Tag checkAndMayConvertToTag(Cfg cfg, String algorithm, boolean please)
+    throws ParseException {
     switch (algorithm) {
     case "tag-cyk-extended":
       if (!cfg.isBinarized()) {
@@ -186,13 +186,13 @@ class GrammarToGrammarConverter {
     }
   }
 
-  Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm)
-    throws ParseException {
+  static Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm,
+    boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
-    return checkAndMayConvertToTag(cfg, algorithm);
+    return checkAndMayConvertToTag(cfg, algorithm, please);
   }
 
-  private Cfg getCfgForCykExtended(Cfg cfg) {
+  private static Cfg getCfgForCykExtended(Cfg cfg, boolean please) {
     if (!cfg.isInCanonicalTwoForm()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
@@ -209,7 +209,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForCyk(Cfg cfg) {
+  private static Cfg getCfgForCyk(Cfg cfg, boolean please) {
     if (!cfg.isInChomskyNormalForm()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
@@ -227,7 +227,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForLeftCorner(Cfg cfg) throws ParseException {
+  private static Cfg getCfgForLeftCorner(Cfg cfg, boolean please)
+    throws ParseException {
     if (cfg.hasEpsilonProductions() || cfg.hasLeftRecursion()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions().getCfgWithoutLeftRecursion()
@@ -243,7 +244,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForShiftReduce(Cfg cfg) {
+  private static Cfg getCfgForShiftReduce(Cfg cfg, boolean please) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
@@ -259,7 +260,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Cfg getCfgForTopDown(Cfg cfg) {
+  private static Cfg getCfgForTopDown(Cfg cfg, boolean please) {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
@@ -275,7 +276,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForCykExtended(Srcg srcg) throws ParseException {
+  private static Srcg getSrcgForCykExtended(Srcg srcg, boolean please)
+    throws ParseException {
     if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
       if (please) {
         return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions()
@@ -290,7 +292,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForCykExtended(Cfg cfg) throws ParseException {
+  private static Srcg getSrcgForCykExtended(Cfg cfg, boolean please)
+    throws ParseException {
     if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
       if (please) {
         return new Srcg(cfg.getBinarizedCfg()
@@ -306,7 +309,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForCykGeneral(Srcg srcg) throws ParseException {
+  private static Srcg getSrcgForCykGeneral(Srcg srcg, boolean please)
+    throws ParseException {
     if (srcg.hasEpsilonProductions()) {
       if (please) {
         return srcg.getSrcgWithoutEmptyProductions()
@@ -321,7 +325,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForCykGeneral(Cfg cfg) throws ParseException {
+  private static Srcg getSrcgForCykGeneral(Cfg cfg, boolean please)
+    throws ParseException {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
         return new Srcg(cfg.getCfgWithoutEmptyProductions())
@@ -336,7 +341,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForEarley(Srcg srcg) throws ParseException {
+  private static Srcg getSrcgForEarley(Srcg srcg, boolean please)
+    throws ParseException {
     if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
       if (please) {
         return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions()
@@ -351,7 +357,8 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private Srcg getSrcgForEarley(Cfg cfg) throws ParseException {
+  private static Srcg getSrcgForEarley(Cfg cfg, boolean please)
+    throws ParseException {
     if (!cfg.isBinarized()) {
       if (please) {
         return new Srcg(cfg.getBinarizedCfg()).getSrcgWithoutUselessRules();

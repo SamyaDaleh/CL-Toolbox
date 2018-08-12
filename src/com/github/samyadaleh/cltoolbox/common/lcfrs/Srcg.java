@@ -188,15 +188,6 @@ public class Srcg {
   }
 
   /**
-   * Returns true if sRCG contains either rules that do not lead to a terminal
-   * sequence or whose lhs nonterminal is not reachable from the start symbol.
-   */
-  public boolean hasUselessRules() {
-    return UselessRules.hasNonterminatingSymbols(this)
-      | UselessRules.hasNonreachableSymbols(this);
-  }
-
-  /**
    * Returns a sRCG equivalent to this one but with only useful rules.
    */
   public Srcg getSrcgWithoutUselessRules() {

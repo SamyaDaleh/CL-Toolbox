@@ -11,14 +11,15 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 public abstract class AbstractChartItem implements ChartItemInterface {
 
   protected String[] itemForm;
-  protected List<Tree> trees = new ArrayList<Tree>();
+  private List<Tree> trees = new ArrayList<Tree>();
 
   @Override public String[] getItemform() {
     return this.itemForm;
   }
 
   @Override public boolean equals(Object o) {
-    return ArrayUtils.match(this.itemForm, ((ChartItemInterface) o).getItemform());
+    return ArrayUtils.match(this.itemForm,
+      ((ChartItemInterface) o).getItemform());
   }
 
   @Override public int hashCode() {

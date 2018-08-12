@@ -188,8 +188,7 @@ public class LcfrsToDeductionRulesConverter {
         new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
           new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length));
       List<Tree> derivedTrees = new ArrayList<Tree>();
-      derivedTrees
-        .add(new Tree(TreeUtils.getCfgRuleRepresentationOfSrcgClause(clause)));
+      derivedTrees.add(TreeUtils.getTreeOfSrcgClause(clause));
       consequence.setTrees(derivedTrees);
       initialize.addConsequence(consequence);
       initialize.setName("initialize");

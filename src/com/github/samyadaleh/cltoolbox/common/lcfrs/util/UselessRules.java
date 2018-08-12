@@ -11,14 +11,6 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 public class UselessRules {
 
   /**
-   * Returns true if sRCG contains at least one nonterminal that can not be
-   * derived to a sequence of terminals.
-   */
-  public static boolean hasNonterminatingSymbols(Srcg srcg) {
-    return getNonterminatingSymbols(srcg).size() > 0;
-  }
-
-  /**
    * Returns a list of all nonterminals that do not lead to a sequence of
    * terminals. Terminating nonterminals are all that appear as lhs on rules
    * whose rhs is empty or whose rhs only constists of terminating nonterminals.
@@ -58,14 +50,6 @@ public class UselessRules {
       }
     }
     return nonterminatingSymbols;
-  }
-
-  /**
-   * Returns true if sRCG contains at least one nonterminal that can not be
-   * reached by the start symbol.
-   */
-  public static boolean hasNonreachableSymbols(Srcg srcg) {
-    return getNonreachableSymbols(srcg).size() > 0;
   }
 
   private static List<String> getNonreachableSymbols(Srcg srcg) {

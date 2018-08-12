@@ -74,8 +74,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
           continue;
         }
         List<Tree> derivedTrees = new ArrayList<Tree>();
-        derivedTrees.add(new Tree(TreeUtils
-          .getCfgRuleRepresentationOfSrcgClause(clause, rangeOverElements)));
+        derivedTrees
+          .add(TreeUtils.getTreeOfSrcgClause(clause, rangeOverElements));
         for (Predicate rhsPred : clause.getRhs()) {
           int[] indices = lhs.find(rhsPred.getArgumentByIndex(1)[0]);
           int pos = lhs.getAbsolutePos(indices[0], indices[1]);

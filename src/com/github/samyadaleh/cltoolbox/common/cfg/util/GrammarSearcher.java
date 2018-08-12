@@ -15,8 +15,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
  */
 public class GrammarSearcher {
   private static Deduction deduction = new Deduction();
-  private static GrammarToDeductionRulesConverter gdrc =
-    new GrammarToDeductionRulesConverter();
   private static ParsingSchema schema;
   private static java.util.Random r = new java.util.Random();
   private static int populationSize = 200;
@@ -326,7 +324,8 @@ public class GrammarSearcher {
 
   private static float propertyCfgTopdownParseable(Cfg cfg, float actualScore)
     throws ParseException {
-    schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-topdown");
+    schema = GrammarToDeductionRulesConverter.convertToSchema(cfg, "t0 t1",
+      "cfg-topdown");
     if (deduction.doParse(schema, false)) {
       actualScore++;
     }
@@ -340,7 +339,8 @@ public class GrammarSearcher {
 
   private static float propertyCfgLeftCornerParseable(Cfg cfg,
     float actualScore) throws ParseException {
-    schema = gdrc.convertToSchema(cfg, "t0 t1", "cfg-leftcorner");
+    schema = GrammarToDeductionRulesConverter.convertToSchema(cfg, "t0 t1",
+      "cfg-leftcorner");
     if (deduction.doParse(schema, false)) {
       actualScore++;
     }

@@ -77,8 +77,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
         ChartItemInterface consequence =
           new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
         List<Tree> derivedTrees = new ArrayList<Tree>();
-        Tree derivedTreeBase = new Tree(
-          TreeUtils.getCfgRuleRepresentationOfSrcgClause(clause, overallRanges));
+        Tree derivedTreeBase =
+          TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
         if (itemForm1.equals(antecedences.get(0).getItemform())) {
           for (Tree tree1 : antecedences.get(0).getTrees()) {
             for (Tree tree2 : antecedences.get(1).getTrees()) {

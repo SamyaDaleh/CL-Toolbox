@@ -159,7 +159,7 @@ public class CfgToDeductionRulesConverter {
    * Converts a cfg to a parsing scheme for Earley parsing with passive items.
    * Based n https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf
    */
-  public static ParsingSchema cfgToEarleyPassiveRules(Cfg cfg, String w) {
+  static ParsingSchema cfgToEarleyPassiveRules(Cfg cfg, String w) {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
@@ -294,19 +294,7 @@ public class CfgToDeductionRulesConverter {
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 1) {
-        for (int i = 0; i < wSplit.length; i++) {
-          if (wSplit[i].equals(rule.getRhs()[0])) {
-            StaticDeductionRule scan = new StaticDeductionRule();
-            ChartItemInterface consequence =
-              new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
-            List<Tree> derivedTrees = new ArrayList<Tree>();
-            derivedTrees.add(new Tree(rule));
-            consequence.setTrees(derivedTrees);
-            scan.addConsequence(consequence);
-            scan.setName("scan " + rule.toString());
-            schema.addAxiom(scan);
-          }
-        }
+        addCykScanRules(wSplit, schema, rule);
       } else {
         DynamicDeductionRuleInterface complete = new CfgCykComplete(rule);
         schema.addRule(complete);
@@ -335,19 +323,7 @@ public class CfgToDeductionRulesConverter {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 1) {
         if (cfg.terminalsContain(rule.getRhs()[0])) {
-          for (int i = 0; i < wSplit.length; i++) {
-            if (wSplit[i].equals(rule.getRhs()[0])) {
-              StaticDeductionRule scan = new StaticDeductionRule();
-              ChartItemInterface consequence =
-                new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
-              List<Tree> derivedTrees = new ArrayList<Tree>();
-              derivedTrees.add(new Tree(rule));
-              consequence.setTrees(derivedTrees);
-              scan.addConsequence(consequence);
-              scan.setName("scan " + rule.toString());
-              schema.addAxiom(scan);
-            }
-          }
+          addCykScanRules(wSplit, schema, rule);
         } else {
           DynamicDeductionRuleInterface complete = new CfgCykCompleteUnary(rule);
           schema.addRule(complete);
@@ -360,6 +336,23 @@ public class CfgToDeductionRulesConverter {
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
       String.valueOf(wSplit.length)));
     return schema;
+  }
+
+  private static void addCykScanRules(String[] wSplit, ParsingSchema schema,
+    CfgProductionRule rule) throws ParseException {
+    for (int i = 0; i < wSplit.length; i++) {
+      if (wSplit[i].equals(rule.getRhs()[0])) {
+        StaticDeductionRule scan = new StaticDeductionRule();
+        ChartItemInterface consequence =
+          new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
+        List<Tree> derivedTrees = new ArrayList<Tree>();
+        derivedTrees.add(new Tree(rule));
+        consequence.setTrees(derivedTrees);
+        scan.addConsequence(consequence);
+        scan.setName("scan " + rule.toString());
+        schema.addAxiom(scan);
+      }
+    }
   }
 
   public static ParsingSchema cfgToCykGeneralRules(Cfg cfg, String w) {

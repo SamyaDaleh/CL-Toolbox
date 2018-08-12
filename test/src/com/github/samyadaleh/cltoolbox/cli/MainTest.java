@@ -29,25 +29,46 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
   }
 
   @Test public void testEmptyCall() throws Exception {
-    Main.main(new String[] {});
-    Main.main(new String[] {".\\resources\\grammars\\anbn.cfg", "a a b b",
-      "itssupposedtobenothing"});
+    try {
+      Main.main(new String[] {});
+      Main.main(new String[] {".\\resources\\grammars\\anbn.cfg", "a a b b",
+        "itssupposedtobenothing"});
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   @Test public void testCfgCalls() throws Exception {
-    callWithGrammar(".\\resources\\grammars\\anbn.cfg", "a a b b");
+    try {
+      callWithGrammar(".\\resources\\grammars\\anbn.cfg", "a a b b");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   @Test public void testPcfgCalls() throws Exception {
-    callWithGrammar(".\\resources\\grammars\\a0n.pcfg", "1 0 0");
+    try {
+      callWithGrammar(".\\resources\\grammars\\a0n.pcfg", "1 0 0");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   @Test public void testTagCalls() throws Exception {
-    callWithGrammar(".\\resources\\grammars\\anbncndn.tag", "a a b b c c d d");
+    try {
+      callWithGrammar(".\\resources\\grammars\\anbncndn.tag",
+        "a a b b c c d d");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   @Test public void testSrcgCalls() throws Exception {
-    callWithGrammar(".\\resources\\grammars\\anbmcndm.srcg", "a a b c c d");
+    try {
+      callWithGrammar(".\\resources\\grammars\\anbmcndm.srcg", "a a b c c d");
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private void callWithGrammar(String grammarfile, String w) throws Exception {

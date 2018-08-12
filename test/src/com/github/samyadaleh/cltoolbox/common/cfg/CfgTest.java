@@ -32,12 +32,6 @@ public class CfgTest {
       epsfree.toString());
   }
 
-  @Test public void testRemoveChainRules() {
-    assertTrue(TestGrammarLibrary.eftCfg().hasChainRules());
-    Cfg chainfree = TestGrammarLibrary.eftCfg().getCfgWithoutChainRules();
-    assertTrue(!chainfree.hasChainRules());
-  }
-
   @Test public void testReplaceTerminals() {
     Cfg treplaced = TestGrammarLibrary.eftCfg()
       .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();

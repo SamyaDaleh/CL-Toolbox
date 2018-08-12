@@ -97,14 +97,4 @@ public class ChainRules {
     return unitPairs;
   }
 
-  /** Returns true if grammar has rules of the form A -> B. */
-  public static boolean hasChainRules(Cfg cfg) {
-    for (CfgProductionRule rule : cfg.getProductionRules()) {
-      if (rule.getRhs().length == 1
-        && cfg.nonterminalsContain(rule.getRhs()[0])) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

@@ -137,11 +137,6 @@ public class Cfg extends AbstractCfg {
     return ChainRules.removeChainRules(this);
   }
 
-  /** Returns true if grammar has rules of the form A -> B. */
-  boolean hasChainRules() {
-    return ChainRules.hasChainRules(this);
-  }
-
   /** Returns a new grammar where in all rhs > 1 terminals are replaced by
    * nonterminals and new rules A -> a are added. */
   public Cfg getCfgWithEitherOneTerminalOrNonterminalsOnRhs() {

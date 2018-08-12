@@ -146,7 +146,7 @@ public class DeductionTest {
   @Test public void testTagEarleyPrefixValid() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema = TagToDeductionRulesConverter
-      .tagToEarleyRules(TestGrammarLibrary.anCBTag(), w2);
+      .tagToEarleyPrefixValidRules(TestGrammarLibrary.anCBTag(), w2);
     Deduction deduction = new Deduction();
     try {
       assertTrue(deduction.doParse(schema, false));

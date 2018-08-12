@@ -31,7 +31,7 @@ public class PcfgProductionRule {
    * Creates a rule from a String representation like 0.5 : S -> A B
    * @throws ParseException
    */
-  public PcfgProductionRule(String ruleString) throws ParseException {
+  PcfgProductionRule(String ruleString) throws ParseException {
     if (!ruleString.contains("->")) {
       throw new ParseException("Separator -> missing in rule " + ruleString, 0);
     }

@@ -54,12 +54,11 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
                 outClause.toString(), posInt, 1, 0, new RangeVector(
                   outClause.getLhs().getSymbolsAsPlainArray().length));
               List<Tree> derivedTrees = new ArrayList<Tree>();
-              Tree derivedTreeBase = new Tree(
-                TreeUtils.getCfgRuleRepresentationOfSrcgClause(outClause));
+              Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(outClause);
               for (Tree tree : antecedences.get(0).getTrees()) {
                 try {
-                derivedTrees.add(
-                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+                  derivedTrees.add(TreeUtils.performLeftmostSubstitution(tree,
+                    derivedTreeBase));
                 } catch (IndexOutOfBoundsException e) {
                   // several items with different trees can lead to the same
                   // item with "predict". It collects all the trees, but they

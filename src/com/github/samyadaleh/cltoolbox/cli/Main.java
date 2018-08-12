@@ -1,5 +1,7 @@
 package com.github.samyadaleh.cltoolbox.cli;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
@@ -17,6 +19,15 @@ import com.github.samyadaleh.cltoolbox.gui.ParsingTraceTable;
 
 /** Entry point into toolbox for the calls by command line */
 class Main { // NO_UCD (test only)
+
+  static boolean success = false;
+  static boolean please = false;
+  static boolean javafx = false;
+  static ParsingSchema schema = null;
+  static Cfg cfg;
+  static Tag tag = null;
+  static Srcg srcg;
+  static Pcfg pcfg;
 
   /**
    * Command line arguments are passed here. Call without arguments displays
@@ -37,9 +48,9 @@ class Main { // NO_UCD (test only)
       System.out.println("Using tag-cyk-extended instead.");
       algorithm = "tag-cyk-extended";
     }
-    boolean success = false;
-    boolean please = false;
-    boolean javafx = false;
+    success = false;
+    please = false;
+    javafx = false;
     for (int i = 3; i < args.length; i++) {
       if (args[i].equals("--success")) {
         success = true;
@@ -51,134 +62,7 @@ class Main { // NO_UCD (test only)
       }
     }
     JfxWindowHolder jwh = new JfxWindowHolder();
-    ParsingSchema schema = null;
-    GrammarToGrammarConverter ggc = new GrammarToGrammarConverter(please);
-    GrammarToDeductionRulesConverter gdrc =
-      new GrammarToDeductionRulesConverter();
-    Cfg cfg;
-    Tag tag = null;
-    Srcg srcg;
-    Pcfg pcfg;
-    String[] algorithmSplit = algorithm.split("-");
-    String[] grammarFileSplit = grammarFile.split("[.]");
-    switch (grammarFileSplit[grammarFileSplit.length - 1]) {
-    case "cfg":
-      cfg = GrammarParser.parseCfgFile(grammarFile);
-      switch (algorithmSplit[0]) {
-      case "cfg":
-        cfg = ggc.checkAndMayConvertToCfg(cfg, algorithm);
-        if (cfg != null) {
-          schema = gdrc.convertToSchema(cfg, w, algorithm);
-        }
-        break;
-      case "tag":
-        tag = ggc.checkAndMayConvertToTag(cfg, algorithm);
-        if (tag != null) {
-          schema = gdrc.convertToSchema(tag, w, algorithm);
-        }
-        break;
-      case "pcfg":
-        pcfg = ggc.checkAndMayConvertToPcfg(cfg, algorithm);
-        if (pcfg != null) {
-          schema = gdrc.convertToSchema(pcfg, w, algorithm);
-        }
-        break;
-      case "srcg":
-        srcg = ggc.checkAndMayConvertToSrcg(cfg, algorithm);
-        if (srcg != null) {
-          schema = gdrc.convertToSchema(srcg, w, algorithm);
-        }
-        break;
-      default:
-        System.out
-          .println("I don't know that formalism, please check the spelling.");
-        return;
-      }
-      break;
-    case "pcfg":
-      pcfg = GrammarParser.parsePcfgFile(grammarFile);
-      switch (algorithmSplit[0]) {
-      case "cfg":
-        cfg = ggc.checkAndMayConvertToCfg(pcfg, algorithm);
-        if (cfg != null) {
-          schema = gdrc.convertToSchema(cfg, w, algorithm);
-        }
-        break;
-      case "pcfg":
-        pcfg = ggc.checkAndMayConvertToPcfg(pcfg, algorithm);
-        if (pcfg != null) {
-          schema = gdrc.convertToSchema(pcfg, w, algorithm);
-        }
-        break;
-      case "tag":
-        tag = ggc.checkAndMayConvertToTag(pcfg, algorithm);
-        if (tag != null) {
-          schema = gdrc.convertToSchema(tag, w, algorithm);
-        }
-        break;
-      case "srcg":
-        srcg = ggc.checkAndMayConvertToSrcg(pcfg, algorithm);
-        if (srcg != null) {
-          schema = gdrc.convertToSchema(srcg, w, algorithm);
-        }
-        break;
-      default:
-        System.out
-          .println("I don't know that formalism, please check the spelling.");
-        return;
-      }
-      break;
-    case "tag":
-      tag = GrammarParser.parseTagFile(grammarFile);
-      switch (algorithmSplit[0]) {
-      case "cfg":
-        System.out.println("I can't parse with a less expressive formalism.");
-        return;
-      case "pcfg":
-        System.out.println("I can't parse with a less expressive formalism.");
-        return;
-      case "tag":
-        tag = ggc.checkAndMayConvertToTag(tag, algorithm);
-        if (tag != null) {
-          schema = gdrc.convertToSchema(tag, w, algorithm);
-        }
-        break;
-      case "srcg":
-        System.out
-          .println("I can't convert a tree language to a string language.");
-        return;
-      default:
-        System.out
-          .println("I don't know that formalism, please check the spelling.");
-        return;
-      }
-      break;
-    case "srcg":
-      srcg = GrammarParser.parseSrcgFile(grammarFile);
-      switch (algorithmSplit[0]) {
-      case "cfg":
-        System.out.println("I can't parse with a less expressive formalism.");
-        return;
-      case "pcfg":
-        System.out.println("I can't parse with a less expressive formalism.");
-        return;
-      case "tag":
-        System.out.println("I can't parse with a less expressive formalism.");
-        return;
-      case "srcg":
-        srcg = ggc.checkAndMayConvertToSrcg(srcg, algorithm);
-        if (srcg != null) {
-          schema = gdrc.convertToSchema(srcg, w, algorithm);
-        }
-        break;
-      default:
-        System.out
-          .println("I don't know that formalism, please check the spelling.");
-        return;
-      }
-      break;
-    default:
-    }
+    parseGrammarFileAndConvertToParsingSchema(grammarFile, w, algorithm);
     Deduction deduction = new Deduction();
     if (algorithm.equals("pcfg-astar")) {
       deduction.setReplace('l');
@@ -207,6 +91,169 @@ class Main { // NO_UCD (test only)
     }
     if (schema != null) {
       drawDerivedTree(algorithm, schema, tag, deduction, javafx, jwh);
+    }
+  }
+
+  private static void parseGrammarFileAndConvertToParsingSchema(
+    String grammarFile, String w, String algorithm)
+    throws IOException, ParseException {
+    String[] grammarFileSplit = grammarFile.split("[.]");
+    switch (grammarFileSplit[grammarFileSplit.length - 1]) {
+    case "cfg":
+      parseCfgFileAndConvertToSchema(grammarFile, w, algorithm);
+      break;
+    case "pcfg":
+      parsePcfgFileAndConvertToSchema(grammarFile, w, algorithm);
+      break;
+    case "tag":
+      parseTagFileAndConvertToSchema(grammarFile, w, algorithm);
+      break;
+    case "srcg":
+      parseSrcgFileAndConvertToSchema(grammarFile, w, algorithm);
+      break;
+    default:
+    }
+  }
+
+  private static void parseSrcgFileAndConvertToSchema(String grammarFile,
+    String w, String algorithm) throws IOException, ParseException {
+    srcg = GrammarParser.parseSrcgFile(grammarFile);
+    String[] algorithmSplit = algorithm.split("-");
+    switch (algorithmSplit[0]) {
+    case "cfg":
+      throw new IllegalArgumentException(
+        "I can't parse with a less expressive formalism.");
+    case "pcfg":
+      throw new IllegalArgumentException(
+        "I can't parse with a less expressive formalism.");
+    case "tag":
+      throw new IllegalArgumentException(
+        "I can't parse with a less expressive formalism.");
+    case "srcg":
+      srcg = GrammarToGrammarConverter.checkAndMayConvertToSrcg(srcg, algorithm,
+        please);
+      if (srcg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(srcg, w, algorithm);
+      }
+      break;
+    default:
+      throw new IllegalArgumentException(
+        "I don't know that formalism, please check the spelling.");
+    }
+  }
+
+  private static void parseTagFileAndConvertToSchema(String grammarFile,
+    String w, String algorithm) throws IOException, ParseException {
+    tag = GrammarParser.parseTagFile(grammarFile);
+    String[] algorithmSplit = algorithm.split("-");
+    switch (algorithmSplit[0]) {
+    case "cfg":
+      throw new IllegalArgumentException(
+        "I can't parse with a less expressive formalism.");
+    case "pcfg":
+      throw new IllegalArgumentException(
+        "I can't parse with a less expressive formalism.");
+    case "tag":
+      tag = GrammarToGrammarConverter.checkAndMayConvertToTag(tag, algorithm,
+        please);
+      if (tag != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
+      }
+      break;
+    case "srcg":
+      throw new IllegalArgumentException(
+        "I can't convert a tree language to a string language.");
+    default:
+      throw new IllegalArgumentException(
+        "I don't know that formalism, please check the spelling.");
+    }
+  }
+
+  private static void parsePcfgFileAndConvertToSchema(String grammarFile,
+    String w, String algorithm) throws IOException, ParseException {
+    pcfg = GrammarParser.parsePcfgFile(grammarFile);
+    String[] algorithmSplit = algorithm.split("-");
+    switch (algorithmSplit[0]) {
+    case "cfg":
+      cfg = GrammarToGrammarConverter.checkAndMayConvertToCfg(pcfg, algorithm,
+        please);
+      if (cfg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(cfg, w, algorithm);
+      }
+      break;
+    case "pcfg":
+      pcfg = GrammarToGrammarConverter.checkAndMayConvertToPcfg(pcfg, algorithm,
+        please);
+      if (pcfg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(pcfg, w, algorithm);
+      }
+      break;
+    case "tag":
+      tag = GrammarToGrammarConverter.checkAndMayConvertToTag(pcfg, algorithm,
+        please);
+      if (tag != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
+      }
+      break;
+    case "srcg":
+      srcg = GrammarToGrammarConverter.checkAndMayConvertToSrcg(pcfg, algorithm,
+        please);
+      if (srcg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(srcg, w, algorithm);
+      }
+      break;
+    default:
+      throw new IllegalArgumentException(
+        "I don't know that formalism, please check the spelling.");
+    }
+  }
+
+  private static void parseCfgFileAndConvertToSchema(String grammarFile,
+    String w, String algorithm) throws IOException, ParseException {
+    cfg = GrammarParser.parseCfgFile(grammarFile);
+    String[] algorithmSplit = algorithm.split("-");
+    switch (algorithmSplit[0]) {
+    case "cfg":
+      cfg = GrammarToGrammarConverter.checkAndMayConvertToCfg(cfg, algorithm,
+        please);
+      if (cfg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(cfg, w, algorithm);
+      }
+      break;
+    case "tag":
+      tag = GrammarToGrammarConverter.checkAndMayConvertToTag(cfg, algorithm,
+        please);
+      if (tag != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
+      }
+      break;
+    case "pcfg":
+      pcfg = GrammarToGrammarConverter.checkAndMayConvertToPcfg(cfg, algorithm,
+        please);
+      if (pcfg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(pcfg, w, algorithm);
+      }
+      break;
+    case "srcg":
+      srcg = GrammarToGrammarConverter.checkAndMayConvertToSrcg(cfg, algorithm,
+        please);
+      if (srcg != null) {
+        schema =
+          GrammarToDeductionRulesConverter.convertToSchema(srcg, w, algorithm);
+      }
+      break;
+    default:
+      throw new IllegalArgumentException(
+        "I don't know that formalism, please check the spelling.");
     }
   }
 

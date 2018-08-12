@@ -14,7 +14,7 @@ public class GrammarToDeductionRulesConverter {
    * Call with appropriate grammar. Better call the convert-to function first.
    * @throws ParseException
    */
-  public ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm)
+  public static ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm)
     throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
@@ -47,7 +47,7 @@ public class GrammarToDeductionRulesConverter {
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
-  public ParsingSchema convertToSchema(Tag tag, String w, String algorithm) {
+  public static ParsingSchema convertToSchema(Tag tag, String w, String algorithm) {
     switch (algorithm) {
     case "tag-cyk-extended":
       return TagToDeductionRulesConverter.tagToCykExtendedRules(tag, w);
@@ -66,7 +66,7 @@ public class GrammarToDeductionRulesConverter {
    * Call with appropriate grammar. Better call the convert-to function first.
    * @throws ParseException
    */
-  public ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm)
+  public static ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm)
     throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
@@ -86,7 +86,7 @@ public class GrammarToDeductionRulesConverter {
    * Call with appropriate grammar. Better call the convert-to function first.
    * @throws ParseException
    */
-  public ParsingSchema convertToSchema(Pcfg pcfg, String w, String algorithm)
+  public static ParsingSchema convertToSchema(Pcfg pcfg, String w, String algorithm)
     throws ParseException {
     switch (algorithm) {
     case "pcfg-astar":
