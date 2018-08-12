@@ -23,6 +23,7 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
       String stack = itemForm[0];
       int i = Integer.parseInt(itemForm[1]);
       if (i < wSplit.length) {
+        this.name = "shift " + wSplit[i];
         ChartItemInterface consequence;
         if (stack.length() == 0) {
           consequence = new DeductionChartItem(wSplit[i], String.valueOf(i + 1));

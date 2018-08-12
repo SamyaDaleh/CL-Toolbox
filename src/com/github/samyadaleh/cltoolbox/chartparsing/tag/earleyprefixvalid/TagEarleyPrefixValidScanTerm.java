@@ -15,7 +15,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
   public TagEarleyPrefixValidScanTerm(String[] wSplit, Tag tag) {
     this.wSplit = wSplit;
     this.tag = tag;
-    this.name = "scan term";
+    this.name = "scan";
     this.antNeeded = 1;
   }
 
@@ -35,6 +35,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
       if (lInt < wSplit.length && pos.equals("la") && adj.equals("0")
         && tag.getTree(treeName).getNodeByGornAdress(node).getLabel()
           .equals(wSplit[lInt])) {
+        this.name = "scan " + wSplit[lInt];
         ChartItemInterface consequence = new DeductionChartItem(treeName, node, "ra", iGamma, i, j,
           k, String.valueOf(lInt + 1), "0");
         consequence.setTrees(antecedences.get(0).getTrees());

@@ -39,6 +39,7 @@ public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
             } else {
               newCompl = nt + " " + stackCompl;
             }
+            this.name = "move " + nt;
             String newPred = ArrayUtils.getSubSequenceAsString(stackPredSplit,
               1, stackPredSplit.length);
             String newLhs = ArrayUtils.getSubSequenceAsString(stackLhsSplit, 1,

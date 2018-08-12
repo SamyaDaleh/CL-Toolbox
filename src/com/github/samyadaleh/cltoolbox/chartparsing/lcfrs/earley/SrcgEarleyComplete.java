@@ -39,7 +39,6 @@ public class SrcgEarleyComplete
       int iInt2 = Integer.parseInt(i2);
       String j2 = itemForm2[3];
       int jInt2 = Integer.parseInt(j2);
-
       for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
         Predicate rhsPred = clause2Parsed.getRhs().get(n);
         boolean vectorsMatch = true;
@@ -55,10 +54,11 @@ public class SrcgEarleyComplete
             break;
           }
         }
-
         String nt2 = rhsPred.getNonterminal();
         if (vectorsMatch && itemForm1[itemForm1.length - 2].equals(pos2)
           && nt.equals(nt2)) {
+          this.name =
+            "complete " + clause2Parsed.getLhs().getSymAt(iInt2, jInt2);
           String posB = itemForm1[itemForm1.length - 1];
           int posBInt = Integer.parseInt(posB);
           ArrayList<String> newVector = new ArrayList<String>();

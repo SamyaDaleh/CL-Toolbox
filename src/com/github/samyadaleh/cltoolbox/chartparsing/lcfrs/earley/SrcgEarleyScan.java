@@ -45,10 +45,10 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
         String j = itemForm[3];
         int jInt = Integer.parseInt(j);
         int place = clauseParsed.getLhs().getAbsolutePos(iInt, jInt);
-
         if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
           && posInt < wSplit.length
           && clauseParsed.getLhsSymAt(iInt, jInt).equals(wSplit[posInt])) {
+          this.name = "scan " + wSplit[posInt];
           ArrayList<String> newVector = new ArrayList<String>();
           for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
             newVector.add(itemForm[2 * k + 4]);

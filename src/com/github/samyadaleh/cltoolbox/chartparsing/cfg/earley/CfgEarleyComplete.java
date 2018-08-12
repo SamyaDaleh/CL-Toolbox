@@ -32,6 +32,7 @@ public class CfgEarleyComplete
       for (int l = 0; l < stackSplit1.length; l++) {
         if (stackSplit1[l].startsWith("•") && stackSplit1[l]
           .substring(1, stackSplit1[l].length()).equals(stackSplit2[0])) {
+          this.name = "complete " + stackSplit2[0];
           String newStack;
           if (l == stackSplit1.length - 1) {
             newStack = ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l)

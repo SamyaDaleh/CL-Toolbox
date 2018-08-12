@@ -33,6 +33,7 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
       String stackLhs = itemForm[2];
       if (stackCompl.length() > 0 && stackPred.length() > 0
         && stackComplSplit[0].equals(stackPredSplit[0])) {
+        this.name = "remove " + stackComplSplit[0];
         String newCompl = ArrayUtils.getSubSequenceAsString(stackComplSplit, 1,
           stackComplSplit.length);
         String newPred = ArrayUtils.getSubSequenceAsString(stackPredSplit, 1,
@@ -46,9 +47,9 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
             derivedTrees.add(antDerivedTrees.get(i));
           }
           try {
-          derivedTrees.add(TreeUtils.performLeftmostSubstitution(
-            antDerivedTrees.get(antDerivedTrees.size() - 2),
-            antDerivedTrees.get(antDerivedTrees.size() - 1)));
+            derivedTrees.add(TreeUtils.performLeftmostSubstitution(
+              antDerivedTrees.get(antDerivedTrees.size() - 2),
+              antDerivedTrees.get(antDerivedTrees.size() - 1)));
           } catch (StringIndexOutOfBoundsException e) {
             // This probably doesn't lead to a successfull trace
             derivedTrees.addAll(antDerivedTrees);

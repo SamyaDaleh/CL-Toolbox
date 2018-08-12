@@ -13,7 +13,7 @@ public class TagEarleyPrefixValidScanEps extends AbstractDynamicDeductionRule {
 
   public TagEarleyPrefixValidScanEps(Tag tag) {
     this.tag = tag;
-    this.name = "scan epsilon";
+    this.name = "scan ε";
     this.antNeeded = 1;
   }
 

@@ -25,6 +25,7 @@ public class CfgEarleyPassiveComplete
       for (int l = 0; l < stackSplit1.length; l++) {
         if (stackSplit1[l].startsWith("•")
           && stackSplit1[l].substring(1).equals(itemForm2[0])) {
+          this.name = "comlete " + itemForm2[0];
           String newStack;
           if (l == stackSplit1.length - 1) {
             newStack = ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l)

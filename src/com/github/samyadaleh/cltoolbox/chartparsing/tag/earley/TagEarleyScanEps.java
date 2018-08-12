@@ -18,7 +18,7 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
    */
   public TagEarleyScanEps(Tag tag) {
     this.tag = tag;
-    this.name = "scan epsilon";
+    this.name = "scan ε";
     this.antNeeded = 1;
   }
 

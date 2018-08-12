@@ -34,6 +34,7 @@ public class CfgLeftCornerChartRemove
         int l2 = Integer.parseInt(itemForm2[2]);
         if (mayDottedRuleSplit[k].substring(1).equals(itemForm2[0])
           && i + l1 == j && mayDottedRuleSplit[k].length() > 1) {
+          this.name = "remove " + mayDottedRuleSplit[k].substring(1);
           if (k == mayDottedRuleSplit.length - 1) {
             ChartItemInterface consequence = new DeductionChartItem(
               ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
@@ -52,7 +53,6 @@ public class CfgLeftCornerChartRemove
                 derivedTrees.addAll(antecedences.get(0).getTrees());
               }
             } else {
-
               if (antecedences.get(0).getTrees().size() > 0) {
                 for (Tree tree1 : antecedences.get(0).getTrees()) {
                   for (Tree tree2 : antecedences.get(1).getTrees()) {
