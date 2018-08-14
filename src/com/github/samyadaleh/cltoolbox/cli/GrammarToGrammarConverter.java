@@ -149,6 +149,8 @@ class GrammarToGrammarConverter {
       } else {
         return tag;
       }
+    case "tag-cyk-general":
+      return tag;
     case "tag-earley":
       return tag;
     case "tag-earley-prefixvalid":
@@ -175,6 +177,8 @@ class GrammarToGrammarConverter {
       } else {
         return new Tag(cfg);
       }
+    case "tag-cyk-general":
+      return new Tag(cfg);
     case "tag-earley":
       return new Tag(cfg);
     case "tag-earley-prefixvalid":

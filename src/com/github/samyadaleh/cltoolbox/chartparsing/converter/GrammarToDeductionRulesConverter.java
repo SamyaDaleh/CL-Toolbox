@@ -51,6 +51,8 @@ public class GrammarToDeductionRulesConverter {
     switch (algorithm) {
     case "tag-cyk-extended":
       return TagToDeductionRulesConverter.tagToCykExtendedRules(tag, w);
+    case "tag-cyk-general":
+      return TagToDeductionRulesConverter.tagToCykGeneralRules(tag, w);
     case "tag-earley":
       return TagToDeductionRulesConverter.tagToEarleyRules(tag, w);
     case "tag-earley-prefixvalid":

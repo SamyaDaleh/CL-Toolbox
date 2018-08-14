@@ -19,7 +19,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
       {"cfg-topdown"}, {"cfg-shiftreduce"}, {"cfg-earley"}, {"cfg-passive"},
       {"cfg-leftcorner"}, {"cfg-leftcorner-chart"}, {"cfg-cyk"},
       {"cfg-cyk-extended"}, {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"},
-      {"pcfg-cyk"}, {"tag-earley"}, {"tag-cyk-extended"},
+      {"pcfg-cyk"}, {"tag-earley"}, {"tag-cyk-extended"}, {"tag-cyk-general"},
       {"tag-earley-prefixvalid"}, {"srcg-cyk-extended"}, {"srcg-cyk-general"},
       {"srcg-earley"}});
   }

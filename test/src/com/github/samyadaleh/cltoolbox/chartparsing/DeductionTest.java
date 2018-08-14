@@ -129,6 +129,17 @@ public class DeductionTest {
       deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testTagCykGeneral() throws ParseException {
+    String w2 = "a c b";
+    ParsingSchema schema = TagToDeductionRulesConverter
+      .tagToCykGeneralRules(TestGrammarLibrary.anCBTag(), w2);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (T (a )(T (c )))(b ))",
+      deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testTagEarley() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema = TagToDeductionRulesConverter
