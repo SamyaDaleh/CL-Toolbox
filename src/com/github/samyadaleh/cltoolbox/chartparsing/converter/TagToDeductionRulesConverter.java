@@ -111,9 +111,9 @@ public class TagToDeductionRulesConverter {
           addCykSubstitutionRule(tag, schema, treeName, p);
         }
       }
-      addCykGoalItems(tag, wSplit, schema);
       addCykFootPredictRules(tag, wSplit, schema, i);
     }
+    addCykGoalItems(tag, wSplit, schema);
   }
 
   private static void addCykFootPredictRules(Tag tag, String[] wSplit,
