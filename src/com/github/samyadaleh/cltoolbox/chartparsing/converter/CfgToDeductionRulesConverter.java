@@ -45,11 +45,6 @@ public class CfgToDeductionRulesConverter {
    * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
    */
   public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w) {
-    if (cfg.hasEpsilonProductions()) {
-      System.out
-        .println("CFG must not contain empty productions for TopDown parsing.");
-      return null;
-    }
     if (cfg.hasLeftRecursion()) {
       System.out
         .println("CFG must not contain left recursion for TopDown parsing.");

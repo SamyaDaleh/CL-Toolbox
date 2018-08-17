@@ -26,7 +26,8 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences()
+      throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
@@ -35,8 +36,13 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       List<Tree> derivedTrees = antecedences.get(0).getTrees();
       if (stackSplit[0].equals(rule.getLhs())) {
         if (stackSplit.length == 1) {
-          ChartItemInterface consequence =
-            new DeductionChartItem(String.join(" ", rule.getRhs()), i);
+          ChartItemInterface consequence;
+          if ("".equals(rule.getRhs()[0])) {
+            consequence = new DeductionChartItem("", i);
+          } else {
+            consequence =
+                new DeductionChartItem(String.join(" ", rule.getRhs()), i);
+          }
           if (derivedTrees.size() == 0) {
             List<Tree> derivedTreesNew = new ArrayList<>();
             derivedTreesNew.add(new Tree(rule));
@@ -46,15 +52,22 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
             Tree derivedTreeBase = new Tree(rule);
             for (Tree tree : derivedTrees) {
               derivedTreesNew.add(
-                TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
             }
             consequence.setTrees(derivedTreesNew);
           }
           consequences.add(consequence);
         } else {
-          ChartItemInterface consequence =
-            new DeductionChartItem(String.join(" ", rule.getRhs()) + " " + ArrayUtils
-              .getSubSequenceAsString(stackSplit, 1, stackSplit.length), i);
+          ChartItemInterface consequence;
+          if ("".equals(rule.getRhs()[0])) {
+            consequence = new DeductionChartItem(ArrayUtils
+                .getSubSequenceAsString(stackSplit, 1, stackSplit.length), i);
+          } else {
+            consequence = new DeductionChartItem(
+                String.join(" ", rule.getRhs()) + " " + ArrayUtils
+                    .getSubSequenceAsString(stackSplit, 1, stackSplit.length),
+                i);
+          }
           if (derivedTrees.size() == 0) {
             derivedTrees.add(new Tree(rule));
             consequence.setTrees(derivedTrees);
@@ -63,7 +76,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
             Tree derivedTreeBase = new Tree(rule);
             for (Tree tree : derivedTrees) {
               derivedTreesNew.add(
-                TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
             }
             consequence.setTrees(derivedTreesNew);
           }
@@ -76,8 +89,8 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[" + rule.getLhs() + "α,i]" + "\n______ " + rule.toString() + ", |"
-      + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n" + "["
-      + ArrayUtils.toString(rule.getRhs()) + " α,i]";
+        + ArrayUtils.toString(rule.getRhs()) + " α| ≤ n - i\n" + "["
+        + ArrayUtils.toString(rule.getRhs()) + " α,i]";
   }
 
 }

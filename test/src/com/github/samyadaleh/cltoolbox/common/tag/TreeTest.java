@@ -12,11 +12,11 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 public class TreeTest {
   @Test public void testTreeFunctions() throws ParseException {
     Tree tree = new Tree("(T_NA (B (T a ε) ) (B_OA T*))");
-    assertTrue(tree.getRoot().getLabel().equals("T"));
-    assertTrue(tree.getFoot().getLabel().equals("T"));
-    assertTrue(tree.getFoot().getGornAddress().equals(".2.1"));
-    assertTrue(tree.getHeight() == 4);
-    assertTrue(tree.getWidth() == 2);
+    assertEquals("T", tree.getRoot().getLabel());
+    assertEquals("T", tree.getFoot().getLabel());
+    assertEquals(".2.1", tree.getFoot().getGornAddress());
+    assertEquals(4, tree.getHeight());
+    assertEquals(2, tree.getWidth());
   }
 
   @Test public void testSubstitute() throws ParseException {

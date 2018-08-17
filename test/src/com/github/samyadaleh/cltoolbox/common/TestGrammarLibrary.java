@@ -24,6 +24,21 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg anBnEpsilonCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S"});
+    try {
+      cfg.addProductionRule("S -> a S b");
+      cfg.addProductionRule("S -> ε");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
   public static Cfg wwRCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c"});

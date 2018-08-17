@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class DeductionItemTest {
     ChartItemInterface item1 = new DeductionChartItem("S", "0");
     ChartItemInterface item2 = new DeductionChartItem("S", "0");
 
-    assertTrue(item1.equals(item2));
+    assertEquals(item1, item2);
     // test set contains item
     Set<ChartItemInterface> itemset = new HashSet<ChartItemInterface>();
     itemset.add(item1);

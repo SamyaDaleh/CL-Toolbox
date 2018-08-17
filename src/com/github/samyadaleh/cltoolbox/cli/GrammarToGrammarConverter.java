@@ -264,15 +264,16 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private static Cfg getCfgForTopDown(Cfg cfg, boolean please) {
-    if (cfg.hasEpsilonProductions()) {
+  private static Cfg getCfgForTopDown(Cfg cfg, boolean please)
+      throws ParseException {
+    if (cfg.hasLeftRecursion()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
-          .getCfgWithoutNonGeneratingSymbols()
-          .getCfgWithoutNonReachableSymbols();
+            .getCfgWithoutNonGeneratingSymbols()
+            .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
       } else {
         System.out.println(
-          "CFG must not contain empty productions for TopDown parsing.");
+            "CFG must not contain empty productions for TopDown parsing.");
         return null;
       }
     } else {
