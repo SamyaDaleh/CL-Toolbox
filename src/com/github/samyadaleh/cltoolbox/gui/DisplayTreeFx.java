@@ -21,9 +21,12 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   private final int y = 500;
   private GraphicsContext gc;
   private Stage stage;
+  private JfxWindowHolder parent;
 
-  public DisplayTreeFx(String[] args) throws ParseException {
+  public DisplayTreeFx(JfxWindowHolder parent, String[] args)
+      throws ParseException {
     this.tree = new Tree(args[0]);
+    this.parent = parent;
     if (args.length > 1) {
       this.itemForm = args[1].substring(1, args[1].length() - 1).split(",");
     } else {
@@ -43,10 +46,13 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     stage.setScene(new Scene(root));
     stage.setX(this.x);
     stage.setY(this.y);
+    stage.setOnCloseRequest( e -> parent.close());
     stage.show();
   }
 
-  /** Initiates the drawing of the tree. */
+  /**
+   * Initiates the drawing of the tree.
+   */
   private void paint(GraphicsContext gc) {
     this.gc = gc;
     AbstractDisplayTree.paint(this);
@@ -74,7 +80,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
 
   @Override public void clearRect(int width, int height) {
     gc.clearRect(0, 0, width, height);
-    
+
   }
 
   @Override public int getWidth() {
@@ -92,5 +98,9 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   public void setLocation(double x, double y) {
     stage.setX(x);
     stage.setY(y);
+  }
+
+  public void close() {
+    stage.close();
   }
 }

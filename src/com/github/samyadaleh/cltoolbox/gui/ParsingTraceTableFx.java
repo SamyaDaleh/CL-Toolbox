@@ -29,28 +29,31 @@ class ParsingTraceTableFx {
   private final TableView<ParsingStep> table = new TableView<ParsingStep>();
 
   private String[] columnNames =
-    new String[] {"Id", "Item", "Rules", "Backpointers"};
+      new String[] {"Id", "Item", "Rules", "Backpointers"};
   private final Timeline showTimer;
   private final Timeline disposeTimer;
   private TableRow<?> popupRow;
   private TableColumn<ParsingStep, String> popupColumn;
   private DisplayTreeFx popup;
+  private Stage stage;
+  private JfxWindowHolder parent;
 
-  public ParsingTraceTableFx(String[][] rowData, String[] columnNames,
-    Tag tag) {
+  public ParsingTraceTableFx(JfxWindowHolder parent, String[][] rowData,
+      String[] columnNames, Tag tag) {
     this.rowData = rowData;
     this.columnNames = columnNames;
     this.tag = tag;
+    this.parent = parent;
     if (tag == null) {
       showTimer = null;
       disposeTimer = null;
     } else {
       showTimer =
-        new Timeline(new KeyFrame(Duration.millis(500), ae -> showPopup()));
+          new Timeline(new KeyFrame(Duration.millis(500), ae -> showPopup()));
       showTimer.play();
       showTimer.setAutoReverse(false);
-      disposeTimer =
-        new Timeline(new KeyFrame(Duration.millis(2500), ae -> disposePopup()));
+      disposeTimer = new Timeline(
+          new KeyFrame(Duration.millis(2500), ae -> disposePopup()));
       showTimer.setAutoReverse(false);
     }
     displayTable();
@@ -82,12 +85,11 @@ class ParsingTraceTableFx {
     if (value.charAt(0) == '[') {
       String treeName = value.substring(1, value.indexOf(','));
       try {
-        popup = new DisplayTreeFx(
-          new String[] {tag.getTree(treeName).toString(), value});
-        popup.setLocation(
-          Math.round(
+        popup = new DisplayTreeFx(parent,
+            new String[] {tag.getTree(treeName).toString(), value});
+        popup.setLocation(Math.round(
             MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()),
-          Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
+            Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
       } catch (ParseException e) {
         e.printStackTrace();
       }
@@ -96,7 +98,7 @@ class ParsingTraceTableFx {
   }
 
   private void displayTable() {
-    Stage stage = new Stage();
+    stage = new Stage();
     final VBox vbox = new VBox();
     Scene scene = new Scene(vbox);
     stage.setTitle("Parsing Trace Table");
@@ -105,9 +107,9 @@ class ParsingTraceTableFx {
 
     for (String columnName : columnNames) {
       TableColumn<ParsingStep, String> col =
-        new TableColumn<ParsingStep, String>(columnName);
+          new TableColumn<ParsingStep, String>(columnName);
       col.setCellValueFactory(
-        new PropertyValueFactory<ParsingStep, String>(columnName));
+          new PropertyValueFactory<ParsingStep, String>(columnName));
       col.setSortable(false);
       if (tag != null) {
         col.setCellFactory(tc -> new HoverCell(this));
@@ -130,7 +132,12 @@ class ParsingTraceTableFx {
     VBox.setVgrow(table, Priority.ALWAYS);
 
     stage.setScene(scene);
+    stage.setOnCloseRequest(e -> parent.close());
     stage.show();
+  }
+
+  public void close() {
+    stage.close();
   }
 
   public static class HoverCell extends TableCell<ParsingStep, String> {
@@ -143,8 +150,8 @@ class ParsingTraceTableFx {
       TableRow<?> row = this.getTableRow();
       TableColumn<ParsingStep, String> col = this.getTableColumn();
       if ((row.getIndex() > -1) // && row < table.getRowCount()
-        && (this.getIndex() > -1) // && col < table.getColumnCount()
-        && (pttf.getPopupRow() == null || pttf.getPopupCol() != col
+          && (this.getIndex() > -1) // && col < table.getColumnCount()
+          && (pttf.getPopupRow() == null || pttf.getPopupCol() != col
           || pttf.getPopupRow() != row)) {
         pttf.setPopupRow(row);
         pttf.setPopupCol(col);

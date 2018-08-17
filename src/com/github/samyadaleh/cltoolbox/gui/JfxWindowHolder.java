@@ -19,6 +19,8 @@ public class JfxWindowHolder {
   private String[][] rowData;
   private Tag tag = null;
   private String[] args = null;
+  private DisplayTreeFx displayTreeFx;
+  private ParsingTraceTableFx parsingTraceTableFx;
 
   public void setArgs(String[] args) {
     this.args = args;
@@ -45,11 +47,11 @@ public class JfxWindowHolder {
   }
 
   private void _callDisplayTreeFx() throws ParseException {
-    new DisplayTreeFx(args);
+    displayTreeFx = new DisplayTreeFx(this, args);
   }
 
   private void _callParsingTraceTableFx() {
-    new ParsingTraceTableFx(rowData, colNames, tag);
+    parsingTraceTableFx = new ParsingTraceTableFx(this,rowData, colNames, tag);
   }
 
   private void ensureFXApplicationThreadRunning() throws Exception {
@@ -63,5 +65,12 @@ public class JfxWindowHolder {
 
   public void setRowData(String[][] rowData) {
     this.rowData = rowData;
+  }
+
+  public void close() {
+    if(displayTreeFx != null) {
+      displayTreeFx.close();
+    }
+    parsingTraceTableFx.close();
   }
 }
