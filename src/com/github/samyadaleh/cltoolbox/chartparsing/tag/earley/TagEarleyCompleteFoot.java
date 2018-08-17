@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -51,7 +52,7 @@ public class TagEarleyCompleteFoot
         ChartItemInterface consequence =
           new DeductionChartItem(treeName2, node2, "rb", i1, i1, l, l, "0");
         List<Tree> derivedTrees;
-        if (itemForm1.equals(antecedences.get(0).getItemform())) {
+        if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
           derivedTrees = antecedences.get(1).getTrees();
         } else {
           derivedTrees = antecedences.get(0).getTrees();

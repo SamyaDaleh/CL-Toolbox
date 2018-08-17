@@ -27,7 +27,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == this.antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
       String[] stackSplit = stack.split(" ");
       String i = itemForm[1];

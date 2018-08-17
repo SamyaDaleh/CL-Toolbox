@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class RangeVector {
   
-  private final List<Range> ranges = new ArrayList<Range>();
+  private final List<Range> ranges = new ArrayList<>();
 
   /**
    * Creates a new vector of numranges ranges filled with placeholders. 
@@ -24,7 +24,7 @@ public class RangeVector {
    * Returns ranges as 1d array.
    */
   public String[] getRangesAsPlainArray() {
-    ArrayList<String> rangesArray = new ArrayList<String>();
+    ArrayList<String> rangesArray = new ArrayList<>();
     for (Range range : ranges) {
       rangesArray.add(range.getRange()[0]);
       rangesArray.add(range.getRange()[1]);

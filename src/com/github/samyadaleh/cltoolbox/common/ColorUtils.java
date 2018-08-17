@@ -3,7 +3,7 @@ package com.github.samyadaleh.cltoolbox.common;
 /**
  * Util class for generating colors.
  */
-public class ColorUtils {
+class ColorUtils {
 
   /**
    * Returns an array of rgb integers for a color, which is determined by i,

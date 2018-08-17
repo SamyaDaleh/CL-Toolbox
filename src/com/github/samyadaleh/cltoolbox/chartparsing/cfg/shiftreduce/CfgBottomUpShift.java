@@ -19,7 +19,7 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
       int i = Integer.parseInt(itemForm[1]);
       if (i < wSplit.length) {

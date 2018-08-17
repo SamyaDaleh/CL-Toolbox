@@ -105,7 +105,6 @@ public class CfgToDeductionRulesConverter {
   /**
    * Converts a cfg to a parsing scheme for Earley parsing. Based n
    * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf
-   * @throws ParseException
    */
   public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w)
     throws ParseException {
@@ -124,7 +123,7 @@ public class CfgToDeductionRulesConverter {
         if (rule.getRhs()[0].equals("")) {
           ChartItemInterface consequence =
             new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0");
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           derivedTrees.add(new Tree(rule));
           consequence.setTrees(derivedTrees);
           axiom.addConsequence(consequence);
@@ -132,7 +131,7 @@ public class CfgToDeductionRulesConverter {
           ChartItemInterface consequence = new DeductionChartItem(
             cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
             "0", "0");
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           derivedTrees.add(new Tree(rule));
           consequence.setTrees(derivedTrees);
           axiom.addConsequence(consequence);
@@ -281,7 +280,6 @@ public class CfgToDeductionRulesConverter {
 
   /**
    * Converts grammar into rules for CYK parsing for CNF.
-   * @throws ParseException
    */
   public static ParsingSchema cfgToCykRules(Cfg cfg, String w)
     throws ParseException {
@@ -309,7 +307,6 @@ public class CfgToDeductionRulesConverter {
    * Like CYK parsing, but with an additional deduction rule for chain rules,
    * hence grammar needs only to be in Canonical Two Form. Source: Giogio Satta,
    * ESSLLI 2013
-   * @throws ParseException
    */
   public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w)
     throws ParseException {
@@ -345,7 +342,7 @@ public class CfgToDeductionRulesConverter {
         StaticDeductionRule scan = new StaticDeductionRule();
         ChartItemInterface consequence =
           new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(new Tree(rule));
         consequence.setTrees(derivedTrees);
         scan.addConsequence(consequence);

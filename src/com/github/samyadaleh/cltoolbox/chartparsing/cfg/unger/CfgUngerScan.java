@@ -19,7 +19,7 @@ public class CfgUngerScan extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       int pos = Integer.parseInt(itemForm[1]);
       int length =
         Integer.parseInt(itemForm[2]) - Integer.parseInt(itemForm[1]);

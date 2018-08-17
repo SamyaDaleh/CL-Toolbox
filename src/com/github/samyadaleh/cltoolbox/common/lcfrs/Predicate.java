@@ -37,7 +37,7 @@ public class Predicate {
       symbols = new String[][] {new String[] {""}};
     } else {
       String[] subgroups = rightOver.split(",");
-      ArrayList<String[]> subgroupCol = new ArrayList<String[]>();
+      ArrayList<String[]> subgroupCol = new ArrayList<>();
       for (String subgroup : subgroups) {
         if (subgroup.trim().equals("ε")) {
           subgroupCol.add(new String[] {""});
@@ -76,7 +76,7 @@ public class Predicate {
   }
 
   public String[] getSymbolsAsPlainArray() {
-    ArrayList<String> symbolsArray = new ArrayList<String>();
+    ArrayList<String> symbolsArray = new ArrayList<>();
     for (String[] symSet : symbols) {
       Collections.addAll(symbolsArray, symSet);
     }

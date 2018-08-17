@@ -32,7 +32,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
       String pos = itemForm[2];
@@ -50,7 +50,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence =
           new DeductionChartItem(outTreeName, outNode, "rb", i, "-", "-", j, "0");
         Tree derivedTreeBase = tag.getTree(outTreeName);
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         for (Tree tree : antecedences.get(0).getTrees()) {
           derivedTrees
             .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));

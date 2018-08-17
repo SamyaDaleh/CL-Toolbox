@@ -69,7 +69,7 @@ public class ChainRules {
   /** Get all unit pairs, that are pairs of nonterminals where the derivation A
    * =>* B is possible. */
   private static ArrayList<String[]> getUnitPairs(Cfg cfg) {
-    ArrayList<String[]> unitPairs = new ArrayList<String[]>();
+    ArrayList<String[]> unitPairs = new ArrayList<>();
     for (String nt : cfg.getNonterminals()) {
       unitPairs.add(new String[] {nt, nt});
     }

@@ -37,8 +37,8 @@ public class MixedRhs {
     Cfg cfg = new Cfg();
     cfg.setStartSymbol(cfgOld.getStartSymbol());
     cfg.setTerminals(cfgOld.getTerminals());
-    ArrayList<String[]> newTRules = new ArrayList<String[]>();
-    ArrayList<String> newNt = new ArrayList<String>();
+    ArrayList<String[]> newTRules = new ArrayList<>();
+    ArrayList<String> newNt = new ArrayList<>();
     Collections.addAll(newNt, cfgOld.getNonterminals());
     doReplaceTerminals(cfg, newTRules, newNt, cfgOld);
     cfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
@@ -55,7 +55,7 @@ public class MixedRhs {
         cfg.getProductionRules().add(rule);
         continue;
       }
-      ArrayList<String> newRhs = new ArrayList<String>();
+      ArrayList<String> newRhs = new ArrayList<>();
       for (String sym : rule.getRhs()) {
         if (cfgOld.nonterminalsContain(sym)) {
           newRhs.add(sym);

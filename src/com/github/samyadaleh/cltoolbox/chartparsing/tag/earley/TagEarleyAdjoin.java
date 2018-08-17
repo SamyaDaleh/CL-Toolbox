@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -49,8 +50,8 @@ public class TagEarleyAdjoin
         && pos2.equals("rb") && j1.equals(j2)) {
         ChartItemInterface consequence =
           new DeductionChartItem(treeName2, node2, "rb", i, g, h, l, "1");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
-        if (antecedences.get(0).getItemform().equals(itemForm1)) {
+        List<Tree> derivedTrees = new ArrayList<>();
+        if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
           for (Tree tree1 : antecedences.get(1).getTrees()) {
             for (Tree tree2 : antecedences.get(0).getTrees()) {
               derivedTrees.add(tree1.adjoin(node2, tree2));

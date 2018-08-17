@@ -27,14 +27,14 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == this.antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String from = itemForm[1];
       String to = itemForm[2];
       int fromInt = Integer.parseInt(from);
       int toInt = Integer.parseInt(to);
       if (itemForm[0].substring(1).equals(rule.getLhs())) {
         List<Tree> derivedTrees = antecedences.get(0).getTrees();
-        List<Tree> derivedTreesNew = new ArrayList<Tree>();
+        List<Tree> derivedTreesNew = new ArrayList<>();
         if (derivedTrees.size() == 0) {
           derivedTreesNew.add(new Tree(rule));
         } else {
@@ -101,20 +101,18 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
   private ArrayList<ArrayList<Integer>> getAllSeparations(int from, int to,
     int length) {
     if (length == 1) {
-      ArrayList<ArrayList<Integer>> newList =
-        new ArrayList<ArrayList<Integer>>();
+      ArrayList<ArrayList<Integer>> newList = new ArrayList<>();
       for (int i = from + 1; i < to; i++) {
-        newList.add(new ArrayList<Integer>());
+        newList.add(new ArrayList<>());
         newList.get(newList.size() - 1).add(i);
       }
       return newList;
     } else {
-      ArrayList<ArrayList<Integer>> finalList =
-        new ArrayList<ArrayList<Integer>>();
+      ArrayList<ArrayList<Integer>> finalList = new ArrayList<>();
       for (int i = from + 1; i <= to - length; i++) {
         for (ArrayList<Integer> subSequence : getAllSeparations(i, to,
           length - 1)) {
-          finalList.add(new ArrayList<Integer>());
+          finalList.add(new ArrayList<>());
           finalList.get(finalList.size() - 1).add(i);
           finalList.get(finalList.size() - 1).addAll(subSequence);
         }

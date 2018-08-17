@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -40,8 +41,8 @@ public class CfgLeftCornerChartRemove
               ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
                 + mayDottedRuleSplit[k].substring(1) + " •",
               String.valueOf(i), String.valueOf(l1 + l2));
-            List<Tree> derivedTrees = new ArrayList<Tree>();
-            if (antecedences.get(0).getItemform().equals(itemForm1)) {
+            List<Tree> derivedTrees = new ArrayList<>();
+            if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
               if (antecedences.get(1).getTrees().size() > 0) {
                 for (Tree tree1 : antecedences.get(0).getTrees()) {
                   for (Tree tree2 : antecedences.get(1).getTrees()) {
@@ -73,8 +74,8 @@ public class CfgLeftCornerChartRemove
                 + ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, k + 1,
                   mayDottedRuleSplit.length),
               String.valueOf(i), String.valueOf(l1 + l2));
-            List<Tree> derivedTrees = new ArrayList<Tree>();
-            if (antecedences.get(0).getItemform().equals(itemForm1)) {
+            List<Tree> derivedTrees = new ArrayList<>();
+            if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
               for (Tree tree1 : antecedences.get(0).getTrees()) {
                 for (Tree tree2 : antecedences.get(1).getTrees()) {
                   derivedTrees

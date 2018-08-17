@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -41,8 +42,8 @@ public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
       && node1.equals("⊤") && node2.endsWith("⊥")) {
       ChartItemInterface consequence = new DeductionChartItem(treeName2,
         node2.substring(0, node2.length() - 1) + "⊤", i, f1b, f2b, j);
-      List<Tree> derivatedTrees = new ArrayList<Tree>();
-      if (itemForm1.equals(antecedences.get(0).getItemform())) {
+      List<Tree> derivatedTrees = new ArrayList<>();
+      if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
         for (Tree tree1 : antecedences.get(0).getTrees()) {
           for (Tree tree2 : antecedences.get(1).getTrees()) {
             derivatedTrees

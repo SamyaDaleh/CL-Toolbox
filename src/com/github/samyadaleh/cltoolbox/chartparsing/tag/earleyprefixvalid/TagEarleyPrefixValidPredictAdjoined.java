@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -47,7 +48,7 @@ public class TagEarleyPrefixValidPredictAdjoined
         ChartItemInterface consequence = new DeductionChartItem(treeName2, node2, "lb", iGamma2, m,
           "-", "-", m, "0");
         List<Tree> derivedTrees;
-        if (antecedences.get(0).getItemform().equals(itemForm1)) {
+        if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
           derivedTrees = antecedences.get(1).getTrees();
         } else {
           derivedTrees = antecedences.get(0).getTrees();

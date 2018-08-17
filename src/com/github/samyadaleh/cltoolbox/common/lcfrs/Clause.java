@@ -9,7 +9,7 @@ import java.util.List;
 public class Clause {
 
   private Predicate lhs;
-  private final List<Predicate> rhs = new ArrayList<Predicate>();
+  private final List<Predicate> rhs = new ArrayList<>();
 
   /** Constructor that creates the lhs Predicate and splits the rhs to make
    * every part a Predicate  */

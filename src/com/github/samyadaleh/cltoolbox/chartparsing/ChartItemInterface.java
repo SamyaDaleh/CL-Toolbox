@@ -8,7 +8,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  * used as antecedences or consequences of rules and can be derived. */
 public interface ChartItemInterface {
 
-  String[] getItemform();
+  String[] getItemForm();
   
   List<Tree> getTrees();
   void setTrees(List<Tree> trees);

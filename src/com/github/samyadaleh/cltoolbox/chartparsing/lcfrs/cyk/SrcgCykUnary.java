@@ -30,13 +30,13 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
   @SuppressWarnings("unchecked") @Override public List<ChartItemInterface>
     getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String nt = itemForm[0];
 
       if (nt.equals(clause.getRhs().get(0).getNonterminal())) {
-        ArrayList<Integer> overallRanges = new ArrayList<Integer>();
+        ArrayList<Integer> overallRanges = new ArrayList<>();
         for (String[] argument : clause.getLhs().getSymbols()) {
-          ArrayList<String> vectorRanges = new ArrayList<String>();
+          ArrayList<String> vectorRanges = new ArrayList<>();
           for (String element : argument) {
             addVectorRangeForElement(itemForm, vectorRanges, element);
           }
@@ -83,7 +83,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
             .getRangesForArguments(overallRanges, clause.getLhs());
           Tree derivedTreeBase =
             TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           for (Tree tree : antecedences.get(0).getTrees()) {
             derivedTrees.add(
               TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));

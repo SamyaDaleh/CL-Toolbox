@@ -14,5 +14,5 @@ interface DisplayTreeInterface {
   void drawLine(int x1, int y1, int x2, int y2);
   int getWidth();
   int getHeight();
-  void clearRect(int i, int j, int width, int height);
+  void clearRect(int width, int height);
 }

@@ -12,7 +12,7 @@ public class SxCalc {
   /** Calculates all inside probabilities (as absolute logs) for all
    * nonterminals in Pcfg up until nmax length. */
   public static Map<String, Double> getInsides(Pcfg cfg, int nmax) {
-    Map<String, Double> insides = new HashMap<String, Double>();
+    Map<String, Double> insides = new HashMap<>();
     for (int n = 1; n <= nmax; n++) {
       for (String nt : cfg.getNonterminals()) {
         insides.put(getInsideKey(nt, n), Double.MAX_VALUE);
@@ -69,7 +69,7 @@ public class SxCalc {
    * in Pcfg for length n. Needs Insides to be calculated first. */
   public static Map<String, Double> getOutsides(Map<String, Double> insides,
     int n, Pcfg pcfg) {
-    Map<String, Double> outsides = new HashMap<String, Double>();
+    Map<String, Double> outsides = new HashMap<>();
 
     for (int l = n; l >= 1; l--) {
       for (int nl = 0; nl <= n - l; nl++) {

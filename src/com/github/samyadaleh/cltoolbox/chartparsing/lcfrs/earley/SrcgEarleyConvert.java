@@ -25,7 +25,7 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
   @SuppressWarnings("unchecked") @Override public List<ChartItemInterface>
     getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
         Clause clauseParsed;
@@ -41,7 +41,7 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
         int jInt = Integer.parseInt(j);
         if (clauseParsed.getLhs().getDim() == iInt
           && clauseParsed.getLhs().getArgumentByIndex(iInt).length == jInt) {
-          ArrayList<String> rangesForElements = new ArrayList<String>();
+          ArrayList<String> rangesForElements = new ArrayList<>();
           rangesForElements
             .addAll(Arrays.asList(itemForm).subList(4, itemForm.length));
           Predicate lhs = clauseParsed.getLhs();

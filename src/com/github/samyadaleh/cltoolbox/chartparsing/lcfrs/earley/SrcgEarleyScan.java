@@ -28,7 +28,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
   @Override public List<ChartItemInterface> getConsequences()
     throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
         Clause clauseParsed;
@@ -49,7 +49,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
           && posInt < wSplit.length
           && clauseParsed.getLhsSymAt(iInt, jInt).equals(wSplit[posInt])) {
           this.name = "scan " + wSplit[posInt];
-          ArrayList<String> newVector = new ArrayList<String>();
+          ArrayList<String> newVector = new ArrayList<>();
           for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
             newVector.add(itemForm[2 * k + 4]);
             newVector.add(itemForm[2 * k + 5]);
@@ -58,7 +58,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
           newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
           ChartItemInterface consequence = new SrcgEarleyActiveItem(clause,
             posInt + 1, iInt, jInt + 1, newVector);
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           for (Tree tree : antecedences.get(0).getTrees()) {
             derivedTrees.add(
               TreeUtils.performPositionSubstitution(tree, wSplit[posInt], pos));

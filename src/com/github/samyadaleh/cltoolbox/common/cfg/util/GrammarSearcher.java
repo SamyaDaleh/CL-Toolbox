@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
@@ -16,9 +17,9 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 public class GrammarSearcher {
   private static Deduction deduction = new Deduction();
   private static ParsingSchema schema;
-  private static java.util.Random r = new java.util.Random();
-  private static int populationSize = 200;
-  private static int generationSize = 1000;
+  private static final java.util.Random r = new java.util.Random();
+  private static final int populationSize = 200;
+  private static final int generationSize = 1000;
 
   /**
    * Entry point to call any searcher method from.
@@ -33,16 +34,16 @@ public class GrammarSearcher {
    * mutated until a goal grammar is found or the maximum number of generations
    * is reached.
    */
-  public static void evolutionarySearch() throws ParseException {
-    List<Cfg> population = new ArrayList<Cfg>();
-    List<Float> scores = new ArrayList<Float>();
+  private static void evolutionarySearch() throws ParseException {
+    List<Cfg> population = new ArrayList<>();
+    List<Float> scores = new ArrayList<>();
     int generation = 0;
     for (int i = 0; i < populationSize; i++) {
       Cfg newCfg = Random.getRandomCfg();
       population.add(newCfg);
       scores.add(evaluateGrammar(newCfg));
     }
-    Cfg bestGrammar = null;
+    Cfg bestGrammar;
     while ((bestGrammar = findMaxScoreGrammar(population, scores)) == null) {
       deleteWorstHalf(population, scores);
       if (generation == generationSize) {
@@ -72,8 +73,8 @@ public class GrammarSearcher {
     Cfg m2 = getRandomElement(population);
     Cfg child = new Cfg();
     List<String> recombinedRules = recombineRules(m1, m2);
-    for (int i = 0; i < recombinedRules.size(); i++) {
-      child.addProductionRule(recombinedRules.get(i));
+    for (String recombinedRule : recombinedRules) {
+      child.addProductionRule(recombinedRule);
     }
     child.setTerminals(combineArrays(m1.getTerminals(), m2.getTerminals()));
     child.setNonterminals(
@@ -125,18 +126,14 @@ public class GrammarSearcher {
     if (decision == 2) {
       if (r.nextBoolean()) {
         String newNt = "N" + child.getNonterminals().length;
-        List<String> newNts = new ArrayList<String>();
-        for (String oldNt : child.getNonterminals()) {
-          newNts.add(oldNt);
-        }
+        List<String> newNts = new ArrayList<>();
+        Collections.addAll(newNts, child.getNonterminals());
         newNts.add(newNt);
         child.setNonterminals(newNts.toArray(new String[newNts.size()]));
       } else {
         String newT = "t" + child.getTerminals().length;
-        List<String> newTs = new ArrayList<String>();
-        for (String oldT : child.getTerminals()) {
-          newTs.add(oldT);
-        }
+        List<String> newTs = new ArrayList<>();
+        Collections.addAll(newTs, child.getTerminals());
         newTs.add(newT);
         child.setTerminals(newTs.toArray(new String[newTs.size()]));
       }
@@ -206,7 +203,7 @@ public class GrammarSearcher {
    * first cfg are added, then from the second one.
    */
   private static List<String> recombineRules(Cfg m1, Cfg m2) {
-    List<String> newRules = new ArrayList<String>();
+    List<String> newRules = new ArrayList<>();
     int splitPoint = 1;
     if (m1.getProductionRules().size() > 1) {
       splitPoint = r.nextInt(m1.getProductionRules().size() - 1) + 1;
@@ -277,13 +274,12 @@ public class GrammarSearcher {
   /**
    * Return the fitness score of the passed grammar according to the current
    * search criteria.
-   * @throws ParseException
    */
   private static float evaluateGrammar(Cfg cfg) throws ParseException {
     float actualScore = 0;
     float maxScore = 0;
-    int tdLength = 0;
-    int lcLength = 0;
+    int tdLength;
+    int lcLength;
     // int srLength = 0;
 
     maxScore++;

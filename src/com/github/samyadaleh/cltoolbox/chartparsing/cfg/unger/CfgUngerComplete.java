@@ -24,20 +24,20 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == this.antNeeded) {
       for (ChartItemInterface mayLhsItem : antecedences) {
-        if (!mayLhsItem.getItemform()[0].startsWith("•")) {
+        if (!mayLhsItem.getItemForm()[0].startsWith("•")) {
           continue;
         }
-        String prevIjPlusOne = mayLhsItem.getItemform()[1];
+        String prevIjPlusOne = mayLhsItem.getItemForm()[1];
         for (int i = 0; i < antNeeded - 1; i++) {
           boolean found = false;
           for (ChartItemInterface mayRhsItem : antecedences) {
-            if (mayRhsItem.getItemform()[0].endsWith("•")
-              && mayRhsItem.getItemform()[0]
-                .substring(0, mayRhsItem.getItemform()[0].length() - 1)
+            if (mayRhsItem.getItemForm()[0].endsWith("•")
+              && mayRhsItem.getItemForm()[0]
+                .substring(0, mayRhsItem.getItemForm()[0].length() - 1)
                 .equals(rule.getRhs()[i])
-              && mayRhsItem.getItemform()[1].equals(prevIjPlusOne)) {
+              && mayRhsItem.getItemForm()[1].equals(prevIjPlusOne)) {
               found = true;
-              prevIjPlusOne = mayRhsItem.getItemform()[2];
+              prevIjPlusOne = mayRhsItem.getItemForm()[2];
               break;
             }
           }
@@ -45,7 +45,7 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
             return this.consequences;
           }
         }
-        if (prevIjPlusOne.equals(mayLhsItem.getItemform()[2])) {
+        if (prevIjPlusOne.equals(mayLhsItem.getItemForm()[2])) {
           List<Tree> derivedTrees;
           if (antecedences.get(0).equals(mayLhsItem)) {
             derivedTrees = antecedences.get(1).getTrees();
@@ -53,7 +53,7 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
             derivedTrees = antecedences.get(0).getTrees();
           }
           ChartItemInterface consequence = new DeductionChartItem(rule.getLhs() + "•",
-            mayLhsItem.getItemform()[1], mayLhsItem.getItemform()[2]);
+            mayLhsItem.getItemForm()[1], mayLhsItem.getItemForm()[2]);
           consequence.setTrees(derivedTrees);
           consequences.add(consequence);
         }

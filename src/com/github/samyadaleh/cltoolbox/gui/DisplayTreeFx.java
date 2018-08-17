@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class DisplayTreeFx implements DisplayTreeInterface {
 
   private Tree tree;
-  private final Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
+  private final Map<String, Integer[]> nodesDrawn = new HashMap<>();
   private String[] itemForm;
   private final int x = 100;
   private final int y = 500;
@@ -72,8 +72,8 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     return this.nodesDrawn;
   }
 
-  @Override public void clearRect(int i, int j, int width, int height) {
-    gc.clearRect(i, j, width, height);
+  @Override public void clearRect(int width, int height) {
+    gc.clearRect(0, 0, width, height);
     
   }
 

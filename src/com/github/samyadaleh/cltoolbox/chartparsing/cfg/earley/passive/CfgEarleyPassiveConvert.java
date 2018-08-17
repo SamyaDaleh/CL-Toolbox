@@ -20,7 +20,7 @@ public class CfgEarleyPassiveConvert extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       if (itemForm[0].endsWith("•")) {
         String lhsSym = itemForm[0].split(" ")[0];
         ChartItemInterface consequence = new DeductionChartItem(lhsSym, itemForm[1], itemForm[2]);

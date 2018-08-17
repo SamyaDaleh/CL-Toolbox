@@ -46,7 +46,7 @@ public class LcfrsToDeductionRulesConverter {
           .append(ranges.get(2 * i)).append("> ");
       }
       treeString.append(")");
-      List<Tree> derivedTrees = new ArrayList<Tree>();
+      List<Tree> derivedTrees = new ArrayList<>();
       derivedTrees.add(new Tree(treeString.toString()));
       consequence.setTrees(derivedTrees);
       scan.addConsequence(consequence);
@@ -116,8 +116,8 @@ public class LcfrsToDeductionRulesConverter {
    */
   @SuppressWarnings("unchecked") private static List<List<Integer>>
     getAllRanges(Predicate lhs, String[] wSplit) {
-    ArrayList<List<Integer>> ranges = new ArrayList<List<Integer>>();
-    ArrayList<Integer> tryOutRange = new ArrayList<Integer>();
+    ArrayList<List<Integer>> ranges = new ArrayList<>();
+    ArrayList<Integer> tryOutRange = new ArrayList<>();
     tryOutRange.add(0);
     tryOutRange.add(1);
 
@@ -187,7 +187,7 @@ public class LcfrsToDeductionRulesConverter {
       ChartItemInterface consequence =
         new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
           new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length));
-      List<Tree> derivedTrees = new ArrayList<Tree>();
+      List<Tree> derivedTrees = new ArrayList<>();
       derivedTrees.add(TreeUtils.getTreeOfSrcgClause(clause));
       consequence.setTrees(derivedTrees);
       initialize.addConsequence(consequence);

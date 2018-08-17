@@ -116,7 +116,7 @@ abstract class AbstractDisplayTree {
     }
     int widthSum = 0;
     List<Vertex> children = dti.getTree().getChildren(p);
-    ArrayList<Integer> widths = new ArrayList<Integer>();
+    ArrayList<Integer> widths = new ArrayList<>();
     for (Vertex child : children) {
       int width = dti.getTree().getWidthBelowNodeInNodes(child);
       if (width == 0) {
@@ -152,7 +152,7 @@ abstract class AbstractDisplayTree {
   }
 
   static void paint(DisplayTreeInterface dti) {
-    dti.clearRect(0, 0, dti.getWidth(), dti.getHeight());
+    dti.clearRect(dti.getWidth(), dti.getHeight());
     switch (dti.getItemForm().length) {
     case 0:
       break;

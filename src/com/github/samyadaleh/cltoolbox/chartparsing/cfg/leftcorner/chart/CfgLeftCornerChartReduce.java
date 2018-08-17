@@ -25,7 +25,7 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
   @Override public List<ChartItemInterface> getConsequences()
     throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String i = itemForm[1];
       String l = itemForm[2];
       if (itemForm[0].equals(rule.getRhs()[0])) {
@@ -35,7 +35,7 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
           i, l);
         Tree derivedTreeBase = new Tree(rule);
         List<Tree> antDerivedTrees = antecedences.get(0).getTrees();
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         if (antDerivedTrees.size() > 0
           && antDerivedTrees.get(antDerivedTrees.size() - 1).getRoot()
             .getLabel().equals(rule.getRhs()[0])) {

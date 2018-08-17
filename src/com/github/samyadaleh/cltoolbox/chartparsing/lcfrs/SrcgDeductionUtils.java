@@ -68,7 +68,7 @@ public class SrcgDeductionUtils {
    * (mostly a lhs) it returns ranges for the whole arguments. */
   public static <T> ArrayList<?>
     getRangesForArguments(ArrayList<T> rangeOverElements, Predicate lhs) {
-    ArrayList<T> rangeOverArguments = new ArrayList<T>();
+    ArrayList<T> rangeOverArguments = new ArrayList<>();
     for (int i = 0; i < lhs.getDim(); i++) {
       rangeOverArguments
         .add(rangeOverElements.get(lhs.getAbsolutePos(i + 1, 0) * 2));

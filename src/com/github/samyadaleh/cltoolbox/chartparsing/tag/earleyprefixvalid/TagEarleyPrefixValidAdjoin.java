@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
@@ -21,9 +22,9 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      String[] itemForm3 = antecedences.get(2).getItemform();
+      String[] itemForm1 = antecedences.get(0).getItemForm();
+      String[] itemForm2 = antecedences.get(1).getItemForm();
+      String[] itemForm3 = antecedences.get(2).getItemForm();
       calculateConsequences(itemForm1, itemForm2, itemForm3);
       calculateConsequences(itemForm1, itemForm3, itemForm2);
       calculateConsequences(itemForm2, itemForm1, itemForm3);
@@ -74,14 +75,14 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
       && adj3.equals("0")) {
       ChartItemInterface consequence = new DeductionChartItem(treeName2, node2, "rb", "~", iGamma1,
         j2, k2, l1, "1");
-      List<Tree> derivedTrees = new ArrayList<Tree>();
-      if (antecedences.get(0).getItemform().equals(itemForm1)) {
+      List<Tree> derivedTrees = new ArrayList<>();
+      if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
         for (Tree tree1 : antecedences.get(1).getTrees()) {
           for (Tree tree2 : antecedences.get(0).getTrees()) {
             derivedTrees.add(tree1.adjoin(node2, tree2));
           }
         }
-      } else if (antecedences.get(1).getItemform().equals(itemForm1)) {
+      } else if (Arrays.equals(antecedences.get(1).getItemForm(), itemForm1)) {
         for (Tree tree1 : antecedences.get(1).getTrees()) {
           for (Tree tree2 : antecedences.get(0).getTrees()) {
             derivedTrees.add(tree2.adjoin(node2, tree1));

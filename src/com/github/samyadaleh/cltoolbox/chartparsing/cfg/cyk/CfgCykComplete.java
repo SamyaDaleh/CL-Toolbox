@@ -41,8 +41,8 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
       ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(), String.valueOf(i1int),
         String.valueOf(j1int + j2int));
       Tree derivedTreeBase = new Tree(rule);
-      List<Tree> derivedTrees = new ArrayList<Tree>();
-      if (i1.equals(antecedences.get(0).getItemform()[1])) {
+      List<Tree> derivedTrees = new ArrayList<>();
+      if (i1.equals(antecedences.get(0).getItemForm()[1])) {
         for (Tree tree1 : antecedences.get(0).getTrees()) {
           for (Tree tree2 : antecedences.get(1).getTrees()) {
             Tree derivedTree =

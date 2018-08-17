@@ -35,14 +35,14 @@ public class Binarization {
     newSrcg.setStartSymbol(oldSrcg.getStartSymbol());
     newSrcg.setTerminals(oldSrcg.getTerminals());
     newSrcg.setVariables(oldSrcg.getVariables());
-    ArrayList<String> newNonterminals = new ArrayList<String>();
+    ArrayList<String> newNonterminals = new ArrayList<>();
     Collections.addAll(newNonterminals, oldSrcg.getNonterminals());
     for (Clause clause : oldSrcg.getClauses()) {
       if (clause.getRhs().size() <= 2) {
         newSrcg.addClause(clause);
       } else {
-        ArrayList<Clause> r = new ArrayList<Clause>();
-        List<Clause> clausesToBeFurtherReduced = new ArrayList<Clause>();
+        ArrayList<Clause> r = new ArrayList<>();
+        List<Clause> clausesToBeFurtherReduced = new ArrayList<>();
         clausesToBeFurtherReduced.add(clause);
         while (clausesToBeFurtherReduced.size() > 0) {
           if (clausesToBeFurtherReduced.get(0).getRhs().size() <= 2) {
@@ -141,7 +141,7 @@ public class Binarization {
     String characteristicString) {
     int arity = 0;
     boolean prevVar = false;
-    Set<String> variablesSet = new HashSet<String>(Arrays.asList(variables));
+    Set<String> variablesSet = new HashSet<>(Arrays.asList(variables));
     for (String token : characteristicString.split(" ")) {
       if (variablesSet.contains(token)) {
         if (!prevVar) {
@@ -225,7 +225,7 @@ public class Binarization {
     String newNt, Predicate predicate, Srcg srcg) throws ParseException {
     StringBuilder newClause =
       new StringBuilder(String.valueOf(predicate) + " ->");
-    List<Predicate> rhsPredToReduceBy = new ArrayList<Predicate>();
+    List<Predicate> rhsPredToReduceBy = new ArrayList<>();
     for (int entry : j) {
       newClause.append(' ').append(clause.getRhs().get(entry).toString());
       rhsPredToReduceBy.add(clause.getRhs().get(entry));

@@ -30,7 +30,7 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
       String i = itemForm[2];
@@ -42,7 +42,7 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence = new DeductionChartItem(this.treeName,
           this.nodeGorn + "⊤", i, "-", "-", j);
         Tree derivedTreeBase = tag.getTree(this.treeName);
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         for (Tree tree : antecedences.get(0).getTrees()) {
           derivedTrees.add(derivedTreeBase.substitute(this.nodeGorn, tree));
         }

@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -35,9 +36,9 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
     if (nt2.equals(clause.getRhs().get(0).getNonterminal())
       && nt1.equals(clause.getRhs().get(1).getNonterminal())) {
       boolean looksGood = true;
-      ArrayList<Integer> overallRanges = new ArrayList<Integer>();
+      ArrayList<Integer> overallRanges = new ArrayList<>();
       for (String[] argument : clause.getLhs().getSymbols()) {
-        ArrayList<String> vectorRanges = new ArrayList<String>();
+        ArrayList<String> vectorRanges = new ArrayList<>();
         for (String element : argument) {
           addVectorRangeForElement(itemForm2, itemForm1, vectorRanges, element);
         }
@@ -76,10 +77,10 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
           .getRangesForArguments(overallRanges, clause.getLhs());
         ChartItemInterface consequence =
           new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         Tree derivedTreeBase =
           TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
-        if (itemForm1.equals(antecedences.get(0).getItemform())) {
+        if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
           for (Tree tree1 : antecedences.get(0).getTrees()) {
             for (Tree tree2 : antecedences.get(1).getTrees()) {
               derivedTreeBase =

@@ -14,7 +14,7 @@ public class DisplayTree extends JFrame implements DisplayTreeInterface {
 
   private static final long serialVersionUID = -9123591819196303915L;
   private Tree tree;
-  private final Map<String, Integer[]> nodesDrawn = new HashMap<String, Integer[]>();
+  private final Map<String, Integer[]> nodesDrawn = new HashMap<>();
   private String[] itemForm;
   private final int x = 100;
   private final int y = 500;
@@ -69,8 +69,8 @@ public class DisplayTree extends JFrame implements DisplayTreeInterface {
     return this.nodesDrawn;
   }
 
-  @Override public void clearRect(int i, int j, int width, int height) {
-    g.clearRect(i, j, width, height);
+  @Override public void clearRect(int width, int height) {
+    g.clearRect(0, 0, width, height);
   }
   
 }

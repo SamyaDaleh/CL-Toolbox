@@ -40,7 +40,7 @@ public class LeftRecursion {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<String>();
+    ArrayList<String> newNts = new ArrayList<>();
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (String nt : cfgOld.getNonterminals()) {
       if (!nonterminalIsLhsOfDirectLeftRecursion(cfgOld, nt)) {
@@ -73,7 +73,7 @@ public class LeftRecursion {
       l++;
     }
     newNts.add(newNt);
-    List<CfgProductionRule> rulesCopy = new ArrayList<CfgProductionRule>();
+    List<CfgProductionRule> rulesCopy = new ArrayList<>();
     for(CfgProductionRule rule : cfg.getProductionRules()) {
       if(rule.getLhs().equals(nt)) {
       rulesCopy.add(new CfgProductionRule(rule.toString()));
@@ -99,7 +99,7 @@ public class LeftRecursion {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<String>();
+    ArrayList<String> newNts = new ArrayList<>();
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       cfg.addProductionRule(rule.toString());
@@ -142,7 +142,7 @@ public class LeftRecursion {
     String[] bi = ArrayUtils.getSubSequenceAsArray(rule.getRhs(), 1,
       rule.getRhs().length);
     cfg.getProductionRules().remove(k);
-    List<String> newRules = new ArrayList<String>();
+    List<String> newRules = new ArrayList<>();
     for (CfgProductionRule rule2 : cfg.getProductionRules()) {
       if (rule2.getLhs().equals(nt2)) {
         newRules.add(nt + " -> " + String.join(" ", rule2.getRhs())
@@ -160,14 +160,14 @@ public class LeftRecursion {
    */
   private static boolean nonterminalIsLhsOfLeftRecursion(Cfg cfg, String nt) {
     boolean change = true;
-    List<String> transitiveClosure = new ArrayList<String>();
+    List<String> transitiveClosure = new ArrayList<>();
     transitiveClosure.add(nt);
     List<String> epsilonNts = EmptyProductions.getEliminateable(cfg);
     while (change) {
       change = false;
       for (CfgProductionRule rule : cfg.getProductionRules()) {
         if (transitiveClosure.contains(rule.getLhs())) {
-          List<String> consider = new ArrayList<String>();
+          List<String> consider = new ArrayList<>();
           int i = 0;
           String considerNt;
           do {

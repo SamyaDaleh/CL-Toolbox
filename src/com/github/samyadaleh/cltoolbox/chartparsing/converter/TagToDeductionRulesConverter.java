@@ -76,7 +76,7 @@ public class TagToDeductionRulesConverter {
   public static ParsingSchema tagToCykGeneralRules(Tag tag, String w) {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-    Set<Integer> childCounts = new HashSet<Integer>();
+    Set<Integer> childCounts = new HashSet<>();
     for (String treeName : tag.getTreeNames()) {
       Tree tree = tag.getTree(treeName);
       for (Vertex p : tree.getVertexes()) {
@@ -127,7 +127,7 @@ public class TagToDeductionRulesConverter {
         ChartItemInterface consequence =
           new DeductionChartItem(auxTree, footGorn + "⊤", String.valueOf(i),
             String.valueOf(i), String.valueOf(j), String.valueOf(j));
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getAuxiliaryTree(auxTree));
         consequence.setTrees(derivedTrees);
         footPredict.addConsequence(consequence);
@@ -165,7 +165,7 @@ public class TagToDeductionRulesConverter {
       ChartItemInterface consequence =
         new DeductionChartItem(treeName, p.getGornAddress() + "⊤",
           String.valueOf(i), "-", "-", String.valueOf(i + 1));
-      List<Tree> derivedTrees = new ArrayList<Tree>();
+      List<Tree> derivedTrees = new ArrayList<>();
       derivedTrees.add(tag.getTree(treeName));
       consequence.setTrees(derivedTrees);
       lexScan.addConsequence(consequence);
@@ -176,7 +176,7 @@ public class TagToDeductionRulesConverter {
       ChartItemInterface consequence =
         new DeductionChartItem(treeName, p.getGornAddress() + "⊤",
           String.valueOf(i), "-", "-", String.valueOf(i));
-      List<Tree> derivedTrees = new ArrayList<Tree>();
+      List<Tree> derivedTrees = new ArrayList<>();
       derivedTrees.add(tag.getTree(treeName));
       consequence.setTrees(derivedTrees);
       epsScan.addConsequence(consequence);
@@ -239,7 +239,7 @@ public class TagToDeductionRulesConverter {
         StaticDeductionRule initialize = new StaticDeductionRule();
         ChartItemInterface consequence = new DeductionChartItem(iniTreeName, "",
           "la", "0", "-", "-", "0", "0");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
         initialize.addConsequence(consequence);
@@ -272,7 +272,7 @@ public class TagToDeductionRulesConverter {
         StaticDeductionRule initialize = new StaticDeductionRule();
         ChartItemInterface consequence = new DeductionChartItem(iniTreeName, "",
           "la", "0", "0", "-", "-", "0", "0");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
         initialize.addConsequence(consequence);

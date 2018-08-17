@@ -25,7 +25,7 @@ public class TagEarleyPrefixValidPredictSubst
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
       String pos = itemForm[2];
@@ -42,7 +42,7 @@ public class TagEarleyPrefixValidPredictSubst
         && p.getLabel().equals(tag.getTree(iniTreeName).getRoot().getLabel())) {
         ChartItemInterface consequence =
           new DeductionChartItem(iniTreeName, "", "la", l, l, "-", "-", l, "0");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);

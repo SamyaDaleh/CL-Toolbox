@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -53,8 +54,8 @@ public class TagEarleyPrefixValidSubstitute
       && pos2.equals("ra") && adj2.equals("0")) {
       ChartItemInterface consequence =
         new DeductionChartItem(treeName1, node1, "rb", "~", l1, "-", "-", l2, "0");
-      List<Tree> derivedTrees = new ArrayList<Tree>();
-      if (itemForm1.equals(antecedences.get(0).getItemform())) {
+      List<Tree> derivedTrees = new ArrayList<>();
+      if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
         for (Tree tree1 : antecedences.get(0).getTrees()) {
           for (Tree tree2 : antecedences.get(1).getTrees()) {
             derivedTrees

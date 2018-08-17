@@ -9,9 +9,9 @@ import java.util.Set;
  * Consists of a set of deduction rules and goal items that have to be derived
  * with help of the rules. */
 public class ParsingSchema {
-  private final Set<StaticDeductionRule> axioms = new HashSet<StaticDeductionRule>();
-  private final Set<DynamicDeductionRuleInterface> rules = new HashSet<DynamicDeductionRuleInterface>();
-  private final List<ChartItemInterface> goal = new ArrayList<ChartItemInterface>();
+  private final Set<StaticDeductionRule> axioms = new HashSet<>();
+  private final Set<DynamicDeductionRuleInterface> rules = new HashSet<>();
+  private final List<ChartItemInterface> goal = new ArrayList<>();
   
   public void addAxiom(StaticDeductionRule rule) {
     axioms.add(rule);

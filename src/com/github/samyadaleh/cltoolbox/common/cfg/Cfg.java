@@ -14,8 +14,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.util.UselessSymbols;
 /** Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol. */
 public class Cfg extends AbstractCfg {
-  private final List<CfgProductionRule> productionRules =
-    new ArrayList<CfgProductionRule>();
+  private final List<CfgProductionRule> productionRules = new ArrayList<>();
 
   public Cfg() {
     super();
@@ -169,17 +168,15 @@ public class Cfg extends AbstractCfg {
   /** Removes direct left recursion. S -> S is ignored. S -> S a | b are
    * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
    * and maybe chain rules. Remove empty productions first to make sure grammar
-   * does not contain indirect left recursion. 
-   * @throws ParseException */
-  public Cfg getCfgWithoutDirectLeftRecursion() throws ParseException {
+   * does not contain indirect left recursion. */
+  public Cfg getCfgWithoutDirectLeftRecursion() {
     return LeftRecursion.removeDirectLeftRecursion(this);
   }
 
   /** Removes left recursion. S -> S is ignored. S -> S a | b are
    * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
    * and maybe chain rules. Remove empty productions first to make sure grammar
-   * does not contain indirect left recursion. 
-   * @throws ParseException */
+   * does not contain indirect left recursion. */
   public Cfg getCfgWithoutLeftRecursion() throws ParseException {
     return LeftRecursion.removeLeftRecursion(this);
   }
@@ -191,8 +188,7 @@ public class Cfg extends AbstractCfg {
   }
 
   /** Creates a CfgProductionRule from the string representation and adds it to
-   * its set of rules. 
-   * @throws ParseException */
+   * its set of rules. */
   public void addProductionRule(String rule) throws ParseException {
     this.productionRules.add(new CfgProductionRule(rule));
   }

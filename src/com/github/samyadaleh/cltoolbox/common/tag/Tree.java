@@ -12,22 +12,22 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
  * node. */
 public class Tree {
 
-  private final List<Vertex> vertexes = new ArrayList<Vertex>();
-  private final List<Edge> edges = new ArrayList<Edge>();
+  private final List<Vertex> vertexes = new ArrayList<>();
+  private final List<Edge> edges = new ArrayList<>();
   private Vertex root = null;
   private Vertex foot = null;
-  private List<Vertex> nA = new ArrayList<Vertex>();
-  private List<Vertex> oA = new ArrayList<Vertex>();
+  private List<Vertex> nA = new ArrayList<>();
+  private List<Vertex> oA = new ArrayList<>();
 
-  private final ArrayList<String> leafOrder = new ArrayList<String>();
-  private final ArrayList<String> leafGorns = new ArrayList<String>();
+  private final ArrayList<String> leafOrder = new ArrayList<>();
+  private final ArrayList<String> leafGorns = new ArrayList<>();
 
   /** Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it. */
   public Tree(String tree) throws ParseException {
     String[] tokens = tokenize(tree);
-    List<Vertex> vertexPath = new ArrayList<Vertex>();
-    List<Integer> children = new ArrayList<Integer>();
+    List<Vertex> vertexPath = new ArrayList<>();
+    List<Integer> children = new ArrayList<>();
     for (int i = 0; i < tokens.length; i++) {
       switch (tokens[i]) {
       case "(": {
@@ -140,7 +140,7 @@ public class Tree {
    * '*' and '_' as single char tokens and all other continuous string
    * concatenations each as a token. */
   private String[] tokenize(String tree) {
-    ArrayList<String> tokens = new ArrayList<String>();
+    ArrayList<String> tokens = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
     for (int i = 0; i < tree.length(); i++) {
       if (tree.charAt(i) == ' ') {
@@ -204,7 +204,7 @@ public class Tree {
 
   /** Returns a list of all child nodes of the given node. */
   public List<Vertex> getChildren(Vertex node) {
-    List<Vertex> children = new ArrayList<Vertex>();
+    List<Vertex> children = new ArrayList<>();
     for (Edge edge : this.edges) {
       if (edge.getFrom().equals(node)) {
         children.add(edge.getTo());
@@ -386,6 +386,7 @@ public class Tree {
       if (vertex.equals(this.foot)) {
         newTree.foot = newTree.getNodeByGornAdress(vertex.getGornAddress());
       }
+      assert adjNode != null;
       if (adjNode.dominates(vertex.getGornAddress())) {
         Vertex p = newTree.getNodeByGornAdress(vertex.getGornAddress());
         p.setGornaddress(gorn + auxTree.getFoot().getGornAddress() + vertex
@@ -407,20 +408,23 @@ public class Tree {
           gorn + auxTree.getFoot().getGornAddress() + edge.getTo()
             .getGornAddress().substring(adjNode.getGornAddress().length()));
         newTree.edges.add(new Edge(newFrom, newTo));
-      } else if (adjNode.dominates(edge.getFrom().getGornAddress())) {
-        Vertex newFrom = newTree.getNodeByGornAdress(
-          gorn + auxTree.getFoot().getGornAddress() + edge.getFrom()
-            .getGornAddress().substring(adjNode.getGornAddress().length()));
-        Vertex newTo = newTree.getNodeByGornAdress(
-          gorn + auxTree.getFoot().getGornAddress() + edge.getTo()
-            .getGornAddress().substring(adjNode.getGornAddress().length()));
-        newTree.edges.add(new Edge(newFrom, newTo));
       } else {
-        Vertex newFrom =
-          newTree.getNodeByGornAdress(edge.getFrom().getGornAddress());
-        Vertex newTo =
-          newTree.getNodeByGornAdress(edge.getTo().getGornAddress());
-        newTree.edges.add(new Edge(newFrom, newTo));
+        assert adjNode != null;
+        if (adjNode.dominates(edge.getFrom().getGornAddress())) {
+          Vertex newFrom = newTree.getNodeByGornAdress(
+            gorn + auxTree.getFoot().getGornAddress() + edge.getFrom()
+              .getGornAddress().substring(adjNode.getGornAddress().length()));
+          Vertex newTo = newTree.getNodeByGornAdress(
+            gorn + auxTree.getFoot().getGornAddress() + edge.getTo()
+              .getGornAddress().substring(adjNode.getGornAddress().length()));
+          newTree.edges.add(new Edge(newFrom, newTo));
+        } else {
+          Vertex newFrom =
+            newTree.getNodeByGornAdress(edge.getFrom().getGornAddress());
+          Vertex newTo =
+            newTree.getNodeByGornAdress(edge.getTo().getGornAddress());
+          newTree.edges.add(new Edge(newFrom, newTo));
+        }
       }
     }
     for (Edge edge : auxTree.edges) {

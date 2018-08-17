@@ -17,14 +17,14 @@ public class Srcg {
   private String[] terminals;
   private String[] variables;
   private String startSymbol;
-  private final List<Clause> clauses = new ArrayList<Clause>();
+  private final List<Clause> clauses = new ArrayList<>();
 
   /** Converts a CFG to a sRCG with dimension = 1. */
   public Srcg(Cfg cfg) throws ParseException {
     this.nonterminals = cfg.getNonterminals();
     this.terminals = cfg.getTerminals();
     this.startSymbol = cfg.getStartSymbol();
-    ArrayList<String> newVariables = new ArrayList<String>();
+    ArrayList<String> newVariables = new ArrayList<>();
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       StringBuilder lhs = new StringBuilder();
       StringBuilder rhs = new StringBuilder();

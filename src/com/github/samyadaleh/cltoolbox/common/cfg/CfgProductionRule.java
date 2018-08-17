@@ -36,7 +36,6 @@ public class CfgProductionRule {
 
   /**
    * Creates a rule from a String representation like S -> A B
-   * @throws ParseException
    */
   public CfgProductionRule(String ruleString) throws ParseException {
     if (!ruleString.contains("->")) {

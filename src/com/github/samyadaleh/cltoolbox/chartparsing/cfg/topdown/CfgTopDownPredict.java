@@ -28,7 +28,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
       String[] stackSplit = stack.split(" ");
       String i = itemForm[1];
@@ -38,11 +38,11 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
           ChartItemInterface consequence =
             new DeductionChartItem(String.join(" ", rule.getRhs()), i);
           if (derivedTrees.size() == 0) {
-            List<Tree> derivedTreesNew = new ArrayList<Tree>();
+            List<Tree> derivedTreesNew = new ArrayList<>();
             derivedTreesNew.add(new Tree(rule));
             consequence.setTrees(derivedTreesNew);
           } else {
-            List<Tree> derivedTreesNew = new ArrayList<Tree>();
+            List<Tree> derivedTreesNew = new ArrayList<>();
             Tree derivedTreeBase = new Tree(rule);
             for (Tree tree : derivedTrees) {
               derivedTreesNew.add(
@@ -59,7 +59,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
             derivedTrees.add(new Tree(rule));
             consequence.setTrees(derivedTrees);
           } else {
-            List<Tree> derivedTreesNew = new ArrayList<Tree>();
+            List<Tree> derivedTreesNew = new ArrayList<>();
             Tree derivedTreeBase = new Tree(rule);
             for (Tree tree : derivedTrees) {
               derivedTreesNew.add(

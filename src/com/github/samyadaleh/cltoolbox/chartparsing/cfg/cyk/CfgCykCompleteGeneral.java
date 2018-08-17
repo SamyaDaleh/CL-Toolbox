@@ -29,7 +29,7 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
       int minI = Integer.MAX_VALUE;
       int prevItemStart = 0;
       for (ChartItemInterface mayFirstRhsItem : antecedences) {
-        int i = Integer.parseInt(mayFirstRhsItem.getItemform()[1]);
+        int i = Integer.parseInt(mayFirstRhsItem.getItemForm()[1]);
         if (i >= minI) {
           continue;
         }
@@ -37,17 +37,17 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
         prevItemStart = i;
       }
       int lSum = 0;
-      List<Tree> derivedTrees = new ArrayList<Tree>();
+      List<Tree> derivedTrees = new ArrayList<>();
       derivedTrees.add(new Tree(rule));
       for (int j = 0; j < rule.getRhs().length; j++) {
         boolean found = false;
         for (ChartItemInterface mayRhsItem : antecedences) {
-          int i = Integer.parseInt(mayRhsItem.getItemform()[1]);
+          int i = Integer.parseInt(mayRhsItem.getItemForm()[1]);
           if (i == prevItemStart
-            && mayRhsItem.getItemform()[0].equals(rule.getRhs()[j])) {
+            && mayRhsItem.getItemForm()[0].equals(rule.getRhs()[j])) {
             found = true;
             if (mayRhsItem.getTrees() != null) {
-              List<Tree> derivedTreesNew = new ArrayList<Tree>();
+              List<Tree> derivedTreesNew = new ArrayList<>();
               for (Tree tree1 : mayRhsItem.getTrees()) {
                 for (Tree tree2 : derivedTrees) {
                   derivedTreesNew
@@ -58,7 +58,7 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
                 derivedTrees = derivedTreesNew;
               }
             }
-            int l = Integer.parseInt(mayRhsItem.getItemform()[2]);
+            int l = Integer.parseInt(mayRhsItem.getItemForm()[2]);
             prevItemStart = i + l;
             lSum += l;
             break;

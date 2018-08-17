@@ -9,7 +9,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
  * Generates a random context free grammar
  */
 public class Random {
-  private static java.util.Random r = new java.util.Random();
+  private static final java.util.Random r = new java.util.Random();
 
   /**
    * Returns a random context free grammar containing from 1 to infinite
@@ -82,13 +82,12 @@ public class Random {
    */
   private static String[] getRandomArray(String prefix) {
     int numt = 0;
-    ArrayList<String> terminals = new ArrayList<String>();
+    ArrayList<String> terminals = new ArrayList<>();
     terminals.add(prefix + numt);
     while (r.nextBoolean()) {
       numt++;
       terminals.add(prefix + numt);
     }
-    String[] terminalArray = terminals.toArray(new String[terminals.size()]);
-    return terminalArray;
+    return terminals.toArray(new String[terminals.size()]);
   }
 }

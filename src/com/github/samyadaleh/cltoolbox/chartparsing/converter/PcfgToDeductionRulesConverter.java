@@ -26,7 +26,6 @@ public class PcfgToDeductionRulesConverter {
   /**
    * Converts a probabilistic CFG to a schema for a star parsing, which is
    * similar to CYK but with weights.
-   * @throws ParseException
    */
   public static ParsingSchema pcfgToAstarRules(Pcfg pcfg, String w)
     throws ParseException {
@@ -53,7 +52,7 @@ public class PcfgToDeductionRulesConverter {
             SxCalc.getOutsideKey(pRule.getLhs(), i, 1, wSplit.length - 1 - i));
           ProbabilisticChartItemInterface conequence =
             new PcfgAstarItem(rulew, outw, pRule.getLhs(), i, i + 1);
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           derivedTrees.add(
             new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs())));
           conequence.setTrees(derivedTrees);
@@ -75,7 +74,6 @@ public class PcfgToDeductionRulesConverter {
   /**
    * Converts a probabilistic CFG to a schema for CYK parsing, which is similar
    * to CYK but with weights.
-   * @throws ParseException
    */
   public static ParsingSchema pcfgToCykRules(Pcfg pcfg, String w)
     throws ParseException {
@@ -95,7 +93,7 @@ public class PcfgToDeductionRulesConverter {
           StaticDeductionRule scan = new StaticDeductionRule();
           Double rulep = -Math.log(pRule.getP());
           ProbabilisticChartItemInterface consequence = new PcfgCykItem(rulep, pRule.getLhs(), i, i + 1);
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           derivedTrees.add(
             new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs())));
           consequence.setTrees(derivedTrees);

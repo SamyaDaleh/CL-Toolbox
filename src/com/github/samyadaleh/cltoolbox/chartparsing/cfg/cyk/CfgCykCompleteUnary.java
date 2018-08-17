@@ -27,7 +27,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
+      String[] itemForm1 = antecedences.get(0).getItemForm();
       String nt1 = itemForm1[0];
       String i1 = itemForm1[1];
       int i1int = Integer.parseInt(i1);
@@ -38,7 +38,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(),
           String.valueOf(i1int), String.valueOf(j1int));
         Tree derivedTreeBase = new Tree(rule);
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         for (Tree tree : antecedences.get(0).getTrees()) {
           derivedTrees
             .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));

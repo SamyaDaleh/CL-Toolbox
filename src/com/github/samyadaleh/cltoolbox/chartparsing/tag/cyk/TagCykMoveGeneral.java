@@ -15,7 +15,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  */
 public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
 
-  private Tag tag;
+  private final Tag tag;
 
   public TagCykMoveGeneral(Tag tag, int antNeeded) {
     this.tag = tag;
@@ -26,8 +26,8 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
   @Override public List<ChartItemInterface> getConsequences()
     throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String treeName = antecedences.get(0).getItemform()[0];
-      String nodeGorn = antecedences.get(0).getItemform()[1];
+      String treeName = antecedences.get(0).getItemForm()[0];
+      String nodeGorn = antecedences.get(0).getItemForm()[1];
       if ("⊤".equals(nodeGorn) || "⊥".equals(nodeGorn)) {
         return consequences;
       }
@@ -37,26 +37,26 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
         .size() != antNeeded) {
         return consequences;
       }
-      List<Integer> children = new ArrayList<Integer>();
+      List<Integer> children = new ArrayList<>();
       String[] boundaries = new String[antNeeded * 2];
       String[] foot = new String[] {"-", "-"};
       int i = 0;
       for (ChartItemInterface antecedence : antecedences) {
-        String thisNodeGorn = antecedence.getItemform()[1];
+        String thisNodeGorn = antecedence.getItemForm()[1];
         if ("⊤".equals(thisNodeGorn) || "⊥".equals(thisNodeGorn)) {
           return consequences;
         }
         String thisParentGorn =
           thisNodeGorn.substring(0, thisNodeGorn.lastIndexOf('.'));
-        if (antecedence.getItemform()[0].equals(treeName)
+        if (antecedence.getItemForm()[0].equals(treeName)
           && thisParentGorn.equals(parentGorn) && thisNodeGorn.endsWith("⊤")) {
           children.add(Integer.parseInt(thisNodeGorn.substring(
             thisNodeGorn.lastIndexOf('.') + 1, thisNodeGorn.length() - 1)));
-          boundaries[i] = antecedence.getItemform()[2];
-          boundaries[i + 1] = antecedence.getItemform()[5];
-          if (!"-".equals(antecedence.getItemform()[3])) {
-            foot[0] = antecedence.getItemform()[3];
-            foot[1] = antecedence.getItemform()[4];
+          boundaries[i] = antecedence.getItemForm()[2];
+          boundaries[i + 1] = antecedence.getItemForm()[5];
+          if (!"-".equals(antecedence.getItemForm()[3])) {
+            foot[0] = antecedence.getItemForm()[3];
+            foot[1] = antecedence.getItemForm()[4];
           }
           i += 2;
         } else {
@@ -90,14 +90,15 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
     int i;
     StringBuilder bars = new StringBuilder();
     for (i = 1; i <= antNeeded; i++) {
-      repr.append("[ɣ,(p." + i + ")⊤,i_" + i + ",f1" + bars.toString()
-        + ",f2+bars.toString()+,i_" + (i + 1) + "] ");
+      repr.append("[ɣ,(p.").append(i).append(")⊤,i_").append(i).append(",f1")
+          .append(bars.toString()).append(",f2+bars.toString()+,i_")
+          .append(i + 1).append("] ");
       bars.append("'");
     }
-    repr.append("\n____________\n")
-      .append("[ɣ,p⊥,i_" + (i - 1) + ",f1⊕...⊕f1"
-        + bars.substring(0, bars.length() - 1)
-        + ",f2⊕...⊕f2\"+bars.substring(0, bars.length()-1)+\",i_" + i + "]");
+    repr.append("\n____________\n").append("[ɣ,p⊥,i_").append(i - 1)
+        .append(",f1⊕...⊕f1").append(bars.substring(0, bars.length() - 1))
+        .append(",f2⊕...⊕f2\"+bars.substring(0, bars.length()-1)+\",i_")
+        .append(i).append("]");
     return repr.toString();
   }
 

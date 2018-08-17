@@ -24,7 +24,7 @@ public class TagEarleyPrefixValidPredictAdjoinable
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
       String pos = itemForm[2];
@@ -39,7 +39,7 @@ public class TagEarleyPrefixValidPredictAdjoinable
         && tag.isAdjoinable(auxTreeName, treeName, node)) {
         ChartItemInterface consequence =
           new DeductionChartItem(auxTreeName, "", "la", l, l, "-", "-", l, "0");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getAuxiliaryTree(auxTreeName));
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);

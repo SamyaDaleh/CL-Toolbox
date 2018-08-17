@@ -45,7 +45,7 @@ public class EmptyProductions {
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
 
-    ArrayList<String> newNt = new ArrayList<String>();
+    ArrayList<String> newNt = new ArrayList<>();
     Collections.addAll(newNt, cfgOld.getNonterminals());
     cfg.getProductionRules().addAll(cfgOld.getProductionRules());
     List<String> eliminateable = getEliminateable(cfgOld);
@@ -106,7 +106,7 @@ public class EmptyProductions {
 
   /** Gets all nonterminals where a derivation =>* ε is possible. */
   static List<String> getEliminateable(Cfg cfg) {
-    ArrayList<String> eliminateable = new ArrayList<String>();
+    ArrayList<String> eliminateable = new ArrayList<>();
     boolean changed = true;
     while (changed) {
       changed = false;

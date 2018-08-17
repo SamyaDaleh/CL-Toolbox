@@ -30,8 +30,8 @@ public abstract class AbstractDynamicDeductionRule
   }
 
   @Override public void clearItems() {
-    antecedences = new ArrayList<ChartItemInterface>();
-    consequences = new ArrayList<ChartItemInterface>();
+    antecedences = new ArrayList<>();
+    consequences = new ArrayList<>();
   }
 
 }

@@ -20,14 +20,14 @@ import com.github.samyadaleh.cltoolbox.gui.ParsingTraceTable;
 /** Entry point into toolbox for the calls by command line */
 class Main { // NO_UCD (test only)
 
-  static boolean success = false;
-  static boolean please = false;
-  static boolean javafx = false;
-  static ParsingSchema schema = null;
-  static Cfg cfg;
-  static Tag tag = null;
-  static Srcg srcg;
-  static Pcfg pcfg;
+  private static boolean success = false;
+  private static boolean please = false;
+  private static boolean javafx = false;
+  private static ParsingSchema schema = null;
+  private static Cfg cfg;
+  private static Tag tag = null;
+  private static Srcg srcg;
+  private static Pcfg pcfg;
 
   /**
    * Command line arguments are passed here. Call without arguments displays
@@ -78,7 +78,7 @@ class Main { // NO_UCD (test only)
       }
     }
     if (schema != null) {
-      drawDerivedTree(algorithm, schema, tag, deduction, javafx, jwh);
+      drawDerivedTree(deduction, javafx, jwh);
     }
   }
 
@@ -261,12 +261,11 @@ class Main { // NO_UCD (test only)
     }
   }
 
-  private static void drawDerivedTree(String algorithm, ParsingSchema schema,
-    Tag tag, Deduction deduction, boolean javafx, JfxWindowHolder jwc)
+  private static void drawDerivedTree(Deduction deduction, boolean javafx,
+      JfxWindowHolder jwc)
     throws Exception {
     List<Tree> derivedTrees = deduction.getDerivedTrees();
-    for (int i = 0; i < derivedTrees.size(); i++) {
-      Tree derivedTree = derivedTrees.get(i);
+    for (Tree derivedTree : derivedTrees) {
       if (javafx) {
         jwc.setArgs(new String[] {derivedTree.toString()});
         jwc.showDisplayTreeFx();

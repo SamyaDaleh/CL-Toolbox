@@ -6,8 +6,8 @@ import java.util.List;
 /** Static deduction rule that stores a set of antecedences and consequences.
  * Used as axiom. */
 public class StaticDeductionRule implements DeductionRuleInterface{
-  private List<ChartItemInterface> antecedences = new ArrayList<ChartItemInterface>();
-  final List<ChartItemInterface> consequences = new ArrayList<ChartItemInterface>();
+  private List<ChartItemInterface> antecedences = new ArrayList<>();
+  final List<ChartItemInterface> consequences = new ArrayList<>();
   private String name = null;
 
   public void addConsequence(ChartItemInterface item) {

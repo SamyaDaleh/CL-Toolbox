@@ -8,8 +8,8 @@ public abstract class AbstractDynamicDecutionRuleTwoAntecedences
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
+      String[] itemForm1 = antecedences.get(0).getItemForm();
+      String[] itemForm2 = antecedences.get(1).getItemForm();
       calculateConsequences(itemForm1, itemForm2);
       calculateConsequences(itemForm2, itemForm1);
     }

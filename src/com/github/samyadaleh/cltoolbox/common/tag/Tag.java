@@ -16,8 +16,8 @@ public class Tag {
   private String[] nonterminals;
   private String[] terminals;
   private String startSymbol;
-  private final Map<String, Tree> initialTrees = new HashMap<String, Tree>();
-  private final Map<String, Tree> auxiliaryTrees = new HashMap<String, Tree>();
+  private final Map<String, Tree> initialTrees = new HashMap<>();
+  private final Map<String, Tree> auxiliaryTrees = new HashMap<>();
 
   public Tag() {
     super();
@@ -134,7 +134,7 @@ public class Tag {
 
   /** Returns a set of all names of inital and auxiliary trees. */
   public Set<String> getTreeNames() {
-    Set<String> c = new HashSet<String>();
+    Set<String> c = new HashSet<>();
     c.addAll(this.initialTrees.keySet());
     c.addAll(this.auxiliaryTrees.keySet());
     return c;

@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -97,7 +98,7 @@ public class SrcgEarleyResume
           new SrcgEarleyActiveItem(itemForm2[0], posInt1, iInt2 + 1, 0,
             ArrayUtils.getSubSequenceAsList(itemForm2, 4, itemForm2.length));
         List<Tree> derivedTrees;
-        if (antecedences.get(0).getItemform().equals(itemForm1)) {
+        if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
           derivedTrees = antecedences.get(0).getTrees();
         } else {
           derivedTrees = antecedences.get(1).getTrees();

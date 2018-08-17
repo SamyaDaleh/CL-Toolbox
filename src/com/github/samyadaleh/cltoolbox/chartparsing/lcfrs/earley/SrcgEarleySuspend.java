@@ -97,15 +97,15 @@ public class SrcgEarleySuspend
     String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2,
     String[] itemForm1) {
     ArrayList<String> newVector;
-    newVector = new ArrayList<String>(Arrays.asList(
-      ArrayUtils.getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
+    newVector = new ArrayList<>(Arrays.asList(
+        ArrayUtils.getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
     int indabspos = clause2Parsed.getLhs().getAbsolutePos(iInt2, jInt2);
     newVector.set(indabspos * 2, pos2);
     newVector.set(indabspos * 2 + 1, pos1);
     ChartItemInterface consequence =
       new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1, newVector);
     List<Tree> derivedTrees;
-    if (antecedences.get(0).getItemform().equals(itemForm1)) {
+    if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
       derivedTrees = antecedences.get(0).getTrees();
     } else {
       derivedTrees = antecedences.get(1).getTrees();

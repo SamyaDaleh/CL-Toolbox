@@ -12,7 +12,6 @@ public class GrammarToDeductionRulesConverter {
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
-   * @throws ParseException
    */
   public static ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm)
     throws ParseException {
@@ -66,7 +65,6 @@ public class GrammarToDeductionRulesConverter {
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
-   * @throws ParseException
    */
   public static ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm)
     throws ParseException {
@@ -86,7 +84,6 @@ public class GrammarToDeductionRulesConverter {
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
-   * @throws ParseException
    */
   public static ParsingSchema convertToSchema(Pcfg pcfg, String w, String algorithm)
     throws ParseException {

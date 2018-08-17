@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
@@ -22,9 +23,9 @@ public class TagEarleyPrefixValidCompleteFoot
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemform();
-      String[] itemForm2 = antecedences.get(1).getItemform();
-      String[] itemForm3 = antecedences.get(2).getItemform();
+      String[] itemForm1 = antecedences.get(0).getItemForm();
+      String[] itemForm2 = antecedences.get(1).getItemForm();
+      String[] itemForm3 = antecedences.get(2).getItemForm();
       calculateConsequences(itemForm1, itemForm2, itemForm3);
       calculateConsequences(itemForm1, itemForm3, itemForm2);
       calculateConsequences(itemForm2, itemForm1, itemForm3);
@@ -77,9 +78,9 @@ public class TagEarleyPrefixValidCompleteFoot
         ChartItemInterface consequence =
           new DeductionChartItem(treeName2, node2, "rb", "~", i1, i1, l1, l1, "0");
         List<Tree> derivedTrees;
-        if (itemForm2.equals(antecedences.get(0).getItemform())) {
+        if (Arrays.equals(itemForm2, antecedences.get(0).getItemForm())) {
           derivedTrees = antecedences.get(0).getTrees();
-        } else if (itemForm2.equals(antecedences.get(1).getItemform())) {
+        } else if (Arrays.equals(itemForm2, antecedences.get(1).getItemForm())) {
           derivedTrees = antecedences.get(1).getTrees();
         } else {
           derivedTrees = antecedences.get(2).getTrees();

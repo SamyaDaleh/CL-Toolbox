@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
@@ -61,7 +62,7 @@ public class SrcgEarleyComplete
             "complete " + clause2Parsed.getLhs().getSymAt(iInt2, jInt2);
           String posB = itemForm1[itemForm1.length - 1];
           int posBInt = Integer.parseInt(posB);
-          ArrayList<String> newVector = new ArrayList<String>();
+          ArrayList<String> newVector = new ArrayList<>();
           for (int k = 0; k < (itemForm2.length - 4) / 2; k++) {
             newVector.add(itemForm2[k * 2 + 4]);
             newVector.add(itemForm2[k * 2 + 5]);
@@ -75,7 +76,7 @@ public class SrcgEarleyComplete
           ChartItemInterface consequence = new SrcgEarleyActiveItem(clause2,
             posBInt, iInt2, jInt2 + 1, newVector);
           List<Tree> derivedTrees;
-          if (itemForm1.equals(antecedences.get(0).getItemform())) {
+          if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
             derivedTrees = antecedences.get(0).getTrees();
           } else {
             derivedTrees = antecedences.get(1).getTrees();

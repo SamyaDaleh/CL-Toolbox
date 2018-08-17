@@ -43,7 +43,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         if (solutionRangeVector.size() < this.rangesNeeded * 2) {
           continue;
         }
-        ArrayList<Integer> rangeOverElements = new ArrayList<Integer>();
+        ArrayList<Integer> rangeOverElements = new ArrayList<>();
         boolean vectorsMatch = true;
         for (int o = 0; o < lhs.getDim(); o++) {
           String lastEnd = null;
@@ -73,7 +73,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         if (rangesAreOverlapping(rangeOverArguments)) {
           continue;
         }
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees
           .add(TreeUtils.getTreeOfSrcgClause(clause, rangeOverElements));
         for (Predicate rhsPred : clause.getRhs()) {
@@ -81,8 +81,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
           int pos = lhs.getAbsolutePos(indices[0], indices[1]);
           String rangeStart = rangeOverElements.get(pos * 2).toString();
           for (ChartItemInterface item : antecedences) {
-            if (item.getItemform()[1].equals(rangeStart)) {
-              List<Tree> derivedTreesNew = new ArrayList<Tree>();
+            if (item.getItemForm()[1].equals(rangeStart)) {
+              List<Tree> derivedTreesNew = new ArrayList<>();
               for (Tree tree1 : derivedTrees) {
                 for (Tree tree2 : item.getTrees()) {
                   derivedTreesNew
@@ -105,7 +105,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
 
   private List<List<String>>
     matchLhsWithAntecedencesReturnSolutionRanges(Predicate lhs) {
-    List<List<String>> solutionRangesList = new ArrayList<List<String>>();
+    List<List<String>> solutionRangesList = new ArrayList<>();
     for (int i = 0; i < lhs.getDim(); i++) {
       for (int j = 0; j < lhs.getArgumentByIndex(i + 1).length; j++) {
         String mayV = lhs.getSymAt(i + 1, j);
@@ -114,12 +114,9 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
           addTerminalVectors(solutionRangesList, i, mayV);
           continue;
         }
-        List<List<String>> newsolutionRangesList =
-          new ArrayList<List<String>>();
-        List<List<Tree>> newDerivedAntecedenceTrees =
-          new ArrayList<List<Tree>>();
+        List<List<String>> newsolutionRangesList = new ArrayList<>();
         for (ChartItemInterface item : antecedences) {
-          if (!nt.equals(item.getItemform()[0])) {
+          if (!nt.equals(item.getItemForm()[0])) {
             continue;
           }
           if (i == 0 && j == 0) {
@@ -128,7 +125,6 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
             handleSubsequentSymbol(solutionRangesList, mayV,
               newsolutionRangesList, item);
           }
-          newDerivedAntecedenceTrees.add(item.getTrees());
         }
         if (!newsolutionRangesList.isEmpty()) {
           solutionRangesList = newsolutionRangesList;
@@ -148,10 +144,10 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
       }
       int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
       for (List<String> solutionRangeVector : solutionRangesList) {
-        List<String> newList = new ArrayList<String>();
+        List<String> newList = new ArrayList<>();
         newList.addAll(solutionRangeVector);
-        newList.add(item.getItemform()[absPos * 2 + 1]);
-        newList.add(item.getItemform()[absPos * 2 + 2]);
+        newList.add(item.getItemForm()[absPos * 2 + 1]);
+        newList.add(item.getItemForm()[absPos * 2 + 2]);
         newsolutionRangesList.add(newList);
       }
     }
@@ -165,11 +161,11 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         continue;
       }
       int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
-      solutionRangesList.add(new ArrayList<String>());
+      solutionRangesList.add(new ArrayList<>());
       solutionRangesList.get(solutionRangesList.size() - 1)
-        .add(item.getItemform()[absPos * 2 + 1]);
+        .add(item.getItemForm()[absPos * 2 + 1]);
       solutionRangesList.get(solutionRangesList.size() - 1)
-        .add(item.getItemform()[absPos * 2 + 2]);
+        .add(item.getItemForm()[absPos * 2 + 2]);
       break;
     }
   }
@@ -195,7 +191,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
     for (int m = 0; m < wSplit.length; m++) {
       if (wSplit[m].equals(mayV)) {
         if (i == 0) {
-          solutionRangesList.add(new ArrayList<String>());
+          solutionRangesList.add(new ArrayList<>());
           solutionRangesList.get(solutionRangesList.size() - 1)
             .add(String.valueOf(m));
           solutionRangesList.get(solutionRangesList.size() - 1)

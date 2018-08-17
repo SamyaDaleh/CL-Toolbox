@@ -31,7 +31,7 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
       String l = itemForm[6];
@@ -39,7 +39,7 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
       if (adjoinable && itemForm[2].equals("la") && itemForm[7].equals("0")) {
         ChartItemInterface consequence =
           new DeductionChartItem(auxTreeName, "", "la", l, "-", "-", l, "0");
-        List<Tree> derivedTrees = new ArrayList<Tree>();
+        List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getAuxiliaryTree(auxTreeName));
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);

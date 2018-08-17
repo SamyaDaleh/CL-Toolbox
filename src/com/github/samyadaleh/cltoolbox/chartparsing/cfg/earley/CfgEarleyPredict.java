@@ -28,7 +28,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
   @Override public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
-      String[] itemForm = antecedences.get(0).getItemform();
+      String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
       String[] stackSplit = stack.split(" ");
       int j = Integer.parseInt(itemForm[2]);
@@ -46,7 +46,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
           ChartItemInterface consequence =
             new DeductionChartItem(newStack, String.valueOf(j), String.valueOf(j));
           Tree derivedTreeBase = new Tree(rule);
-          List<Tree> derivedTrees = new ArrayList<Tree>();
+          List<Tree> derivedTrees = new ArrayList<>();
           for (Tree tree : antecedences.get(0).getTrees()) {
             derivedTrees.add(
               TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));

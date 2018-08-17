@@ -27,7 +27,7 @@ public class ArrayUtils {
    */
   public static String[] getSubSequenceAsArray(String[] sequence, int from,
     int to) {
-    ArrayList<String> newSequence = new ArrayList<String>();
+    ArrayList<String> newSequence = new ArrayList<>();
     for (int i = from; i < to && i < sequence.length; i++) {
       newSequence.add(sequence[i]);
     }
@@ -40,7 +40,7 @@ public class ArrayUtils {
    */
   public static List<String> getSubSequenceAsList(String[] sequence, int from,
     int to) {
-    ArrayList<String> newSequence = new ArrayList<String>();
+    ArrayList<String> newSequence = new ArrayList<>();
     for (int i = from; i < to && i < sequence.length; i++) {
       newSequence.add(sequence[i]);
     }
@@ -102,7 +102,7 @@ public class ArrayUtils {
 
   /** Returns a new array without the element at index i. */
   public static String[] getSequenceWithoutIAsArray(String[] array, int i) {
-    ArrayList<String> newArray = new ArrayList<String>();
+    ArrayList<String> newArray = new ArrayList<>();
     for (int j = 0; j < array.length; j++) {
       if (j != i) {
         newArray.add(array[j]);
@@ -113,7 +113,6 @@ public class ArrayUtils {
 
   /**
    * Returns true if the element is to be found somewhere in the array.
-   * @param <T>
    */
   public static <T> boolean contains(T[] array, T element) {
     for (T el : array) {

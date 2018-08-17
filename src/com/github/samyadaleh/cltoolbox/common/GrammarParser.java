@@ -34,7 +34,7 @@ public class GrammarParser {
   /** Parses a CFG from a file and returns it as Cfg. */
   public static Cfg parseCfgFile(String grammarFile) throws IOException {
     Cfg cfg = new Cfg();
-    errors = new ArrayList<Exception>();
+    errors = new ArrayList<>();
     Map<String, List<String>> declarations = parseDeclarations(grammarFile);
     for (Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
@@ -80,7 +80,7 @@ public class GrammarParser {
   /** Parses a PCFG from a file and returns it as Pcfg. */
   public static Pcfg parsePcfgFile(String grammarFile) throws IOException {
     Pcfg pcfg = new Pcfg();
-    errors = new ArrayList<Exception>();
+    errors = new ArrayList<>();
     Map<String, List<String>> declarations = parseDeclarations(grammarFile);
     for (Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
@@ -126,7 +126,7 @@ public class GrammarParser {
   /** Parses a TAG from a text file and returns it as a Tag object. */
   public static Tag parseTagFile(String grammarFile) throws IOException {
     Tag tag = new Tag();
-    errors = new ArrayList<Exception>();
+    errors = new ArrayList<>();
     Map<String, List<String>> declarations = parseDeclarations(grammarFile);
     for (Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
@@ -181,7 +181,7 @@ public class GrammarParser {
   /** Parses a sRCG from a file and returns it as Srcg. */
   public static Srcg parseSrcgFile(String grammarFile) throws IOException {
     Srcg srcg = new Srcg();
-    errors = new ArrayList<Exception>();
+    errors = new ArrayList<>();
     Map<String, List<String>> declarations = parseDeclarations(grammarFile);
     for (Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
@@ -394,24 +394,22 @@ public class GrammarParser {
   }
 
   private static void checkInitialTrees(Tag tag) {
-    Iterator<String> treeNameIter = tag.getInitialTreeNames().iterator();
-    while (treeNameIter.hasNext()) {
-      String treeName = treeNameIter.next();
+    for (String treeName : tag.getInitialTreeNames()) {
       Tree tree = tag.getInitialTree(treeName);
       for (Vertex v : tree.getVertexes()) {
-        if (!v.getLabel().equals("")
-          && !contains(tag.getNonterminals(), v.getLabel())
-          && !contains(tag.getTerminals(), v.getLabel())) {
-          errors.add(
-            new ParseException("Label of vertex " + v.getLabel() + " of tree "
-              + treeName + " is neither declared nonterminal nor terminal "
-              + "and is not epsilon.", 0));
+        if (!v.getLabel().equals("") && !contains(tag.getNonterminals(),
+            v.getLabel()) && !contains(tag.getTerminals(), v.getLabel())) {
+          errors.add(new ParseException(
+              "Label of vertex " + v.getLabel() + " of tree " + treeName
+                  + " is neither declared nonterminal nor terminal "
+                  + "and is not epsilon.", 0));
         }
         if (tree.getNodeByGornAdress(v.getGornAddress() + ".1") != null
-          && contains(tag.getTerminals(), v.getLabel())) {
-          errors.add(new ParseException("Node with gorn address "
-            + v.getGornAddress() + " in tree " + treeName
-            + " is not a leaf, but its label is declared terminal.", 0));
+            && contains(tag.getTerminals(), v.getLabel())) {
+          errors.add(new ParseException(
+              "Node with gorn address " + v.getGornAddress() + " in tree "
+                  + treeName
+                  + " is not a leaf, but its label is declared terminal.", 0));
         }
       }
     }
@@ -440,7 +438,7 @@ public class GrammarParser {
    */
   private static List<String> parseNT(String lineTrim) {
     Matcher m = p.matcher(lineTrim);
-    List<String> nList = new ArrayList<String>();
+    List<String> nList = new ArrayList<>();
     while (m.find()) {
       String n = m.group();
       nList.add(n.substring(1, n.length() - 1));
@@ -450,8 +448,7 @@ public class GrammarParser {
 
   private static Map<String, List<String>> parseDeclarations(String grammarFile)
     throws IOException {
-    Map<String, List<String>> declarations =
-      new LinkedHashMap<String, List<String>>();
+    Map<String, List<String>> declarations = new LinkedHashMap<>();
     BufferedReader in = new BufferedReader(new FileReader(grammarFile));
     String line = in.readLine().trim();
     while (line != null) {

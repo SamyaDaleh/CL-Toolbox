@@ -80,6 +80,7 @@ public class ParsingTraceTable {
   private class ShowPopupActionHandler implements ActionListener {
     @Override public void actionPerformed(ActionEvent e) {
       if (hintCell != null) {
+        assert disposeTimer != null;
         disposeTimer.stop();
         DisplayTree popup = getTreePopup();
         if (popup != null) {

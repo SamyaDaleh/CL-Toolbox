@@ -12,12 +12,12 @@ public class UselessSymbols {
    * before removing non-reachable symbols. */
   public static Cfg removeNonGeneratingSymbols(Cfg cfgOld) {
     Cfg cfg = new Cfg();
-    ArrayList<String> generating = new ArrayList<String>();
+    ArrayList<String> generating = new ArrayList<>();
     Collections.addAll(generating, cfgOld.getTerminals());
     getGeneratingSymbols(generating, cfgOld);
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> restNts = new ArrayList<String>();
+    ArrayList<String> restNts = new ArrayList<>();
     for (String symbol : generating) {
       if (cfgOld.nonterminalsContain(symbol)) {
         restNts.add(symbol);
@@ -70,7 +70,7 @@ public class UselessSymbols {
    * calling this, remove all non-generating symbols. */
   public static Cfg removeNonReachableSymbols(Cfg cfgOld) {
     Cfg cfg = new Cfg();
-    ArrayList<String> reachable = new ArrayList<String>();
+    ArrayList<String> reachable = new ArrayList<>();
     reachable.add(cfgOld.getStartSymbol());
     boolean changed = true;
     while (changed) {
@@ -88,13 +88,13 @@ public class UselessSymbols {
       }
     }
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<String>();
+    ArrayList<String> newNts = new ArrayList<>();
     for (String nt : cfgOld.getNonterminals()) {
       if (reachable.contains(nt)) {
         newNts.add(nt);
       }
     }
-    ArrayList<String> newTerms = new ArrayList<String>();
+    ArrayList<String> newTerms = new ArrayList<>();
     for (String t : cfgOld.getTerminals()) {
       if (reachable.contains(t)) {
         newTerms.add(t);
@@ -114,7 +114,7 @@ public class UselessSymbols {
    * Returns true if grammar has generating nonterminals.
    */
   public static boolean hasGeneratingSymbols(Cfg cfg) {
-    ArrayList<String> generating = new ArrayList<String>();
+    ArrayList<String> generating = new ArrayList<>();
     Collections.addAll(generating, cfg.getTerminals());
     getGeneratingSymbols(generating, cfg);
     return cfg.getTerminals().length > 0

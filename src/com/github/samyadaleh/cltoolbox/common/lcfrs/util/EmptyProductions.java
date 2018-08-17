@@ -43,7 +43,7 @@ public class EmptyProductions {
     newSrcg.setVariables(oldSrcg.getVariables());
     newSrcg.setTerminals(oldSrcg.getTerminals());
     newSrcg.setStartSymbol(oldSrcg.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<String>();
+    ArrayList<String> newNts = new ArrayList<>();
     for (String[] candidate : epsilonCandidates) {
       if (candidate[1].contains("1")) {
         newNts.add(candidate[0] + "^" + candidate[1]);
@@ -203,8 +203,7 @@ public class EmptyProductions {
   @SuppressWarnings({"serial", "unchecked"}) private static
     ArrayList<ArrayList<String[]>> getCombinationsForRhs(
       ArrayList<String[]> epsilonCandidates, Clause clause) {
-    ArrayList<ArrayList<String[]>> combinations =
-      new ArrayList<ArrayList<String[]>>();
+    ArrayList<ArrayList<String[]>> combinations = new ArrayList<>();
     for (int i = 0; i < clause.getRhs().size(); i++) {
       if (i == 0) {
         boolean somethingAppended = false;
@@ -228,8 +227,7 @@ public class EmptyProductions {
         }
       } else {
         boolean somethingAppended = false;
-        ArrayList<ArrayList<String[]>> newCombinations =
-          new ArrayList<ArrayList<String[]>>();
+        ArrayList<ArrayList<String[]>> newCombinations = new ArrayList<>();
         for (String[] candidate : epsilonCandidates) {
           if (candidate[0].equals(clause.getRhs().get(i).getNonterminal())) {
             somethingAppended = true;
@@ -286,7 +284,7 @@ public class EmptyProductions {
 
   private static String[] getEpsilonCandidateForLhsWithoutCandidate(
     Clause clause, String[] candidate, Predicate clauseLhs, Srcg srcg) {
-    ArrayList<String> lhsVector = new ArrayList<String>();
+    ArrayList<String> lhsVector = new ArrayList<>();
     for (int j = 0; j < clauseLhs.getDim(); j++) {
       String[] argument = clauseLhs.getArgumentByIndex(j + 1);
       StringBuilder newArgument = new StringBuilder();
@@ -327,7 +325,7 @@ public class EmptyProductions {
   }
 
   private static ArrayList<String[]> getDirectEpsilonCandidates(Srcg srcg) {
-    ArrayList<String[]> epsilonCandidates = new ArrayList<String[]>();
+    ArrayList<String[]> epsilonCandidates = new ArrayList<>();
     for (Clause clause : srcg.getClauses()) {
       if (clause.getRhs().isEmpty()) {
         String jota = getJotaForPredicate(clause.getLhs());
