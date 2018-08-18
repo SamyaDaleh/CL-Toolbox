@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
@@ -262,6 +263,16 @@ public class DeductionTest {
     deduction.printTrace();
     assertEquals("(S (a )(S (a )(b ))(b ))",
       deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Ignore public void testCfgLr() throws ParseException {
+    String w = "the apple";
+    ParsingSchema schema = cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 0);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(the (apple ))",
+        deduction.getDerivedTrees().get(0).toString());
   }
 
 }

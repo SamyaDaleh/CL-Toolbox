@@ -63,10 +63,10 @@ public class Deduction {
   public boolean doParse(ParsingSchema schema, boolean success)
     throws ParseException {
     successfulTrace = success;
-    chart = new ArrayList<ChartItemInterface>();
-    agenda = new ArrayList<ChartItemInterface>();
-    deductedFrom = new ArrayList<ArrayList<ArrayList<Integer>>>();
-    appliedRule = new ArrayList<ArrayList<String>>();
+    chart = new ArrayList<>();
+    agenda = new ArrayList<>();
+    deductedFrom = new ArrayList<>();
+    appliedRule = new ArrayList<>();
     if (schema == null)
       return false;
     for (StaticDeductionRule rule : schema.getAxioms()) {
@@ -163,7 +163,7 @@ public class Deduction {
   /** Returns the backpointers in this list of lists as plain list. */
   private static ArrayList<Integer>
     getPointersAsArray(ArrayList<ArrayList<Integer>> backpointers) {
-    ArrayList<Integer> pointerList = new ArrayList<Integer>();
+    ArrayList<Integer> pointerList = new ArrayList<>();
     for (ArrayList<Integer> pointerTuple : backpointers) {
       pointerList.addAll(pointerTuple);
     }

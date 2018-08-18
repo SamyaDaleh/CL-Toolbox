@@ -40,6 +40,11 @@ public class GrammarToDeductionRulesConverter {
     case "cfg-unger":
       return CfgToDeductionRulesConverter.cfgToUngerRules(cfg, w);
     default:
+      if (algorithm.matches("cfg-lr-\\d+")) {
+        String[] algorithmSplit = algorithm.split("-");
+        return CfgToDeductionRulesConverter
+            .cfgToLrKRules(cfg, w, Integer.parseInt(algorithmSplit[2]));
+      }
       log.info(
           "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;

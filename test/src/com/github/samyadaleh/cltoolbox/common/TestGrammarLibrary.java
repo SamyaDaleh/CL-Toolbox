@@ -55,6 +55,23 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg lrCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"John", "the", "apple"});
+    cfg.setNonterminals(new String[] {"NP", "N", "Det"});
+    try {
+      cfg.addProductionRule("NP -> Det N");
+      cfg.addProductionRule("NP -> John");
+      cfg.addProductionRule("Det -> the");
+      cfg.addProductionRule("N -> apple");
+      cfg.setStartSymbol("NP");
+      return cfg;
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
   public static Tag anCBTag() throws ParseException {
     Tag g = new Tag();
     g.setNonterminals(new String[] {"S", "T"});

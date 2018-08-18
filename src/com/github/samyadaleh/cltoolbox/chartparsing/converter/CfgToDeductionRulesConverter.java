@@ -1,8 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
@@ -25,11 +24,13 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart.CfgLeft
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart.CfgLeftCornerChartRemove;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgBottomUpReduce;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgBottomUpShift;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgLrKRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown.CfgTopDownPredict;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown.CfgTopDownScan;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerPredict;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerScan;
+import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -417,5 +418,253 @@ public class CfgToDeductionRulesConverter {
       schema.addRule(complete);
     }
     return schema;
+  }
+
+  public static ParsingSchema cfgToLrKRules(Cfg cfg, String w, int k) {
+    String[] wSplit = w.split(" ");
+    ParsingSchema schema = new ParsingSchema();
+    StaticDeductionRule axiom = new StaticDeductionRule();
+    axiom.setName("initialize");
+    axiom.addConsequence(new DeductionChartItem("q0", "0"));
+    schema.addAxiom(axiom);
+    String[] initialState;
+    if (k > 0) {
+      initialState =
+          new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol(),
+              "$"};
+    } else {
+      initialState =
+          new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol()};
+    }
+    List<List<String[]>> states = computeStates(cfg, initialState, k);
+    Map<String[], String> parsTable =
+        computeParseTable(states, initialState, wSplit, schema, cfg, k);
+    // TODO check for sr conflicts. If yes, log warning and return null
+    CfgLrKRule rule =
+        new CfgLrKRule(wSplit, cfg.getProductionRules(), parsTable, k);
+    schema.addRule(rule);
+    for (int i = 0; i < states.size(); i++) {
+      if (states.get(i).contains(initialState)) {
+        schema.addGoal(new DeductionChartItem("q" + i));
+        break;
+      }
+    }
+    return schema;
+  }
+
+  private static Map<String[], String> computeParseTable(
+      List<List<String[]>> states, String[] initialState, String[] wSplit,
+      ParsingSchema schema, Cfg cfg, int k) {
+    Map<String[], String> parseTable = new HashMap<>();
+    for (int i = 0; i < states.size(); i++) {
+      for (String t : cfg.getTerminals()) {
+        List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
+        for (int j = 0; j < states.size(); j++) {
+          if (equals(gotoState, states.get(j))) {
+            // TODO throw exception if entry already exists
+            parseTable.put(new String[] {String.valueOf(i), t},
+                "s" + String.valueOf(j));
+            break;
+          }
+        }
+      }
+      for (String[] stateEntry : states.get(i)) {
+        if (stateEntry[0].endsWith("•")) {
+          for (int j = 0; j < cfg.getProductionRules().size(); j++) {
+            if (stateEntry[0].substring(0, stateEntry[0].length() - 2)
+                .equals(cfg.getProductionRules().get(j).toString())) {
+              // TODO more state entries for higher k
+              // TODO throw exception if entry already exists
+              parseTable.put(new String[] {String.valueOf(i), ""},
+                  "r" + String.valueOf(j + 1));
+            }
+          }
+        }
+      }
+      if (states.get(i).contains(initialState))
+        schema.addGoal(
+            new DeductionChartItem("q" + i, String.valueOf(wSplit.length)));
+    }
+    for (int i = 0; i < states.size(); i++) {
+      for (String nt : cfg.getNonterminals()) {
+        List<String[]> gotoState = computeGotoStates(states.get(i), nt, cfg, k);
+        if (gotoState.size() == 0) {
+          continue;
+        }
+        for (int j = 0; j < states.size(); j++) {
+          if (equals(gotoState, states.get(j))) {
+            parseTable
+                .put(new String[] {String.valueOf(i), nt}, String.valueOf(j));
+            break;
+          }
+        }
+      }
+    }
+    return parseTable;
+  }
+
+  private static List<List<String[]>> computeStates(Cfg cfg,
+      String[] initialState, int k) {
+    List<List<String[]>> states = new ArrayList<>();
+    List<String[]> initialClosure = new ArrayList<>();
+    initialClosure.add(initialState);
+    states.add(computeClosure(initialClosure, cfg, k));
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      String[] nUT =
+          new String[cfg.getNonterminals().length + cfg.getTerminals().length];
+      System.arraycopy(cfg.getNonterminals(), 0, nUT, 0,
+          cfg.getNonterminals().length);
+      System.arraycopy(cfg.getTerminals(), 0, nUT, cfg.getNonterminals().length,
+          cfg.getTerminals().length);
+      for (String x : nUT) {
+        List<List<String[]>> statesCopy = new ArrayList<>(states);
+        for (List<String[]> q : statesCopy) {
+          List<String[]> gotoStates = computeGotoStates(q, x, cfg, k);
+          if (Union(states, gotoStates)) {
+            changed = true;
+          }
+        }
+      }
+    }
+    return states;
+  }
+
+  /**
+   * Returns true if goToStates is not in states yet.
+   */
+  private static boolean Union(List<List<String[]>> states,
+      List<String[]> gotoStates) {
+    if (gotoStates.size() == 0) {
+      return false;
+    }
+    for (List<String[]> state : states) {
+      if (equals(state, gotoStates)) {
+        return false;
+      }
+    }
+    states.add(gotoStates);
+    return true;
+  }
+
+  /**
+   * Returns true if lists contain the same arrays, order in list doesn't matter.
+   */
+  private static boolean equals(List<String[]> states,
+      List<String[]> gotoStates) {
+    if (states.size() != gotoStates.size()) {
+      return false;
+    }
+    for (String[] state1 : states) {
+      boolean found = false;
+      for (String[] state2 : gotoStates) {
+        if (Arrays.equals(state1, state2)) {
+          found = true;
+        }
+      }
+      if (!found) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static List<String[]> computeGotoStates(List<String[]> q, String x,
+      Cfg cfg, int k) {
+    List<String[]> gotoStates = new ArrayList<>();
+    for (String[] rule : q) {
+      String[] newState = getGotoState(rule, x);
+      if (newState != null) {
+        gotoStates.add(newState);
+      }
+    }
+    return computeClosure(gotoStates, cfg, k);
+  }
+
+  private static String[] getGotoState(String[] rule, String x) {
+    String[] ruleSplit = rule[0].split(" ");
+    for (String aRuleSplit : ruleSplit) {
+      if (aRuleSplit.startsWith("•")) {
+        if (aRuleSplit.length() > 1) {
+          String sym = aRuleSplit.substring(1);
+          if (sym.equals(x)) {
+            String[] newState = rule.clone();
+            int dotPos = rule[0].indexOf('•');
+            int afterDot = dotPos + sym.length() + 2;
+            if (afterDot < rule[0].length()) {
+              newState[0] = rule[0].substring(0, dotPos) + sym + " •" + rule[0]
+                  .substring(dotPos + sym.length() + 2);
+            } else {
+              newState[0] = rule[0].substring(0, dotPos) + sym + " •";
+            }
+            return newState;
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
+  private static List<String[]> computeClosure(List<String[]> closure, Cfg cfg,
+      int k) {
+    boolean changed = true;
+    while (changed) {
+      changed = false;
+      List<String[]> closureCopy = new ArrayList<>(closure);
+      for (String[] stateEntry : closureCopy) {
+        String[] ruleSplit = stateEntry[0].split(" ");
+        for (String sym : ruleSplit) {
+          if (sym.startsWith("•")) {
+            if (sym.length() > 1) {
+              String interestingSymbol = sym.substring(1);
+              for (CfgProductionRule rule : cfg.getProductionRules()) {
+                if (rule.getLhs().equals(interestingSymbol)) {
+                  if (k > 0) { // TODO later
+                    // TODO for every string concatenation of length k in First set of the stuff after the lhs symbol
+                    // add prediction of that rule with dot at beginning of rhs and string concatenation afterwards if not exists
+                    // and set changed true
+                  } else {
+                    String[] newState = new String[] {
+                        rule.getLhs() + " -> •" + ArrayUtils
+                            .getSubSequenceAsString(rule.getRhs(), 0,
+                                rule.getRhs().length)};
+                    if (!listContainsArray(closure, newState)) {
+                      closure.add(newState);
+                      changed = true;
+                    }
+                  }
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
+    return closure;
+  }
+
+  private static boolean listContainsArray(List<String[]> closure,
+      String[] newState) {
+    for (String[] state : closure) {
+      if (state.length == newState.length) {
+        boolean same = true;
+        for (int i = 0; i < state.length; i++) {
+          if (!state[i].equals(newState[i])) {
+            same = false;
+            break;
+          }
+        }
+        if (same) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
