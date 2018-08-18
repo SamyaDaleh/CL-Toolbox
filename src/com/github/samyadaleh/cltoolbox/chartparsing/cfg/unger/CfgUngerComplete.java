@@ -55,6 +55,7 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
           ChartItemInterface consequence = new DeductionChartItem(rule.getLhs() + "•",
             mayLhsItem.getItemForm()[1], mayLhsItem.getItemForm()[2]);
           consequence.setTrees(derivedTrees);
+          logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }

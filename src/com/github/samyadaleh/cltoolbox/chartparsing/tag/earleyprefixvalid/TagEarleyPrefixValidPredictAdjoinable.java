@@ -42,6 +42,7 @@ public class TagEarleyPrefixValidPredictAdjoinable
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getAuxiliaryTree(auxTreeName));
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

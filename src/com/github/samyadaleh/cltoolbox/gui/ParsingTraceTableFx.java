@@ -20,6 +20,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 class ParsingTraceTableFx {
 
@@ -37,6 +39,7 @@ class ParsingTraceTableFx {
   private DisplayTreeFx popup;
   private Stage stage;
   private JfxWindowHolder parent;
+  private static final Logger log = LogManager.getLogger();
 
   public ParsingTraceTableFx(JfxWindowHolder parent, String[][] rowData,
       String[] columnNames, Tag tag) {
@@ -91,7 +94,7 @@ class ParsingTraceTableFx {
             MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()),
             Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
       } catch (ParseException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(),e);
       }
     }
     return popup;

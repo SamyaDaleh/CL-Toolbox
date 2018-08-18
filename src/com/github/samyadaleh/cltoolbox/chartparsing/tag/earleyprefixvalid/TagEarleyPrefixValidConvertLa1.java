@@ -7,7 +7,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 
 public class TagEarleyPrefixValidConvertLa1
-  extends AbstractDynamicDeductionRule {
+    extends AbstractDynamicDeductionRule {
 
   public TagEarleyPrefixValidConvertLa1() {
     this.name = "convert la1";
@@ -26,11 +26,13 @@ public class TagEarleyPrefixValidConvertLa1
       String k = itemForm[6];
       String l = itemForm[7];
       String adj = itemForm[8];
-      if (pos.equals("la") && adj.equals("0") && !iGamma.equals("~")
-        && !i.equals("~") && !j.equals("~") && !k.equals("~")) {
-        ChartItemInterface consequence = new DeductionChartItem(treeName, node, "la", iGamma, "~",
-          "~", "~", l, "0");
+      if (pos.equals("la") && adj.equals("0") && !iGamma.equals("~") && !i
+          .equals("~") && !j.equals("~") && !k.equals("~")) {
+        ChartItemInterface consequence =
+            new DeductionChartItem(treeName, node, "la", iGamma, "~", "~", "~",
+                l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

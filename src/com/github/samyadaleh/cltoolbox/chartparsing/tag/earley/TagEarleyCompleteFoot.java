@@ -58,6 +58,7 @@ public class TagEarleyCompleteFoot
           derivedTrees = antecedences.get(0).getTrees();
         }
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

@@ -26,12 +26,15 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Generates different parsing schemes. Based on the slides from Laura Kallmeyer
  * about Parsing as Deduction.
  */
 public class LcfrsToDeductionRulesConverter {
+  private static final Logger log = LogManager.getLogger();
 
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
     Clause clause) throws ParseException {
@@ -58,12 +61,12 @@ public class LcfrsToDeductionRulesConverter {
   public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w)
     throws ParseException {
     if (srcg.hasEpsilonProductions()) {
-      System.out.println(
+      log.info(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
       return null;
     }
     if (!srcg.isBinarized()) {
-      System.out.println("sRCG must be binarized for this CYK algorithm.");
+      log.info("sRCG must be binarized for this CYK algorithm.");
       return null;
     }
     String[] wsplit = w.split(" ");
@@ -88,7 +91,7 @@ public class LcfrsToDeductionRulesConverter {
   public static ParsingSchema srcgToCykGeneralRules(Srcg srcg, String w)
     throws ParseException {
     if (srcg.hasEpsilonProductions()) {
-      System.out.println(
+      log.info(
         "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
       return null;
     }
@@ -166,12 +169,12 @@ public class LcfrsToDeductionRulesConverter {
   public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w)
     throws ParseException {
     if (srcg.hasEpsilonProductions()) {
-      System.out.println(
+      log.info(
         "sRCG is not allowed to have epsilon productions for this Earley algorithm.");
       return null;
     }
     if (!srcg.isOrdered()) {
-      System.out.println("sRCG must be ordered for this Earley algorithm.");
+      log.info("sRCG must be ordered for this Earley algorithm.");
       return null;
     }
     String[] wsplit = w.split(" ");

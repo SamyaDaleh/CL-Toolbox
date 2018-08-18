@@ -55,13 +55,14 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
           derivedTrees
             .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
         }
-        consequence.setTrees(derivedTrees);
-        consequences.add(consequence);
         // imagine a tree with 1 node where you would substitute into the root
         // ...
         String outNodeName = outNode.length() == 0 ? "ε" : outNode;
         this.name = "substitute " + outTreeName + "[" + outNodeName + ","
-          + treeName + "]";
+            + treeName + "]";
+        consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
     return consequences;

@@ -44,7 +44,8 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
             .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
         }
         consequence.setTrees(derivedTrees);
-        this.consequences.add(consequence);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
     return this.consequences;

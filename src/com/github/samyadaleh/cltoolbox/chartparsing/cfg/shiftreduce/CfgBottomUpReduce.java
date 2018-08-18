@@ -58,6 +58,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
         }
         derivedTrees.add(0, derivedTreeBase);
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

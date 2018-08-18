@@ -9,6 +9,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Main point for the JFX Application Thread, because launch() can only run
  * once. Calls the initialization of the other JFX windows. */
@@ -21,6 +23,7 @@ public class JfxWindowHolder {
   private String[] args = null;
   private DisplayTreeFx displayTreeFx;
   private ParsingTraceTableFx parsingTraceTableFx;
+  private static final Logger log = LogManager.getLogger();
 
   public void setArgs(String[] args) {
     this.args = args;
@@ -41,7 +44,7 @@ public class JfxWindowHolder {
       try {
         _callDisplayTreeFx();
       } catch (ParseException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
       }
     });
   }

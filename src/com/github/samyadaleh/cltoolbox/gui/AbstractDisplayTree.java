@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 abstract class AbstractDisplayTree {
+  private static final Logger log = LogManager.getLogger();
 
   private static String createTreeLabel(DisplayTreeInterface dti, Vertex p) {
     StringBuilder label = new StringBuilder();
@@ -54,7 +57,7 @@ abstract class AbstractDisplayTree {
       dti.drawText("•", nodeX + halfLabelWidth, height - 5);
       break;
     default:
-      System.out.println("Unknown pos: " + dti.getItemForm()[2]);
+      log.info("Unknown pos: " + dti.getItemForm()[2]);
     }
   }
 
@@ -69,7 +72,7 @@ abstract class AbstractDisplayTree {
       dti.drawText("•", nodeX, height + 8);
       break;
     default:
-      System.out.println("Unknown pos: " + pos);
+      log.info("Unknown pos: " + pos);
     }
   }
 

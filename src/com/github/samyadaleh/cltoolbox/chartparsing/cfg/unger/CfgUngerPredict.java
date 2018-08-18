@@ -48,6 +48,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
           ChartItemInterface consequence =
             new DeductionChartItem("•" + rule.getRhs()[0], from, to);
           consequence.setTrees(derivedTreesNew);
+          logItemGeneration(consequence);
           consequences.add(consequence);
         } else {
           for (ArrayList<Integer> sequence : getAllSeparations(fromInt, toInt,
@@ -74,18 +75,21 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
             ChartItemInterface consequence = new DeductionChartItem("•" + rule.getRhs()[0], from,
               String.valueOf(sequence.get(0)));
             consequence.setTrees(derivedTreesNew);
+            logItemGeneration(consequence);
             consequences.add(consequence);
             for (int i = 1; i < sequence.size(); i++) {
               consequence = new DeductionChartItem("•" + rule.getRhs()[i],
                 String.valueOf(sequence.get(i - 1)),
                 String.valueOf(sequence.get(i)));
               consequence.setTrees(derivedTreesNew);
+              logItemGeneration(consequence);
               consequences.add(consequence);
             }
             consequence =
               new DeductionChartItem("•" + rule.getRhs()[rule.getRhs().length - 1],
                 String.valueOf(sequence.get(sequence.size() - 1)), to);
             consequence.setTrees(derivedTreesNew);
+            logItemGeneration(consequence);
             consequences.add(consequence);
           }
         }

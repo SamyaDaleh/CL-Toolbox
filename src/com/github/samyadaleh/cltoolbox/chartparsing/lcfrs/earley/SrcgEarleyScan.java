@@ -9,12 +9,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Whenever the next symbol after the dot is the next terminal in the input, we
  * can scan it.
  */
 public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
+  private static final Logger log = LogManager.getLogger();
 
   private final String[] wSplit;
 
@@ -35,7 +38,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
         try {
           clauseParsed = new Clause(clause);
         } catch (ParseException e) {
-          e.printStackTrace();
+          log.error(e.getMessage(),e);
           return this.consequences;
         }
         String pos = itemForm[1];
@@ -64,6 +67,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
               TreeUtils.performPositionSubstitution(tree, wSplit[posInt], pos));
           }
           consequence.setTrees(derivedTrees);
+          logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }

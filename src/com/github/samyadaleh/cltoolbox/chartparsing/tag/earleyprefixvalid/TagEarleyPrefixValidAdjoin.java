@@ -96,8 +96,9 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
         }
       }
       consequence.setTrees(derivedTrees);
-      consequences.add(consequence);
       this.name = "adjoin " + treeName2 + "[" + node2 + "," + treeName1 + "]";
+      logItemGeneration(consequence);
+      consequences.add(consequence);
     }
 
   }

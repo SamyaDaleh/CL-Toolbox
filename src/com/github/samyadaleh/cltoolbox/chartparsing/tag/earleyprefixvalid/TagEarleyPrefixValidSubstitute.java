@@ -71,9 +71,10 @@ public class TagEarleyPrefixValidSubstitute
         }
       }
       consequence.setTrees(derivedTrees);
-      consequences.add(consequence);
       this.name =
-        "substitute " + treeName1 + "[" + node1 + "," + treeName2 + "]";
+          "substitute " + treeName1 + "[" + node1 + "," + treeName2 + "]";
+      logItemGeneration(consequence);
+      consequences.add(consequence);
     }
   }
 

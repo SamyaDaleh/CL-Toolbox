@@ -33,12 +33,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerScan;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Generates different parsing schemes. Based on the slides from Laura Kallmeyer
  * about Parsing as Deduction.
  */
 public class CfgToDeductionRulesConverter {
+  private static final Logger log = LogManager.getLogger();
 
   /**
    * Converts a cfg to a parsing scheme for Topdown parsing. Based on
@@ -46,8 +49,7 @@ public class CfgToDeductionRulesConverter {
    */
   public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w) {
     if (cfg.hasLeftRecursion()) {
-      System.out
-        .println("CFG must not contain left recursion for TopDown parsing.");
+      log.info("CFG must not contain left recursion for TopDown parsing.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -74,8 +76,8 @@ public class CfgToDeductionRulesConverter {
    */
   public static ParsingSchema cfgToShiftReduceRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
-      System.out.println(
-        "CFG must not contain empty productions for ShiftReduce parsing.");
+      log.info(
+          "CFG must not contain empty productions for ShiftReduce parsing.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -92,8 +94,8 @@ public class CfgToDeductionRulesConverter {
     axiom.addConsequence(new DeductionChartItem("", "0"));
     axiom.setName("axiom");
     schema.addAxiom(axiom);
-    schema.addGoal(
-      new DeductionChartItem(cfg.getStartSymbol(), String.valueOf(wSplit.length)));
+    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
+        String.valueOf(wSplit.length)));
     return schema;
   }
 
@@ -102,7 +104,7 @@ public class CfgToDeductionRulesConverter {
    * https://user.phil.hhu.de/~kallmeyer/Parsing/earley.pdf
    */
   public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w)
-    throws ParseException {
+      throws ParseException {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
 
@@ -117,15 +119,15 @@ public class CfgToDeductionRulesConverter {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
           ChartItemInterface consequence =
-            new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0");
+              new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0");
           List<Tree> derivedTrees = new ArrayList<>();
           derivedTrees.add(new Tree(rule));
           consequence.setTrees(derivedTrees);
           axiom.addConsequence(consequence);
         } else {
           ChartItemInterface consequence = new DeductionChartItem(
-            cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
-            "0", "0");
+              cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
+              "0", "0");
           List<Tree> derivedTrees = new ArrayList<>();
           derivedTrees.add(new Tree(rule));
           consequence.setTrees(derivedTrees);
@@ -134,12 +136,13 @@ public class CfgToDeductionRulesConverter {
         axiom.setName("axiom");
         schema.addAxiom(axiom);
         if (rule.getRhs()[0].equals("")) {
-          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
-            String.valueOf(wSplit.length)));
+          schema.addGoal(
+              new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
+                  String.valueOf(wSplit.length)));
         } else {
-          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + " -> "
-            + String.join(" ", rule.getRhs()) + " •", "0",
-            String.valueOf(wSplit.length)));
+          schema.addGoal(new DeductionChartItem(
+              cfg.getStartSymbol() + " -> " + String.join(" ", rule.getRhs())
+                  + " •", "0", String.valueOf(wSplit.length)));
         }
       }
 
@@ -171,20 +174,21 @@ public class CfgToDeductionRulesConverter {
         StaticDeductionRule axiom = new StaticDeductionRule();
         if (rule.getRhs()[0].equals("")) {
           axiom.addConsequence(
-            new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0"));
+              new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0", "0"));
         } else {
           axiom.addConsequence(new DeductionChartItem(
-            cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
-            "0", "0"));
+              cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
+              "0", "0"));
         }
         axiom.setName("axiom");
         schema.addAxiom(axiom);
         if (rule.getRhs()[0].equals("")) {
-          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
-            String.valueOf(wSplit.length)));
+          schema.addGoal(
+              new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
+                  String.valueOf(wSplit.length)));
         } else {
           schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-            String.valueOf(wSplit.length)));
+              String.valueOf(wSplit.length)));
         }
       }
 
@@ -201,13 +205,12 @@ public class CfgToDeductionRulesConverter {
    */
   public static ParsingSchema cfgToLeftCornerRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
-      System.out.println(
-        "CFG must not contain empty productions for Leftcorner parsing.");
+      log.info(
+          "CFG must not contain empty productions for Leftcorner parsing.");
       return null;
     }
     if (cfg.hasDirectLeftRecursion()) {
-      System.out
-        .println("CFG must not contain left recursion for Leftcorner parsing.");
+      log.info("CFG must not contain left recursion for Leftcorner parsing.");
       return null;
     }
     ParsingSchema schema = new ParsingSchema();
@@ -224,7 +227,8 @@ public class CfgToDeductionRulesConverter {
     DynamicDeductionRuleInterface remove = new CfgLeftCornerRemove();
     schema.addRule(remove);
 
-    DynamicDeductionRuleInterface move = new CfgLeftCornerMove(cfg.getNonterminals());
+    DynamicDeductionRuleInterface move =
+        new CfgLeftCornerMove(cfg.getNonterminals());
     schema.addRule(move);
 
     schema.addGoal(new DeductionChartItem("", "", ""));
@@ -242,8 +246,8 @@ public class CfgToDeductionRulesConverter {
 
     for (int i = 0; i < wSplit.length; i++) {
       StaticDeductionRule axiom = new StaticDeductionRule();
-      axiom
-        .addConsequence(new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
+      axiom.addConsequence(
+          new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
       axiom.setName("scan " + wSplit[i]);
       schema.addAxiom(axiom);
       axiom = new StaticDeductionRule();
@@ -253,7 +257,7 @@ public class CfgToDeductionRulesConverter {
     }
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(
-      new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
+        new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
     axiom.setName("scan-ε ");
     schema.addAxiom(axiom);
 
@@ -269,7 +273,7 @@ public class CfgToDeductionRulesConverter {
     schema.addRule(move);
 
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-      String.valueOf(wSplit.length)));
+        String.valueOf(wSplit.length)));
     return schema;
   }
 
@@ -277,9 +281,9 @@ public class CfgToDeductionRulesConverter {
    * Converts grammar into rules for CYK parsing for CNF.
    */
   public static ParsingSchema cfgToCykRules(Cfg cfg, String w)
-    throws ParseException {
+      throws ParseException {
     if (!cfg.isInChomskyNormalForm()) {
-      System.out.println("Grammar has to be in Chomsky Normal Form.");
+      log.info("Grammar has to be in Chomsky Normal Form.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -294,7 +298,7 @@ public class CfgToDeductionRulesConverter {
       }
     }
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-      String.valueOf(wSplit.length)));
+        String.valueOf(wSplit.length)));
     return schema;
   }
 
@@ -304,9 +308,9 @@ public class CfgToDeductionRulesConverter {
    * ESSLLI 2013
    */
   public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w)
-    throws ParseException {
+      throws ParseException {
     if (!cfg.isInCanonicalTwoForm()) {
-      System.out.println("Grammar has to be in Canonical Two Form.");
+      log.info("Grammar has to be in Canonical Two Form.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -317,7 +321,8 @@ public class CfgToDeductionRulesConverter {
         if (cfg.terminalsContain(rule.getRhs()[0])) {
           addCykScanRules(wSplit, schema, rule);
         } else {
-          DynamicDeductionRuleInterface complete = new CfgCykCompleteUnary(rule);
+          DynamicDeductionRuleInterface complete =
+              new CfgCykCompleteUnary(rule);
           schema.addRule(complete);
         }
       } else {
@@ -326,17 +331,17 @@ public class CfgToDeductionRulesConverter {
       }
     }
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-      String.valueOf(wSplit.length)));
+        String.valueOf(wSplit.length)));
     return schema;
   }
 
   private static void addCykScanRules(String[] wSplit, ParsingSchema schema,
-    CfgProductionRule rule) throws ParseException {
+      CfgProductionRule rule) throws ParseException {
     for (int i = 0; i < wSplit.length; i++) {
       if (wSplit[i].equals(rule.getRhs()[0])) {
         StaticDeductionRule scan = new StaticDeductionRule();
         ChartItemInterface consequence =
-          new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
+            new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(new Tree(rule));
         consequence.setTrees(derivedTrees);
@@ -353,17 +358,19 @@ public class CfgToDeductionRulesConverter {
 
     for (int i = 0; i < wSplit.length; i++) {
       StaticDeductionRule scan = new StaticDeductionRule();
-      scan.addConsequence(new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
+      scan.addConsequence(
+          new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
       scan.setName("scan " + wSplit[i]);
       schema.addAxiom(scan);
       StaticDeductionRule scanEps = new StaticDeductionRule();
-      scanEps.addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
+      scanEps
+          .addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
       scanEps.setName("scan ε");
       schema.addAxiom(scanEps);
     }
     StaticDeductionRule scanEps = new StaticDeductionRule();
     scanEps.addConsequence(
-      new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
+        new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
     scanEps.setName("scan ε");
     schema.addAxiom(scanEps);
 
@@ -372,20 +379,20 @@ public class CfgToDeductionRulesConverter {
       schema.addRule(complete);
     }
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-      String.valueOf(wSplit.length)));
+        String.valueOf(wSplit.length)));
     return schema;
   }
 
-  /** Unger parsing tries out all possible separations, factorial runtime. */
+  /**
+   * Unger parsing tries out all possible separations, factorial runtime.
+   */
   public static ParsingSchema cfgToUngerRules(Cfg cfg, String w) {
     if (cfg.hasEpsilonProductions()) {
-      System.out
-        .println("CFG must not contain empty productions for Unger parsing.");
+      log.info("CFG must not contain empty productions for Unger parsing.");
       return null;
     }
     if (cfg.hasDirectLeftRecursion()) {
-      System.out
-        .println("CFG must not contain left recursion for Unger parsing.");
+      log.info("CFG must not contain left recursion for Unger parsing.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -394,11 +401,11 @@ public class CfgToDeductionRulesConverter {
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.setName("axiom");
     axiom.addConsequence(new DeductionChartItem("•" + cfg.getStartSymbol(), "0",
-      String.valueOf(wSplit.length)));
+        String.valueOf(wSplit.length)));
     schema.addAxiom(axiom);
 
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol() + "•", "0",
-      String.valueOf(wSplit.length)));
+        String.valueOf(wSplit.length)));
 
     DynamicDeductionRuleInterface scan = new CfgUngerScan(wSplit);
     schema.addRule(scan);

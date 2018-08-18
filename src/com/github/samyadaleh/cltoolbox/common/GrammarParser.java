@@ -25,11 +25,14 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Parses different grammars from text files. */
 public class GrammarParser {
   private static final Pattern p = Pattern.compile("\"(.*?)\"");
   private static List<Exception> errors;
+  private static final Logger log = LogManager.getLogger();
 
   /** Parses a CFG from a file and returns it as Cfg. */
   public static Cfg parseCfgFile(String grammarFile) throws IOException {
@@ -65,7 +68,7 @@ public class GrammarParser {
         }
         break;
       case "G":
-        System.out.println("Grammar declaration detected. Nothing to do.");
+        log.info("Grammar declaration detected. Nothing to do.");
         break;
       default:
         errors.add(new ParseException(
@@ -111,7 +114,7 @@ public class GrammarParser {
         }
         break;
       case "G":
-        System.out.println("Grammar declaration detected. Nothing to do.");
+        log.info("Grammar declaration detected. Nothing to do.");
         break;
       default:
         errors.add(new ParseException(
@@ -166,7 +169,7 @@ public class GrammarParser {
         }
         break;
       case "G":
-        System.out.println("Grammar declaration detected. Nothing to do.");
+        log.info("Grammar declaration detected. Nothing to do.");
         break;
       default:
         errors.add(new ParseException(
@@ -217,7 +220,7 @@ public class GrammarParser {
         }
         break;
       case "G":
-        System.out.println("Grammar declaration detected. Nothing to do.");
+        log.info("Grammar declaration detected. Nothing to do.");
         break;
       default:
         errors.add(new ParseException(
@@ -231,10 +234,10 @@ public class GrammarParser {
 
   private static boolean printErrors() {
     if (errors.size() > 0) {
-      System.err.println(
+      log.error(
         "The following errors occurred while reading the grammar file:");
       for (Exception e : errors) {
-        System.err.println(e.getMessage());
+        log.error(e.getMessage(), e);
       }
       return true;
     }

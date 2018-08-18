@@ -12,6 +12,8 @@ import java.text.ParseException;
 import javax.swing.*;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ParsingTraceTable {
 
@@ -21,6 +23,7 @@ public class ParsingTraceTable {
   private Point hintCell;
   private DisplayTree popup;
   private final Tag tag;
+  private static final Logger log = LogManager.getLogger();
 
   public ParsingTraceTable(String[][] rowData, String[] columnNames, Tag tag) {
     JFrame f = new JFrame();
@@ -71,7 +74,7 @@ public class ParsingTraceTable {
         popup = new DisplayTree(
           new String[] {tag.getTree(treeName).toString(), value});
       } catch (ParseException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
       }
     }
     return popup;

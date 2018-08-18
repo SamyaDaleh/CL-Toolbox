@@ -42,6 +42,7 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
           ChartItemInterface consequence = new DeductionChartItem(newStack.toString(),
             String.valueOf(i), String.valueOf(j + 1));
           consequence.setTrees(antecedences.get(0).getTrees());
+          logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }

@@ -32,6 +32,7 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
             new DeductionChartItem(stack + " " + wSplit[i], String.valueOf(i + 1));
         }
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

@@ -40,6 +40,7 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
           ChartItemInterface consequence =
             new DeductionChartItem(treeName, parentNode, i, f1, f2, j);
           consequence.setTrees(antecedences.get(0).getTrees());
+          logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }

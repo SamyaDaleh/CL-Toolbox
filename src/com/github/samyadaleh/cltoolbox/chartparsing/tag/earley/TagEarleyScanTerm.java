@@ -43,6 +43,7 @@ public class TagEarleyScanTerm extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence = new DeductionChartItem(treeName, node, "ra", i, j, k,
           String.valueOf(lInt + 1), "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

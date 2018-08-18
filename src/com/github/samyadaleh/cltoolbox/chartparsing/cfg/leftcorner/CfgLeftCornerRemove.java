@@ -10,12 +10,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * If topmost symbol on stacks completed and predicted are the same, remove
  * both.
  */
 public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
+  private static final Logger log = LogManager.getLogger();
 
   public CfgLeftCornerRemove() {
     this.name = "remove";
@@ -51,13 +54,14 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
               antDerivedTrees.get(antDerivedTrees.size() - 2),
               antDerivedTrees.get(antDerivedTrees.size() - 1)));
           } catch (StringIndexOutOfBoundsException e) {
-            // This probably doesn't lead to a successfull trace
+            log.debug(e.getMessage(), e);
             derivedTrees.addAll(antDerivedTrees);
           }
         } else {
           derivedTrees.addAll(antDerivedTrees);
         }
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

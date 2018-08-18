@@ -49,6 +49,7 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
         }
         derivedTrees.add(derivedTreeBase);
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

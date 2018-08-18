@@ -45,6 +45,7 @@ public class CfgEarleyComplete
           ChartItemInterface consequence =
             new DeductionChartItem(newStack, String.valueOf(i1), String.valueOf(k2));
           consequence.setTrees(antecedences.get(0).getTrees());
+          logItemGeneration(consequence);
           consequences.add(consequence);
           break;
         }

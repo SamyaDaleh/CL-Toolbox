@@ -34,6 +34,7 @@ public class TagEarleyPrefixValidScanEps extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence =
           new DeductionChartItem(treeName, node, "ra", iGamma, i, j, k, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

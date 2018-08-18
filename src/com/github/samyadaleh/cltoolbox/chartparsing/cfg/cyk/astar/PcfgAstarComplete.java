@@ -66,7 +66,8 @@ public class PcfgAstarComplete extends PcfgCykComplete {
         new PcfgAstarItem(x1 + x2 + -Math.log(pRule.getP()), newOutP,
           pRule.getLhs(), i1Int, j2Int);
       addTreesToConsequence(i1, consequence);
-      this.consequences.add(consequence);
+      logItemGeneration(consequence);
+      consequences.add(consequence);
     }
   }
 

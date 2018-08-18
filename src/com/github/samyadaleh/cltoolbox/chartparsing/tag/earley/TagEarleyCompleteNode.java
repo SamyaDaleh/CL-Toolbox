@@ -50,6 +50,7 @@ public class TagEarleyCompleteNode
         ChartItemInterface consequence =
           new DeductionChartItem(treeName1, node1, "ra", f, f1, f2, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

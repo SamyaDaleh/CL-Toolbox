@@ -41,6 +41,7 @@ public class TagCykMoveBinary
         ChartItemInterface consequence =
           new DeductionChartItem(treeName1, parentNode, i, f1New, f2New, j);
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

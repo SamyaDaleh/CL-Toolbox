@@ -1,19 +1,21 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * From "antNeeded" number of sibling nodes moves up to the parent.
  */
 public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
+  private static final Logger log = LogManager.getLogger();
 
   private final Tag tag;
 
@@ -23,8 +25,7 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
     this.name = "move-general";
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-    throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String treeName = antecedences.get(0).getItemForm()[0];
       String nodeGorn = antecedences.get(0).getItemForm()[1];
@@ -77,6 +78,7 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
         parentGorn + "⊥", boundaries[firstEntry * 2], foot[0], foot[1],
         boundaries[lastEntry * 2 + 1]);
       consequence.setTrees(antecedences.get(0).getTrees());
+      logItemGeneration(consequence);
       consequences.add(consequence);
     }
     return consequences;

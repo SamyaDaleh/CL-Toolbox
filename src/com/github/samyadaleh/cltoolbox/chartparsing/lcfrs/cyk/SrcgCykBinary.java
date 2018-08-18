@@ -102,6 +102,7 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
         derivedTrees.add(derivedTreeBase);
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);
+        logItemGeneration(consequence);
         this.name = "complete " + clause.toString();
       }
     }

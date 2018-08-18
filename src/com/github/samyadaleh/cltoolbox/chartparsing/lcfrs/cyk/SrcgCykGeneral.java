@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Similar to the general complete rule in CYK for CFG. If there is a clause and
@@ -20,6 +22,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  * <3,4>)] // generate: [S^1, (0,4)]
  */
 public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
+  private static final Logger log = LogManager.getLogger();
 
   private final Clause clause;
   private final String[] wSplit;
@@ -97,6 +100,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence =
           new SrcgCykItem(clause.getLhs().getNonterminal(), rangeOverArguments);
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }
@@ -144,8 +148,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
       }
       int absPos = rhsPred.getAbsolutePos(indices[0], indices[1]);
       for (List<String> solutionRangeVector : solutionRangesList) {
-        List<String> newList = new ArrayList<>();
-        newList.addAll(solutionRangeVector);
+        List<String> newList = new ArrayList<>(solutionRangeVector);
         newList.add(item.getItemForm()[absPos * 2 + 1]);
         newList.add(item.getItemForm()[absPos * 2 + 2]);
         newsolutionRangesList.add(newList);

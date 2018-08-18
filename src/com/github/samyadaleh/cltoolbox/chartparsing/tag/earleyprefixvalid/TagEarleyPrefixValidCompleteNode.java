@@ -57,6 +57,7 @@ public class TagEarleyPrefixValidCompleteNode
         derivedTrees = antecedences.get(0).getTrees();
       }
       consequence.setTrees(derivedTrees);
+      logItemGeneration(consequence);
       consequences.add(consequence);
     }
   }

@@ -7,14 +7,17 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GrammarToDeductionRulesConverter {
+  private static final Logger log = LogManager.getLogger();
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
-  public static ParsingSchema convertToSchema(Cfg cfg, String w, String algorithm)
-    throws ParseException {
+  public static ParsingSchema convertToSchema(Cfg cfg, String w,
+      String algorithm) throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToDeductionRulesConverter.cfgToTopDownRules(cfg, w);
@@ -37,8 +40,8 @@ public class GrammarToDeductionRulesConverter {
     case "cfg-unger":
       return CfgToDeductionRulesConverter.cfgToUngerRules(cfg, w);
     default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
+      log.info(
+          "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
   }
@@ -46,7 +49,8 @@ public class GrammarToDeductionRulesConverter {
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
-  public static ParsingSchema convertToSchema(Tag tag, String w, String algorithm) {
+  public static ParsingSchema convertToSchema(Tag tag, String w,
+      String algorithm) {
     switch (algorithm) {
     case "tag-cyk-extended":
       return TagToDeductionRulesConverter.tagToCykExtendedRules(tag, w);
@@ -57,8 +61,8 @@ public class GrammarToDeductionRulesConverter {
     case "tag-earley-prefixvalid":
       return TagToDeductionRulesConverter.tagToEarleyPrefixValidRules(tag, w);
     default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
+      log.info(
+          "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
   }
@@ -66,8 +70,8 @@ public class GrammarToDeductionRulesConverter {
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
-  public static ParsingSchema convertToSchema(Srcg srcg, String w, String algorithm)
-    throws ParseException {
+  public static ParsingSchema convertToSchema(Srcg srcg, String w,
+      String algorithm) throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
       return LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcg, w);
@@ -76,8 +80,8 @@ public class GrammarToDeductionRulesConverter {
     case "srcg-cyk-general":
       return LcfrsToDeductionRulesConverter.srcgToCykGeneralRules(srcg, w);
     default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
+      log.info(
+          "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
   }
@@ -85,16 +89,16 @@ public class GrammarToDeductionRulesConverter {
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
-  public static ParsingSchema convertToSchema(Pcfg pcfg, String w, String algorithm)
-    throws ParseException {
+  public static ParsingSchema convertToSchema(Pcfg pcfg, String w,
+      String algorithm) throws ParseException {
     switch (algorithm) {
     case "pcfg-astar":
       return PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg, w);
     case "pcfg-cyk":
       return PcfgToDeductionRulesConverter.pcfgToCykRules(pcfg, w);
     default:
-      System.out.println(
-        "I did not understand. Please check the spelling of your parsing algorithm.");
+      log.info(
+          "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
   }

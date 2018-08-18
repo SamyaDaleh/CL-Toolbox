@@ -7,8 +7,10 @@ import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
-/** The scan rule for topdown removes a terminal if it is the next input
- * symbol. */
+/**
+ * The scan rule for topdown removes a terminal if it is the next input
+ * symbol.
+ */
 public class CfgTopDownScan extends AbstractDynamicDeductionRule {
 
   private final String[] wsplit;
@@ -28,9 +30,10 @@ public class CfgTopDownScan extends AbstractDynamicDeductionRule {
       if (i < wsplit.length && stackSplit[0].equals(wsplit[i])) {
         this.name = "scan " + wsplit[i];
         ChartItemInterface consequence = new DeductionChartItem(
-          ArrayUtils.getSubSequenceAsString(stackSplit, 1, stackSplit.length),
-          String.valueOf(i + 1));
+            ArrayUtils.getSubSequenceAsString(stackSplit, 1, stackSplit.length),
+            String.valueOf(i + 1));
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

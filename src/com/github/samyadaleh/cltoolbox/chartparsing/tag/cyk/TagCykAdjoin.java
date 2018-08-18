@@ -58,12 +58,13 @@ public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
           }
         }
       }
-      consequence.setTrees(derivatedTrees);
-      consequences.add(consequence);
       String node2Name =
-        (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
+          (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
       this.name =
-        "adjoin " + treeName2 + "[" + node2Name + "," + treeName1 + "]";
+          "adjoin " + treeName2 + "[" + node2Name + "," + treeName1 + "]";
+      consequence.setTrees(derivatedTrees);
+      logItemGeneration(consequence);
+      consequences.add(consequence);
     }
   }
 

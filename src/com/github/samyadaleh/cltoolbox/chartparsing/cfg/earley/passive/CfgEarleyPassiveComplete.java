@@ -38,6 +38,7 @@ public class CfgEarleyPassiveComplete
           ChartItemInterface consequence =
             new DeductionChartItem(newStack, itemForm1[1], itemForm2[2]);
           consequence.setTrees(antecedences.get(0).getTrees());
+          logItemGeneration(consequence);
           consequences.add(consequence);
           break;
         }

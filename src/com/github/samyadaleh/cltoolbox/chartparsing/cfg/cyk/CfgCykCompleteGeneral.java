@@ -24,7 +24,8 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
     this.antNeeded = rule.getRhs().length;
   }
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences()
+      throws ParseException {
     if (antecedences.size() == antNeeded) {
       int minI = Integer.MAX_VALUE;
       int prevItemStart = 0;
@@ -43,15 +44,15 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
         boolean found = false;
         for (ChartItemInterface mayRhsItem : antecedences) {
           int i = Integer.parseInt(mayRhsItem.getItemForm()[1]);
-          if (i == prevItemStart
-            && mayRhsItem.getItemForm()[0].equals(rule.getRhs()[j])) {
+          if (i == prevItemStart && mayRhsItem.getItemForm()[0]
+              .equals(rule.getRhs()[j])) {
             found = true;
             if (mayRhsItem.getTrees() != null) {
               List<Tree> derivedTreesNew = new ArrayList<>();
               for (Tree tree1 : mayRhsItem.getTrees()) {
                 for (Tree tree2 : derivedTrees) {
                   derivedTreesNew
-                    .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
+                      .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
                 }
               }
               if (derivedTreesNew.size() > 0) {
@@ -68,16 +69,28 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
           return this.consequences;
         }
       }
-      ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(), String.valueOf(minI),
-        String.valueOf(lSum));
+      ChartItemInterface consequence =
+          new DeductionChartItem(rule.getLhs(), String.valueOf(minI),
+              String.valueOf(lSum));
       consequence.setTrees(derivedTrees);
+      logItemGeneration(consequence);
       consequences.add(consequence);
     }
     return this.consequences;
   }
 
   @Override public String toString() {
-    return "[" + rule.getRhs()[0] + ",1,l1], [" + rule.getRhs()[1] + ",i+l1,l2]"
-      + "\n______ \n" + "[" + rule.getLhs() + ",i,l1+l2]";
+    StringBuilder repr = new StringBuilder();
+    int i = 1;
+    for (String rhsSym : rule.getRhs()) {
+      repr.append('[').append(rhsSym).append(",i");
+      if (i > 1) {
+        repr.append("+l").append(i - 1);
+      }
+      repr.append(",l").append(i).append(']');
+      i++;
+    }
+    repr.append("\n______ \n").append('[').append(rule.getLhs());
+    return repr.toString();
   }
 }

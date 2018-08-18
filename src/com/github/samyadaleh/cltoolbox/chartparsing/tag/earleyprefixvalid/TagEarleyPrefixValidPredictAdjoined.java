@@ -53,11 +53,12 @@ public class TagEarleyPrefixValidPredictAdjoined
         } else {
           derivedTrees = antecedences.get(0).getTrees();
         }
-        consequence.setTrees(derivedTrees);
-        consequences.add(consequence);
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name = "predict adjoined " + treeName2 + "[" + node2name + ","
-          + treeName1 + "]";
+            + treeName1 + "]";
+        consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
   }

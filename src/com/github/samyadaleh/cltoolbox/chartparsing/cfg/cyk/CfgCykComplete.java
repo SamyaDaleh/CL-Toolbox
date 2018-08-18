@@ -64,12 +64,13 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
         }
       }
       consequence.setTrees(derivedTrees);
-      this.consequences.add(consequence);
+      logItemGeneration(consequence);
+      consequences.add(consequence);
     }
   }
 
   @Override public String toString() {
-    return "[" + rule.getRhs()[0] + ",1,l1], [" + rule.getRhs()[1] + ",i+l1,l2]"
+    return "[" + rule.getRhs()[0] + ",i,l1], [" + rule.getRhs()[1] + ",i+l1,l2]"
       + "\n______ \n" + "[" + rule.getLhs() + ",i,l1+l2]";
   }
 }

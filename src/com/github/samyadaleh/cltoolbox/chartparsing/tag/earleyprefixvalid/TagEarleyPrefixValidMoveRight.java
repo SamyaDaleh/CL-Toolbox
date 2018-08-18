@@ -8,7 +8,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class TagEarleyPrefixValidMoveRight
-  extends AbstractDynamicDeductionRule {
+    extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
@@ -31,13 +31,15 @@ public class TagEarleyPrefixValidMoveRight
       String l = itemForm[7];
       String adj = itemForm[8];
       String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-        .getGornAddressOfPotentialRightSibling();
-      if (pos.equals("ra") && !iGamma.equals("~") && !i.equals("~")
-        && !j.equals("~") && !k.equals("~") && adj.equals("0")
-        && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
-        ChartItemInterface consequence = new DeductionChartItem(treeName, siblingGorn, "la",
-          iGamma, i, j, k, l, "0");
+          .getGornAddressOfPotentialRightSibling();
+      if (pos.equals("ra") && !iGamma.equals("~") && !i.equals("~") && !j
+          .equals("~") && !k.equals("~") && adj.equals("0")
+          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
+        ChartItemInterface consequence =
+            new DeductionChartItem(treeName, siblingGorn, "la", iGamma, i, j, k,
+                l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }
@@ -46,7 +48,7 @@ public class TagEarleyPrefixValidMoveRight
 
   @Override public String toString() {
     return "[ɣ,p,ra,i_ɣ,i,j,k,l,0]" + "\n______ ɣ(p+1) is defined\n"
-      + "[ɣ,p+1,la,i_ɣ,i,j,k,l,0]";
+        + "[ɣ,p+1,la,i_ɣ,i,j,k,l,0]";
   }
 
 }

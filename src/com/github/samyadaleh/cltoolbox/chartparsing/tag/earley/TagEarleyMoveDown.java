@@ -36,6 +36,7 @@ public class TagEarleyMoveDown extends AbstractDynamicDeductionRule {
         ChartItemInterface consequence =
           new DeductionChartItem(treeName, node + ".1", "la", i, j, k, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

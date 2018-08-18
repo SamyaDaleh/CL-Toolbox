@@ -19,9 +19,12 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Creates parsing schemes for probabilistic parsing of CFGs. */
 public class PcfgToDeductionRulesConverter {
+  private static final Logger log = LogManager.getLogger();
 
   /**
    * Converts a probabilistic CFG to a schema for a star parsing, which is
@@ -30,7 +33,7 @@ public class PcfgToDeductionRulesConverter {
   public static ParsingSchema pcfgToAstarRules(Pcfg pcfg, String w)
     throws ParseException {
     if (!(new Cfg(pcfg)).isInChomskyNormalForm()) {
-      System.out.println(
+      log.info(
         "PCFG must be in Chomsky Normal Form to apply this kind of astar parsing.");
     }
     String[] wSplit = w.split(" ");
@@ -78,7 +81,7 @@ public class PcfgToDeductionRulesConverter {
   public static ParsingSchema pcfgToCykRules(Pcfg pcfg, String w)
     throws ParseException {
     if (!(new Cfg(pcfg)).isInChomskyNormalForm()) {
-      System.out.println(
+      log.info(
         "PCFG must be in Chomsky Normal Form to apply this kind of cyk parsing.");
     }
     String[] wSplit = w.split(" ");

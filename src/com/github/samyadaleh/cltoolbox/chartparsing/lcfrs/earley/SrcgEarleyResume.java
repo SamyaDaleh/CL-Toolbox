@@ -11,17 +11,22 @@ import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Whenever we are left of a variable that is not the first argument of one of
  * the rhs predicates, we resume the rule of the rhs predicate.
  */
 public class SrcgEarleyResume
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
+  private static final Logger log = LogManager.getLogger();
 
   private final String[] variables;
 
-  /** Remember variables to check if symbols are one of them. */
+  /**
+   * Remember variables to check if symbols are one of them.
+   */
   public SrcgEarleyResume(String[] variables) {
     this.variables = variables;
     this.name = "resume";
@@ -36,7 +41,7 @@ public class SrcgEarleyResume
       try {
         clause1Parsed = new Clause(clause1);
       } catch (ParseException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return;
       }
       String pos1 = itemForm1[1];
@@ -49,7 +54,7 @@ public class SrcgEarleyResume
       try {
         clause2Parsed = new Clause(clause2);
       } catch (ParseException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return;
       }
       String i2 = itemForm2[2];
@@ -74,29 +79,31 @@ public class SrcgEarleyResume
         }
         for (Predicate rhs : clause1Parsed.getRhs()) {
           handleRhsPredicate(itemForm1, itemForm2, clause1Parsed, posInt1,
-            iInt1, clause2Parsed, iInt2, jInt2, mayV1FirstArg, isVar1, mayV1,
-            rhs);
+              iInt1, clause2Parsed, iInt2, jInt2, mayV1FirstArg, isVar1, mayV1,
+              rhs);
         }
       }
     }
   }
 
   private void handleRhsPredicate(String[] itemForm1, String[] itemForm2,
-    Clause clause1Parsed, int posInt1, int iInt1, Clause clause2Parsed,
-    int iInt2, int jInt2, boolean mayV1FirstArg, boolean isVar1, String mayV1,
-    Predicate rhs) {
+      Clause clause1Parsed, int posInt1, int iInt1, Clause clause2Parsed,
+      int iInt2, int jInt2, boolean mayV1FirstArg, boolean isVar1, String mayV1,
+      Predicate rhs) {
     int[] indices = rhs.find(mayV1);
-    boolean dotIsAtArgEnd = clause2Parsed.getLhs().ifSymExists(iInt2, 0)
-      && jInt2 == clause2Parsed.getLhs().getSymbols()[iInt2 - 1].length;
+    boolean dotIsAtArgEnd =
+        clause2Parsed.getLhs().ifSymExists(iInt2, 0) && jInt2 == clause2Parsed
+            .getLhs().getSymbols()[iInt2 - 1].length;
     if (indices[0] == iInt2 + 1 && isVar1 && !mayV1FirstArg && dotIsAtArgEnd
-      && clause2Parsed.getLhs().ifSymExists(iInt2 + 1, 0)) {
-      boolean vectorsmatch =
-        SrcgDeductionUtils.ifRhsVectorMatchesLhsVectorResume(clause1Parsed,
-          itemForm1, rhs, iInt1, clause2Parsed, itemForm2);
+        && clause2Parsed.getLhs().ifSymExists(iInt2 + 1, 0)) {
+      boolean vectorsmatch = SrcgDeductionUtils
+          .ifRhsVectorMatchesLhsVectorResume(clause1Parsed, itemForm1, rhs,
+              iInt1, clause2Parsed, itemForm2);
       if (vectorsmatch) {
         ChartItemInterface consequence =
-          new SrcgEarleyActiveItem(itemForm2[0], posInt1, iInt2 + 1, 0,
-            ArrayUtils.getSubSequenceAsList(itemForm2, 4, itemForm2.length));
+            new SrcgEarleyActiveItem(itemForm2[0], posInt1, iInt2 + 1, 0,
+                ArrayUtils
+                    .getSubSequenceAsList(itemForm2, 4, itemForm2.length));
         List<Tree> derivedTrees;
         if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
           derivedTrees = antecedences.get(0).getTrees();
@@ -104,6 +111,7 @@ public class SrcgEarleyResume
           derivedTrees = antecedences.get(1).getTrees();
         }
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }
@@ -111,7 +119,7 @@ public class SrcgEarleyResume
 
   @Override public String toString() {
     return "[A(φ) -> ... B(ξ)...,pos,<i,j>,ρ_A], [B(ψ) -> Ψ,pos',<k-1,l>,ρ_B]"
-      + "\n______ \n" + "[B(ψ) -> Ψ,pos,<k,0>,ρ_B]";
+        + "\n______ \n" + "[B(ψ) -> Ψ,pos,<k,0>,ρ_B]";
   }
 
 }

@@ -31,6 +31,7 @@ public class TagEarleyPrefixValidConvertLa2
         ChartItemInterface consequence =
           new DeductionChartItem(treeName, node, "la", "~", "~", "~", "~", l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

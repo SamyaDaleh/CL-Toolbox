@@ -30,15 +30,17 @@ public class TagEarleyPrefixValidMoveUp extends AbstractDynamicDeductionRule {
       String l = itemForm[7];
       String adj = itemForm[8];
       String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-        .getGornAddressOfPotentialRightSibling();
-      if (!node.equals("") && pos.equals("ra") && !iGamma.equals("~")
-        && !i.equals("~") && !j.equals("~") && !k.equals("~") && adj.equals("0")
-        && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
+          .getGornAddressOfPotentialRightSibling();
+      if (!node.equals("") && pos.equals("ra") && !iGamma.equals("~") && !i
+          .equals("~") && !j.equals("~") && !k.equals("~") && adj.equals("0")
+          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
         String parentGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-          .getGornAddressOfParent();
+            .getGornAddressOfParent();
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName, parentGorn, "rb", "~", i, j, k, l, "0");
+            new DeductionChartItem(treeName, parentGorn, "rb", "~", i, j, k, l,
+                "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }
@@ -47,7 +49,7 @@ public class TagEarleyPrefixValidMoveUp extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p.m,ra,i_ɣ,i,j,k,l,0]" + "\n______ ɣ(p.m+1) is not defined\n"
-      + "[ɣ,p,rb,i_ɣ,i,j,k,l,0]";
+        + "[ɣ,p,rb,i_ɣ,i,j,k,l,0]";
   }
 
 }

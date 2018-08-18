@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * If topmost symbol on stacks completed and predicted are the same, remove
@@ -18,6 +20,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  */
 public class CfgLeftCornerChartRemove
   extends AbstractDynamicDecutionRuleTwoAntecedences {
+
+  private static final Logger log = LogManager.getLogger();
 
   public CfgLeftCornerChartRemove() {
     this.name = "remove";
@@ -66,6 +70,7 @@ public class CfgLeftCornerChartRemove
               }
             }
             consequence.setTrees(derivedTrees);
+            logItemGeneration(consequence);
             consequences.add(consequence);
           } else {
             ChartItemInterface consequence = new DeductionChartItem(
@@ -93,6 +98,7 @@ public class CfgLeftCornerChartRemove
               }
             }
             consequence.setTrees(derivedTrees);
+            logItemGeneration(consequence);
             consequences.add(consequence);
           }
         } else {

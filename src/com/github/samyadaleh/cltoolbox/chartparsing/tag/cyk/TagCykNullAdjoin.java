@@ -39,6 +39,7 @@ public class TagCykNullAdjoin extends AbstractDynamicDeductionRule {
         String newNode = node.substring(0, node.length() - 1) + "⊤";
         ChartItemInterface consequence = new DeductionChartItem(treeName, newNode, i, f1, f2, j);
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

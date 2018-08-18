@@ -92,6 +92,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
             new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
           consequence.setTrees(derivedTrees);
           consequences.add(consequence);
+          logItemGeneration(consequence);
           this.name = "complete " + clause.toString();
         }
       }

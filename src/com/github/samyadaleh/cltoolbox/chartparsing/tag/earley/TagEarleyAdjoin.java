@@ -65,10 +65,11 @@ public class TagEarleyAdjoin
           }
         }
         consequence.setTrees(derivedTrees);
-        consequences.add(consequence);
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name =
-          "adjoin " + treeName2 + "[" + node2name + "," + treeName1 + "]";
+            "adjoin " + treeName2 + "[" + node2name + "," + treeName1 + "]";
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
   }

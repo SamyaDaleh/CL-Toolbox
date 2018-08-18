@@ -11,12 +11,15 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Whenever our dot is left of a variable that is the first argument of some rhs
  * predicate B, we predict new B-rules.
  */
 public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
+  private static final Logger log = LogManager.getLogger();
 
   private final Clause outClause;
 
@@ -36,7 +39,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
         try {
           clauseParsed = new Clause(clause);
         } catch (ParseException e) {
-          e.printStackTrace();
+          log.error(e.getMessage(),e);
           return this.consequences;
         }
         String pos = itemForm[1];
@@ -66,6 +69,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
                 }
               }
               consequence.setTrees(derivedTrees);
+              logItemGeneration(consequence);
               consequences.add(consequence);
             }
           }

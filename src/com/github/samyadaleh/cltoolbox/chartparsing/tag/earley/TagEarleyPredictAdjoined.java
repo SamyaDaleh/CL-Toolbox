@@ -48,6 +48,7 @@ public class TagEarleyPredictAdjoined extends AbstractDynamicDeductionRule {
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getTree(outTreeName));
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

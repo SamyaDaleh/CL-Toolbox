@@ -56,6 +56,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
             }
             consequence.setTrees(derivedTreesNew);
           }
+          logItemGeneration(consequence);
           consequences.add(consequence);
         } else {
           ChartItemInterface consequence;
@@ -80,6 +81,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
             }
             consequence.setTrees(derivedTreesNew);
           }
+          logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }

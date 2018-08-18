@@ -36,6 +36,7 @@ public class TagEarleyPrefixValidPredictNoAdj
         ChartItemInterface consequence =
           new DeductionChartItem(treeName, node, "lb", iGamma, l, "-", "-", l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

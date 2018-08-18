@@ -47,9 +47,10 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
           derivedTrees.add(derivedTreeBase.substitute(this.nodeGorn, tree));
         }
         consequence.setTrees(derivedTrees);
-        consequences.add(consequence);
         this.name = "substitute " + this.treeName + "[" + this.nodeGorn + ","
-          + treeName + "]";
+            + treeName + "]";
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
     return consequences;

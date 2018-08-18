@@ -111,6 +111,7 @@ public class SrcgEarleySuspend
       derivedTrees = antecedences.get(1).getTrees();
     }
     consequence.setTrees(derivedTrees);
+    logItemGeneration(consequence);
     consequences.add(consequence);
   }
 

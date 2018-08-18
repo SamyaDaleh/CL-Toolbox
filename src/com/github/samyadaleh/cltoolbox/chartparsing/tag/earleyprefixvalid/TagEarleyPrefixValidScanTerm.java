@@ -32,13 +32,15 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
       String l = itemForm[7];
       int lInt = Integer.parseInt(l);
       String adj = itemForm[8];
-      if (lInt < wSplit.length && pos.equals("la") && adj.equals("0")
-        && tag.getTree(treeName).getNodeByGornAdress(node).getLabel()
+      if (lInt < wSplit.length && pos.equals("la") && adj.equals("0") && tag
+          .getTree(treeName).getNodeByGornAdress(node).getLabel()
           .equals(wSplit[lInt])) {
         this.name = "scan " + wSplit[lInt];
-        ChartItemInterface consequence = new DeductionChartItem(treeName, node, "ra", iGamma, i, j,
-          k, String.valueOf(lInt + 1), "0");
+        ChartItemInterface consequence =
+            new DeductionChartItem(treeName, node, "ra", iGamma, i, j, k,
+                String.valueOf(lInt + 1), "0");
         consequence.setTrees(antecedences.get(0).getTrees());
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }
@@ -47,7 +49,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i_ɣ,i,j,k,l,0]" + "\n______ l(ɣ,p_ɣ . p) = w_l\n"
-      + "[ɣ,p,ra,i_ɣ,i,j,k,l+1,0]";
+        + "[ɣ,p,ra,i_ɣ,i,j,k,l+1,0]";
   }
 
 }

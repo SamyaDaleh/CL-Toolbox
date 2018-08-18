@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A deduction system that derives consequences from antecendence items and
@@ -51,12 +53,12 @@ public class Deduction {
    * best one, store probability or weight here.
    */
   private Double pGoal;
+  private static final Logger log = LogManager.getLogger();
 
   /**
    * Takes a parsing schema, generates items from axiom rules and applies rules
    * to the items until all items were used. Returns true if a goal item was
    * derived.
-   * @throws ParseException
    */
   public boolean doParse(ParsingSchema schema, boolean success)
     throws ParseException {
@@ -227,7 +229,7 @@ public class Deduction {
       agenda.add(item);
       deductedFrom.add(new ArrayList<ArrayList<Integer>>() {
         {
-          add(new ArrayList<Integer>());
+          add(new ArrayList<>());
         }
       });
       appliedRule.add(new ArrayList<String>() {
@@ -243,7 +245,6 @@ public class Deduction {
    * antecendence items. Looks through the chart to find the other needed items
    * and adds new consequence items to chart and agenda if all antecedences were
    * found.
-   * @throws ParseException
    */
   private void applyRule(ChartItemInterface item, DynamicDeductionRuleInterface rule)
     throws ParseException {
@@ -327,7 +328,7 @@ public class Deduction {
           }
           break;
         default:
-          System.out.println(
+          log.info(
             "Unknown replace parameter " + replace + ", doing nothing.");
         }
       } else {
@@ -364,7 +365,7 @@ public class Deduction {
     }
     String backpointersRep = backpointersToString(backpointers);
     line.append(backpointersRep);
-    System.out.println(line.toString());
+    log.info(line.toString());
     return new String[] {String.valueOf(i + 1), item, rulesRep,
       backpointersRep};
   }

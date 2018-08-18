@@ -6,8 +6,11 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 class GrammarToGrammarConverter {
+  private static final Logger log = LogManager.getLogger();
 
   static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm, boolean please)
     throws ParseException {
@@ -32,7 +35,7 @@ class GrammarToGrammarConverter {
     case "cfg-unger":
       return getCfgForLeftCorner(cfg, please);
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -57,7 +60,7 @@ class GrammarToGrammarConverter {
             .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
             .getCfgWithoutChainRules());
         } else {
-          System.out.println(
+          log.info(
             "CFG must be in Chomsky Normal Form to convert it into a PCFG where "
               + " is possible.");
           return null;
@@ -66,7 +69,7 @@ class GrammarToGrammarConverter {
         return new Pcfg(cfg);
       }
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -80,10 +83,10 @@ class GrammarToGrammarConverter {
       Cfg cfg = new Cfg(pcfg);
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
-          System.out.println("PCFG can't be converted.");
+          log.info("PCFG can't be converted.");
           return null;
         } else {
-          System.out.println(
+          log.info(
             "PCFG must be in Chomsky Normal Form to apply A* parsing.");
           return null;
         }
@@ -91,7 +94,7 @@ class GrammarToGrammarConverter {
         return pcfg;
       }
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -107,7 +110,7 @@ class GrammarToGrammarConverter {
     case "srcg-cyk-general":
       return getSrcgForCykGeneral(cfg, please);
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -123,7 +126,7 @@ class GrammarToGrammarConverter {
     case "srcg-cyk-general":
       return getSrcgForCykGeneral(srcg, please);
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -143,7 +146,7 @@ class GrammarToGrammarConverter {
         if (please) {
           return tag.getBinarizedTag();
         } else {
-          System.out.println("TAG must be binarized to apply CYK parsing.");
+          log.info("TAG must be binarized to apply CYK parsing.");
           return null;
         }
       } else {
@@ -156,7 +159,7 @@ class GrammarToGrammarConverter {
     case "tag-earley-prefixvalid":
       return tag;
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -170,7 +173,7 @@ class GrammarToGrammarConverter {
         if (please) {
           return new Tag(cfg.getBinarizedCfg());
         } else {
-          System.out.println(
+          log.info(
             "CFG must be binarized to convert it into a TAG where CYK parsing is possible.");
           return null;
         }
@@ -184,7 +187,7 @@ class GrammarToGrammarConverter {
     case "tag-earley-prefixvalid":
       return new Tag(cfg);
     default:
-      System.out.println(
+      log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
     }
@@ -239,7 +242,7 @@ class GrammarToGrammarConverter {
           .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
           .getCfgWithoutNonReachableSymbols();
       } else {
-        System.out.println(
+        log.info(
           "CFG must not contain empty productions or left recursion for this parsing algorithm.");
         return null;
       }
@@ -255,7 +258,7 @@ class GrammarToGrammarConverter {
           .getCfgWithoutNonGeneratingSymbols()
           .getCfgWithoutNonReachableSymbols();
       } else {
-        System.out.println(
+        log.info(
           "CFG must not contain empty productions for ShiftReduce parsing.");
         return null;
       }
@@ -272,8 +275,8 @@ class GrammarToGrammarConverter {
             .getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
       } else {
-        System.out.println(
-            "CFG must not contain empty productions for TopDown parsing.");
+        log.info(
+            "CFG must not contain left recursion for TopDown parsing.");
         return null;
       }
     } else {
@@ -288,7 +291,7 @@ class GrammarToGrammarConverter {
         return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions()
           .getSrcgWithoutUselessRules();
       } else {
-        System.out.println(
+        log.info(
           "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
         return null;
       }
@@ -305,7 +308,7 @@ class GrammarToGrammarConverter {
           .getCfgWithEitherOneTerminalOrNonterminalsOnRhs())
             .getSrcgWithoutUselessRules();
       } else {
-        System.out.println(
+        log.info(
           "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
         return null;
       }
@@ -321,7 +324,7 @@ class GrammarToGrammarConverter {
         return srcg.getSrcgWithoutEmptyProductions()
           .getSrcgWithoutUselessRules();
       } else {
-        System.out.println(
+        log.info(
           "sRCG must not contain empty productions to apply general CYK parsing");
         return null;
       }
@@ -337,7 +340,7 @@ class GrammarToGrammarConverter {
         return new Srcg(cfg.getCfgWithoutEmptyProductions())
           .getSrcgWithoutUselessRules();
       } else {
-        System.out.println(
+        log.info(
           "CFG must not contain empty productions to be converted into a sRCG where general CYK parsing is possible.");
         return null;
       }
@@ -353,7 +356,7 @@ class GrammarToGrammarConverter {
         return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions()
           .getSrcgWithoutUselessRules();
       } else {
-        System.out.println(
+        log.info(
           "sRCG must be ordered and not contain epsilon productions for this Earley algorithm");
         return null;
       }
@@ -368,7 +371,7 @@ class GrammarToGrammarConverter {
       if (please) {
         return new Srcg(cfg.getBinarizedCfg()).getSrcgWithoutUselessRules();
       } else {
-        System.out.println(
+        log.info(
           "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");
         return null;
       }

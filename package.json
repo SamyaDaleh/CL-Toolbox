@@ -11,7 +11,10 @@
     "url": "https://github.com/SamyaDaleh/CL-Toolbox/issues"
   },
   "homepage": "https://github.com/SamyaDaleh/CL-Toolbox",
+  "dependencies": {
+    "log4j": "^2"
+  },
     "devDependencies" : {
-    "junit4": "^4.12"
+    "junit4": "^4"
   }
 }

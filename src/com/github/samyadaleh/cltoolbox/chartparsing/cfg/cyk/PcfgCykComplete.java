@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Similar to the complete rule for CYK, but used for a PCFG and with weights
@@ -27,6 +29,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   protected final PcfgProductionRule pRule;
 
   private final int antneeded = 2;
+  protected static final Logger log = LogManager.getLogger();
 
   public PcfgCykComplete(PcfgProductionRule pRule) {
     this.pRule = pRule;
@@ -81,7 +84,8 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
       ProbabilisticChartItemInterface consequence = new PcfgCykItem(
         x1 + x2 + -Math.log(pRule.getP()), pRule.getLhs(), i1Int, j2Int);
       addTreesToConsequence(i1, consequence);
-      this.consequences.add(consequence);
+      logItemGeneration(consequence);
+      consequences.add(consequence);
     }
   }
 
@@ -131,6 +135,22 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   @Override public void clearItems() {
     antecedences = new ArrayList<>();
     consequences = new ArrayList<>();
+  }
+
+  protected void logItemGeneration(ChartItemInterface item) {
+    if(log.isDebugEnabled()) {
+      StringBuilder out = new StringBuilder("generated: ");
+      out.append(item).append(" with trees:");
+      for (Tree tree : item.getTrees()) {
+        out.append(' ').append(tree);
+      }
+      out.append(" from:");
+      for(ChartItemInterface antecedence : antecedences) {
+        out.append(' ').append(antecedence);
+      }
+      out.append(" with rule ").append(name);
+      log.debug(out.toString() );
+    }
   }
 
 }

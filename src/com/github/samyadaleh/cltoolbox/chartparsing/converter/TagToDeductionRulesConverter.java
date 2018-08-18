@@ -48,6 +48,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid.TagEar
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Convertes Tree adjoining grammars to parsing schemes for the respective
@@ -55,11 +57,12 @@ import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
  * Parsing https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/4tag-parsing.pdf
  */
 public class TagToDeductionRulesConverter {
+  private static final Logger log = LogManager.getLogger();
 
   /** Returns a parsing schema for CYK parsing of the given input w with tag. */
   public static ParsingSchema tagToCykExtendedRules(Tag tag, String w) {
     if (!tag.isBinarized()) {
-      System.out.println("TAG is not binarized, CYK-Parsing not applicable.");
+      log.info("TAG is not binarized, CYK-Parsing not applicable.");
       return null;
     }
     String[] wSplit = w.split(" ");
@@ -261,10 +264,10 @@ public class TagToDeductionRulesConverter {
     ParsingSchema schema = new ParsingSchema();
     Set<String> iniTreesNameSet = tag.getInitialTreeNames();
     String[] iniTreeNames =
-      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
+      iniTreesNameSet.toArray(new String[0]);
     Set<String> auxTreesNameSet = tag.getAuxiliaryTreeNames();
     String[] auxTreeNames =
-      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
+      auxTreesNameSet.toArray(new String[0]);
 
     for (String iniTreeName : iniTreeNames) {
       if (tag.getInitialTree(iniTreeName).getRoot().getLabel()

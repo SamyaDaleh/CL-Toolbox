@@ -10,6 +10,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Different methods to search for grammars with specific properties.
@@ -20,6 +22,7 @@ public class GrammarSearcher {
   private static final java.util.Random r = new java.util.Random();
   private static final int populationSize = 200;
   private static final int generationSize = 1000;
+  private static final Logger log = LogManager.getLogger();
 
   /**
    * Entry point to call any searcher method from.
@@ -47,11 +50,11 @@ public class GrammarSearcher {
     while ((bestGrammar = findMaxScoreGrammar(population, scores)) == null) {
       deleteWorstHalf(population, scores);
       if (generation == generationSize) {
-        System.out.println("No target grammar found after " + generationSize
+        log.info("No target grammar found after " + generationSize
           + " generations. These are the grammars:");
         for (int i = 0; i < population.size(); i++) {
-          System.out.println(population.get(i));
-          System.out.println("Score: " + scores.get(i));
+          log.info(population.get(i));
+          log.info("Score: " + scores.get(i));
         }
         return;
       }
@@ -60,7 +63,7 @@ public class GrammarSearcher {
       }
       generation++;
     }
-    System.out.println(bestGrammar);
+    log.info(bestGrammar);
   }
 
   /**

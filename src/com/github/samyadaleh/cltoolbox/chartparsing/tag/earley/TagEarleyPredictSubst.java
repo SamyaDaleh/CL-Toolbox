@@ -54,6 +54,7 @@ public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }

@@ -10,6 +10,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Whenever we have a passive B item we can use it to move the dot over the
@@ -18,6 +20,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  */
 public class SrcgEarleyComplete
   extends AbstractDynamicDecutionRuleTwoAntecedences {
+  private static final Logger log = LogManager.getLogger();
 
   public SrcgEarleyComplete() {
     this.name = "complete";
@@ -32,7 +35,7 @@ public class SrcgEarleyComplete
       try {
         clause2Parsed = new Clause(clause2);
       } catch (ParseException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(),e);
         return;
       }
       String pos2 = itemForm2[1];
@@ -82,6 +85,7 @@ public class SrcgEarleyComplete
             derivedTrees = antecedences.get(1).getTrees();
           }
           consequence.setTrees(derivedTrees);
+          logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }
