@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.*;
 
@@ -479,11 +480,8 @@ public class CfgToDeductionRulesConverter {
     if (log.isDebugEnabled()) {
       List<String> keysWithoutStates = new ArrayList<>();
       int columnWidth = 0;
-      boolean emptyHead = false;
       for (String key : parseTable.keySet()) {
-        if (key.endsWith(" ")) {
-          emptyHead = true;
-        } else {
+        if (!key.endsWith(" $")) {
           String[] keySplit = key.split(" ", 2);
           keysWithoutStates.add(keySplit[1]);
           int thisWidth = keySplit[1].length();
@@ -492,9 +490,7 @@ public class CfgToDeductionRulesConverter {
           }
         }
       }
-      if (emptyHead) {
-        keysWithoutStates.add("");
-      }
+      keysWithoutStates.add("$");
       columnWidth += 3;
       printParseTableHeader(keysWithoutStates, columnWidth);
       for (int i = 0; i < statesSize; i++) {
@@ -542,12 +538,13 @@ public class CfgToDeductionRulesConverter {
       List<List<String[]>> states, String[] initialState, String[] wSplit,
       ParsingSchema schema, Cfg cfg, int k) {
     Map<String, String> parseTable = new HashMap<>();
+    String[] finalState = initialState.clone();
+    finalState[0] = initialState[0].replaceFirst("•", "") + " •";
     for (int i = 0; i < states.size(); i++) {
       for (String t : cfg.getTerminals()) {
         List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
         for (int j = 0; j < states.size(); j++) {
           if (equals(gotoState, states.get(j))) {
-            // TODO more state entries for higher k possibly
             String key = String.valueOf(i) + " " + t;
             if (parseTable.containsKey(key)) {
               throw new IllegalArgumentException("Second shift entry for " + key
@@ -563,8 +560,7 @@ public class CfgToDeductionRulesConverter {
           for (int j = 0; j < cfg.getProductionRules().size(); j++) {
             if (stateEntry[0].substring(0, stateEntry[0].length() - 2)
                 .equals(cfg.getProductionRules().get(j).toString())) {
-              // TODO more state entries for higher k
-              String key = String.valueOf(i) + " ";
+              String key = String.valueOf(i) + " $";
               if (parseTable.containsKey(key)) {
                 throw new IllegalArgumentException(
                     "Second reduce entry for " + key
@@ -576,11 +572,12 @@ public class CfgToDeductionRulesConverter {
           }
         }
       }
-      if (states.get(i).contains(initialState))
-        parseTable.put(String.valueOf(i) + " ", "acc");
-      schema.addGoal(
-          new DeductionChartItem("q0 " + cfg.getStartSymbol() + " q" + i,
-              String.valueOf(wSplit.length)));
+      if (contains(states.get(i), finalState)) {
+        parseTable.put(String.valueOf(i) + " $", "acc");
+        schema.addGoal(
+            new DeductionChartItem("q0 " + cfg.getStartSymbol() + " q" + i,
+                String.valueOf(wSplit.length)));
+      }
     }
     for (int i = 0; i < states.size(); i++) {
       for (String nt : cfg.getNonterminals()) {
@@ -597,6 +594,28 @@ public class CfgToDeductionRulesConverter {
       }
     }
     return parseTable;
+  }
+
+  /**
+   * Returns true if state is one of the entries in states by string comparison.
+   */
+  private static boolean contains(List<String[]> states, String[] state) {
+    for (String[] stateEntry : states) {
+      if (stateEntry.length != state.length) {
+        return false;
+      }
+      boolean same = true;
+      for (int i = 0; i < state.length; i++) {
+        if (!state[i].equals(stateEntry[i])) {
+          same = false;
+          break;
+        }
+      }
+      if (same) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static List<List<String[]>> computeStates(Cfg cfg,
@@ -718,12 +737,31 @@ public class CfgToDeductionRulesConverter {
           if (sym.startsWith("•")) {
             if (sym.length() > 1) {
               String interestingSymbol = sym.substring(1);
+              String stuffafterdot = stateEntry[0].split("•")[1];
+              List<String[]> firstSet;
+              String[] heritage = ArrayUtils
+                  .getSubSequenceAsArray(stateEntry, 1, stateEntry.length);
+              if (stuffafterdot.length() > sym.length()) {
+                firstSet = getFirstSet(cfg,
+                    stateEntry[0].split("•\\S* ")[1].split(" "), heritage, k);
+              } else {
+                firstSet = getFirstSet(cfg, new String[] {}, heritage, k);
+              }
               for (CfgProductionRule rule : cfg.getProductionRules()) {
                 if (rule.getLhs().equals(interestingSymbol)) {
-                  if (k > 0) { // TODO later
-                    // TODO for every string concatenation of length k in First set of the stuff after the lhs symbol
-                    // add prediction of that rule with dot at beginning of rhs and string concatenation afterwards if not exists
-                    // and set changed true
+                  if (k > 0) {
+                    for (String[] lookahead : firstSet) {
+                      String[] newState = new String[lookahead.length + 1];
+                      newState[0] = rule.getLhs() + " -> •" + ArrayUtils
+                          .getSubSequenceAsString(rule.getRhs(), 0,
+                              rule.getRhs().length);
+                      System.arraycopy(lookahead, 0, newState, 1,
+                          lookahead.length);
+                      if (!listContainsArray(closure, newState)) {
+                        closure.add(newState);
+                        changed = true;
+                      }
+                    }
                   } else {
                     String[] newState = new String[] {
                         rule.getLhs() + " -> •" + ArrayUtils
@@ -743,6 +781,66 @@ public class CfgToDeductionRulesConverter {
       }
     }
     return closure;
+  }
+
+  private static List<String[]> getFirstSet(Cfg cfg, String[] ruleRest,
+      String[] heritage, int k) {
+    List<String[]> firstSet = new ArrayList<>();
+    if (k == 0) {
+      return firstSet;
+    }
+    List<String[]> firstSetExpansions = new ArrayList<>();
+    String[] ruleRestAndHeritage =
+        new String[ruleRest.length + heritage.length];
+    System.arraycopy(ruleRest, 0, ruleRestAndHeritage, 0, ruleRest.length);
+    System.arraycopy(heritage, 0, ruleRestAndHeritage, ruleRest.length,
+        heritage.length);
+    firstSetExpansions.add(ruleRestAndHeritage);
+    while (firstSetExpansions.size() > 0) {
+      String[] underExamination = firstSetExpansions.get(0);
+      firstSetExpansions.remove(0);
+      boolean ntFound = false;
+      for (int i = 0; i < k && i < underExamination.length; i++) {
+        if (cfg.nonterminalsContain(underExamination[i])) {
+          ntFound = true;
+          for (CfgProductionRule rule : cfg.getProductionRules()) {
+            if (rule.getLhs().equals(underExamination[i])) {
+              String[] newExpansion;
+              if (rule.getRhs()[0].equals("")) {
+                newExpansion =
+                    ArrayUtils.getSequenceWithoutIAsArray(underExamination, i);
+              } else {
+                newExpansion =
+                    new String[underExamination.length + rule.getRhs().length
+                        - 1];
+                for (int j = 0; j < i; j++) {
+                  newExpansion[j] = underExamination[j];
+                }
+                for (int j = i; j < rule.getRhs().length; j++) {
+                  newExpansion[j] = rule.getRhs()[j - i];
+                }
+                for (int j = i + rule.getRhs().length; j
+                    < underExamination.length + rule.getRhs().length - 1; j++) {
+                  newExpansion[j] =
+                      underExamination[j - rule.getRhs().length + 1];
+                }
+              }
+              firstSetExpansions.add(newExpansion);
+            }
+          }
+          break;
+        }
+      }
+      if (ntFound) {
+        continue;
+      }
+      if (underExamination.length < k) {
+        firstSet.add(underExamination);
+      } else {
+        firstSet.add(ArrayUtils.getSubSequenceAsArray(underExamination, 0, k));
+      }
+    }
+    return firstSet;
   }
 
   private static boolean listContainsArray(List<String[]> closure,

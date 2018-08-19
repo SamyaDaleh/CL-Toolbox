@@ -15,13 +15,15 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
   private final String algorithm;
 
   @Parameters public static Collection<String[]> browsers() {
-    return Arrays.asList(new String[][] {{"cfg-neverheardofthis"},
-      {"cfg-topdown"}, {"cfg-shiftreduce"}, {"cfg-earley"}, {"cfg-passive"},
-      {"cfg-leftcorner"}, {"cfg-leftcorner-chart"}, {"cfg-cyk"},
-      {"cfg-cyk-extended"}, {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"},
-      {"pcfg-cyk"}, {"tag-earley"}, {"tag-cyk-extended"}, {"tag-cyk-general"},
-      {"tag-earley-prefixvalid"}, {"srcg-cyk-extended"}, {"srcg-cyk-general"},
-      {"srcg-earley"}});
+    return Arrays.asList(
+        new String[][] {{"cfg-neverheardofthis"}, {"cfg-topdown"},
+            {"cfg-shiftreduce"}, {"cfg-lr-0"}, {"cfg-lr-1"}, {"cfg-earley"},
+            {"cfg-passive"}, {"cfg-leftcorner"}, {"cfg-leftcorner-chart"},
+            {"cfg-cyk"}, {"cfg-cyk-extended"}, {"cfg-cyk-general"},
+            {"cfg-unger"}, {"pcfg-astar"}, {"pcfg-cyk"}, {"tag-earley"},
+            {"tag-cyk-extended"}, {"tag-cyk-general"},
+            {"tag-earley-prefixvalid"}, {"srcg-cyk-extended"},
+            {"srcg-cyk-general"}, {"srcg-earley"}});
   }
 
   public MainTest(String algorithm) {
@@ -32,7 +34,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     try {
       Main.main(new String[] {});
       Main.main(new String[] {".\\resources\\grammars\\anbn.cfg", "a a b b",
-        "itssupposedtobenothing"});
+          "itssupposedtobenothing"});
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -57,7 +59,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
   @Test public void testTagCalls() throws Exception {
     try {
       callWithGrammar(".\\resources\\grammars\\anbncndn.tag",
-        "a a b b c c d d");
+          "a a b b c c d d");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }

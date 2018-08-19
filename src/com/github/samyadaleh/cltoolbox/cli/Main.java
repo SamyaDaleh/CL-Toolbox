@@ -333,8 +333,9 @@ class Main { // NO_UCD (test only)
         + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
         + "\n   cfg-earley-passive" + "\n   cfg-leftcorner"
         + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
-        + "\n   cfg-shiftreduce" + "\n   cfg-unger" + "\n   pcfg-astar"
-        + "\n   tag-cyk-extended" + "\n   tag-cyk-general" + "\n   tag-earley"
+        + "\n   cfg-shiftreduce" + "\n   cfg-lr-k   (with k >=0)"
+        + "\n   cfg-unger" + "\n   pcfg-astar" + "\n   tag-cyk-extended"
+        + "\n   tag-cyk-general" + "\n   tag-earley"
         + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk-extended"
         + "\n   srcg-cyk-general" + "\n   srcg-earley");
     log.info(

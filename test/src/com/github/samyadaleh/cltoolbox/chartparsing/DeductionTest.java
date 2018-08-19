@@ -276,9 +276,12 @@ public class DeductionTest {
     ParsingSchema schema = cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 0);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
     assertEquals("(NP (Det (the ))(N (apple )))",
         deduction.getDerivedTrees().get(0).toString());
+    schema = cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 1);
+    assertTrue(deduction.doParse(schema, false));
+   /* schema = cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 2);
+    assertTrue(deduction.doParse(schema, false)); //*/
   }
 
 }

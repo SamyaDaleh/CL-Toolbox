@@ -42,26 +42,12 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
       String[] stackSplit = stack.split(" ");
       String state = stackSplit[stackSplit.length - 1];
       String[] tableKey;
-      int lookEnd = i + lookahead;
-      if (lookEnd > wSplit.length) {
-        tableKey = new String[wSplit.length - i];
-        tableKey[0] = state;
-        int j = 1;
-        for (String sym : ArrayUtils
-            .getSubSequenceAsArray(wSplit, i + 1, wSplit.length)) {
-          tableKey[j] = sym;
-          j++;
-        }
-        tableKey[tableKey.length - 1] = "$";
-      } else {
-        tableKey = new String[lookEnd - i + 2];
-        tableKey[0] = state.substring(1);
-        int j = 1;
-        for (String sym : ArrayUtils
-            .getSubSequenceAsArray(wSplit, i, lookEnd + 1)) {
-          tableKey[j] = sym;
-          j++;
-        }
+      tableKey = new String[2];
+      tableKey[0] = state.substring(1);
+      int j = 1;
+      for (String sym : ArrayUtils.getSubSequenceAsArray(wSplit, i, i + 1)) {
+        tableKey[j] = sym;
+        j++;
       }
       String key =
           ArrayUtils.getSubSequenceAsString(tableKey, 0, tableKey.length);
@@ -72,23 +58,15 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
               .getSubSequenceAsString(stackSplit, 0, stackSplit.length) + " "
               + wSplit[i] + " q" + action.substring(1), String.valueOf(i + 1));
           consequence.setTrees(antecedences.get(0).getTrees());
-          logItemGeneration(consequence);
           this.name = "shift " + wSplit[i];
+          logItemGeneration(consequence);
           consequences.add(consequence);
         } else {
           log.error("Unexpected table entry " + action + " for " + state + ", "
               + wSplit[i]);
         }
       } else {
-        String halfKey;
-        if (lookahead == 0) {
-          halfKey = state.substring(1) + " ";
-        } else if (lookahead == 1) {
-          halfKey = state.substring(1) + " $";
-        } else {
-          // TODO
-          halfKey = null;
-        }
+        String halfKey = state.substring(1) + " $";
         String action = parsTable.get(halfKey);
         if (action != null && action.startsWith("r")) {
           int ruleId = Integer.parseInt(action.substring(1));
@@ -132,6 +110,7 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
             }
           }
           derivedTrees.add(0, derivedTreeBase);
+          this.name = "reduce " + rule.toString();
           consequence.setTrees(derivedTrees);
           logItemGeneration(consequence);
           consequences.add(consequence);

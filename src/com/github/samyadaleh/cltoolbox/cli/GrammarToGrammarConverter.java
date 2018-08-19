@@ -1,13 +1,13 @@
 package com.github.samyadaleh.cltoolbox.cli;
 
-import java.text.ParseException;
-
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
 
 class GrammarToGrammarConverter {
   private static final Logger log = LogManager.getLogger();
@@ -21,11 +21,10 @@ class GrammarToGrammarConverter {
       return getCfgForShiftReduce(cfg, please);
     case "cfg-earley":
     case "cfg-earley-passive":
+    case "cfg-leftcorner-chart":
       return cfg;
     case "cfg-leftcorner":
       return getCfgForLeftCorner(cfg, please);
-    case "cfg-leftcorner-chart":
-      return cfg;
     case "cfg-cyk":
       return getCfgForCyk(cfg, please);
     case "cfg-cyk-extended":
@@ -35,6 +34,9 @@ class GrammarToGrammarConverter {
     case "cfg-unger":
       return getCfgForLeftCorner(cfg, please);
     default:
+      if (algorithm.matches("cfg-lr-\\d+")) {
+        return cfg;
+      }
       log.info(
         "I did not understand. Please check the spelling of your parsing algorithm.");
       return null;
