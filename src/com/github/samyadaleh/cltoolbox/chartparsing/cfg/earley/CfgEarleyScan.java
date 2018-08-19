@@ -28,7 +28,7 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
       int j = Integer.parseInt(itemForm[2]);
       for (int k = 0; k < stackSplit.length; k++) {
         if (stackSplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
-          .equals(stackSplit[k].substring(1, stackSplit[k].length()))) {
+          .equals(stackSplit[k].substring(1))) {
           this.name = "scan " + wsplit[j];
           StringBuilder newStack = new StringBuilder();
           newStack.append(ArrayUtils.getSubSequenceAsString(stackSplit, 0, k));

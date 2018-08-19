@@ -7,7 +7,7 @@ import java.text.ParseException;
  * contain one symbol and the rule has a probability.
  */
 public class PcfgProductionRule {
-  private Double p = 0.0;
+  private Double p;
   private final String lhs;
   private final String[] rhs;
 

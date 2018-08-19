@@ -40,7 +40,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     }
   }
 
-  @Test public void testCfgCalls() throws Exception {
+  @Test public void testCfgCalls() {
     try {
       callWithGrammar(".\\resources\\grammars\\anbn.cfg", "a a b b");
     } catch (IllegalArgumentException e) {
@@ -48,7 +48,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     }
   }
 
-  @Test public void testPcfgCalls() throws Exception {
+  @Test public void testPcfgCalls() {
     try {
       callWithGrammar(".\\resources\\grammars\\a0n.pcfg", "1 0 0");
     } catch (IllegalArgumentException e) {
@@ -56,7 +56,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     }
   }
 
-  @Test public void testTagCalls() throws Exception {
+  @Test public void testTagCalls() {
     try {
       callWithGrammar(".\\resources\\grammars\\anbncndn.tag",
           "a a b b c c d d");
@@ -65,7 +65,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     }
   }
 
-  @Test public void testSrcgCalls() throws Exception {
+  @Test public void testSrcgCalls() {
     try {
       callWithGrammar(".\\resources\\grammars\\anbmcndm.srcg", "a a b c c d");
     } catch (IllegalArgumentException e) {

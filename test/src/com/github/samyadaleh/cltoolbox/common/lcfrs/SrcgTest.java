@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Objects;
 
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ public class SrcgTest {
   }
 
   @Test public void testCfgToSrcgConversion() throws ParseException {
-    Srcg srcg = new Srcg(TestGrammarLibrary.epsCfg());
+    Srcg srcg = new Srcg(Objects.requireNonNull(TestGrammarLibrary.epsCfg()));
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C}\n" + "T = {a, b}\n"
       + "V = {X1, X2, X3}\n" + "P = {A(ε) -> ε, S(ε) -> ε, C(ε) -> ε, "
       + "S(b X1 a X2 b X3) -> A(X1) S(X2) C(X3), A(a) -> ε, "
@@ -36,7 +37,8 @@ public class SrcgTest {
   }
 
   @Test public void testCfgToSrcgConversion2() throws ParseException {
-    Srcg srcg = new Srcg(TestGrammarLibrary.anbnCnfProbCfg());
+    Srcg srcg = new Srcg(
+        Objects.requireNonNull(TestGrammarLibrary.anbnCnfProbCfg()));
     assertEquals(
       "G = <N, T, V, P, S>\n" + "N = {S, X1, Y1, Y2}\n" + "T = {a, b}\n"
         + "V = {X2, X3}\n"
@@ -130,7 +132,7 @@ public class SrcgTest {
     throws IOException, ParseException {
     Srcg srcg =
       GrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
-    Srcg srcgEpsFree = srcg.getSrcgWithoutEmptyProductions();
+    Srcg srcgEpsFree = Objects.requireNonNull(srcg).getSrcgWithoutEmptyProductions();
     ParsingSchema schema =
       LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcgEpsFree, "a c");
     Deduction deduction = new Deduction();

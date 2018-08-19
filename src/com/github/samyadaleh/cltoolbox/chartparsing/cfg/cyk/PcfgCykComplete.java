@@ -24,7 +24,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
       new ArrayList<>();
   protected List<ProbabilisticChartItemInterface> consequences =
       new ArrayList<>();
-  protected String name = null;
+  protected String name;
 
   protected final PcfgProductionRule pRule;
 

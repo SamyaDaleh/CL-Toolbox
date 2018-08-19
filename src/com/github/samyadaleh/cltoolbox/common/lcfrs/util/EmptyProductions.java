@@ -304,7 +304,6 @@ public class EmptyProductions {
             if (rhsPred.getNonterminal().equals(candidate[0])
               && candidate[1].length() == rhsPred.getDim()
               && candidate[1].charAt(indices[0] - 1) == '0') {
-              newArgument.append("");
             } else {
               newArgument.append(element);
             }

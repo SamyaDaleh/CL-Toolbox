@@ -163,7 +163,7 @@ public class Order {
         int ibrack = clause2String.indexOf(')');
         String newClause = orderedPredicate(clause2.getLhs(),
           newNtString, orderVector)
-          + clause2String.substring(ibrack + 1, clause2String.length());
+          + clause2String.substring(ibrack + 1);
         newSrcg.addClause(newClause);
       }
     }

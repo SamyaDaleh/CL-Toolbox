@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
+import java.util.Objects;
 
 import org.junit.Test;
 
@@ -14,14 +15,14 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 public class CfgTest {
 
   @Test public void testBinarization() {
-    assertTrue(!TestGrammarLibrary.longRhsCfg().isBinarized());
-    Cfg cfgbin = TestGrammarLibrary.longRhsCfg().getBinarizedCfg();
+    assertTrue(!Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).isBinarized());
+    Cfg cfgbin = Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).getBinarizedCfg();
     assertTrue(cfgbin.isBinarized());
   }
 
   @Test public void testRemoveEpsilon() {
-    assertTrue(TestGrammarLibrary.epsCfg().hasEpsilonProductions());
-    Cfg epsfree = TestGrammarLibrary.epsCfg().getCfgWithoutEmptyProductions();
+    assertTrue(Objects.requireNonNull(TestGrammarLibrary.epsCfg()).hasEpsilonProductions());
+    Cfg epsfree = Objects.requireNonNull(TestGrammarLibrary.epsCfg()).getCfgWithoutEmptyProductions();
     assertTrue(!epsfree.hasEpsilonProductions());
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, A, B, C, S1}\n" + "T = {a, b}\n"
@@ -33,7 +34,7 @@ public class CfgTest {
   }
 
   @Test public void testReplaceTerminals() {
-    Cfg treplaced = TestGrammarLibrary.eftCfg()
+    Cfg treplaced = Objects.requireNonNull(TestGrammarLibrary.eftCfg())
       .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
@@ -45,7 +46,7 @@ public class CfgTest {
   }
 
   @Test public void testToCnf() {
-    Cfg cfgcnf = TestGrammarLibrary.eftCfg().getCfgWithoutEmptyProductions()
+    Cfg cfgcnf = Objects.requireNonNull(TestGrammarLibrary.eftCfg()).getCfgWithoutEmptyProductions()
       .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols()
       .getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
       .getCfgWithoutChainRules();
@@ -61,14 +62,15 @@ public class CfgTest {
   }
 
   @Test public void testToC2f() {
-    assertTrue(TestGrammarLibrary.eftCfg().getCfgWithoutEmptyProductions()
+    assertTrue(Objects.requireNonNull(TestGrammarLibrary.eftCfg()).getCfgWithoutEmptyProductions()
       .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols()
       .getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
       .isInCanonicalTwoForm());
   }
 
   @Test public void testRemoveDirectLeftRecursion() {
-    Cfg cfgwlr = TestGrammarLibrary.directLeftRecursionCfg()
+    Cfg cfgwlr = Objects
+        .requireNonNull(TestGrammarLibrary.directLeftRecursionCfg())
       .getCfgWithoutDirectLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
@@ -78,7 +80,7 @@ public class CfgTest {
 
   @Test public void testRemoveDirectLeftRecursion2() throws ParseException {
     Cfg cfgwlr =
-      TestGrammarLibrary.directLeftRecursionCfg().getCfgWithoutLeftRecursion();
+      Objects.requireNonNull(TestGrammarLibrary.directLeftRecursionCfg()).getCfgWithoutLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
         + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
@@ -86,7 +88,8 @@ public class CfgTest {
   }
 
   @Test public void testRemoveIndirectLeftRecursion() throws ParseException {
-    Cfg cfgwlr = TestGrammarLibrary.indirectLeftRecursionCfg()
+    Cfg cfgwlr = Objects
+        .requireNonNull(TestGrammarLibrary.indirectLeftRecursionCfg())
       .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
       .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" + 
@@ -99,25 +102,29 @@ public class CfgTest {
 
   @Test public void testRemoveLeftRecursionNoTermination()
     throws ParseException {
-    Cfg cfgwlr = TestGrammarLibrary.leftRecursionNoTerminationCfg()
+    Cfg cfgwlr = Objects
+        .requireNonNull(TestGrammarLibrary.leftRecursionNoTerminationCfg())
       .getCfgWithoutLeftRecursion();
     assertNull(cfgwlr);
   }
 
   @Test public void testRemoveNotReachableSymbols() {
-    Cfg after = TestGrammarLibrary.nonReachableSymbolsCfg()
+    Cfg after = Objects
+        .requireNonNull(TestGrammarLibrary.nonReachableSymbolsCfg())
       .getCfgWithoutNonReachableSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
   }
 
   @Test public void testRemoveNonGeneratingSymbols() {
-    Cfg after = TestGrammarLibrary.nonGeneratingSymbolsCfg()
+    Cfg after = Objects
+        .requireNonNull(TestGrammarLibrary.nonGeneratingSymbolsCfg())
       .getCfgWithoutNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
 
-    assertNull(TestGrammarLibrary.noUsefulNonterminalCfg()
+    assertNull(
+        Objects.requireNonNull(TestGrammarLibrary.noUsefulNonterminalCfg())
       .getCfgWithoutNonGeneratingSymbols());
   }
 

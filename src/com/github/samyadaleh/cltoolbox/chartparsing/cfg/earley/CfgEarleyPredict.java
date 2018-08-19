@@ -35,7 +35,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
       for (String stackSymbol : stackSplit) {
         if (stackSymbol.startsWith("•") && stackSymbol
-          .substring(1, stackSymbol.length()).equals(rule.getLhs())) {
+          .substring(1).equals(rule.getLhs())) {
           String newStack;
           if (rule.getRhs()[0].equals("")) {
             newStack = rule.getLhs() + " -> •";

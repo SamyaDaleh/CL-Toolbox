@@ -34,7 +34,7 @@ public class Vertex implements Cloneable {
     // node is child of root
     if (gornsplit.length == 0) {
       int nthchild =
-        Integer.parseInt(gornAddress.substring(1, gornAddress.length()));
+        Integer.parseInt(gornAddress.substring(1));
       return "." + String.valueOf(nthchild + 1);
     }
     int nthchild = Integer.parseInt(gornsplit[gornsplit.length - 1]);
