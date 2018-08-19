@@ -44,7 +44,7 @@ public abstract class AbstractDynamicDeductionRule
       StringBuilder out = new StringBuilder("generated: ");
       out.append(item).append(" with trees:");
       for (Tree tree : item.getTrees()) {
-        out.append(' ').append(tree);
+        out.append(' ').append(tree).append(',');
       }
       out.append(" from:");
       for(ChartItemInterface antecedence : antecedences) {

@@ -25,14 +25,15 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     this.name = "reduce " + rule.toString();
   }
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences()
+      throws ParseException {
     if (antecedences.size() == this.antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
       String[] stackSplit = stack.split(" ");
       String i = itemForm[1];
       String gamma =
-        ArrayUtils.getStringHeadIfEndsWith(stackSplit, rule.getRhs());
+          ArrayUtils.getStringHeadIfEndsWith(stackSplit, rule.getRhs());
       if (gamma != null) {
         ChartItemInterface consequence;
         if (gamma.length() == 0) {
@@ -48,8 +49,14 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
           for (String rhsSym : rule.getRhs()) {
             if (tree.getRoot().getLabel().equals(rhsSym)) {
               derivedTrees.remove(0);
-              derivedTreeBase =
-                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree);
+              try {
+                derivedTreeBase = TreeUtils
+                    .performLeftmostSubstitution(derivedTreeBase, tree);
+              } catch (IndexOutOfBoundsException e) {
+                log.debug(e.getMessage(), e);
+              }
+              found = true;
+              break;
             }
           }
           if (!found) {
@@ -67,7 +74,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]" + "\n______"
-      + rule.toString() + "\n" + "[Γ " + rule.getLhs() + ",i]";
+        + rule.toString() + "\n" + "[Γ " + rule.getLhs() + ",i]";
   }
 
 }

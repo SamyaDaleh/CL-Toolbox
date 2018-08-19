@@ -437,11 +437,33 @@ public class CfgToDeductionRulesConverter {
           new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol()};
     }
     List<List<String[]>> states = computeStates(cfg, initialState, k);
-    Map<String[], String> parsTable =
+    Map<String, String> parseTable =
         computeParseTable(states, initialState, wSplit, schema, cfg, k);
-    // TODO check for sr conflicts. If yes, log warning and return null
+    printParseTable(parseTable, states.size());
+    List<String> statesWithShifts = new ArrayList<>();
+    List<String> statesWithReduces = new ArrayList<>();
+    for (Map.Entry<String, String> entry : parseTable.entrySet()) {
+      String state = entry.getKey().split(" ")[0];
+      String action = entry.getValue().substring(0, 1);
+      if (action.equals("s")) {
+        if (statesWithReduces.contains(state)) {
+          log.warn("Shift-Reduce conflict for state " + state
+              + ", grammar cannot be parsed with LR(" + k + ").");
+          return null;
+        }
+        statesWithShifts.add(state);
+
+      } else if (action.equals("r")) {
+        if (statesWithShifts.contains(state)) {
+          log.warn("Shift-Reduce conflict for state " + state
+              + ", grammar cannot be parsed with LR(" + k + ").");
+          return null;
+        }
+        statesWithReduces.add(state);
+      }
+    }
     CfgLrKRule rule =
-        new CfgLrKRule(wSplit, cfg.getProductionRules(), parsTable, k);
+        new CfgLrKRule(wSplit, cfg.getProductionRules(), parseTable, k);
     schema.addRule(rule);
     for (int i = 0; i < states.size(); i++) {
       if (states.get(i).contains(initialState)) {
@@ -452,18 +474,86 @@ public class CfgToDeductionRulesConverter {
     return schema;
   }
 
-  private static Map<String[], String> computeParseTable(
+  private static void printParseTable(Map<String, String> parseTable,
+      int statesSize) {
+    if (log.isDebugEnabled()) {
+      List<String> keysWithoutStates = new ArrayList<>();
+      int columnWidth = 0;
+      boolean emptyHead = false;
+      for (String key : parseTable.keySet()) {
+        if (key.endsWith(" ")) {
+          emptyHead = true;
+        } else {
+          String[] keySplit = key.split(" ", 2);
+          keysWithoutStates.add(keySplit[1]);
+          int thisWidth = keySplit[1].length();
+          if (thisWidth > columnWidth) {
+            columnWidth = thisWidth;
+          }
+        }
+      }
+      if (emptyHead) {
+        keysWithoutStates.add("");
+      }
+      columnWidth += 3;
+      printParseTableHeader(keysWithoutStates, columnWidth);
+      for (int i = 0; i < statesSize; i++) {
+        printParseTableLine(parseTable, String.valueOf(i), keysWithoutStates,
+            columnWidth);
+      }
+    }
+  }
+
+  private static void printParseTableLine(Map<String, String> parseTable,
+      String state, List<String> keysWithoutStates, int columnWidth) {
+    StringBuilder line = new StringBuilder();
+    line.append(printParseTableCell(state, columnWidth));
+    for (String column : keysWithoutStates) {
+      String key = state + " " + column;
+      String entry = parseTable.get(key);
+      if (entry == null) {
+        line.append(printParseTableCell("", columnWidth));
+      } else {
+        line.append(printParseTableCell(entry, columnWidth));
+      }
+    }
+    log.debug(line.toString());
+  }
+
+  private static String printParseTableCell(String content, int columnWidth) {
+    StringBuilder cell = new StringBuilder(content);
+    for (int i = 0; i < columnWidth - content.length(); i++) {
+      cell.append(' ');
+    }
+    return cell.toString();
+  }
+
+  private static void printParseTableHeader(List<String> keysWithoutStates,
+      int columnWidth) {
+    StringBuilder line = new StringBuilder();
+    line.append(printParseTableCell("", columnWidth));
+    for (String column : keysWithoutStates) {
+      line.append(printParseTableCell(column, columnWidth));
+    }
+    log.debug(line.toString());
+  }
+
+  private static Map<String, String> computeParseTable(
       List<List<String[]>> states, String[] initialState, String[] wSplit,
       ParsingSchema schema, Cfg cfg, int k) {
-    Map<String[], String> parseTable = new HashMap<>();
+    Map<String, String> parseTable = new HashMap<>();
     for (int i = 0; i < states.size(); i++) {
       for (String t : cfg.getTerminals()) {
         List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
         for (int j = 0; j < states.size(); j++) {
           if (equals(gotoState, states.get(j))) {
-            // TODO throw exception if entry already exists
-            parseTable.put(new String[] {String.valueOf(i), t},
-                "s" + String.valueOf(j));
+            // TODO more state entries for higher k possibly
+            String key = String.valueOf(i) + " " + t;
+            if (parseTable.containsKey(key)) {
+              throw new IllegalArgumentException("Second shift entry for " + key
+                  + " generated. Grammar cannot be LR(" + k + ") parsed.");
+            }
+            parseTable.put(key, "s" + String.valueOf(j));
             break;
           }
         }
@@ -474,16 +564,23 @@ public class CfgToDeductionRulesConverter {
             if (stateEntry[0].substring(0, stateEntry[0].length() - 2)
                 .equals(cfg.getProductionRules().get(j).toString())) {
               // TODO more state entries for higher k
-              // TODO throw exception if entry already exists
-              parseTable.put(new String[] {String.valueOf(i), ""},
-                  "r" + String.valueOf(j + 1));
+              String key = String.valueOf(i) + " ";
+              if (parseTable.containsKey(key)) {
+                throw new IllegalArgumentException(
+                    "Second reduce entry for " + key
+                        + " generated. Grammar cannot be LR(" + k
+                        + ") parsed.");
+              }
+              parseTable.put(key, "r" + String.valueOf(j + 1));
             }
           }
         }
       }
       if (states.get(i).contains(initialState))
-        schema.addGoal(
-            new DeductionChartItem("q" + i, String.valueOf(wSplit.length)));
+        parseTable.put(String.valueOf(i) + " ", "acc");
+      schema.addGoal(
+          new DeductionChartItem("q0 " + cfg.getStartSymbol() + " q" + i,
+              String.valueOf(wSplit.length)));
     }
     for (int i = 0; i < states.size(); i++) {
       for (String nt : cfg.getNonterminals()) {
@@ -493,8 +590,7 @@ public class CfgToDeductionRulesConverter {
         }
         for (int j = 0; j < states.size(); j++) {
           if (equals(gotoState, states.get(j))) {
-            parseTable
-                .put(new String[] {String.valueOf(i), nt}, String.valueOf(j));
+            parseTable.put(String.valueOf(i) + " " + nt, String.valueOf(j));
             break;
           }
         }

@@ -63,9 +63,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
                   derivedTrees.add(TreeUtils.performLeftmostSubstitution(tree,
                     derivedTreeBase));
                 } catch (IndexOutOfBoundsException e) {
-                  // several items with different trees can lead to the same
-                  // item with "predict". It collects all the trees, but they
-                  // can not always be applied in all derivations downstream.
+                  log.debug(e.getMessage(), e);
                 }
               }
               consequence.setTrees(derivedTrees);

@@ -194,9 +194,8 @@ class Main { // NO_UCD (test only)
       }
       break;
     default:
-      throw new IllegalArgumentException(
-          "I don't know formalism \"" + algorithmSplit
-              + "\", please check the spelling.");
+      throw new IllegalArgumentException("I don't know formalism \"" + algorithm
+          + "\", please check the spelling.");
     }
   }
 
@@ -223,9 +222,8 @@ class Main { // NO_UCD (test only)
       throw new IllegalArgumentException(
           "I can't convert a tree language to a string language.");
     default:
-      throw new IllegalArgumentException(
-          "I don't know formalism \"" + algorithmSplit
-              + "\", please check the spelling.");
+      throw new IllegalArgumentException("I don't know formalism \"" + algorithm
+          + "\", please check the spelling.");
     }
   }
 
@@ -267,9 +265,8 @@ class Main { // NO_UCD (test only)
       }
       break;
     default:
-      throw new IllegalArgumentException(
-          "I don't know formalism \"" + algorithmSplit
-              + "\", please check the spelling.");
+      throw new IllegalArgumentException("I don't know formalism \"" + algorithm
+          + "\", please check the spelling.");
     }
   }
 
@@ -311,9 +308,8 @@ class Main { // NO_UCD (test only)
       }
       break;
     default:
-      throw new IllegalArgumentException(
-          "I don't know formalism \"" + algorithmSplit
-              + "\", please check the spelling.");
+      throw new IllegalArgumentException("I don't know formalism \"" + algorithm
+          + "\", please check the spelling.");
     }
   }
 

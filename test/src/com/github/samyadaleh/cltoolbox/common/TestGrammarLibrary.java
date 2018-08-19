@@ -6,8 +6,11 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TestGrammarLibrary {
+  private static final Logger log = LogManager.getLogger();
 
   public static Cfg anBnCfg() {
     Cfg cfg = new Cfg();
@@ -19,7 +22,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -34,7 +37,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -50,7 +53,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -67,7 +70,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("NP");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -127,7 +130,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -147,7 +150,7 @@ public class TestGrammarLibrary {
       cfgeps.setStartSymbol("S");
       return cfgeps;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -172,7 +175,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("E");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -190,7 +193,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -206,7 +209,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -221,7 +224,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -236,7 +239,7 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("G -> b");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -252,7 +255,7 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("G -> G b");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -281,7 +284,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -300,7 +303,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -359,7 +362,7 @@ public class TestGrammarLibrary {
       cfgeps.setStartSymbol("S");
       return cfgeps;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -488,7 +491,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -503,7 +506,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -517,7 +520,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
@@ -545,7 +548,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error(e.getMessage(),e);
       return null;
     }
   }
