@@ -41,7 +41,7 @@ public class MixedRhs {
     ArrayList<String> newNt = new ArrayList<>();
     Collections.addAll(newNt, cfgOld.getNonterminals());
     doReplaceTerminals(cfg, newTRules, newNt, cfgOld);
-    cfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
+    cfg.setNonterminals(newNt.toArray(new String[0]));
     return cfg;
   }
 
@@ -87,7 +87,7 @@ public class MixedRhs {
         newRhs.add(newLhs);
       }
       cfg.getProductionRules().add(new CfgProductionRule(rule.getLhs(),
-        newRhs.toArray(new String[newRhs.size()])));
+        newRhs.toArray(new String[0])));
     }
   }
 }

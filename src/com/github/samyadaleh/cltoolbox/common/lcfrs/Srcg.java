@@ -55,7 +55,7 @@ public class Srcg {
       lhs.append(")");
       this.addClause(lhs.toString(), rhs.toString());
     }
-    this.variables = newVariables.toArray(new String[newVariables.size()]);
+    this.variables = newVariables.toArray(new String[0]);
   }
 
   public Srcg() {

@@ -88,6 +88,6 @@ public class Random {
       numt++;
       terminals.add(prefix + numt);
     }
-    return terminals.toArray(new String[terminals.size()]);
+    return terminals.toArray(new String[0]);
   }
 }

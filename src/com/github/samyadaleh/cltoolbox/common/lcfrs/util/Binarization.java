@@ -88,7 +88,7 @@ public class Binarization {
       }
     }
     newSrcg.setNonterminals(
-      newNonterminals.toArray(new String[newNonterminals.size()]));
+      newNonterminals.toArray(new String[0]));
     return newSrcg;
   }
 

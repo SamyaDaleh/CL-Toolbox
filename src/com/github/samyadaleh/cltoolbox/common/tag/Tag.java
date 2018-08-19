@@ -225,10 +225,10 @@ public class Tag {
     StringBuilder builder = new StringBuilder();
     Set<String> iniTreesNameSet = getInitialTreeNames();
     String[] iniTreeNames =
-      iniTreesNameSet.toArray(new String[iniTreesNameSet.size()]);
+      iniTreesNameSet.toArray(new String[0]);
     Set<String> auxTreesNameSet = getAuxiliaryTreeNames();
     String[] auxTreeNames =
-      auxTreesNameSet.toArray(new String[auxTreesNameSet.size()]);
+      auxTreesNameSet.toArray(new String[0]);
     builder.append("G = <N, T, I, A, S>\n");
     builder.append("N = {").append(String.join(", ", nonterminals))
       .append("}\n");

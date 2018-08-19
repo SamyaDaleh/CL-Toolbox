@@ -25,7 +25,7 @@ public class ArrayUtilsTest {
     ChartItemInterface item1 = new DeductionChartItem("a", ".1", "la", "1", "?", "?", "3", "0");
     ChartItemInterface item2 = new DeductionChartItem("a", ".1", "la", "1", "-", "-", "3", "0");
 
-    List<ChartItemInterface> testchart = new ArrayList<ChartItemInterface>();
+    List<ChartItemInterface> testchart = new ArrayList<>();
     testchart.add(item2);
     assertTrue(testchart.contains(item1));
     assertEquals(0, testchart.indexOf(item1));

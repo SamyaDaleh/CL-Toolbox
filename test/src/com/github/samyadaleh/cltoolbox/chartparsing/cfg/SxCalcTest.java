@@ -8,7 +8,6 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar.SxCalc;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SxCalcTest {
 

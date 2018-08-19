@@ -80,7 +80,7 @@ public class Predicate {
     for (String[] symSet : symbols) {
       Collections.addAll(symbolsArray, symSet);
     }
-    return symbolsArray.toArray(new String[symbolsArray.size()]);
+    return symbolsArray.toArray(new String[0]);
   }
 
   /**

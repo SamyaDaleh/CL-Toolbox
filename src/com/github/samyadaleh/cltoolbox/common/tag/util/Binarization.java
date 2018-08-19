@@ -26,8 +26,8 @@ public class Binarization {
     Tag newTag = new Tag();
     newTag.setStartSymbol(oldTag.getStartSymbol());
     newTag.setTerminals(oldTag.getTerminals());
-    ArrayList<String> newNonterminals = new ArrayList<>();
-    newNonterminals.addAll(Arrays.asList(oldTag.getNonterminals()));
+    ArrayList<String> newNonterminals =
+        new ArrayList<>(Arrays.asList(oldTag.getNonterminals()));
     for (String treeName : oldTag.getInitialTreeNames()) {
       Tree tree = oldTag.getInitialTree(treeName);
       if (tree.isBinarized()) {
@@ -63,7 +63,7 @@ public class Binarization {
       }
     }
     newTag.setNonterminals(
-      newNonterminals.toArray(new String[newNonterminals.size()]));
+      newNonterminals.toArray(new String[0]));
     return newTag;
   }
 }

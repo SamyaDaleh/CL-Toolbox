@@ -31,7 +31,7 @@ public class ArrayUtils {
     for (int i = from; i < to && i < sequence.length; i++) {
       newSequence.add(sequence[i]);
     }
-    return newSequence.toArray(new String[newSequence.size()]);
+    return newSequence.toArray(new String[0]);
   }
 
   /**
@@ -108,7 +108,7 @@ public class ArrayUtils {
         newArray.add(array[j]);
       }
     }
-    return newArray.toArray(new String[newArray.size()]);
+    return newArray.toArray(new String[0]);
   }
 
   /**

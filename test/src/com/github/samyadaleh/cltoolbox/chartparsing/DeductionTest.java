@@ -6,12 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
-import com.github.samyadaleh.cltoolbox.chartparsing.converter.CfgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.LcfrsToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.PcfgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.TagToDeductionRulesConverter;

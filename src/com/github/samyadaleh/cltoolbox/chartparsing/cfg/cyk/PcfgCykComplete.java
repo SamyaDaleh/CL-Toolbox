@@ -29,7 +29,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   protected final PcfgProductionRule pRule;
 
   private final int antneeded = 2;
-  protected static final Logger log = LogManager.getLogger();
+  private static final Logger log = LogManager.getLogger();
 
   public PcfgCykComplete(PcfgProductionRule pRule) {
     this.pRule = pRule;
@@ -37,8 +37,8 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   @Override public List<ChartItemInterface> getAntecedences() {
-    List<ChartItemInterface> outantecedences = new ArrayList<>();
-    outantecedences.addAll(this.antecedences);
+    List<ChartItemInterface> outantecedences =
+        new ArrayList<>(this.antecedences);
     return outantecedences;
   }
 
@@ -58,8 +58,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
       calculateConsequences(itemForm1, itemForm2);
       calculateConsequences(itemForm2, itemForm1);
     }
-    List<ChartItemInterface> outcon = new ArrayList<>();
-    outcon.addAll(this.consequences);
+    List<ChartItemInterface> outcon = new ArrayList<>(this.consequences);
     return outcon;
   }
 

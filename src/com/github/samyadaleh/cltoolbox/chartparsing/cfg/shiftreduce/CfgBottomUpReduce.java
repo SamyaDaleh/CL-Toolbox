@@ -41,8 +41,8 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
         } else {
           consequence = new DeductionChartItem(gamma + " " + rule.getLhs(), i);
         }
-        List<Tree> derivedTrees = new ArrayList<Tree>();
-        derivedTrees.addAll(antecedences.get(0).getTrees());
+        List<Tree> derivedTrees =
+            new ArrayList<>(antecedences.get(0).getTrees());
         Tree derivedTreeBase = new Tree(rule);
         for (Tree tree : antecedences.get(0).getTrees()) {
           boolean found = false;

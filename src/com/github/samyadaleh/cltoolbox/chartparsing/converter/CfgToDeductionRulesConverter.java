@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.*;
 
@@ -464,7 +463,7 @@ public class CfgToDeductionRulesConverter {
       }
     }
     CfgLrKRule rule =
-        new CfgLrKRule(wSplit, cfg.getProductionRules(), parseTable, k);
+        new CfgLrKRule(wSplit, cfg.getProductionRules(), parseTable);
     schema.addRule(rule);
     for (int i = 0; i < states.size(); i++) {
       if (states.get(i).contains(initialState)) {
@@ -813,9 +812,7 @@ public class CfgToDeductionRulesConverter {
                 newExpansion =
                     new String[underExamination.length + rule.getRhs().length
                         - 1];
-                for (int j = 0; j < i; j++) {
-                  newExpansion[j] = underExamination[j];
-                }
+                System.arraycopy(underExamination, 0, newExpansion, 0, i);
                 for (int j = i; j < rule.getRhs().length; j++) {
                   newExpansion[j] = rule.getRhs()[j - i];
                 }

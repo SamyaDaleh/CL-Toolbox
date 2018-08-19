@@ -29,7 +29,7 @@ public class RangeVector {
       rangesArray.add(range.getRange()[0]);
       rangesArray.add(range.getRange()[1]);
     }
-    return rangesArray.toArray(new String[rangesArray.size()]);
+    return rangesArray.toArray(new String[0]);
   }
 
   @Override public String toString() {

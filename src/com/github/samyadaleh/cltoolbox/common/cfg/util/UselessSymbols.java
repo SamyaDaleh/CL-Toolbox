@@ -27,7 +27,7 @@ public class UselessSymbols {
       System.err.println("Input grammar has no generating symbols.");
       return null;
     }
-    cfg.setNonterminals(restNts.toArray(new String[restNts.size()]));
+    cfg.setNonterminals(restNts.toArray(new String[0]));
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       boolean notGeneratingSeen = false;
       for (String symbol : rule.getRhs()) {
@@ -100,8 +100,8 @@ public class UselessSymbols {
         newTerms.add(t);
       }
     }
-    cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
-    cfg.setTerminals(newTerms.toArray(new String[newTerms.size()]));
+    cfg.setNonterminals(newNts.toArray(new String[0]));
+    cfg.setTerminals(newTerms.toArray(new String[0]));
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       if (reachable.contains(rule.getLhs())) {
         cfg.getProductionRules().add(rule);

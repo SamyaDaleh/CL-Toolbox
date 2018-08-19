@@ -160,7 +160,7 @@ public class Tree {
         builder.append(String.valueOf(tree.charAt(i)));
       }
     }
-    return tokens.toArray(new String[tokens.size()]);
+    return tokens.toArray(new String[0]);
   }
 
   public Vertex getRoot() {

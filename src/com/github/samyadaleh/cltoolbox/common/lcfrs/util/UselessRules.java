@@ -140,11 +140,11 @@ public class UselessRules {
         nonterminals.add(nt);
       }
     }
-    String[] ntArray = nonterminals.toArray(new String[nonterminals.size()]);
+    String[] ntArray = nonterminals.toArray(new String[0]);
     newSrcg.setNonterminals(ntArray);
-    String[] varArray = usedVariables.toArray(new String[usedVariables.size()]);
+    String[] varArray = usedVariables.toArray(new String[0]);
     newSrcg.setVariables(varArray);
-    String[] terArray = usedTerminals.toArray(new String[usedTerminals.size()]);
+    String[] terArray = usedTerminals.toArray(new String[0]);
     newSrcg.setTerminals(terArray);
     return newSrcg;
   }

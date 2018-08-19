@@ -18,7 +18,7 @@ public class Binarization {
     Collections.addAll(newNt, cfg.getNonterminals());
     ArrayList<String[]> newP = new ArrayList<>();
     doBinarize(newNt, newP, cfg);
-    newCfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
+    newCfg.setNonterminals(newNt.toArray(new String[0]));
     for (String[] newRule : newP) {
       newCfg.getProductionRules()
         .add(new CfgProductionRule(newRule[0], newRule[1].split(" ")));

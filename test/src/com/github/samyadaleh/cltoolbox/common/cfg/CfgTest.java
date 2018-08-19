@@ -67,7 +67,7 @@ public class CfgTest {
       .isInCanonicalTwoForm());
   }
 
-  @Test public void testRemoveDirectLeftRecursion() throws ParseException {
+  @Test public void testRemoveDirectLeftRecursion() {
     Cfg cfgwlr = TestGrammarLibrary.directLeftRecursionCfg()
       .getCfgWithoutDirectLeftRecursion();
     assertEquals(

@@ -20,13 +20,13 @@ public class DeductionItemTest {
 
     assertEquals(item1, item2);
     // test set contains item
-    Set<ChartItemInterface> itemset = new HashSet<ChartItemInterface>();
+    Set<ChartItemInterface> itemset = new HashSet<>();
     itemset.add(item1);
 
-    List<ChartItemInterface> itemssetlist = new ArrayList<ChartItemInterface>(itemset);
+    List<ChartItemInterface> itemssetlist = new ArrayList<>(itemset);
     assertTrue(itemssetlist.contains(item2));
     // test list contains Item
-    List<ChartItemInterface> itemlist = new ArrayList<ChartItemInterface>();
+    List<ChartItemInterface> itemlist = new ArrayList<>();
     itemlist.add(item1);
     assertTrue(itemlist.contains(item2));
   }

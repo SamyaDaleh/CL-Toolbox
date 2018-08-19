@@ -56,7 +56,7 @@ public class EmptyProductions {
       }
     }
 
-    cfg.setNonterminals(newNt.toArray(new String[newNt.size()]));
+    cfg.setNonterminals(newNt.toArray(new String[0]));
     return cfg;
   }
 

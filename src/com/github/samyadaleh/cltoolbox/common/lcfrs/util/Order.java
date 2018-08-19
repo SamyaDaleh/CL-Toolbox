@@ -57,7 +57,7 @@ public class Order {
 
   private static ArrayList<Integer> getOrderInLhs(Clause clause,
     Predicate rhsPred) {
-    ArrayList<Integer> posInLhs = new ArrayList<Integer>();
+    ArrayList<Integer> posInLhs = new ArrayList<>();
     for (String symbol : rhsPred.getSymbolsAsPlainArray()) {
       int[] indices = clause.getLhs().find(symbol);
       int abspos = clause.getLhs().getAbsolutePos(indices[0], indices[1]);
@@ -76,12 +76,12 @@ public class Order {
     newSrcg.setVariables(oldSrcg.getVariables());
     newSrcg.setStartSymbol(oldSrcg.getStartSymbol() + "^" + ORDER_MARKING_LEFT
       + "1" + ORDER_MARKING_RIGHT);
-    ArrayList<String> newNonterminals = new ArrayList<String>();
+    ArrayList<String> newNonterminals = new ArrayList<>();
     for (Clause clause : oldSrcg.getClauses()) {
       newSrcg.addClause(getClauseWithPositionVectors(clause, newNonterminals));
     }
     newSrcg.setNonterminals(
-      newNonterminals.toArray(new String[newNonterminals.size()]));
+      newNonterminals.toArray(new String[0]));
     boolean change = true;
     while (change) {
       change = false;
@@ -117,10 +117,10 @@ public class Order {
           if (newSrcg.nonTerminalsContain(newNt.toString())) {
             continue;
           }
-          ArrayList<String> newNts = new ArrayList<String>();
+          ArrayList<String> newNts = new ArrayList<>();
           Collections.addAll(newNts, newSrcg.getNonterminals());
           newNts.add(newNtString);
-          newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+          newSrcg.setNonterminals(newNts.toArray(new String[0]));
           replaceUnorderedPredicateInAllLhs(newSrcg, oldNt, orderVector,
             newNtString);
         }

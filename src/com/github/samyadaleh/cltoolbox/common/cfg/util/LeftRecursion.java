@@ -60,7 +60,7 @@ public class LeftRecursion {
       newNts.add(newNt);
       doRemoveDirectLeftRecursion(cfg, nt, newNt, cfgOld);
     }
-    cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+    cfg.setNonterminals(newNts.toArray(new String[0]));
     return cfg;
   }
 
@@ -133,7 +133,7 @@ public class LeftRecursion {
         removeDirectLeftRecursion(cfg, newNts, nt);
       }
     }
-    cfg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+    cfg.setNonterminals(newNts.toArray(new String[0]));
     return cfg;
   }
 

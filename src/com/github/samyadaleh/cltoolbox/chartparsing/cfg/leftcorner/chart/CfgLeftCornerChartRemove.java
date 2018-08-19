@@ -21,8 +21,6 @@ import org.apache.logging.log4j.Logger;
 public class CfgLeftCornerChartRemove
   extends AbstractDynamicDecutionRuleTwoAntecedences {
 
-  private static final Logger log = LogManager.getLogger();
-
   public CfgLeftCornerChartRemove() {
     this.name = "remove";
     this.antNeeded = 2;

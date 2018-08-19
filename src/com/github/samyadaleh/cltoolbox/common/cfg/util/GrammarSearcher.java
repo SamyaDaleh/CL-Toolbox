@@ -132,13 +132,13 @@ public class GrammarSearcher {
         List<String> newNts = new ArrayList<>();
         Collections.addAll(newNts, child.getNonterminals());
         newNts.add(newNt);
-        child.setNonterminals(newNts.toArray(new String[newNts.size()]));
+        child.setNonterminals(newNts.toArray(new String[0]));
       } else {
         String newT = "t" + child.getTerminals().length;
         List<String> newTs = new ArrayList<>();
         Collections.addAll(newTs, child.getTerminals());
         newTs.add(newT);
-        child.setTerminals(newTs.toArray(new String[newTs.size()]));
+        child.setTerminals(newTs.toArray(new String[0]));
       }
     }
   }

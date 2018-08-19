@@ -18,18 +18,16 @@ import java.util.Map;
  * parse table
  */
 public class CfgLrKRule extends AbstractDynamicDeductionRule {
-  private List<CfgProductionRule> rules;
-  private Map<String, String> parsTable;
-  private String[] wSplit;
-  private int lookahead;
+  private final List<CfgProductionRule> rules;
+  private final Map<String, String> parsTable;
+  private final String[] wSplit;
 
   public CfgLrKRule(String[] wSplit, List<CfgProductionRule> rules,
-      Map<String, String> parsTable, int lookahead) {
+      Map<String, String> parsTable) {
     this.wSplit = wSplit;
     this.rules = rules;
     this.parsTable = parsTable;
     this.antNeeded = 1;
-    this.lookahead = lookahead;
     this.name = "LR(k) parse table lookup";
   }
 

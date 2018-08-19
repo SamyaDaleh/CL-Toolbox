@@ -32,7 +32,7 @@ public class GrammarParserTest {
       pcfg.toString());
   }
 
-  @Test public void testparseSrcgFile() throws IOException, ParseException {
+  @Test public void testparseSrcgFile() throws IOException {
     Srcg srcg =
       GrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
     assert srcg != null;
@@ -42,7 +42,7 @@ public class GrammarParserTest {
       + "A(a,c) -> ε, A(a X,c Y) -> A(X,Y)}\n" + "S = S\n", srcg.toString());
   }
 
-  @Test public void testparseTagFile() throws IOException, ParseException {
+  @Test public void testparseTagFile() throws IOException {
     Tag tag = GrammarParser.parseTagFile("./resources/grammars/anbncndn.tag");
     assert tag != null;
     assertEquals(

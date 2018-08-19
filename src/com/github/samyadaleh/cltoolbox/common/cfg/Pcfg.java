@@ -7,8 +7,7 @@ import java.util.List;
 /** Representation of a context free grammar where the rules have
  * probabilities. */
 public class Pcfg extends AbstractCfg{
-  private final List<PcfgProductionRule> productionRules =
-    new ArrayList<PcfgProductionRule>();
+  private final List<PcfgProductionRule> productionRules = new ArrayList<>();
 
   public Pcfg() {
     super();
@@ -56,7 +55,7 @@ public class Pcfg extends AbstractCfg{
 
   /** Creates a PcfgProductionRule from the string representation and adds it to
    * its set of rules. 
-   * @throws ParseException */
+   */
   public void addProductionRule(String rule) throws ParseException {
     this.productionRules.add(new PcfgProductionRule(rule));
   }

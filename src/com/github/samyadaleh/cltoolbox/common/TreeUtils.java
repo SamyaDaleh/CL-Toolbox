@@ -11,7 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 public class TreeUtils {
 
   public static Tree getTreeOfSrcgClause(Clause clause, List<Integer> vector)
-    throws ParseException {
+      throws ParseException {
     StringBuilder extractedRule = new StringBuilder();
     extractedRule.append(clause.getLhs().getNonterminal()).append(" ->");
     int terminalsInLhs = 0;
@@ -22,14 +22,14 @@ public class TreeUtils {
     }
     String[] lhsSymbols = clause.getLhs().getSymbolsAsPlainArray();
     int i = 0;
-    for (int terminalsProcessed = 0; terminalsProcessed < terminalsInLhs
-      / 2; i++) {
+    for (int terminalsProcessed = 0;
+         terminalsProcessed < terminalsInLhs / 2; i++) {
       String symbol = lhsSymbols[i];
       boolean found = TreeUtils.symbolIsVariable(clause, symbol);
       if (!found) {
         terminalsProcessed++;
         extractedRule.append(" ").append(symbol).append('<')
-          .append(vector.get(i * 2)).append('>');
+            .append(vector.get(i * 2)).append('>');
       }
     }
     for (Predicate rhs : clause.getRhs()) {
@@ -40,7 +40,7 @@ public class TreeUtils {
       boolean found = TreeUtils.symbolIsVariable(clause, symbol);
       if (!found) {
         extractedRule.append(" ").append(symbol).append('<')
-          .append(vector.get(i * 2)).append('>');
+            .append(vector.get(i * 2)).append('>');
       }
     }
     return new Tree(new CfgProductionRule(extractedRule.toString()));
@@ -48,14 +48,13 @@ public class TreeUtils {
 
   public static Tree getTreeOfSrcgClause(Clause clause) throws ParseException {
     if (clause.getRhs().size() == 0) {
-      return new Tree(
-        new CfgProductionRule(clause.getLhs().getNonterminal() + " -> "
-          + ArrayUtils.getSubSequenceAsString(
-            clause.getLhs().getSymbolsAsPlainArray(), 0,
-            clause.getLhs().getSymbolsAsPlainArray().length)));
+      return new Tree(new CfgProductionRule(
+          clause.getLhs().getNonterminal() + " -> " + ArrayUtils
+              .getSubSequenceAsString(clause.getLhs().getSymbolsAsPlainArray(),
+                  0, clause.getLhs().getSymbolsAsPlainArray().length)));
     }
     StringBuilder cfgRuleString =
-      new StringBuilder(clause.getLhs().getNonterminal());
+        new StringBuilder(clause.getLhs().getNonterminal());
     cfgRuleString.append(" ->");
     for (Predicate rhsPred : clause.getRhs()) {
       cfgRuleString.append(" ").append(rhsPred.getNonterminal());
@@ -92,32 +91,27 @@ public class TreeUtils {
    * Performs leftmost substitution of tree into derivatedTree.
    */
   public static Tree performLeftmostSubstitution(Tree derivedTree, Tree tree)
-    throws ParseException {
+      throws ParseException {
     String derivedTreeString = derivedTree.toString();
-    Tree newDerivatedTree = new Tree(derivedTreeString.substring(0,
-      derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )"))
-      + tree.toString()
-      + derivedTreeString.substring(
-        derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )")
-          + tree.getRoot().getLabel().length() + 3));
-    return newDerivatedTree;
+    return new Tree(derivedTreeString.substring(0,
+        derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )"))
+        + tree.toString() + derivedTreeString.substring(
+        derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )") + tree
+            .getRoot().getLabel().length() + 3));
   }
 
   /**
    * Returns a new tree where the leftmost terminal without position index has
    * got index pos.
-   * @throws ParseException
    */
   public static Tree performPositionSubstitution(Tree tree, String terminal,
-    String pos) throws ParseException {
+      String pos) throws ParseException {
     String derivedTreeString = tree.toString();
     String searchFor = terminal + " ";
     int index = derivedTreeString.indexOf(searchFor);
-    Tree newTree = new Tree(derivedTreeString.substring(0, index) + terminal
-      + "<" + pos + ">" + derivedTreeString
-        .substring(index + searchFor.length(), derivedTreeString.length()));
-    return newTree;
+    return new Tree(
+        derivedTreeString.substring(0, index) + terminal + "<" + pos + ">"
+            + derivedTreeString.substring(index + searchFor.length()));
   }
 
-  
 }

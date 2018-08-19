@@ -94,7 +94,7 @@ public class EmptyProductions {
         newSrcg.addClause(newClause);
       }
     }
-    newSrcg.setNonterminals(newNts.toArray(new String[newNts.size()]));
+    newSrcg.setNonterminals(newNts.toArray(new String[0]));
     return newSrcg;
   }
 

@@ -43,12 +43,12 @@ public class GrammarParser {
       switch (entry.getKey()) {
       case "N":
         String[] nts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         cfg.setNonterminals(nts);
         break;
       case "T":
         String[] ts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         cfg.setTerminals(ts);
         break;
       case "S":
@@ -89,12 +89,12 @@ public class GrammarParser {
       switch (entry.getKey()) {
       case "N":
         String[] nts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         pcfg.setNonterminals(nts);
         break;
       case "T":
         String[] ts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         pcfg.setTerminals(ts);
         break;
       case "S":
@@ -135,12 +135,12 @@ public class GrammarParser {
       switch (entry.getKey()) {
       case "N":
         String[] nts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         tag.setNonterminals(nts);
         break;
       case "T":
         String[] ts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         tag.setTerminals(ts);
         break;
       case "S":
@@ -190,17 +190,17 @@ public class GrammarParser {
       switch (entry.getKey()) {
       case "N":
         String[] nts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         srcg.setNonterminals(nts);
         break;
       case "V":
         String[] vs =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         srcg.setVariables(vs);
         break;
       case "T":
         String[] ts =
-          entry.getValue().toArray(new String[entry.getValue().size()]);
+          entry.getValue().toArray(new String[0]);
         srcg.setTerminals(ts);
         break;
       case "S":

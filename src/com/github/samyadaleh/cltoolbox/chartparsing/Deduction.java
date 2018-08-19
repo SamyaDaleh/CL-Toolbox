@@ -81,7 +81,7 @@ public class Deduction {
     }
     boolean goalfound = false;
     usefulItem = new boolean[chart.size()];
-    derivedTrees = new ArrayList<Tree>();
+    derivedTrees = new ArrayList<>();
     for (ChartItemInterface goal : schema.getGoals()) {
       if (checkForGoal(goal) >= 0) {
         goalfound = true;
@@ -97,7 +97,7 @@ public class Deduction {
    */
   public String[][] printTrace() {
     markUsefulItems();
-    ArrayList<String[]> chartData = new ArrayList<String[]>();
+    ArrayList<String[]> chartData = new ArrayList<>();
     int iMaxWidth = 0;
     int chartMaxWidth = 0;
     int appliedRuleMaxWidth = 0;
@@ -252,8 +252,8 @@ public class Deduction {
     if (chart.size() < itemsNeeded) {
       return;
     }
-    List<List<ChartItemInterface>> startList = new ArrayList<List<ChartItemInterface>>();
-    startList.add(new ArrayList<ChartItemInterface>());
+    List<List<ChartItemInterface>> startList = new ArrayList<>();
+    startList.add(new ArrayList<>());
     startList.get(0).add(item);
     for (List<ChartItemInterface> tryAntecedences : antecedenceListGenerator(startList, 0,
       itemsNeeded - 1)) {
@@ -275,12 +275,12 @@ public class Deduction {
     if (itemsNeeded == 0) {
       return oldList;
     }
-    List<List<ChartItemInterface>> finalList = new ArrayList<List<ChartItemInterface>>();
+    List<List<ChartItemInterface>> finalList = new ArrayList<>();
     for (int j = i; j <= chart.size() - itemsNeeded; j++) {
       if (!chart.get(j).equals(oldList.get(0).get(0))) {
-        List<List<ChartItemInterface>> newList = new ArrayList<List<ChartItemInterface>>();
+        List<List<ChartItemInterface>> newList = new ArrayList<>();
         for (List<ChartItemInterface> subList : oldList) {
-          newList.add(new ArrayList<ChartItemInterface>());
+          newList.add(new ArrayList<>());
           newList.get(newList.size() - 1).addAll(subList);
           newList.get(newList.size() - 1).add(chart.get(j));
         }
@@ -293,7 +293,7 @@ public class Deduction {
 
   /** Adds new items to chart and agenda if they are not in the chart yet. */
   private void processNewItems(List<ChartItemInterface> newItems, DynamicDeductionRuleInterface rule) {
-    ArrayList<Integer> newItemsDeductedFrom = new ArrayList<Integer>();
+    ArrayList<Integer> newItemsDeductedFrom = new ArrayList<>();
     for (ChartItemInterface itemToCheck : rule.getAntecedences()) {
       newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
     }
@@ -334,9 +334,9 @@ public class Deduction {
       } else {
         chart.add(newItem);
         agenda.add(newItem);
-        appliedRule.add(new ArrayList<String>());
+        appliedRule.add(new ArrayList<>());
         appliedRule.get(appliedRule.size() - 1).add(rule.getName());
-        deductedFrom.add(new ArrayList<ArrayList<Integer>>());
+        deductedFrom.add(new ArrayList<>());
         deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
       }
     }

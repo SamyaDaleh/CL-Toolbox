@@ -30,7 +30,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     this.algorithm = algorithm;
   }
 
-  @Test public void testEmptyCall() throws Exception {
+  @Test public void testEmptyCall() {
     try {
       Main.main(new String[] {});
       Main.main(new String[] {".\\resources\\grammars\\anbn.cfg", "a a b b",
@@ -73,7 +73,7 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     }
   }
 
-  private void callWithGrammar(String grammarfile, String w) throws Exception {
+  private void callWithGrammar(String grammarfile, String w) {
     Main.main(new String[] {grammarfile, w, algorithm, "--please"});
     Main.main(new String[] {grammarfile, w, algorithm, "--javafx"});
   }

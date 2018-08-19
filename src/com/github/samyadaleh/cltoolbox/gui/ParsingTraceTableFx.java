@@ -28,7 +28,7 @@ class ParsingTraceTableFx {
   private final String[][] rowData;
   private final Tag tag;
 
-  private final TableView<ParsingStep> table = new TableView<ParsingStep>();
+  private final TableView<ParsingStep> table = new TableView<>();
 
   private String[] columnNames =
       new String[] {"Id", "Item", "Rules", "Backpointers"};
@@ -38,7 +38,7 @@ class ParsingTraceTableFx {
   private TableColumn<ParsingStep, String> popupColumn;
   private DisplayTreeFx popup;
   private Stage stage;
-  private JfxWindowHolder parent;
+  private final JfxWindowHolder parent;
   private static final Logger log = LogManager.getLogger();
 
   public ParsingTraceTableFx(JfxWindowHolder parent, String[][] rowData,
@@ -109,10 +109,8 @@ class ParsingTraceTableFx {
     stage.setHeight(750);
 
     for (String columnName : columnNames) {
-      TableColumn<ParsingStep, String> col =
-          new TableColumn<ParsingStep, String>(columnName);
-      col.setCellValueFactory(
-          new PropertyValueFactory<ParsingStep, String>(columnName));
+      TableColumn<ParsingStep, String> col = new TableColumn<>(columnName);
+      col.setCellValueFactory(new PropertyValueFactory<>(columnName));
       col.setSortable(false);
       if (tag != null) {
         col.setCellFactory(tc -> new HoverCell(this));
