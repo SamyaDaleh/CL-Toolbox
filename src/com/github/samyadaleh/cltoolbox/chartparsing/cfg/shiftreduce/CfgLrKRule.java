@@ -122,5 +122,11 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
     return consequences;
   }
 
-  // TODO implement toString()
+  @Override public String toString() {
+    return "[α, i]                      [α X1 q1 ... Xn qn, i]\n"
+        + "______ w_(i+1) = a   or     ______________________ "
+        + "A -> X1 ... Xn ∈ P and X1 ... Xn ∈ T ∪ N\n"
+        + "[α a q, i+1]                      [α A q, i]\n"
+        + "depending on lookup in parse table.";
+  }
 }

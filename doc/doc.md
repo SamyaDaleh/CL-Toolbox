@@ -29,9 +29,11 @@ Currently this only works if the user is located in the same folder as the jar a
 * cfg-leftcorner-chart
 * cfg-topdown
 * cfg-shiftreduce
+* cfg-lr-k     (with k >=0)
 * cfg-unger
 * pcfg-astar
 * tag-cyk
+* tag-cyk-general
 * tag-earley
 * tag-earley-prefixvalid
 * srcg-cyk
@@ -114,7 +116,7 @@ The main method has checked for the file extension of the grammar file and calle
 
 This converter serves different purposes. One is that it checks if the grammar provided by the user can be handled by the parsing algorithm the user requests. If the grammar is appropriate and the algorithm has the same complexity (e. g. the grammar is a CFG and the algorithm is CFG) the grammar is simply returned. If the algorithm has a higher complexity than the grammar (e. g. the grammar is a CFG and the algorithm is for parsing TAGs), the grammar is converted to the higher formalism if possible. This happens regardless of --please is set or not. The idea is that automatic conversion happens if a conversion obviously needs be made, which is the case as the grammar file has a file extension that specifies its type as so does the algorithm. Other conversions are only made if the user explicitly sets the --please flag. If this is set and the grammar is not appropriate to be parsed with an algorithm of the same complexity, conversion is performed. For instance the common CYK algorithm for CFG demands a grammar in Chomsky Normal Form. If a grammar is provided that is not in CNF and the --please flag is set, the grammar is converted to CNF. If a grammar has both not the same complexity and is not appropriate for an algorithm, in case the --please flag is set all conversions are performed to make the grammar fitting for the algorithm. If a conversion is not possible, for instance if the --please flag is not set or the grammar can't be converted to the complexity of the algorithm, the process fails with a note to the user.
 
-#### Conversions in detail
+#### Conversions in Detail
 
 This section covers how grammars are transformed into other equivalent grammars. For details on which transformation is performed for which parsing algorithm see the respective algorithm in section Deduction.
 
@@ -152,7 +154,7 @@ The algorithm removes both direct and indirect left recursion. For direct recurs
 
 For removing indirect left recursion epsilon productions have to be removed first. The algorithm assumes an order between the nonterminals. For each nonterminal, that is the lhs of a rule whose first rhs symbol is a previous nonterminal, it is replaced by all rhs of rules with those nonterminal as lhs. For example a grammar has the rules `S -> A a, S -> b, A -> S a` where the declared order of nonterminals is `[S, A]`. `S` is declared before `A`, hence rule `A -> S a` is handled and removed. The rhs without  the nonterminal, in this case `a`´, is appended to the rhs' of S-productions to form the new rules `A -> A a a, A -> b a`. One nonterminal is handled like this until the rules don't change anymore. Afterwards remaining direct left recursive rules are removed for that nonterminal. 
 
-##### CFG have either one terminal or nonterminals on the Right Hand Side
+##### CFG have either one Terminal or Nonterminals on the Right Hand Side
 
 Internally called `doReplaceTerminals` it is one of the steps needed for converting a grammar into Chomsky Normal Form: For each rule whose right hand side is longer than 1, all terminals are replaced by a new nonterminal for each terminal and a new rule like `X1 -> a` is added. The algorithm is smart enough to use the same nonterminal for every occurence of the same terminal.
 
@@ -195,6 +197,10 @@ This section covers the currently implemented parsing algorithm. See here which 
 ##### CFG Shift Reduce
 
 Shift reduce or bottom-up parsing demands a grammar without epsilon productions. If a conversion occurs beside removing empty productions also useless symbols are removed. The algorithm starts from the input string and tries to combine the symbols to get the left hand side of the rules until the start symbol is left. It starts with an empty string and an index indicating how many input symbols have been shifted. That means if a "shift" occurs, one more input symbol is moved onto the stack and the index is increased. The other rule called "reduce" takes stack symbol from the left or rather top if they match the complete right hand side of a production rule and replaces them by its left hand side. The outcome of the algorithm is a rightmost derivation.
+
+##### CFG LR(k)
+
+LR(k) parsing with a k >=0 works like Shift Reduce parsing with a precombiled table that tells the algorithm which shift or reduce step to take next. k is the lookahead, the number of symbols following a rule to consider in the decision. The algorithm is deterministic, but works only with grammars that allow for deterministic LR(k) parsing with the respective k. If a conflict is detected when creating the parse table, the process is stopped. No grammar conversion is performed.
 
 ##### CFG CYK
 
@@ -370,6 +376,14 @@ Satta, Giorgio: Part III: CKY Parsing (Everything you always wanted to know abou
 
 Kallmeyer, Laura: Left-Corner Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf) – last checked 2017-05-27, p. 6-8
 
+### LR(k) for CFG
+
+Kallmeyer, Laura: LR Parsing (Parsing). Düsseldorf, Wintersemester 2017/18. URL [https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/lr.pdf](https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/lr.pdf) – last checked 2018-08-19
+
+### Shift-Reduce for CFG
+
+Kallmeyer, Laura: Shift Reduce Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf) – last checked 2017-05-27, p. 12
+
 ### Top-Down for CFG
 
 Kallmeyer, Laura: Parsing as Deduction (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf) – last checked 2017-05-27, p. 18-19
@@ -377,10 +391,6 @@ Kallmeyer, Laura: Parsing as Deduction (Parsing). Düsseldorf, Wintersemester 16
 ### Tree String Format
 
 Marcus, Mitchell et. al: The Penn Treebank: annotating predicate argument structure. HLT '94 Proceedings of the workshop on Human Language Technology : Plainsboro, NJ, 1994. URL http://dl.acm.org/citation.cfm?id=1075835. – ISBN:1-55860-357-3 p. 114-119
-
-### Shift-Reduce for CFG
-
-Kallmeyer, Laura: Shift Reduce Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf) – last checked 2017-05-27, p. 12
 
 ### Unger for CFG
 
