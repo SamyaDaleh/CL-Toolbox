@@ -10,6 +10,7 @@ Parsing as Deduction:
 - Earley for CFG
 - Top Down for CFG
 - Shift Reduce for CFG
+- LR(k) for CFG
 - Left Corner for CFG
 - Unger for CFG
 - A* for PCFG
