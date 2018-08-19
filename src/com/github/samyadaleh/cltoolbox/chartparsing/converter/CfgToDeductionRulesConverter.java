@@ -437,6 +437,7 @@ public class CfgToDeductionRulesConverter {
           new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol()};
     }
     List<List<String[]>> states = computeStates(cfg, initialState, k);
+    printStates(states);
     Map<String, String> parseTable =
         computeParseTable(states, initialState, wSplit, schema, cfg, k);
     printParseTable(parseTable, states.size());
@@ -472,6 +473,20 @@ public class CfgToDeductionRulesConverter {
       }
     }
     return schema;
+  }
+
+  private static void printStates(List<List<String[]>> states) {
+    if (log.isDebugEnabled()) {
+      log.debug("Generated states: ");
+      for (List<String[]> state : states) {
+        StringBuilder line = new StringBuilder("{");
+        for (String[] entry : state) {
+          line.append(' ').append(ArrayUtils.toString(entry));
+        }
+        line.append(" }");
+        log.debug(line.toString());
+      }
+    }
   }
 
   private static void printParseTable(Map<String, String> parseTable,
