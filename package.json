@@ -12,9 +12,9 @@
   },
   "homepage": "https://github.com/SamyaDaleh/CL-Toolbox",
   "dependencies": {
-    "apache/logging-log4j2": "https://github.com/apache/logging-log4j2.git#^2"
+    "apache/logging-log4j2": "git://github.com/apache/logging-log4j2.git#^2"
   },
     "devDependencies" : {
-    "junit-team/junit4": "https://github.com/junit-team/junit4.git#^4"
+    "junit-team/junit4": "git://github.com/junit-team/junit4.git#^4"
   }
 }
