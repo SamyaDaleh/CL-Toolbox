@@ -1,13 +1,6 @@
 package com.github.samyadaleh.cltoolbox.cli;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.GrammarParser;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
@@ -18,6 +11,12 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.gui.DisplayTree;
 import com.github.samyadaleh.cltoolbox.gui.JfxWindowHolder;
 import com.github.samyadaleh.cltoolbox.gui.ParsingTraceTable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * Entry point into toolbox for the calls by command line
@@ -39,6 +38,7 @@ class Main { // NO_UCD (test only)
    * help about the what arguments to use.
    */
   public static void main(String[] args) {
+    logCall(args);
     if (args.length < 3) {
       printHelp();
       return;
@@ -111,6 +111,17 @@ class Main { // NO_UCD (test only)
         log.error(e.getMessage(), e);
       }
     }
+  }
+
+  private static void logCall(String[] args) {
+    StringBuilder call = new StringBuilder();
+    for (String arg : args) {
+      if(call.length() > 0) {
+        call.append(" ");
+      }
+      call.append(arg);
+    }
+    log.info("Call: " + call.toString());
   }
 
   private static void logParsingSchema() {
