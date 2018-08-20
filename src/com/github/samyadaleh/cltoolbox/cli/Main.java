@@ -174,6 +174,9 @@ class Main { // NO_UCD (test only)
   private static void parseSrcgFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
     srcg = GrammarParser.parseSrcgFile(grammarFile);
+    if(log.isDebugEnabled()) {
+      log.debug("Grammar read from file: " + srcg.toString());
+    }
     String[] algorithmSplit = algorithm.split("-");
     switch (algorithmSplit[0]) {
     case "cfg":
@@ -189,6 +192,9 @@ class Main { // NO_UCD (test only)
       srcg = GrammarToGrammarConverter
           .checkAndMayConvertToSrcg(srcg, algorithm, please);
       if (srcg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + srcg.toString());
+        }
         schema = GrammarToDeductionRulesConverter
             .convertToSchema(srcg, w, algorithm);
       }
@@ -202,6 +208,9 @@ class Main { // NO_UCD (test only)
   private static void parseTagFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
     tag = GrammarParser.parseTagFile(grammarFile);
+    if(log.isDebugEnabled()) {
+      log.debug("Grammar read from file: " + tag.toString());
+    }
     String[] algorithmSplit = algorithm.split("-");
     switch (algorithmSplit[0]) {
     case "cfg":
@@ -214,6 +223,9 @@ class Main { // NO_UCD (test only)
       tag = GrammarToGrammarConverter
           .checkAndMayConvertToTag(tag, algorithm, please);
       if (tag != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + tag.toString());
+        }
         schema =
             GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
       }
@@ -230,12 +242,18 @@ class Main { // NO_UCD (test only)
   private static void parsePcfgFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
     pcfg = GrammarParser.parsePcfgFile(grammarFile);
+    if(log.isDebugEnabled()) {
+      log.debug("Grammar read from file: " + pcfg.toString());
+    }
     String[] algorithmSplit = algorithm.split("-");
     switch (algorithmSplit[0]) {
     case "cfg":
       cfg = GrammarToGrammarConverter
           .checkAndMayConvertToCfg(pcfg, algorithm, please);
       if (cfg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + cfg.toString());
+        }
         schema =
             GrammarToDeductionRulesConverter.convertToSchema(cfg, w, algorithm);
       }
@@ -244,6 +262,9 @@ class Main { // NO_UCD (test only)
       pcfg = GrammarToGrammarConverter
           .checkAndMayConvertToPcfg(pcfg, algorithm, please);
       if (pcfg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + pcfg.toString());
+        }
         schema = GrammarToDeductionRulesConverter
             .convertToSchema(pcfg, w, algorithm);
       }
@@ -252,6 +273,9 @@ class Main { // NO_UCD (test only)
       tag = GrammarToGrammarConverter
           .checkAndMayConvertToTag(pcfg, algorithm, please);
       if (tag != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + tag.toString());
+        }
         schema =
             GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
       }
@@ -260,6 +284,9 @@ class Main { // NO_UCD (test only)
       srcg = GrammarToGrammarConverter
           .checkAndMayConvertToSrcg(pcfg, algorithm, please);
       if (srcg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + srcg.toString());
+        }
         schema = GrammarToDeductionRulesConverter
             .convertToSchema(srcg, w, algorithm);
       }
@@ -273,12 +300,18 @@ class Main { // NO_UCD (test only)
   private static void parseCfgFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
     cfg = GrammarParser.parseCfgFile(grammarFile);
+    if(log.isDebugEnabled()) {
+      log.debug("Grammar read from file: " + cfg.toString());
+    }
     String[] algorithmSplit = algorithm.split("-");
     switch (algorithmSplit[0]) {
     case "cfg":
       cfg = GrammarToGrammarConverter
           .checkAndMayConvertToCfg(cfg, algorithm, please);
       if (cfg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + cfg.toString());
+        }
         schema =
             GrammarToDeductionRulesConverter.convertToSchema(cfg, w, algorithm);
       }
@@ -287,6 +320,9 @@ class Main { // NO_UCD (test only)
       tag = GrammarToGrammarConverter
           .checkAndMayConvertToTag(cfg, algorithm, please);
       if (tag != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + tag.toString());
+        }
         schema =
             GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
       }
@@ -295,6 +331,9 @@ class Main { // NO_UCD (test only)
       pcfg = GrammarToGrammarConverter
           .checkAndMayConvertToPcfg(cfg, algorithm, please);
       if (pcfg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + pcfg.toString());
+        }
         schema = GrammarToDeductionRulesConverter
             .convertToSchema(pcfg, w, algorithm);
       }
@@ -303,6 +342,9 @@ class Main { // NO_UCD (test only)
       srcg = GrammarToGrammarConverter
           .checkAndMayConvertToSrcg(cfg, algorithm, please);
       if (srcg != null) {
+        if(log.isDebugEnabled()){
+          log.debug("Grammar after conversion: " + srcg.toString());
+        }
         schema = GrammarToDeductionRulesConverter
             .convertToSchema(srcg, w, algorithm);
       }
