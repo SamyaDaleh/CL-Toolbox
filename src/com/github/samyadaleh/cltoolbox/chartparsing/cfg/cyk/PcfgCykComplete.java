@@ -37,9 +37,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   @Override public List<ChartItemInterface> getAntecedences() {
-    List<ChartItemInterface> outantecedences =
-        new ArrayList<>(this.antecedences);
-    return outantecedences;
+    return new ArrayList<>(this.antecedences);
   }
 
   @Override public void setAntecedences(List<ChartItemInterface> antecedences) {
@@ -58,8 +56,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
       calculateConsequences(itemForm1, itemForm2);
       calculateConsequences(itemForm2, itemForm1);
     }
-    List<ChartItemInterface> outcon = new ArrayList<>(this.consequences);
-    return outcon;
+    return new ArrayList<>(this.consequences);
   }
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2)

@@ -332,12 +332,12 @@ public class Tree {
       if (vertexes.get(i).getGornAddress().equals(gorn)) {
         substNode = vertexes.get(i);
         for (Vertex p : initialTree.vertexes) {
-          newTree.vertexes.add(p.clone());
+          newTree.vertexes.add(p.copy());
           newTree.vertexes.get(newTree.vertexes.size() - 1)
             .setGornaddress(gorn + p.getGornAddress());
         }
       } else {
-        newTree.vertexes.add(vertexes.get(i).clone());
+        newTree.vertexes.add(vertexes.get(i).copy());
       }
       if (vertexes.get(i).getGornAddress().equals("")) {
         newTree.root = newTree.vertexes.get(newTree.vertexes.size() - 1);
@@ -379,7 +379,7 @@ public class Tree {
       if (vertexes.get(i).getGornAddress().equals(gorn)) {
         adjNode = vertexes.get(i);
       } else {
-        newTree.vertexes.add(vertexes.get(i).clone());
+        newTree.vertexes.add(vertexes.get(i).copy());
       }
     }
     for (Vertex vertex : vertexes) {
@@ -394,7 +394,7 @@ public class Tree {
       }
     }
     for (Vertex p : auxTree.vertexes) {
-      newTree.vertexes.add(p.clone());
+      newTree.vertexes.add(p.copy());
       newTree.vertexes.get(newTree.vertexes.size() - 1)
         .setGornaddress(gorn + p.getGornAddress());
     }

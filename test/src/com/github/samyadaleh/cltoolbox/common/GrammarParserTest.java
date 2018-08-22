@@ -3,7 +3,6 @@ package com.github.samyadaleh.cltoolbox.common;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 import org.junit.Test;
 

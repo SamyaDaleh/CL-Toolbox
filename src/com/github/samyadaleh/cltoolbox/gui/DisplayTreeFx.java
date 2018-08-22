@@ -17,8 +17,6 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   private Tree tree;
   private final Map<String, Integer[]> nodesDrawn = new HashMap<>();
   private String[] itemForm;
-  private final int x = 100;
-  private final int y = 500;
   private GraphicsContext gc;
   private Stage stage;
   private JfxWindowHolder parent;
@@ -44,8 +42,8 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     paint(gc);
     root.getChildren().add(canvas);
     stage.setScene(new Scene(root));
-    stage.setX(this.x);
-    stage.setY(this.y);
+    stage.setX(X);
+    stage.setY(Y);
     stage.setOnCloseRequest( e -> parent.close());
     stage.show();
   }

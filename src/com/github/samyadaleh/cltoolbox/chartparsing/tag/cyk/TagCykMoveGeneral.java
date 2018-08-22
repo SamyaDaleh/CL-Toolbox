@@ -5,8 +5,6 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,6 @@ import java.util.List;
  * From "antNeeded" number of sibling nodes moves up to the parent.
  */
 public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
-  private static final Logger log = LogManager.getLogger();
 
   private final Tag tag;
 

@@ -11,8 +11,6 @@ import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * If topmost symbol on stacks completed and predicted are the same, remove

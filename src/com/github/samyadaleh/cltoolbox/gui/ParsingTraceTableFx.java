@@ -30,7 +30,7 @@ class ParsingTraceTableFx {
 
   private final TableView<ParsingStep> table = new TableView<>();
 
-  private String[] columnNames;
+  private final String[] columnNames;
   private final Timeline showTimer;
   private final Timeline disposeTimer;
   private TableRow<?> popupRow;

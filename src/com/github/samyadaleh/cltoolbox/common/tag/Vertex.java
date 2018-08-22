@@ -86,7 +86,7 @@ public class Vertex implements Cloneable {
     return true;
   }
   
-  @Override protected Vertex clone() {
+  Vertex copy() {
     Vertex p = new Vertex(this.label);
     p.gornAddress = this.gornAddress;
     return p;

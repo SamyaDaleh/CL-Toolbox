@@ -16,8 +16,6 @@ public class DisplayTree extends JFrame implements DisplayTreeInterface {
   private Tree tree;
   private final Map<String, Integer[]> nodesDrawn = new HashMap<>();
   private String[] itemForm;
-  private final int x = 100;
-  private final int y = 500;
   private Graphics g;
 
   /** Called with a tree in bracket format as argument, retrieves the depth by
@@ -30,7 +28,7 @@ public class DisplayTree extends JFrame implements DisplayTreeInterface {
     } else {
       itemForm = new String[] {};
     }
-    this.setLocation(x, y);
+    this.setLocation(X, Y);
 
     this.setSize(80 * tree.getWidth(), 80 * tree.getHeight());
     this.setVisible(true);

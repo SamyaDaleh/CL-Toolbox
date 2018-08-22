@@ -7,8 +7,11 @@ import java.util.Objects;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EmptyProductions {
+  private static final Logger log = LogManager.getLogger();
 
   /** Returns true if there is at least one clause that contains the empty
    * string in one of its lhs arguments, except if it is the start symbol in
@@ -304,6 +307,7 @@ public class EmptyProductions {
             if (rhsPred.getNonterminal().equals(candidate[0])
               && candidate[1].length() == rhsPred.getDim()
               && candidate[1].charAt(indices[0] - 1) == '0') {
+              log.debug("Doing nothing with predicate " + rhsPred.toString());
             } else {
               newArgument.append(element);
             }

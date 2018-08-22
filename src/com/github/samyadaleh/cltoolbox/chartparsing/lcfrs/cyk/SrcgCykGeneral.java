@@ -1,9 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
@@ -11,8 +7,10 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Similar to the general complete rule in CYK for CFG. If there is a clause and
@@ -22,7 +20,6 @@ import org.apache.logging.log4j.Logger;
  * <3,4>)] // generate: [S^1, (0,4)]
  */
 public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
-  private static final Logger log = LogManager.getLogger();
 
   private final Clause clause;
   private final String[] wSplit;

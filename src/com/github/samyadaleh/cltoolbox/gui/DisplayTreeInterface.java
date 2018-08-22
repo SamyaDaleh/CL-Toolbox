@@ -5,6 +5,9 @@ import java.util.Map;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 interface DisplayTreeInterface {
+
+  int X = 100;
+  int Y = 500;
   
   Tree getTree();
   String[] getItemForm();
