@@ -25,15 +25,17 @@ Use it to generate examples, play around with grammars etc.
 
 ## Installation
 
-Download the jar from /releases and that's it. You need Java 8 installed for the jar to run, or else compile it for yourself.
+Download the jar from /releases and that's it. The jar already contains needed third-party libraries. You need Java 8 or higher installed for the jar to run, or else compile it for yourself.
 
 Or if you want to tinker with the code, for me it worked like this:
-- clone
-- create a new project in your favorite IDE
-- copy the files into it or import them
-- add JUnit to your classpath/build path
+- use your favorite IDE to clone/checkout the project
+- add the dependencies to your classpath/build path
 - run the JUnit tests in test.src to verify that everything is working. You should see some success messages and parsing outputs.
 
+### Dependencies
+
+* apache/logging-log4j2 at runtime
+* junit-team/junit4 for development
 
 ## Usage
 
