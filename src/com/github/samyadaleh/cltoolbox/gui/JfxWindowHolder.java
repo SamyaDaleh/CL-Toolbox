@@ -75,5 +75,6 @@ public class JfxWindowHolder {
       displayTreeFx.close();
     }
     parsingTraceTableFx.close();
+    System.exit(0);
   }
 }
