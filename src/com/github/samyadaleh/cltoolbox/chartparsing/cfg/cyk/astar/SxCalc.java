@@ -5,13 +5,17 @@ import java.util.Map;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Calculates the SX estimates to be used for astar parsing. */
 public class SxCalc {
+  private static final Logger log = LogManager.getLogger();
 
   /** Calculates all inside probabilities (as absolute logs) for all
    * nonterminals in Pcfg up until nmax length. */
   public static Map<String, Double> getInsides(Pcfg cfg, int nmax) {
+    log.debug("Calculating insides:");
     Map<String, Double> insides = new HashMap<>();
     for (int n = 1; n <= nmax; n++) {
       for (String nt : cfg.getNonterminals()) {
@@ -26,6 +30,9 @@ public class SxCalc {
           }
         }
       }
+    }
+    if (log.isDebugEnabled()) {
+      insides.forEach((key, value) -> log.debug(key + " = " + value));
     }
     return insides;
   }
@@ -69,8 +76,8 @@ public class SxCalc {
    * in Pcfg for length n. Needs Insides to be calculated first. */
   public static Map<String, Double> getOutsides(Map<String, Double> insides,
     int n, Pcfg pcfg) {
+    log.debug("Calculating outsides:");
     Map<String, Double> outsides = new HashMap<>();
-
     for (int l = n; l >= 1; l--) {
       for (int nl = 0; nl <= n - l; nl++) {
         int nr = n - nl - l;
@@ -109,6 +116,9 @@ public class SxCalc {
           }
         }
       }
+    }
+    if (log.isDebugEnabled()) {
+      outsides.forEach((key, value) -> log.debug(key + " = " + value));
     }
     return outsides;
   }
