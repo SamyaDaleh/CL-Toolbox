@@ -3,7 +3,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar;
 import java.text.ParseException;
 import java.util.Map;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.ProbabilisticChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgCykComplete;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 

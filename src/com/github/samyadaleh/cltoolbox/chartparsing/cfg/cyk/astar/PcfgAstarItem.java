@@ -1,7 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ProbabilisticChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
 /** Item that stores a weight, which is like the cost of this item (bigger =

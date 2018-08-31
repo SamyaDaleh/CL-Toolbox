@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
 public class DeductionItemTest {
   @Test public void testItemOperations() {

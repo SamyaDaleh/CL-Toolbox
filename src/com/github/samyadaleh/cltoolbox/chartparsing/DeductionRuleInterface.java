@@ -1,10 +1,12 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+
 import java.text.ParseException;
 import java.util.List;
 
 /** Interface that defines any kind of rule used for deduction. */
-interface DeductionRuleInterface {
+public interface DeductionRuleInterface {
 
   List<ChartItemInterface> getAntecedences();
 

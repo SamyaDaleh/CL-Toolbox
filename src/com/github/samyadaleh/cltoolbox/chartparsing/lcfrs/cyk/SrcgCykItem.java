@@ -2,8 +2,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
 /** Item for CYK for sRCG, consisting of a nonterminal and an arbitrary long
  * range vector of at least length 2*1. */

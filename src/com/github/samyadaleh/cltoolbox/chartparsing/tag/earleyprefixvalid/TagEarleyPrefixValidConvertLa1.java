@@ -2,9 +2,9 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
 public class TagEarleyPrefixValidConvertLa1
     extends AbstractDynamicDeductionRule {

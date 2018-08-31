@@ -2,8 +2,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
 /** An item we get if we have fully seen an active item. It is used to move the
  * dot further in active items. */

@@ -1,4 +1,6 @@
-package com.github.samyadaleh.cltoolbox.chartparsing;
+package com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule;
+
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
 import java.text.ParseException;
 import java.util.List;

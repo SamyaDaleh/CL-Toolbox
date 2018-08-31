@@ -1,6 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgLrKRule;

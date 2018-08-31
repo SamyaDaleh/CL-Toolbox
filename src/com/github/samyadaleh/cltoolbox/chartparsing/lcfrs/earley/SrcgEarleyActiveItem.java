@@ -3,8 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 import java.text.ParseException;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.AbstractChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 

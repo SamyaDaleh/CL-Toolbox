@@ -1,7 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.*;

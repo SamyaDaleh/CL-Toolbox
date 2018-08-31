@@ -1,18 +1,18 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRuleThreeAntecedences;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TagEarleyPrefixValidCompleteFoot
-    extends AbstractDynamicDeductionRule {
+    extends AbstractDynamicDeductionRuleThreeAntecedences {
 
   private final Tag tag;
 
@@ -22,22 +22,7 @@ public class TagEarleyPrefixValidCompleteFoot
     this.antNeeded = 3;
   }
 
-  @Override public List<ChartItemInterface> getConsequences() {
-    if (antecedences.size() == antNeeded) {
-      String[] itemForm1 = antecedences.get(0).getItemForm();
-      String[] itemForm2 = antecedences.get(1).getItemForm();
-      String[] itemForm3 = antecedences.get(2).getItemForm();
-      calculateConsequences(itemForm1, itemForm2, itemForm3);
-      calculateConsequences(itemForm1, itemForm3, itemForm2);
-      calculateConsequences(itemForm2, itemForm1, itemForm3);
-      calculateConsequences(itemForm2, itemForm3, itemForm1);
-      calculateConsequences(itemForm3, itemForm1, itemForm2);
-      calculateConsequences(itemForm3, itemForm2, itemForm1);
-    }
-    return consequences;
-  }
-
-  private void calculateConsequences(String[] itemForm1, String[] itemForm2,
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2,
       String[] itemForm3) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];

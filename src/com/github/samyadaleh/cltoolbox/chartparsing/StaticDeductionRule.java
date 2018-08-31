@@ -1,5 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+
 import java.util.ArrayList;
 import java.util.List;
 
