@@ -7,6 +7,7 @@ import java.util.List;
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -42,36 +43,25 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
     String pos1 = itemForm1[2];
     String iGamma1 = itemForm1[3];
     String i1 = itemForm1[4];
-    String j1 = itemForm1[5];
     String k1 = itemForm1[6];
     String l1 = itemForm1[7];
     String adj1 = itemForm1[8];
     String treeName2 = itemForm2[0];
     String node2 = itemForm2[1];
-    String pos2 = itemForm2[2];
-    String iGamma2 = itemForm2[3];
-    String i2 = itemForm2[4];
     String j2 = itemForm2[5];
     String k2 = itemForm2[6];
-    String l2 = itemForm2[7];
-    String adj2 = itemForm2[8];
-    String treeName3 = itemForm3[0];
-    String node3 = itemForm3[1];
-    String pos3 = itemForm3[2];
-    String iGamma3 = itemForm3[3];
-    String i3 = itemForm3[4];
-    String j3 = itemForm3[5];
-    String k3 = itemForm3[6];
-    String l3 = itemForm3[7];
-    String adj3 = itemForm3[8];
+    String[] itemForm2Goal =
+        new String[] {"?", "?", "rb", "~", itemForm1[5], "?", "?", itemForm1[6],
+            "0"};
+    String[] itemForm3Goal =
+        new String[] {itemForm2[0], itemForm2[1], "la", "~", "~", "~", "~",
+            itemForm1[3], "0"};
     boolean adjoinable = tag.isAdjoinable(treeName1, treeName2, node2);
     if (adjoinable && node1.equals("") && iGamma1.equals(i1) && !iGamma1
         .equals("~") && !k1.equals("~") && adj1.equals("0") && pos1.equals("ra")
-        && pos2.equals("rb") && iGamma2.equals("~") && j1.equals(i2) && k1
-        .equals(l2) && !j2.equals("~") && !k2.equals("~") && adj2.equals("0")
-        && treeName2.equals(treeName3) && node2.equals(node3) && pos3
-        .equals("la") && iGamma3.equals("~") && i3.equals("~") && j3.equals("~")
-        && k3.equals("~") && iGamma1.equals(l3) && adj3.equals("0")) {
+        && !j2.equals("~") && !k2.equals("~") && ArrayUtils
+        .match(itemForm2, itemForm2Goal) && ArrayUtils
+        .match(itemForm3, itemForm3Goal)) {
       ChartItemInterface consequence =
           new DeductionChartItem(treeName2, node2, "rb", "~", iGamma1, j2, k2,
               l1, "1");
