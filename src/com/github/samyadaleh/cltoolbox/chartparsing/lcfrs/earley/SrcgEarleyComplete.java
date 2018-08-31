@@ -32,10 +32,8 @@ public class SrcgEarleyComplete
       Clause clause2Parsed;
       clause2Parsed = new Clause(clause2);
       String pos2 = itemForm2[1];
-      String i2 = itemForm2[2];
-      int iInt2 = Integer.parseInt(i2);
-      String j2 = itemForm2[3];
-      int jInt2 = Integer.parseInt(j2);
+      int iInt2 = Integer.parseInt(itemForm2[2]);
+      int jInt2 = Integer.parseInt(itemForm2[3]);
       for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
         Predicate rhsPred = clause2Parsed.getRhs().get(n);
         boolean vectorsMatch = true;

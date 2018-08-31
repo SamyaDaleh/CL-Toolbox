@@ -30,10 +30,8 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
       if (itemForm[0].contains("->")) {
         Clause clauseParsed;
         clauseParsed = new Clause(clause);
-        String i = itemForm[2];
-        int iInt = Integer.parseInt(i);
-        String j = itemForm[3];
-        int jInt = Integer.parseInt(j);
+        int iInt = Integer.parseInt(itemForm[2]);
+        int jInt = Integer.parseInt(itemForm[3]);
         if (clauseParsed.getLhs().getDim() == iInt
             && clauseParsed.getLhs().getArgumentByIndex(iInt).length == jInt) {
           ArrayList<String> rangesForElements = new ArrayList<>(

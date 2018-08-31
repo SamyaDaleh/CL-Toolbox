@@ -1,9 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
@@ -11,8 +7,10 @@ import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Whenever we are left of a variable that is not the first argument of one of
@@ -20,7 +18,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class SrcgEarleyResume
     extends AbstractDynamicDecutionRuleTwoAntecedences {
-  private static final Logger log = LogManager.getLogger();
 
   private final String[] variables;
 
@@ -40,24 +37,13 @@ public class SrcgEarleyResume
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       Clause clause1Parsed;
       clause1Parsed = new Clause(clause1);
-      String pos1 = itemForm1[1];
-      int posInt1 = Integer.parseInt(pos1);
-      String i1 = itemForm1[2];
-      int iInt1 = Integer.parseInt(i1);
-      String j1 = itemForm1[3];
-      int jInt1 = Integer.parseInt(j1);
+      int posInt1 = Integer.parseInt(itemForm1[1]);
+      int iInt1 = Integer.parseInt(itemForm1[2]);
+      int jInt1 = Integer.parseInt(itemForm1[3]);
       Clause clause2Parsed;
-      try {
-        clause2Parsed = new Clause(clause2);
-      } catch (ParseException e) {
-        log.error(e.getMessage(), e);
-        return;
-      }
-      String i2 = itemForm2[2];
-      int iInt2 = Integer.parseInt(i2);
-      String j2 = itemForm2[3];
-      int jInt2 = Integer.parseInt(j2);
-
+      clause2Parsed = new Clause(clause2);
+      int iInt2 = Integer.parseInt(itemForm2[2]);
+      int jInt2 = Integer.parseInt(itemForm2[3]);
       boolean mayV1FirstArg = false;
       boolean isVar1 = false;
       if (clause1Parsed.getLhs().ifSymExists(iInt1, jInt1)) {

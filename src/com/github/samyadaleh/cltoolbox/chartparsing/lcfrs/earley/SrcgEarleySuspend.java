@@ -38,21 +38,12 @@ public class SrcgEarleySuspend
       String clause1 = itemForm1[0];
       Clause clause1Parsed;
       clause1Parsed = new Clause(clause1);
-      String pos1 = itemForm1[1];
-      int posInt1 = Integer.parseInt(pos1);
-      String i1 = itemForm1[2];
-      int iInt1 = Integer.parseInt(i1);
-      String j1 = itemForm1[3];
-      int jInt1 = Integer.parseInt(j1);
-
+      int posInt1 = Integer.parseInt(itemForm1[1]);
+      int iInt1 = Integer.parseInt(itemForm1[2]);
+      int jInt1 = Integer.parseInt(itemForm1[3]);
       String clause2 = itemForm2[0];
       Clause clause2Parsed;
-      try {
-        clause2Parsed = new Clause(clause2);
-      } catch (ParseException e1) {
-        e1.printStackTrace();
-        return;
-      }
+      clause2Parsed = new Clause(clause2);
       String pos2 = itemForm2[1];
       String i2 = itemForm2[2];
       int iInt2 = Integer.parseInt(i2);
@@ -67,9 +58,9 @@ public class SrcgEarleySuspend
             break;
           }
         }
-        handleRhsVarWithDot(itemForm1, itemForm2, clause1Parsed, pos1, posInt1,
-            iInt1, jInt1, clause2, clause2Parsed, pos2, iInt2, jInt2, isVar2,
-            mayV2);
+        handleRhsVarWithDot(itemForm1, itemForm2, clause1Parsed, itemForm1[1],
+            posInt1, iInt1, jInt1, clause2, clause2Parsed, pos2, iInt2, jInt2,
+            isVar2, mayV2);
       }
     }
   }
