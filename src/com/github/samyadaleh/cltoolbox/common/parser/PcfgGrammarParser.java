@@ -6,6 +6,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,11 +20,12 @@ public class PcfgGrammarParser {
   /**
    * Parses a PCFG from a file and returns it as Pcfg.
    */
-  public static Pcfg parsePcfgFile(String grammarFile) throws IOException {
+  public static Pcfg parsePcfgReader(BufferedReader grammarReader)
+      throws IOException {
     Pcfg pcfg = new Pcfg();
     errors = new ArrayList<>();
     Map<String, List<String>> declarations =
-        GrammarParserUtils.parseDeclarations(grammarFile, errors);
+        GrammarParserUtils.parseDeclarations(grammarReader, errors);
     for (Map.Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
       case "N":

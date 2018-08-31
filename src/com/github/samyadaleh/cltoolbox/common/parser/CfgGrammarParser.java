@@ -5,6 +5,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,11 +21,12 @@ public class CfgGrammarParser {
   /**
    * Parses a CFG from a file and returns it as Cfg.
    */
-  public static Cfg parseCfgFile(String grammarFile) throws IOException {
+  public static Cfg parseCfgReader(BufferedReader grammarReader)
+      throws IOException {
     Cfg cfg = new Cfg();
     errors = new ArrayList<>();
     Map<String, List<String>> declarations =
-        GrammarParserUtils.parseDeclarations(grammarFile, errors);
+        GrammarParserUtils.parseDeclarations(grammarReader, errors);
     for (Map.Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
       case "N":

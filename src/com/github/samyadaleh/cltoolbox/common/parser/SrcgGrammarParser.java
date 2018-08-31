@@ -7,6 +7,7 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,11 +21,12 @@ public class SrcgGrammarParser {
   /**
    * Parses a sRCG from a file and returns it as Srcg.
    */
-  public static Srcg parseSrcgFile(String grammarFile) throws IOException {
+  public static Srcg parseSrcgReader(BufferedReader grammarReader)
+      throws IOException {
     Srcg srcg = new Srcg();
     errors = new ArrayList<>();
     Map<String, List<String>> declarations =
-        GrammarParserUtils.parseDeclarations(grammarFile, errors);
+        GrammarParserUtils.parseDeclarations(grammarReader, errors);
     for (Map.Entry<String, List<String>> entry : declarations.entrySet()) {
       switch (entry.getKey()) {
       case "N":

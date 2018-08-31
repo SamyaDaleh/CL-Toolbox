@@ -4,14 +4,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** Parses different grammars from text files. */
+/**
+ * Parses different grammars from text files.
+ */
 class GrammarParserUtils {
   private static final Pattern p = Pattern.compile("\"(.*?)\"");
   private static final Logger log = LogManager.getLogger();
@@ -19,7 +23,7 @@ class GrammarParserUtils {
   static boolean printErrors(List<Exception> errors) {
     if (errors.size() > 0) {
       log.error(
-        "The following errors occurred while reading the grammar file:");
+          "The following errors occurred while reading the grammar file:");
       for (Exception e : errors) {
         log.error(e.getMessage(), e);
       }
@@ -42,23 +46,23 @@ class GrammarParserUtils {
     return nList;
   }
 
-  static Map<String, List<String>> parseDeclarations(String grammarFile,
-      List<Exception> errors)
-    throws IOException {
+  static Map<String, List<String>> parseDeclarations(
+      BufferedReader grammarReader, List<Exception> errors) throws IOException {
     Map<String, List<String>> declarations = new LinkedHashMap<>();
-    BufferedReader in = new BufferedReader(new FileReader(grammarFile));
-    String line = in.readLine().trim();
+    String line = grammarReader.readLine().trim();
     while (line != null) {
       String lineTrim = line.trim();
       int quotes = lineTrim.length() - lineTrim.replace("\"", "").length();
       if (quotes % 2 > 0) {
         errors.add(
-          new ParseException("Uneven number of quotes in line " + lineTrim, 0));
+            new ParseException("Uneven number of quotes in line " + lineTrim,
+                0));
       }
       String[] splitEquals = lineTrim.split("=");
       if (splitEquals.length == 1) {
         errors.add(
-          new ParseException("No equals symbol found in line " + lineTrim, 0));
+            new ParseException("No equals symbol found in line " + lineTrim,
+                0));
         continue;
       }
       String symbol = splitEquals[0].trim();
@@ -66,9 +70,9 @@ class GrammarParserUtils {
         errors.add(new ParseException(symbol + " was declared twice.", 0));
       }
       declarations.put(symbol, parseNT(lineTrim));
-      line = in.readLine();
+      line = grammarReader.readLine();
     }
-    in.close();
+    grammarReader.close();
     return declarations;
   }
 }

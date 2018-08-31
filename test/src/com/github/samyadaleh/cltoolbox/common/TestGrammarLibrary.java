@@ -22,7 +22,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -37,7 +37,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -53,7 +53,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -70,7 +70,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("NP");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -96,18 +96,6 @@ public class TestGrammarLibrary {
     return g;
   }
 
-  public static Tag acbTag() throws ParseException {
-    Tag g = new Tag();
-    g.setNonterminals(new String[] {"A", "B", "S"});
-    g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartSymbol("S");
-    g.addInitialTree("α1", "(S (A )(S )(B ))");
-    g.addInitialTree("α2", "(S (c ))");
-    g.addInitialTree("α3", "(A (a ))");
-    g.addInitialTree("α4", "(B (b ))");
-    return g;
-  }
-
   public static Srcg anBnSrcg() throws ParseException {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});
@@ -130,7 +118,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -150,7 +138,7 @@ public class TestGrammarLibrary {
       cfgeps.setStartSymbol("S");
       return cfgeps;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -175,7 +163,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("E");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -193,7 +181,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -209,7 +197,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -224,7 +212,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -239,7 +227,7 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("G -> b");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -255,7 +243,7 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("G -> G b");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -264,9 +252,9 @@ public class TestGrammarLibrary {
     Pcfg pcfg = new Pcfg();
     pcfg.setTerminals(new String[] {"a", "b"});
     pcfg.setNonterminals(new String[] {"S", "A", "B"});
-    pcfg
-      .setProductionRules(new String[][] {{"S", "A B", "1"}, {"A", "b", "0.7"},
-        {"A", "a", "0.3"}, {"B", "B B", "0.6"}, {"B", "a", "0.4"}});
+    pcfg.setProductionRules(
+        new String[][] {{"S", "A B", "1"}, {"A", "b", "0.7"}, {"A", "a", "0.3"},
+            {"B", "B B", "0.6"}, {"B", "a", "0.4"}});
     pcfg.setStartSymbol("S");
     return pcfg;
   }
@@ -284,7 +272,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -303,7 +291,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -311,14 +299,16 @@ public class TestGrammarLibrary {
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});
-    pcfg.setTerminals(new String[] {"camping", "car", "nice", "red", "ugly",
-      "green", "house", "bike"});
+    pcfg.setTerminals(
+        new String[] {"camping", "car", "nice", "red", "ugly", "green", "house",
+            "bike"});
     pcfg.setStartSymbol("N");
-    pcfg.setProductionRules(new String[][] {{"N", "N N", "0.1"},
-      {"N", "red", "0.1"}, {"N", "car", "0.1"}, {"N", "camping", "0.2"},
-      {"A", "nice", "0.3"}, {"A", "red", "0.2"}, {"N", "A N", "0.2"},
-      {"N", "green", "0.1"}, {"N", "bike", "0.1"}, {"N", "house", "0.1"},
-      {"A", "ugly", "0.25"}, {"A", "green", "0.25"}});
+    pcfg.setProductionRules(
+        new String[][] {{"N", "N N", "0.1"}, {"N", "red", "0.1"},
+            {"N", "car", "0.1"}, {"N", "camping", "0.2"}, {"A", "nice", "0.3"},
+            {"A", "red", "0.2"}, {"N", "A N", "0.2"}, {"N", "green", "0.1"},
+            {"N", "bike", "0.1"}, {"N", "house", "0.1"}, {"A", "ugly", "0.25"},
+            {"A", "green", "0.25"}});
     return pcfg;
   }
 
@@ -362,7 +352,7 @@ public class TestGrammarLibrary {
       cfgeps.setStartSymbol("S");
       return cfgeps;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -452,65 +442,6 @@ public class TestGrammarLibrary {
     return srcg;
   }
 
-  public static Srcg snbmcndmSrcg() throws ParseException {
-    Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[] {"S", "A", "B"});
-    srcg.setTerminals(new String[] {"a", "b", "c", "d"});
-    srcg.setVariables(new String[] {"X", "Y", "V", "W"});
-    srcg.addClause("S( X V Y W ) -> A(X,Y) B(V,W)");
-    srcg.addClause("B(b,d) -> ε");
-    srcg.addClause("B(b X,d Y) -> B(X,Y)");
-    srcg.addClause("A(a,c) -> ε");
-    srcg.addClause("A(a X,c Y) -> A(X,Y)");
-    srcg.setStartSymbol("S");
-    return srcg;
-  }
-
-  public static Tag gentag() throws ParseException {
-    Tag g = new Tag();
-    g.setNonterminals(new String[] {"S", "T"});
-    g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartSymbol("S");
-    g.addInitialTree("α1", "(S T b)");
-    g.addInitialTree("α2", "(T c)");
-    g.addAuxiliaryTree("β", "(T a T*)");
-    return g;
-  }
-
-  public static Cfg gencfg() {
-    Cfg cfg = new Cfg();
-
-    cfg.setTerminals(new String[] {"a", "b", "c"});
-    cfg.setNonterminals(new String[] {"A", "B", "S"});
-    try {
-      cfg.addProductionRule("S -> A S B");
-      cfg.addProductionRule("S -> a b");
-      cfg.addProductionRule("S -> c");
-      cfg.addProductionRule("A -> a");
-      cfg.addProductionRule("B -> b");
-      cfg.setStartSymbol("S");
-      return cfg;
-    } catch (ParseException e) {
-      log.error(e.getMessage(),e);
-      return null;
-    }
-  }
-
-  public static Cfg gen_cfgdedtest() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b"});
-    cfg.setNonterminals(new String[] {"S"});
-    try {
-      cfg.addProductionRule("S -> a S b");
-      cfg.addProductionRule("S -> a b");
-      cfg.setStartSymbol("S");
-      return cfg;
-    } catch (ParseException e) {
-      log.error(e.getMessage(),e);
-      return null;
-    }
-  }
-
   public static Cfg noUsefulNonterminalCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
@@ -520,17 +451,18 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
 
   public static Cfg leftCornerBreak() {
     Cfg cfg = new Cfg();
-    cfg
-      .setTerminals(new String[] {"a", "b", "c", "d", "e", "f", "g", "h", "i"});
-    cfg.setNonterminals(new String[] {"S", "A", "B", "C", "D", "E", "F", "G",
-      "H", "I", "J", "K", "L"});
+    cfg.setTerminals(
+        new String[] {"a", "b", "c", "d", "e", "f", "g", "h", "i"});
+    cfg.setNonterminals(
+        new String[] {"S", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+            "K", "L"});
     try {
       cfg.addProductionRule("S -> A B C");
       cfg.addProductionRule("A -> D E F");
@@ -548,7 +480,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(),e);
+      log.error(e.getMessage(), e);
       return null;
     }
   }
