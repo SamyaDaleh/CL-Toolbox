@@ -3,6 +3,14 @@ package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 import java.text.ParseException;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToAstarRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
@@ -20,29 +28,29 @@ public class GrammarToDeductionRulesConverter {
       String algorithm) throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
-      return CfgToDeductionRulesConverter.cfgToTopDownRules(cfg, w);
+      return CfgToTopDownRulesConverter.cfgToTopDownRules(cfg, w);
     case "cfg-shiftreduce":
-      return CfgToDeductionRulesConverter.cfgToShiftReduceRules(cfg, w);
+      return CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(cfg, w);
     case "cfg-earley":
-      return CfgToDeductionRulesConverter.cfgToEarleyRules(cfg, w);
+      return CfgToEarleyRulesConverter.cfgToEarleyRules(cfg, w);
     case "cfg-earley-passive":
-      return CfgToDeductionRulesConverter.cfgToEarleyPassiveRules(cfg, w);
+      return CfgToEarleyPassiveRulesConverter.cfgToEarleyPassiveRules(cfg, w);
     case "cfg-leftcorner":
-      return CfgToDeductionRulesConverter.cfgToLeftCornerRules(cfg, w);
+      return CfgToLeftCornerRulesConverter.cfgToLeftCornerRules(cfg, w);
     case "cfg-leftcorner-chart":
-      return CfgToDeductionRulesConverter.cfgToLeftCornerChartRules(cfg, w);
+      return CfgToLeftCornerChartRulesConverter.cfgToLeftCornerChartRules(cfg, w);
     case "cfg-cyk":
-      return CfgToDeductionRulesConverter.cfgToCykRules(cfg, w);
+      return CfgToCykRulesConverter.cfgToCykRules(cfg, w);
     case "cfg-cyk-extended":
-      return CfgToDeductionRulesConverter.cfgToCykExtendedRules(cfg, w);
+      return CfgToCykRulesConverter.cfgToCykExtendedRules(cfg, w);
     case "cfg-cyk-general":
-      return CfgToDeductionRulesConverter.cfgToCykGeneralRules(cfg, w);
+      return CfgToCykRulesConverter.cfgToCykGeneralRules(cfg, w);
     case "cfg-unger":
-      return CfgToDeductionRulesConverter.cfgToUngerRules(cfg, w);
+      return CfgToUngerRulesConverter.cfgToUngerRules(cfg, w);
     default:
       if (algorithm.matches("cfg-lr-\\d+")) {
         String[] algorithmSplit = algorithm.split("-");
-        return CfgToDeductionRulesConverter
+        return CfgToLrKRulesConverter
             .cfgToLrKRules(cfg, w, Integer.parseInt(algorithmSplit[2]));
       }
       log.info(
@@ -58,13 +66,14 @@ public class GrammarToDeductionRulesConverter {
       String algorithm) {
     switch (algorithm) {
     case "tag-cyk-extended":
-      return TagToDeductionRulesConverter.tagToCykExtendedRules(tag, w);
+      return TagToCykRulesConverter.tagToCykExtendedRules(tag, w);
     case "tag-cyk-general":
-      return TagToDeductionRulesConverter.tagToCykGeneralRules(tag, w);
+      return TagToCykRulesConverter.tagToCykGeneralRules(tag, w);
     case "tag-earley":
-      return TagToDeductionRulesConverter.tagToEarleyRules(tag, w);
+      return TagToEarleyRulesConverter.tagToEarleyRules(tag, w);
     case "tag-earley-prefixvalid":
-      return TagToDeductionRulesConverter.tagToEarleyPrefixValidRules(tag, w);
+      return TagToEarleyPrefixValidRulesConverter
+          .tagToEarleyPrefixValidRules(tag, w);
     default:
       log.info(
           "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -79,11 +88,11 @@ public class GrammarToDeductionRulesConverter {
       String algorithm) throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
-      return LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcg, w);
+      return LcfrsToEarleyRulesConverter.srcgToEarleyRules(srcg, w);
     case "srcg-cyk-extended":
-      return LcfrsToDeductionRulesConverter.srcgToCykExtendedRules(srcg, w);
+      return LcfrsToCykRulesConverter.srcgToCykExtendedRules(srcg, w);
     case "srcg-cyk-general":
-      return LcfrsToDeductionRulesConverter.srcgToCykGeneralRules(srcg, w);
+      return LcfrsToCykRulesConverter.srcgToCykGeneralRules(srcg, w);
     default:
       log.info(
           "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -98,9 +107,9 @@ public class GrammarToDeductionRulesConverter {
       String algorithm) throws ParseException {
     switch (algorithm) {
     case "pcfg-astar":
-      return PcfgToDeductionRulesConverter.pcfgToAstarRules(pcfg, w);
+      return PcfgToAstarRulesConverter.pcfgToAstarRules(pcfg, w);
     case "pcfg-cyk":
-      return PcfgToDeductionRulesConverter.pcfgToCykRules(pcfg, w);
+      return PcfgToCykRulesConverter.pcfgToCykRules(pcfg, w);
     default:
       log.info(
           "I did not understand. Please check the spelling of your parsing algorithm.");

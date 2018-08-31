@@ -1,11 +1,7 @@
-package com.github.samyadaleh.cltoolbox.chartparsing.converter;
+package com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
@@ -13,40 +9,31 @@ import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk.SrcgCykBinary;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk.SrcgCykGeneral;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk.SrcgCykItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk.SrcgCykUnary;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleyActiveItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleyComplete;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleyConvert;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleyPredict;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleyResume;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleyScan;
-import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley.SrcgEarleySuspend;
-import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
-import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * Generates different parsing schemes. Based on the slides from Laura Kallmeyer
- * about Parsing as Deduction.
- */
-public class LcfrsToDeductionRulesConverter {
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LcfrsToCykRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
-    Clause clause) throws ParseException {
+      Clause clause) throws ParseException {
     for (List<Integer> ranges : getAllRanges(clause.getLhs(), wsplit)) {
       StaticDeductionRule scan = new StaticDeductionRule();
       ChartItemInterface consequence =
-        new SrcgCykItem(clause.getLhs().getNonterminal(), ranges);
+          new SrcgCykItem(clause.getLhs().getNonterminal(), ranges);
       StringBuilder treeString =
-        new StringBuilder("( " + clause.getLhs().getNonterminal() + " ");
+          new StringBuilder("( " + clause.getLhs().getNonterminal() + " ");
       for (int i = 0; i * 2 < ranges.size(); i++) {
         treeString.append(clause.getLhs().getSymAt(i + 1, 0)).append('<')
-          .append(ranges.get(2 * i)).append("> ");
+            .append(ranges.get(2 * i)).append("> ");
       }
       treeString.append(")");
       List<Tree> derivedTrees = new ArrayList<>();
@@ -59,10 +46,10 @@ public class LcfrsToDeductionRulesConverter {
   }
 
   public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w)
-    throws ParseException {
+      throws ParseException {
     if (srcg.hasEpsilonProductions()) {
       log.info(
-        "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
+          "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
       return null;
     }
     if (!srcg.isBinarized()) {
@@ -75,7 +62,7 @@ public class LcfrsToDeductionRulesConverter {
     for (Clause clause : srcg.getClauses()) {
       if (clause.getRhs().size() == 2) {
         DynamicDeductionRuleInterface binary =
-          new SrcgCykBinary(clause, wsplit);
+            new SrcgCykBinary(clause, wsplit);
         schema.addRule(binary);
       } else if (clause.getRhs().size() == 0) {
         addSrcgCykScanRules(wsplit, schema, clause);
@@ -89,10 +76,10 @@ public class LcfrsToDeductionRulesConverter {
   }
 
   public static ParsingSchema srcgToCykGeneralRules(Srcg srcg, String w)
-    throws ParseException {
+      throws ParseException {
     if (srcg.hasEpsilonProductions()) {
       log.info(
-        "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
+          "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
       return null;
     }
     String[] wsplit = w.split(" ");
@@ -103,7 +90,7 @@ public class LcfrsToDeductionRulesConverter {
         addSrcgCykScanRules(wsplit, schema, clause);
       } else {
         DynamicDeductionRuleInterface general =
-          new SrcgCykGeneral(clause, wsplit);
+            new SrcgCykGeneral(clause, wsplit);
         schema.addRule(general);
       }
     }
@@ -117,8 +104,9 @@ public class LcfrsToDeductionRulesConverter {
    * arguments could have over parts of the input. All symbols in the Predicate
    * have to be terminals.
    */
-  @SuppressWarnings("unchecked") private static List<List<Integer>>
-    getAllRanges(Predicate lhs, String[] wSplit) {
+  @SuppressWarnings("unchecked")
+  private static List<List<Integer>> getAllRanges(Predicate lhs,
+      String[] wSplit) {
     ArrayList<List<Integer>> ranges = new ArrayList<>();
     ArrayList<Integer> tryOutRange = new ArrayList<>();
     tryOutRange.add(0);
@@ -137,20 +125,20 @@ public class LcfrsToDeductionRulesConverter {
         boolean match = true;
         for (int i = 0; i * 2 < tryOutRange.size(); i++) {
           if (!lhsSymbolsAsPlainArray[i]
-            .equals(wSplit[tryOutRange.get(i * 2)])) {
+              .equals(wSplit[tryOutRange.get(i * 2)])) {
             match = false;
             break;
           }
         }
         if (match) {
           ranges.add((List<Integer>) SrcgDeductionUtils
-            .getRangesForArguments(tryOutRange, lhs));
+              .getRangesForArguments(tryOutRange, lhs));
         }
       }
       tryOutRange.set(tryOutRange.size() - 2,
-        tryOutRange.get(tryOutRange.size() - 2) + 1);
+          tryOutRange.get(tryOutRange.size() - 2) + 1);
       tryOutRange.set(tryOutRange.size() - 1,
-        tryOutRange.get(tryOutRange.size() - 1) + 1);
+          tryOutRange.get(tryOutRange.size() - 1) + 1);
       while (tryOutRange.get(tryOutRange.size() - 1) > wSplit.length) {
         tryOutRange.remove(tryOutRange.size() - 1);
         tryOutRange.remove(tryOutRange.size() - 1);
@@ -158,60 +146,11 @@ public class LcfrsToDeductionRulesConverter {
           break;
         }
         tryOutRange.set(tryOutRange.size() - 2,
-          tryOutRange.get(tryOutRange.size() - 2) + 1);
+            tryOutRange.get(tryOutRange.size() - 2) + 1);
         tryOutRange.set(tryOutRange.size() - 1,
-          tryOutRange.get(tryOutRange.size() - 1) + 1);
+            tryOutRange.get(tryOutRange.size() - 1) + 1);
       }
     }
     return ranges;
-  }
-
-  public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w)
-    throws ParseException {
-    if (srcg.hasEpsilonProductions()) {
-      log.info(
-        "sRCG is not allowed to have epsilon productions for this Earley algorithm.");
-      return null;
-    }
-    if (!srcg.isOrdered()) {
-      log.info("sRCG must be ordered for this Earley algorithm.");
-      return null;
-    }
-    String[] wsplit = w.split(" ");
-    ParsingSchema schema = new ParsingSchema();
-
-    for (Clause clause : srcg.getClauses()) {
-      DynamicDeductionRuleInterface predict = new SrcgEarleyPredict(clause);
-      schema.addRule(predict);
-      if (!clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
-        continue;
-      }
-      StaticDeductionRule initialize = new StaticDeductionRule();
-      ChartItemInterface consequence =
-        new SrcgEarleyActiveItem(clause.toString(), 0, 1, 0,
-          new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length));
-      List<Tree> derivedTrees = new ArrayList<>();
-      derivedTrees.add(TreeUtils.getTreeOfSrcgClause(clause));
-      consequence.setTrees(derivedTrees);
-      initialize.addConsequence(consequence);
-      initialize.setName("initialize");
-      schema.addAxiom(initialize);
-      schema.addGoal(new SrcgEarleyActiveItem(clause.toString(), wsplit.length,
-        1, clause.getLhs().getSymbolsAsPlainArray().length,
-        new RangeVector(clause.getLhs().getSymbolsAsPlainArray().length)));
-    }
-    DynamicDeductionRuleInterface scan = new SrcgEarleyScan(wsplit);
-    schema.addRule(scan);
-    DynamicDeductionRuleInterface suspend =
-      new SrcgEarleySuspend(srcg.getVariables());
-    schema.addRule(suspend);
-    DynamicDeductionRuleInterface convert = new SrcgEarleyConvert();
-    schema.addRule(convert);
-    DynamicDeductionRuleInterface complete = new SrcgEarleyComplete();
-    schema.addRule(complete);
-    DynamicDeductionRuleInterface resume =
-      new SrcgEarleyResume(srcg.getVariables());
-    schema.addRule(resume);
-    return schema;
   }
 }

@@ -4,13 +4,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
-import com.github.samyadaleh.cltoolbox.chartparsing.converter.TagToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-import com.github.samyadaleh.cltoolbox.gui.ParsingTraceTable;
 
 public class ParsingTraceTableTest {
   private static Tag gentag() throws ParseException {
@@ -27,7 +26,7 @@ public class ParsingTraceTableTest {
   @Test public void testParsingTraceTable() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToDeductionRulesConverter.tagToEarleyRules(gentag(), w2);
+        TagToEarleyRulesConverter.tagToEarleyRules(gentag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     String[][] data = deduction.printTrace();
