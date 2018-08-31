@@ -76,6 +76,19 @@ class Main { // NO_UCD (test only)
       log.error(e.getMessage(), e);
       return;
     }
+    if (displayParsingTraceTable(jwh, deduction))
+      return;
+    if (schema != null) {
+      try {
+        drawDerivedTree(deduction, javafx, jwh);
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+      }
+    }
+  }
+
+  private static boolean displayParsingTraceTable(JfxWindowHolder jwh,
+      Deduction deduction) {
     String[][] data = deduction.printTrace();
     if (tag != null) {
       if (javafx) {
@@ -85,7 +98,7 @@ class Main { // NO_UCD (test only)
           jwh.showParsingTraceTableFx();
         } catch (Exception e) {
           log.error(e.getMessage(), e);
-          return;
+          return true;
         }
       } else {
         new ParsingTraceTable(data,
@@ -98,19 +111,14 @@ class Main { // NO_UCD (test only)
           jwh.showParsingTraceTableFx();
         } catch (Exception e) {
           log.error(e.getMessage(), e);
+          return true;
         }
       } else {
         new ParsingTraceTable(data,
             new String[] {"Id", "Item", "Rules", "Backpointers"}, null);
       }
     }
-    if (schema != null) {
-      try {
-        drawDerivedTree(deduction, javafx, jwh);
-      } catch (Exception e) {
-        log.error(e.getMessage(), e);
-      }
-    }
+    return false;
   }
 
   private static void logCall(String[] args) {

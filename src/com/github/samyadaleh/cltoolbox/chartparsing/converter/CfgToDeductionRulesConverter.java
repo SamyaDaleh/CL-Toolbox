@@ -555,37 +555,8 @@ public class CfgToDeductionRulesConverter {
     String[] finalState = initialState.clone();
     finalState[0] = initialState[0].replaceFirst("•", "") + " •";
     for (int i = 0; i < states.size(); i++) {
-      for (String t : cfg.getTerminals()) {
-        List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
-        for (int j = 0; j < states.size(); j++) {
-          if (equals(gotoState, states.get(j))) {
-            String key = String.valueOf(i) + " " + t;
-            if (parseTable.containsKey(key)) {
-              throw new IllegalArgumentException("Second shift entry for " + key
-                  + " generated. Grammar cannot be LR(" + k + ") parsed.");
-            }
-            parseTable.put(key, "s" + String.valueOf(j));
-            break;
-          }
-        }
-      }
-      for (String[] stateEntry : states.get(i)) {
-        if (stateEntry[0].endsWith("•")) {
-          for (int j = 0; j < cfg.getProductionRules().size(); j++) {
-            if (stateEntry[0].substring(0, stateEntry[0].length() - 2)
-                .equals(cfg.getProductionRules().get(j).toString())) {
-              String key = String.valueOf(i) + " $";
-              if (parseTable.containsKey(key)) {
-                throw new IllegalArgumentException(
-                    "Second reduce entry for " + key
-                        + " generated. Grammar cannot be LR(" + k
-                        + ") parsed.");
-              }
-              parseTable.put(key, "r" + String.valueOf(j + 1));
-            }
-          }
-        }
-      }
+      addShiftActionToParseTable(states, cfg, k, parseTable, i);
+      addReduceActionToParseTable(states, cfg, k, parseTable, i);
       if (contains(states.get(i), finalState)) {
         parseTable.put(String.valueOf(i) + " $", "acc");
         schema.addGoal(
@@ -593,6 +564,12 @@ public class CfgToDeductionRulesConverter {
                 String.valueOf(wSplit.length)));
       }
     }
+    addGotoActionToParseTable(states, cfg, k, parseTable);
+    return parseTable;
+  }
+
+  private static void addGotoActionToParseTable(List<List<String[]>> states,
+      Cfg cfg, int k, Map<String, String> parseTable) {
     for (int i = 0; i < states.size(); i++) {
       for (String nt : cfg.getNonterminals()) {
         List<String[]> gotoState = computeGotoStates(states.get(i), nt, cfg, k);
@@ -607,7 +584,45 @@ public class CfgToDeductionRulesConverter {
         }
       }
     }
-    return parseTable;
+  }
+
+  private static void addReduceActionToParseTable(List<List<String[]>> states,
+      Cfg cfg, int k, Map<String, String> parseTable, int i) {
+    for (String[] stateEntry : states.get(i)) {
+      if (stateEntry[0].endsWith("•")) {
+        for (int j = 0; j < cfg.getProductionRules().size(); j++) {
+          if (stateEntry[0].substring(0, stateEntry[0].length() - 2)
+              .equals(cfg.getProductionRules().get(j).toString())) {
+            String key = String.valueOf(i) + " $";
+            if (parseTable.containsKey(key)) {
+              throw new IllegalArgumentException(
+                  "Second reduce entry for " + key
+                      + " generated. Grammar cannot be LR(" + k
+                      + ") parsed.");
+            }
+            parseTable.put(key, "r" + String.valueOf(j + 1));
+          }
+        }
+      }
+    }
+  }
+
+  private static void addShiftActionToParseTable(List<List<String[]>> states,
+      Cfg cfg, int k, Map<String, String> parseTable, int i) {
+    for (String t : cfg.getTerminals()) {
+      List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
+      for (int j = 0; j < states.size(); j++) {
+        if (equals(gotoState, states.get(j))) {
+          String key = String.valueOf(i) + " " + t;
+          if (parseTable.containsKey(key)) {
+            throw new IllegalArgumentException("Second shift entry for " + key
+                + " generated. Grammar cannot be LR(" + k + ") parsed.");
+          }
+          parseTable.put(key, "s" + String.valueOf(j));
+          break;
+        }
+      }
+    }
   }
 
   /**
