@@ -6,6 +6,7 @@ import java.util.List;
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
@@ -32,19 +33,17 @@ public class TagEarleyPrefixValidCompleteNode
     String l1 = itemForm1[7];
     String adj1 = itemForm1[8];
     String treeName2 = itemForm2[0];
-    String node2 = itemForm2[1];
-    String pos2 = itemForm2[2];
-    String iGamma2 = itemForm2[3];
-    String i2 = itemForm2[4];
     String j2 = itemForm2[5];
     String k2 = itemForm2[6];
     String l2 = itemForm2[7];
+    String[] itemForm2Goal =
+        new String[] {itemForm1[0], itemForm1[1], "rb", "~", itemForm1[7], "?",
+            "?", "?", "?"};
     Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
-    if (treeName1.equals(treeName2) && node1.equals(node2) && pos1.equals("la")
-        && pos2.equals("rb") && !iGamma1.equals("~") && !i1.equals("~") && !j1
-        .equals("~") && !k1.equals("~") && !l1.equals("~") && l1.equals(i2)
-        && adj1.equals("0") && iGamma2.equals("~") && !i2.equals("~") && !j2
-        .equals("~") && !k2.equals("~") && !l2.equals("~") && tag
+    if (treeName1.equals(treeName2) && pos1.equals("la") && !iGamma1.equals("~")
+        && !i1.equals("~") && !j1.equals("~") && !k1.equals("~") && !l1
+        .equals("~") && adj1.equals("0") && !j2.equals("~") && !k2.equals("~")
+        && !l2.equals("~") && ArrayUtils.match(itemForm2, itemForm2Goal) && tag
         .isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;
