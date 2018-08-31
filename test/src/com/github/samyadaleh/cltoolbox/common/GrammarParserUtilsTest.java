@@ -4,25 +4,28 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import com.github.samyadaleh.cltoolbox.common.parser.CfgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.PcfgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.TagGrammarParser;
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.common.GrammarParser;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
-public class GrammarParserTest {
+public class GrammarParserUtilsTest {
 
   @Test public void testparseCfgFile() throws IOException {
-    Cfg cfg = GrammarParser.parseCfgFile("./resources/grammars/anbn.cfg");
+    Cfg cfg = CfgGrammarParser.parseCfgFile("./resources/grammars/anbn.cfg");
     assert cfg != null;
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
       + "P = {S -> a S b, S -> a b}\n", cfg.toString());
   }
 
   @Test public void testparsePcfgFile() throws IOException {
-    Pcfg pcfg = GrammarParser.parsePcfgFile("./resources/grammars/a0n.pcfg");
+    Pcfg pcfg = PcfgGrammarParser.parsePcfgFile("./resources/grammars/a0n.pcfg");
     assert pcfg != null;
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, A, B}\n" + "T = {0, 1}\n" + "S = S\n"
@@ -32,8 +35,7 @@ public class GrammarParserTest {
   }
 
   @Test public void testparseSrcgFile() throws IOException {
-    Srcg srcg =
-      GrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
+    Srcg srcg = SrcgGrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
     assert srcg != null;
     assertEquals("G = <N, T, V, P, S>\n" + "N = {A, B, S}\n"
       + "T = {a, b, c, d}\n" + "V = {X, Y, V, W}\n"
@@ -42,7 +44,7 @@ public class GrammarParserTest {
   }
 
   @Test public void testparseTagFile() throws IOException {
-    Tag tag = GrammarParser.parseTagFile("./resources/grammars/anbncndn.tag");
+    Tag tag = TagGrammarParser.parseTagFile("./resources/grammars/anbncndn.tag");
     assert tag != null;
     assertEquals(
       "G = <N, T, I, A, S>\n" + "N = {S}\n" + "T = {a, b, c, d}\n"

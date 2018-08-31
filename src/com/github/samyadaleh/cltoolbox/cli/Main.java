@@ -2,10 +2,13 @@ package com.github.samyadaleh.cltoolbox.cli;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.*;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
-import com.github.samyadaleh.cltoolbox.common.GrammarParser;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import com.github.samyadaleh.cltoolbox.common.parser.CfgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.PcfgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.TagGrammarParser;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.gui.DisplayTree;
@@ -192,7 +195,7 @@ class Main { // NO_UCD (test only)
 
   private static void parseSrcgFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
-    srcg = GrammarParser.parseSrcgFile(grammarFile);
+    srcg = SrcgGrammarParser.parseSrcgFile(grammarFile);
     if(log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + srcg.toString());
     }
@@ -226,7 +229,7 @@ class Main { // NO_UCD (test only)
 
   private static void parseTagFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
-    tag = GrammarParser.parseTagFile(grammarFile);
+    tag = TagGrammarParser.parseTagFile(grammarFile);
     if(log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + tag.toString());
     }
@@ -260,7 +263,7 @@ class Main { // NO_UCD (test only)
 
   private static void parsePcfgFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
-    pcfg = GrammarParser.parsePcfgFile(grammarFile);
+    pcfg = PcfgGrammarParser.parsePcfgFile(grammarFile);
     if(log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + pcfg.toString());
     }
@@ -318,7 +321,7 @@ class Main { // NO_UCD (test only)
 
   private static void parseCfgFileAndConvertToSchema(String grammarFile,
       String w, String algorithm) throws IOException, ParseException {
-    cfg = GrammarParser.parseCfgFile(grammarFile);
+    cfg = CfgGrammarParser.parseCfgFile(grammarFile);
     if(log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + cfg.toString());
     }

@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Objects;
 
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgGrammarParser;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.LcfrsToDeductionRulesConverter;
-import com.github.samyadaleh.cltoolbox.common.GrammarParser;
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
-import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 
 public class SrcgTest {
@@ -130,8 +129,7 @@ public class SrcgTest {
 
   @Test public void testRemoveEmptyProductionsForEarley()
     throws IOException, ParseException {
-    Srcg srcg =
-      GrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
+    Srcg srcg = SrcgGrammarParser.parseSrcgFile("./resources/grammars/anbmcndm.srcg");
     Srcg srcgEpsFree = Objects.requireNonNull(srcg).getSrcgWithoutEmptyProductions();
     ParsingSchema schema =
       LcfrsToDeductionRulesConverter.srcgToEarleyRules(srcgEpsFree, "a c");
