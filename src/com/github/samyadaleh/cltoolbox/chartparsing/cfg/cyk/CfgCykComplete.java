@@ -1,13 +1,11 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -17,6 +15,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final CfgProductionRule rule;
+  private final CfgCykUtils cfgCykUtils = new CfgCykUtils();
 
   public CfgCykComplete(CfgProductionRule rule) {
     this.rule = rule;
@@ -25,7 +24,7 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
   }
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-    throws ParseException {
+      throws ParseException {
     String nt1 = itemForm1[0];
     String i1 = itemForm1[1];
     int i1int = Integer.parseInt(i1);
@@ -37,32 +36,12 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
     String j2 = itemForm2[2];
     int j2int = Integer.parseInt(j2);
     if (nt1.equals(rule.getRhs()[0]) && nt2.equals(rule.getRhs()[1])
-      && i1int + j1int == i2int) {
-      ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(), String.valueOf(i1int),
-        String.valueOf(j1int + j2int));
-      Tree derivedTreeBase = new Tree(rule);
-      List<Tree> derivedTrees = new ArrayList<>();
-      if (i1.equals(antecedences.get(0).getItemForm()[1])) {
-        for (Tree tree1 : antecedences.get(0).getTrees()) {
-          for (Tree tree2 : antecedences.get(1).getTrees()) {
-            Tree derivedTree =
-              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
-            derivedTree =
-              TreeUtils.performLeftmostSubstitution(derivedTree, tree2);
-            derivedTrees.add(derivedTree);
-          }
-        }
-      } else {
-        for (Tree tree1 : antecedences.get(0).getTrees()) {
-          for (Tree tree2 : antecedences.get(1).getTrees()) {
-            Tree derivedTree =
-              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
-            derivedTree =
-              TreeUtils.performLeftmostSubstitution(derivedTree, tree1);
-            derivedTrees.add(derivedTree);
-          }
-        }
-      }
+        && i1int + j1int == i2int) {
+      ChartItemInterface consequence =
+          new DeductionChartItem(rule.getLhs(), String.valueOf(i1int),
+              String.valueOf(j1int + j2int));
+      List<Tree> derivedTrees =
+          cfgCykUtils.generateDerivedTrees(i1, antecedences, rule);
       consequence.setTrees(derivedTrees);
       logItemGeneration(consequence);
       consequences.add(consequence);
@@ -71,6 +50,6 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   @Override public String toString() {
     return "[" + rule.getRhs()[0] + ",i,l1], [" + rule.getRhs()[1] + ",i+l1,l2]"
-      + "\n______ \n" + "[" + rule.getLhs() + ",i,l1+l2]";
+        + "\n______ \n" + "[" + rule.getLhs() + ",i,l1+l2]";
   }
 }

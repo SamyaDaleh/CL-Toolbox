@@ -1,18 +1,17 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ProbabilisticChartItemInterface;
-import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Similar to the complete rule for CYK, but used for a PCFG and with weights
@@ -49,7 +48,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   @Override public List<ChartItemInterface> getConsequences()
-    throws ParseException {
+      throws ParseException {
     if (antecedences.size() == antneeded) {
       String[] itemForm1 = antecedences.get(0).getItemForm();
       String[] itemForm2 = antecedences.get(1).getItemForm();
@@ -60,7 +59,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-    throws ParseException {
+      throws ParseException {
     String nt1 = itemForm1[0];
     String i1 = itemForm1[1];
     int i1Int = Integer.parseInt(i1);
@@ -76,9 +75,10 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
     Double x2 = antecedences.get(1).getProbability();
 
     if (nt1.equals(pRule.getRhs()[0]) && nt2.equals(pRule.getRhs()[1])
-      && j1Int == i2Int) {
-      ProbabilisticChartItemInterface consequence = new PcfgCykItem(
-        x1 + x2 + -Math.log(pRule.getP()), pRule.getLhs(), i1Int, j2Int);
+        && j1Int == i2Int) {
+      ProbabilisticChartItemInterface consequence =
+          new PcfgCykItem(x1 + x2 + -Math.log(pRule.getP()), pRule.getLhs(),
+              i1Int, j2Int);
       addTreesToConsequence(i1, consequence);
       logItemGeneration(consequence);
       consequences.add(consequence);
@@ -86,31 +86,11 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   protected void addTreesToConsequence(String i1,
-    ProbabilisticChartItemInterface consequence) throws ParseException {
-    List<Tree> derivedTrees = new ArrayList<>();
-    Tree derivedTreeBase =
-      new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs()));
-    if (i1.equals(antecedences.get(0).getItemForm()[1])) {
-      for (Tree tree1 : antecedences.get(0).getTrees()) {
-        for (Tree tree2 : antecedences.get(1).getTrees()) {
-          Tree derivedTree =
-            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
-          derivedTree =
-            TreeUtils.performLeftmostSubstitution(derivedTree, tree2);
-          derivedTrees.add(derivedTree);
-        }
-      }
-    } else {
-      for (Tree tree1 : antecedences.get(0).getTrees()) {
-        for (Tree tree2 : antecedences.get(1).getTrees()) {
-          Tree derivedTree =
-            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
-          derivedTree =
-            TreeUtils.performLeftmostSubstitution(derivedTree, tree1);
-          derivedTrees.add(derivedTree);
-        }
-      }
-    }
+      ProbabilisticChartItemInterface consequence) throws ParseException {
+    CfgProductionRule rule =
+        new CfgProductionRule(pRule.getLhs(), pRule.getRhs());
+    List<Tree> derivedTrees =
+        CfgCykUtils.generateDerivedTrees(i1, this.getAntecedences(), rule);
     consequence.setTrees(derivedTrees);
   }
 
@@ -124,8 +104,8 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
 
   @Override public String toString() {
     return "x1 : [" + pRule.getRhs()[0] + ", i, j], x2 : [" + pRule.getRhs()[1]
-      + ", j, k]" + "\n______ \n" + "x1 + x2 + |log("
-      + String.valueOf(pRule.getP()) + ")| : [" + pRule.getLhs() + ", i, k]";
+        + ", j, k]" + "\n______ \n" + "x1 + x2 + |log(" + String
+        .valueOf(pRule.getP()) + ")| : [" + pRule.getLhs() + ", i, k]";
   }
 
   @Override public void clearItems() {
@@ -134,18 +114,18 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   protected void logItemGeneration(ChartItemInterface item) {
-    if(log.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       StringBuilder out = new StringBuilder("generated: ");
       out.append(item).append(" with trees:");
       for (Tree tree : item.getTrees()) {
         out.append(' ').append(tree);
       }
       out.append(" from:");
-      for(ChartItemInterface antecedence : antecedences) {
+      for (ChartItemInterface antecedence : antecedences) {
         out.append(' ').append(antecedence);
       }
       out.append(" with rule ").append(name);
-      log.debug(out.toString() );
+      log.debug(out.toString());
     }
   }
 
