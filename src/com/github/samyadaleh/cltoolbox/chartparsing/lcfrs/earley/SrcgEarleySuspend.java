@@ -19,27 +19,25 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
  * used to predict it.
  */
 public class SrcgEarleySuspend
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final String[] variables;
 
-  /** Remember variables to check if symbols are one of them. */
+  /**
+   * Remember variables to check if symbols are one of them.
+   */
   public SrcgEarleySuspend(String[] variables) {
     this.variables = variables;
     this.name = "suspend";
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
+      throws ParseException {
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       String clause1 = itemForm1[0];
       Clause clause1Parsed;
-      try {
-        clause1Parsed = new Clause(clause1);
-      } catch (ParseException e1) {
-        e1.printStackTrace();
-        return;
-      }
+      clause1Parsed = new Clause(clause1);
       String pos1 = itemForm1[1];
       int posInt1 = Integer.parseInt(pos1);
       String i1 = itemForm1[2];
@@ -83,19 +81,20 @@ public class SrcgEarleySuspend
     for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
       Predicate rhsPred = clause2Parsed.getRhs().get(n);
       if (rhsPred.getNonterminal()
-        .equals(clause1Parsed.getLhs().getNonterminal())
-        && rhsPred.getSymAt(iInt1, 0).equals(mayV2) && isVar2
-        && itemForm1.length > (iInt1 - 1) * 2 + 5
-        && itemForm2.length > (iInt1 - 1 + n) * 2 + 5) {
-        if (itemForm1[2 * (iInt1 - 1) + 4].equals(pos2)
-          && iInt1 < clause1Parsed.getLhs().getDim() && clause1Parsed
-            .getLhs().getArgumentByIndex(iInt1).length == jInt1) {
-          boolean vectorsMatch =
-            SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1Parsed,
-              itemForm1, rhsPred, iInt1, clause2Parsed, itemForm2);
+          .equals(clause1Parsed.getLhs().getNonterminal()) && rhsPred
+          .getSymAt(iInt1, 0).equals(mayV2) && isVar2
+          && itemForm1.length > (iInt1 - 1) * 2 + 5
+          && itemForm2.length > (iInt1 - 1 + n) * 2 + 5) {
+        if (itemForm1[2 * (iInt1 - 1) + 4].equals(pos2) && iInt1 < clause1Parsed
+            .getLhs().getDim()
+            && clause1Parsed.getLhs().getArgumentByIndex(iInt1).length
+            == jInt1) {
+          boolean vectorsMatch = SrcgDeductionUtils
+              .ifRhsVectorMatchesLhsVector(clause1Parsed, itemForm1, rhsPred,
+                  iInt1, clause2Parsed, itemForm2);
           if (vectorsMatch) {
-            addNewConsequence(itemForm2, pos1, posInt1, clause2,
-              clause2Parsed, pos2, iInt2, jInt2, itemForm1);
+            addNewConsequence(itemForm2, pos1, posInt1, clause2, clause2Parsed,
+                pos2, iInt2, jInt2, itemForm1);
           }
         }
       }
@@ -103,8 +102,8 @@ public class SrcgEarleySuspend
   }
 
   private void addNewConsequence(String[] itemForm2, String pos1, int posInt1,
-    String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2,
-    String[] itemForm1) {
+      String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2,
+      String[] itemForm1) {
     ArrayList<String> newVector;
     newVector = new ArrayList<>(Arrays.asList(
         ArrayUtils.getSubSequenceAsArray(itemForm2, 4, itemForm2.length)));
@@ -112,7 +111,7 @@ public class SrcgEarleySuspend
     newVector.set(indabspos * 2, pos2);
     newVector.set(indabspos * 2 + 1, pos1);
     ChartItemInterface consequence =
-      new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1, newVector);
+        new SrcgEarleyActiveItem(clause2, posInt1, iInt2, jInt2 + 1, newVector);
     List<Tree> derivedTrees;
     if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
       derivedTrees = antecedences.get(0).getTrees();
@@ -126,7 +125,7 @@ public class SrcgEarleySuspend
 
   @Override public String toString() {
     return "[B(ψ) -> Ψ,pos',<i,j>,ρ_B], [A(φ) -> ... B(ξ)...,pos,<k,l>,ρ_A]"
-      + "\n______ \n" + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
+        + "\n______ \n" + "[A(φ) -> ... B(ξ)...,pos',<k,l+1>,ρ]";
   }
 
 }

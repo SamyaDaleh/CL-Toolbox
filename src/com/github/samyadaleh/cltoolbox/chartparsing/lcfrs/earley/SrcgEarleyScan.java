@@ -1,27 +1,26 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Whenever the next symbol after the dot is the next terminal in the input, we
  * can scan it.
  */
 public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
-  private static final Logger log = LogManager.getLogger();
 
   private final String[] wSplit;
 
-  /** Remembers the input string to compare it with the next symbol to scan. */
+  /**
+   * Remembers the input string to compare it with the next symbol to scan.
+   */
   public SrcgEarleyScan(String[] wSplit) {
     this.wSplit = wSplit;
     this.name = "scan";
@@ -29,42 +28,36 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
   }
 
   @Override public List<ChartItemInterface> getConsequences()
-    throws ParseException {
+      throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
         Clause clauseParsed;
-        try {
-          clauseParsed = new Clause(clause);
-        } catch (ParseException e) {
-          log.error(e.getMessage(),e);
-          return this.consequences;
-        }
-        String pos = itemForm[1];
-        int posInt = Integer.parseInt(pos);
-        String i = itemForm[2];
-        int iInt = Integer.parseInt(i);
-        String j = itemForm[3];
-        int jInt = Integer.parseInt(j);
+        clauseParsed = new Clause(clause);
+        int posInt = Integer.parseInt(itemForm[1]);
+        int iInt = Integer.parseInt(itemForm[2]);
+        int jInt = Integer.parseInt(itemForm[3]);
         int place = clauseParsed.getLhs().getAbsolutePos(iInt, jInt);
         if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
-          && posInt < wSplit.length
-          && clauseParsed.getLhsSymAt(iInt, jInt).equals(wSplit[posInt])) {
+            && posInt < wSplit.length && clauseParsed.getLhsSymAt(iInt, jInt)
+            .equals(wSplit[posInt])) {
           this.name = "scan " + wSplit[posInt];
           ArrayList<String> newVector = new ArrayList<>();
           for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
             newVector.add(itemForm[2 * k + 4]);
             newVector.add(itemForm[2 * k + 5]);
           }
-          newVector.set(place * 2, pos);
+          newVector.set(place * 2, itemForm[1]);
           newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
-          ChartItemInterface consequence = new SrcgEarleyActiveItem(clause,
-            posInt + 1, iInt, jInt + 1, newVector);
+          ChartItemInterface consequence =
+              new SrcgEarleyActiveItem(clause, posInt + 1, iInt, jInt + 1,
+                  newVector);
           List<Tree> derivedTrees = new ArrayList<>();
           for (Tree tree : antecedences.get(0).getTrees()) {
-            derivedTrees.add(
-              TreeUtils.performPositionSubstitution(tree, wSplit[posInt], pos));
+            derivedTrees.add(TreeUtils
+                .performPositionSubstitution(tree, wSplit[posInt],
+                    itemForm[1]));
           }
           consequence.setTrees(derivedTrees);
           logItemGeneration(consequence);
@@ -77,6 +70,6 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[A(φ) -> Φ,pos,<i,j>,ρ]" + "\n______ φ(i,j) = w_pos\n"
-      + "[A(φ) -> Φ,pos,<i,j+1>,ρ']";
+        + "[A(φ) -> Φ,pos,<i,j+1>,ρ']";
   }
 }

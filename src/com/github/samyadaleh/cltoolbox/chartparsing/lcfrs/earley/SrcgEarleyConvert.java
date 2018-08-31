@@ -1,24 +1,21 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.earley;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Whenever we arrive at the end of the last argument, we convert the item into
  * a passive one.
  */
 public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
-  private static final Logger log = LogManager.getLogger();
 
   public SrcgEarleyConvert() {
     this.name = "convert";
@@ -26,18 +23,13 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
   }
 
   @SuppressWarnings("unchecked") @Override
-  public List<ChartItemInterface> getConsequences() {
+  public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
         Clause clauseParsed;
-        try {
-          clauseParsed = new Clause(clause);
-        } catch (ParseException e) {
-          log.error(e.getMessage(), e);
-          return this.consequences;
-        }
+        clauseParsed = new Clause(clause);
         String i = itemForm[2];
         int iInt = Integer.parseInt(i);
         String j = itemForm[3];

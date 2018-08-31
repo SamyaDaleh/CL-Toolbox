@@ -33,17 +33,13 @@ public class SrcgEarleyResume
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
+      throws ParseException {
     String clause1 = itemForm1[0];
     String clause2 = itemForm2[0];
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       Clause clause1Parsed;
-      try {
-        clause1Parsed = new Clause(clause1);
-      } catch (ParseException e) {
-        log.error(e.getMessage(), e);
-        return;
-      }
+      clause1Parsed = new Clause(clause1);
       String pos1 = itemForm1[1];
       int posInt1 = Integer.parseInt(pos1);
       String i1 = itemForm1[2];
