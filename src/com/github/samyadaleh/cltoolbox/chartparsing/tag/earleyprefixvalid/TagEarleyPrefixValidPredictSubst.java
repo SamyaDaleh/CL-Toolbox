@@ -11,7 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
 public class TagEarleyPrefixValidPredictSubst
-  extends AbstractDynamicDeductionRule {
+    extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
   private final String iniTreeName;
@@ -27,21 +27,16 @@ public class TagEarleyPrefixValidPredictSubst
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
-      String node = itemForm[1];
-      String pos = itemForm[2];
-      String iGamma = itemForm[3];
-      String i = itemForm[4];
-      String j = itemForm[5];
-      String k = itemForm[6];
       String l = itemForm[7];
-      String adj = itemForm[8];
-      Vertex p = tag.getTree(treeName).getNodeByGornAdress(node);
-      if (pos.equals("la") && adj.equals("0") && iGamma.equals("~")
-        && i.equals("~") && j.equals("~") && k.equals("~") && !l.equals("~")
-        && tag.isSubstitutionNode(p, treeName)
-        && p.getLabel().equals(tag.getTree(iniTreeName).getRoot().getLabel())) {
+      Vertex p = tag.getTree(treeName).getNodeByGornAdress(itemForm[1]);
+      if (itemForm[2].equals("la") && itemForm[8].equals("0") && itemForm[3]
+          .equals("~") && itemForm[4].equals("~") && itemForm[5].equals("~")
+          && itemForm[6].equals("~") && !l.equals("~") && tag
+          .isSubstitutionNode(p, treeName) && p.getLabel()
+          .equals(tag.getTree(iniTreeName).getRoot().getLabel())) {
         ChartItemInterface consequence =
-          new DeductionChartItem(iniTreeName, "", "la", l, l, "-", "-", l, "0");
+            new DeductionChartItem(iniTreeName, "", "la", l, l, "-", "-", l,
+                "0");
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
@@ -54,8 +49,8 @@ public class TagEarleyPrefixValidPredictSubst
 
   @Override public String toString() {
     return "[ɣ,p,la,~,~,~,~,l,0]" + "\n______ " + iniTreeName
-      + " ∈ I, ɣ(p) substitution node, l(ɣ,p) = l(\" + iniTreeName + \",ε)\n"
-      + "[" + iniTreeName + ",ε,la,l,l,-,-,l,0]";
+        + " ∈ I, ɣ(p) substitution node, l(ɣ,p) = l(\" + iniTreeName + \",ε)\n"
+        + "[" + iniTreeName + ",ε,la,l,l,-,-,l,0]";
   }
 
 }

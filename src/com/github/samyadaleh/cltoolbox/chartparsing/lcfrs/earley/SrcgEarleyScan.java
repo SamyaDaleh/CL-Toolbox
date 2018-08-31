@@ -31,10 +31,8 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
       throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
-      String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
-        Clause clauseParsed;
-        clauseParsed = new Clause(clause);
+        Clause clauseParsed = new Clause(itemForm[0]);
         int posInt = Integer.parseInt(itemForm[1]);
         int iInt = Integer.parseInt(itemForm[2]);
         int jInt = Integer.parseInt(itemForm[3]);
@@ -51,7 +49,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
           newVector.set(place * 2, itemForm[1]);
           newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
           ChartItemInterface consequence =
-              new SrcgEarleyActiveItem(clause, posInt + 1, iInt, jInt + 1,
+              new SrcgEarleyActiveItem(itemForm[0], posInt + 1, iInt, jInt + 1,
                   newVector);
           List<Tree> derivedTrees = new ArrayList<>();
           for (Tree tree : antecedences.get(0).getTrees()) {

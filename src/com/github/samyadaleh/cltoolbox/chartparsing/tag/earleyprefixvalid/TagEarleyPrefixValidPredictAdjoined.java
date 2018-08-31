@@ -10,7 +10,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 public class TagEarleyPrefixValidPredictAdjoined
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -22,35 +22,28 @@ public class TagEarleyPrefixValidPredictAdjoined
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String treeName1 = itemForm1[0];
-    String node1 = itemForm1[1];
-    String pos1 = itemForm1[2];
-    String iGamma1 = itemForm1[3];
-    String j1 = itemForm1[5];
-    String k1 = itemForm1[6];
     String m = itemForm1[7];
-    String adj1 = itemForm1[8];
     String treeName2 = itemForm2[0];
     String node2 = itemForm2[1];
-    String pos2 = itemForm2[2];
     String iGamma2 = itemForm2[3];
-    String j2 = itemForm2[4];
-    String g = itemForm2[5];
-    String h = itemForm2[6];
-    String k2 = itemForm2[7];
-    String adj2 = itemForm2[8];
     boolean adjoinable1 = tag.isAdjoinable(treeName1, treeName2, node2);
-    if (adj1.equals("0") && adj2.equals("0") && adjoinable1) {
-      boolean isFootNode = tag.getAuxiliaryTree(treeName1).getFoot()
-        .getGornAddress().equals(node1);
-      if (isFootNode && pos1.equals("la") && pos2.equals("la") && j1.equals("-")
-        && k1.equals("-") && iGamma1.equals(k2) && j2.equals("~")
-        && g.equals("~") && h.equals("~") && !iGamma2.equals("~")) {
-        ChartItemInterface consequence = new DeductionChartItem(treeName2, node2, "lb", iGamma2, m,
-          "-", "-", m, "0");
+    if (itemForm1[8].equals("0") && itemForm2[8].equals("0") && adjoinable1) {
+      boolean isFootNode =
+          tag.getAuxiliaryTree(treeName1).getFoot().getGornAddress()
+              .equals(itemForm1[1]);
+      if (isFootNode && itemForm1[2].equals("la") && itemForm2[2].equals("la")
+          && itemForm1[5].equals("-") && itemForm1[6].equals("-")
+          && itemForm1[3].equals(itemForm2[7]) && itemForm2[4].equals("~")
+          && itemForm2[5].equals("~") && itemForm2[6].equals("~") && !iGamma2
+          .equals("~")) {
+        ChartItemInterface consequence =
+            new DeductionChartItem(treeName2, node2, "lb", iGamma2, m, "-", "-",
+                m, "0");
         List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
         String node2name = node2.length() == 0 ? "ε" : node2;
-        this.name = "predict adjoined " + treeName2 + "[" + node2name + ","
-            + treeName1 + "]";
+        this.name =
+            "predict adjoined " + treeName2 + "[" + node2name + "," + treeName1
+                + "]";
         consequence.setTrees(derivedTrees);
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -70,7 +63,7 @@ public class TagEarleyPrefixValidPredictAdjoined
 
   @Override public String toString() {
     return "[β,p_f,ra,i,j,k,l,0], [ɣ,p,rb,j,g,h,k,0]"
-      + "\n______ β(p_f) foot node, β ∈ f_SA(ɣ,p)\n" + "[ɣ,p,rb,i,g,h,l,1]";
+        + "\n______ β(p_f) foot node, β ∈ f_SA(ɣ,p)\n" + "[ɣ,p,rb,i,g,h,l,1]";
   }
 
 }

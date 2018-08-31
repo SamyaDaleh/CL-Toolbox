@@ -24,18 +24,10 @@ public class TagEarleyPrefixValidCompleteFoot
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2,
       String[] itemForm3) {
-    String treeName1 = itemForm1[0];
-    String node1 = itemForm1[1];
-    String pos1 = itemForm1[2];
-    String iGamma1 = itemForm1[3];
     String i1 = itemForm1[4];
-    String j1 = itemForm1[5];
-    String k1 = itemForm1[6];
     String l1 = itemForm1[7];
-    String adj1 = itemForm1[8];
     String treeName2 = itemForm2[0];
     String node2 = itemForm2[1];
-    String i2 = itemForm2[4];
     String[] itemForm2Goal =
         new String[] {"?", "?", "la", "?", "?", "-", "-", itemForm1[4], "0"};
     String[] itemForm3Goal =
@@ -43,12 +35,12 @@ public class TagEarleyPrefixValidCompleteFoot
             itemForm2[3], "0"};
     if (tag.getAuxiliaryTree(treeName2) != null) {
       Vertex pf = tag.getAuxiliaryTree(treeName2).getNodeByGornAdress(node2);
-      if (pos1.equals("rb") && iGamma1.equals("~") && j1.equals("~") && k1
-          .equals("~") && adj1.equals("0") && pf == tag
-          .getAuxiliaryTree(treeName2).getFoot() && !i2.equals("~")
-          && ArrayUtils.match(itemForm2, itemForm2Goal) && ArrayUtils
-          .match(itemForm3, itemForm3Goal) && tag
-          .isAdjoinable(treeName2, treeName1, node1)) {
+      if (itemForm1[2].equals("rb") && itemForm1[3].equals("~") && itemForm1[5]
+          .equals("~") && itemForm1[6].equals("~") && itemForm1[8].equals("0")
+          && pf == tag.getAuxiliaryTree(treeName2).getFoot() && !itemForm2[4]
+          .equals("~") && ArrayUtils.match(itemForm2, itemForm2Goal)
+          && ArrayUtils.match(itemForm3, itemForm3Goal) && tag
+          .isAdjoinable(treeName2, itemForm1[0], itemForm1[1])) {
         ChartItemInterface consequence =
             new DeductionChartItem(treeName2, node2, "rb", "~", i1, i1, l1, l1,
                 "0");

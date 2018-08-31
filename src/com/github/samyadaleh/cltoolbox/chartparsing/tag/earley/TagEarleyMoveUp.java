@@ -7,7 +7,9 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
-/** If a node has no right sibling, move to the parent. */
+/**
+ * If a node has no right sibling, move to the parent.
+ */
 public class TagEarleyMoveUp extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
@@ -27,20 +29,16 @@ public class TagEarleyMoveUp extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      String pos = itemForm[2];
-      String i = itemForm[3];
-      String j = itemForm[4];
-      String k = itemForm[5];
-      String l = itemForm[6];
-      String adj = itemForm[7];
       String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-        .getGornAddressOfPotentialRightSibling();
-      if (!node.equals("") && pos.equals("ra") && adj.equals("0")
-        && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
+          .getGornAddressOfPotentialRightSibling();
+      if (!node.equals("") && itemForm[2].equals("ra") && itemForm[7]
+          .equals("0")
+          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
         String parentGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-          .getGornAddressOfParent();
+            .getGornAddressOfParent();
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName, parentGorn, "rb", i, j, k, l, "0");
+            new DeductionChartItem(treeName, parentGorn, "rb", itemForm[3],
+                itemForm[4], itemForm[5], itemForm[6], "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -51,7 +49,7 @@ public class TagEarleyMoveUp extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p.m,ra,i,j,k,l,0]" + "\n______ ɣ(p.m+1) is not defined\n"
-      + "[ɣ,p,rb,i,j,k,l,0]";
+        + "[ɣ,p,rb,i,j,k,l,0]";
   }
 
 }

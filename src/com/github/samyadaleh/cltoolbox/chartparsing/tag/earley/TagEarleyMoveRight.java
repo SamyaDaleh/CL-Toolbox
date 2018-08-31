@@ -7,7 +7,9 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
-/** If a node has a right sibling, move to that sibling. */
+/**
+ * If a node has a right sibling, move to that sibling.
+ */
 public class TagEarleyMoveRight extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
@@ -26,19 +28,14 @@ public class TagEarleyMoveRight extends AbstractDynamicDeductionRule {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
-      String node = itemForm[1];
-      String pos = itemForm[2];
-      String i = itemForm[3];
-      String j = itemForm[4];
-      String k = itemForm[5];
-      String l = itemForm[6];
-      String adj = itemForm[7];
-      String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-        .getGornAddressOfPotentialRightSibling();
-      if (pos.equals("ra") && adj.equals("0")
-        && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
+      String siblingGorn =
+          tag.getTree(treeName).getNodeByGornAdress(itemForm[1])
+              .getGornAddressOfPotentialRightSibling();
+      if (itemForm[2].equals("ra") && itemForm[7].equals("0")
+          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName, siblingGorn, "la", i, j, k, l, "0");
+            new DeductionChartItem(treeName, siblingGorn, "la", itemForm[3],
+                itemForm[4], itemForm[5], itemForm[6], "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -49,7 +46,7 @@ public class TagEarleyMoveRight extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,ra,i,j,k,l,0]" + "\n______ ɣ(p+1) is defined\n"
-      + "[ɣ,p+1,la,i,j,k,l,0]";
+        + "[ɣ,p+1,la,i,j,k,l,0]";
   }
 
 }

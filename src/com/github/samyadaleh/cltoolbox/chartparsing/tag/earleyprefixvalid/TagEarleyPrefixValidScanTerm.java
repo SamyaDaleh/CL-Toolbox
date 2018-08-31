@@ -24,21 +24,15 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      String pos = itemForm[2];
-      String iGamma = itemForm[3];
-      String i = itemForm[4];
-      String j = itemForm[5];
-      String k = itemForm[6];
-      String l = itemForm[7];
-      int lInt = Integer.parseInt(l);
-      String adj = itemForm[8];
-      if (lInt < wSplit.length && pos.equals("la") && adj.equals("0") && tag
-          .getTree(treeName).getNodeByGornAdress(node).getLabel()
-          .equals(wSplit[lInt])) {
+      int lInt = Integer.parseInt(itemForm[7]);
+      if (lInt < wSplit.length && itemForm[2].equals("la") && itemForm[8]
+          .equals("0") && tag.getTree(treeName).getNodeByGornAdress(node)
+          .getLabel().equals(wSplit[lInt])) {
         this.name = "scan " + wSplit[lInt];
         ChartItemInterface consequence =
-            new DeductionChartItem(treeName, node, "ra", iGamma, i, j, k,
-                String.valueOf(lInt + 1), "0");
+            new DeductionChartItem(treeName, node, "ra", itemForm[3],
+                itemForm[4], itemForm[5], itemForm[6], String.valueOf(lInt + 1),
+                "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);

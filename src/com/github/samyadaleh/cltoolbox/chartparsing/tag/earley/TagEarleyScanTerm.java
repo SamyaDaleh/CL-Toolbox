@@ -7,7 +7,9 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
-/** If the node's label is the next input symbol, consume it. */
+/**
+ * If the node's label is the next input symbol, consume it.
+ */
 public class TagEarleyScanTerm extends AbstractDynamicDeductionRule {
 
   private final String[] wSplit;
@@ -29,19 +31,14 @@ public class TagEarleyScanTerm extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      String pos = itemForm[2];
-      String i = itemForm[3];
-      String j = itemForm[4];
-      String k = itemForm[5];
-      String l = itemForm[6];
-      int lInt = Integer.parseInt(l);
-      String adj = itemForm[7];
-      if (lInt < wSplit.length && pos.equals("la") && adj.equals("0")
-        && tag.getTree(treeName).getNodeByGornAdress(node).getLabel()
-          .equals(wSplit[lInt])) {
+      int lInt = Integer.parseInt(itemForm[6]);
+      if (lInt < wSplit.length && itemForm[2].equals("la") && itemForm[7]
+          .equals("0") && tag.getTree(treeName).getNodeByGornAdress(node)
+          .getLabel().equals(wSplit[lInt])) {
         this.name = "scan " + wSplit[lInt];
-        ChartItemInterface consequence = new DeductionChartItem(treeName, node, "ra", i, j, k,
-          String.valueOf(lInt + 1), "0");
+        ChartItemInterface consequence =
+            new DeductionChartItem(treeName, node, "ra", itemForm[3],
+                itemForm[4], itemForm[5], String.valueOf(lInt + 1), "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -52,7 +49,7 @@ public class TagEarleyScanTerm extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i,j,k,l,0]" + "\n______ l(ɣ,p) = w_l\n"
-      + "[ɣ,p,ra,i,j,k,l+1,0]";
+        + "[ɣ,p,ra,i,j,k,l+1,0]";
   }
 
 }

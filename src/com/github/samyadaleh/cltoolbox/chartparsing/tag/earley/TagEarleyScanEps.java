@@ -7,7 +7,9 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
-/** If the node's label is epsilon, just move on. */
+/**
+ * If the node's label is epsilon, just move on.
+ */
 public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
@@ -27,16 +29,11 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      String pos = itemForm[2];
-      String i = itemForm[3];
-      String j = itemForm[4];
-      String k = itemForm[5];
-      String l = itemForm[6];
-      String adj = itemForm[7];
-      if (pos.equals("la") && adj.equals("0") && tag.getTree(treeName)
-        .getNodeByGornAdress(node).getLabel().equals("")) {
+      if (itemForm[2].equals("la") && itemForm[7].equals("0") && tag
+          .getTree(treeName).getNodeByGornAdress(node).getLabel().equals("")) {
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName, node, "ra", i, j, k, l, "0");
+            new DeductionChartItem(treeName, node, "ra", itemForm[3],
+                itemForm[4], itemForm[5], itemForm[6], "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -47,7 +44,7 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i,j,k,l,0]" + "\n______ l(ɣ,p) = ε\n"
-      + "[ɣ,p,ra,i,j,k,l,0]";
+        + "[ɣ,p,ra,i,j,k,l,0]";
   }
 
 }

@@ -37,41 +37,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
       && nt1.equals(clause.getRhs().get(1).getNonterminal())) {
       boolean looksGood = true;
       ArrayList<Integer> overallRanges = new ArrayList<>();
-      for (String[] argument : clause.getLhs().getSymbols()) {
-        ArrayList<String> vectorRanges = new ArrayList<>();
-        for (String element : argument) {
-          addVectorRangeForElement(itemForm2, itemForm1, vectorRanges, element);
-        }
-        int i = (vectorRanges.lastIndexOf("?") + 1) / 2;
-        int prevnum = Integer.parseInt(vectorRanges.get(i * 2));
-        for (; i > 0; --i) {
-          vectorRanges.set(i * 2, String.valueOf(prevnum - 1));
-          vectorRanges.set(i * 2 + 1, String.valueOf(prevnum));
-          if (prevnum == 0 || !wSplit[prevnum - 1].equals(argument[i])) {
-            looksGood = false;
-          }
-          prevnum--;
-        }
-        if (looksGood) {
-          i = 1;
-          for (; i * 2 < vectorRanges.size(); i++) {
-            prevnum = Integer.parseInt(vectorRanges.get(i * 2 - 1));
-            if (vectorRanges.get(i * 2).equals("?")) {
-              vectorRanges.set(i * 2, String.valueOf(prevnum));
-              vectorRanges.set(i * 2 + 1, String.valueOf(prevnum + 1));
-              if (!wSplit[prevnum].equals(argument[i])) {
-                looksGood = false;
-              }
-            } else if (!vectorRanges.get(i * 2)
-              .equals(vectorRanges.get(i * 2 - 1))) {
-              looksGood = false;
-            }
-          }
-          for (String elem : vectorRanges) {
-            overallRanges.add(Integer.parseInt(elem));
-          }
-        }
-      }
+      looksGood =
+          isVectorRangesMatch(itemForm2, itemForm1, looksGood, overallRanges);
       if (looksGood && overallRanges.size() > 0) {
         List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
           .getRangesForArguments(overallRanges, clause.getLhs());
@@ -85,6 +52,46 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
         this.name = "complete " + clause.toString();
       }
     }
+  }
+
+  private boolean isVectorRangesMatch(String[] itemForm2, String[] itemForm1,
+      boolean looksGood, ArrayList<Integer> overallRanges) {
+    for (String[] argument : clause.getLhs().getSymbols()) {
+      ArrayList<String> vectorRanges = new ArrayList<>();
+      for (String element : argument) {
+        addVectorRangeForElement(itemForm2, itemForm1, vectorRanges, element);
+      }
+      int i = (vectorRanges.lastIndexOf("?") + 1) / 2;
+      int prevnum = Integer.parseInt(vectorRanges.get(i * 2));
+      for (; i > 0; --i) {
+        vectorRanges.set(i * 2, String.valueOf(prevnum - 1));
+        vectorRanges.set(i * 2 + 1, String.valueOf(prevnum));
+        if (prevnum == 0 || !wSplit[prevnum - 1].equals(argument[i])) {
+          looksGood = false;
+        }
+        prevnum--;
+      }
+      if (looksGood) {
+        i = 1;
+        for (; i * 2 < vectorRanges.size(); i++) {
+          prevnum = Integer.parseInt(vectorRanges.get(i * 2 - 1));
+          if (vectorRanges.get(i * 2).equals("?")) {
+            vectorRanges.set(i * 2, String.valueOf(prevnum));
+            vectorRanges.set(i * 2 + 1, String.valueOf(prevnum + 1));
+            if (!wSplit[prevnum].equals(argument[i])) {
+              looksGood = false;
+            }
+          } else if (!vectorRanges.get(i * 2)
+            .equals(vectorRanges.get(i * 2 - 1))) {
+            looksGood = false;
+          }
+        }
+        for (String elem : vectorRanges) {
+          overallRanges.add(Integer.parseInt(elem));
+        }
+      }
+    }
+    return looksGood;
   }
 
   private List<Tree> calculateDerivatedTrees(String[] itemForm1,

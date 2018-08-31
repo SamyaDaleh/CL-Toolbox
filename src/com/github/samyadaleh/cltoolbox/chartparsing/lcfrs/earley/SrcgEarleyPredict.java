@@ -33,10 +33,8 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
       throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
-      String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
-        Clause clauseParsed;
-        clauseParsed = new Clause(clause);
+        Clause clauseParsed = new Clause(itemForm[0]);
         int posInt = Integer.parseInt(itemForm[1]);
         int iInt = Integer.parseInt(itemForm[2]);
         int jInt = Integer.parseInt(itemForm[3]);

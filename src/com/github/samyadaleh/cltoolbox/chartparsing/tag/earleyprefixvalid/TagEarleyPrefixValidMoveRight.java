@@ -22,22 +22,19 @@ public class TagEarleyPrefixValidMoveRight
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
-      String node = itemForm[1];
-      String pos = itemForm[2];
       String iGamma = itemForm[3];
       String i = itemForm[4];
       String j = itemForm[5];
       String k = itemForm[6];
-      String l = itemForm[7];
-      String adj = itemForm[8];
-      String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
-          .getGornAddressOfPotentialRightSibling();
-      if (pos.equals("ra") && !iGamma.equals("~") && !i.equals("~") && !j
-          .equals("~") && !k.equals("~") && adj.equals("0")
+      String siblingGorn =
+          tag.getTree(treeName).getNodeByGornAdress(itemForm[1])
+              .getGornAddressOfPotentialRightSibling();
+      if (itemForm[2].equals("ra") && !iGamma.equals("~") && !i.equals("~")
+          && !j.equals("~") && !k.equals("~") && itemForm[8].equals("0")
           && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, siblingGorn, "la", iGamma, i, j, k,
-                l, "0");
+                itemForm[7], "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);

@@ -22,17 +22,11 @@ public class TagEarleyPrefixValidScanEps extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      String pos = itemForm[2];
-      String iGamma = itemForm[3];
-      String i = itemForm[4];
-      String j = itemForm[5];
-      String k = itemForm[6];
-      String l = itemForm[7];
-      String adj = itemForm[8];
-      if (pos.equals("la") && adj.equals("0") && tag.getTree(treeName)
-        .getNodeByGornAdress(node).getLabel().equals("")) {
+      if (itemForm[2].equals("la") && itemForm[8].equals("0") && tag
+          .getTree(treeName).getNodeByGornAdress(node).getLabel().equals("")) {
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName, node, "ra", iGamma, i, j, k, l, "0");
+            new DeductionChartItem(treeName, node, "ra", itemForm[3],
+                itemForm[4], itemForm[5], itemForm[6], itemForm[7], "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -43,7 +37,7 @@ public class TagEarleyPrefixValidScanEps extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i_ɣ,i,j,k,l,0]" + "\n______ l(ɣ,p) = ε\n"
-      + "[ɣ,p,ra,i_ɣ,i,j,k,l,0]";
+        + "[ɣ,p,ra,i_ɣ,i,j,k,l,0]";
   }
 
 }

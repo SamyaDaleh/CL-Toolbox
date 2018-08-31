@@ -25,14 +25,10 @@ public class TagEarleyPrefixValidCompleteNode
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
-    String pos1 = itemForm1[2];
     String iGamma1 = itemForm1[3];
     String i1 = itemForm1[4];
     String j1 = itemForm1[5];
     String k1 = itemForm1[6];
-    String l1 = itemForm1[7];
-    String adj1 = itemForm1[8];
-    String treeName2 = itemForm2[0];
     String j2 = itemForm2[5];
     String k2 = itemForm2[6];
     String l2 = itemForm2[7];
@@ -40,10 +36,11 @@ public class TagEarleyPrefixValidCompleteNode
         new String[] {itemForm1[0], itemForm1[1], "rb", "~", itemForm1[7], "?",
             "?", "?", "?"};
     Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
-    if (treeName1.equals(treeName2) && pos1.equals("la") && !iGamma1.equals("~")
-        && !i1.equals("~") && !j1.equals("~") && !k1.equals("~") && !l1
-        .equals("~") && adj1.equals("0") && !j2.equals("~") && !k2.equals("~")
-        && !l2.equals("~") && ArrayUtils.match(itemForm2, itemForm2Goal) && tag
+    if (treeName1.equals(itemForm2[0]) && itemForm1[2].equals("la") && !iGamma1
+        .equals("~") && !i1.equals("~") && !j1.equals("~") && !k1.equals("~")
+        && !itemForm1[7].equals("~") && itemForm1[8].equals("0") && !j2
+        .equals("~") && !k2.equals("~") && !l2.equals("~") && ArrayUtils
+        .match(itemForm2, itemForm2Goal) && tag
         .isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;

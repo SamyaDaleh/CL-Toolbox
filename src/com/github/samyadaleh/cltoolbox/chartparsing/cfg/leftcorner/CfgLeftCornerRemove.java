@@ -26,23 +26,20 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
   }
 
   @Override public List<ChartItemInterface> getConsequences()
-    throws ParseException {
+      throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
-      String stackCompl = itemForm[0];
-      String[] stackComplSplit = stackCompl.split(" ");
-      String stackPred = itemForm[1];
-      String[] stackPredSplit = stackPred.split(" ");
-      String stackLhs = itemForm[2];
-      if (stackCompl.length() > 0 && stackPred.length() > 0
-        && stackComplSplit[0].equals(stackPredSplit[0])) {
+      String[] stackComplSplit = itemForm[0].split(" ");
+      String[] stackPredSplit = itemForm[1].split(" ");
+      if (itemForm[0].length() > 0 && itemForm[1].length() > 0
+          && stackComplSplit[0].equals(stackPredSplit[0])) {
         this.name = "remove " + stackComplSplit[0];
-        String newCompl = ArrayUtils.getSubSequenceAsString(stackComplSplit, 1,
-          stackComplSplit.length);
-        String newPred = ArrayUtils.getSubSequenceAsString(stackPredSplit, 1,
-          stackPredSplit.length);
+        String newCompl = ArrayUtils
+            .getSubSequenceAsString(stackComplSplit, 1, stackComplSplit.length);
+        String newPred = ArrayUtils
+            .getSubSequenceAsString(stackPredSplit, 1, stackPredSplit.length);
         ChartItemInterface consequence =
-          new DeductionChartItem(newCompl, newPred, stackLhs);
+            new DeductionChartItem(newCompl, newPred, itemForm[2]);
         List<Tree> derivedTrees = new ArrayList<>();
         List<Tree> antDerivedTrees = antecedences.get(0).getTrees();
         if (antDerivedTrees.size() > 1) {
@@ -51,8 +48,8 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
           }
           try {
             derivedTrees.add(TreeUtils.performLeftmostSubstitution(
-              antDerivedTrees.get(antDerivedTrees.size() - 2),
-              antDerivedTrees.get(antDerivedTrees.size() - 1)));
+                antDerivedTrees.get(antDerivedTrees.size() - 2),
+                antDerivedTrees.get(antDerivedTrees.size() - 1)));
           } catch (StringIndexOutOfBoundsException e) {
             log.debug(e.getMessage(), e);
             derivedTrees.addAll(antDerivedTrees);
