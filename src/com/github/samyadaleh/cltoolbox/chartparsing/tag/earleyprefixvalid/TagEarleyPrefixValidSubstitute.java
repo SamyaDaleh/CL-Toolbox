@@ -54,28 +54,34 @@ public class TagEarleyPrefixValidSubstitute
       && pos2.equals("ra") && adj2.equals("0")) {
       ChartItemInterface consequence =
         new DeductionChartItem(treeName1, node1, "rb", "~", l1, "-", "-", l2, "0");
-      List<Tree> derivedTrees = new ArrayList<>();
-      if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
-        for (Tree tree1 : antecedences.get(0).getTrees()) {
-          for (Tree tree2 : antecedences.get(1).getTrees()) {
-            derivedTrees
-              .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
-          }
-        }
-      } else {
-        for (Tree tree1 : antecedences.get(0).getTrees()) {
-          for (Tree tree2 : antecedences.get(1).getTrees()) {
-            derivedTrees
-              .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
-          }
-        }
-      }
+      List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
       consequence.setTrees(derivedTrees);
       this.name =
           "substitute " + treeName1 + "[" + node1 + "," + treeName2 + "]";
       logItemGeneration(consequence);
       consequences.add(consequence);
     }
+  }
+
+  private List<Tree> generateDerivatedTrees(String[] itemForm1)
+      throws ParseException {
+    List<Tree> derivedTrees = new ArrayList<>();
+    if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
+      for (Tree tree1 : antecedences.get(0).getTrees()) {
+        for (Tree tree2 : antecedences.get(1).getTrees()) {
+          derivedTrees
+            .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+        }
+      }
+    } else {
+      for (Tree tree1 : antecedences.get(0).getTrees()) {
+        for (Tree tree2 : antecedences.get(1).getTrees()) {
+          derivedTrees
+            .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
+        }
+      }
+    }
+    return derivedTrees;
   }
 
   @Override public String toString() {

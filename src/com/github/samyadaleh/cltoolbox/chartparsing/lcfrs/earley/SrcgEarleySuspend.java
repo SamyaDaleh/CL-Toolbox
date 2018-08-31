@@ -69,24 +69,33 @@ public class SrcgEarleySuspend
             break;
           }
         }
-        for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
-          Predicate rhsPred = clause2Parsed.getRhs().get(n);
-          if (rhsPred.getNonterminal()
-            .equals(clause1Parsed.getLhs().getNonterminal())
-            && rhsPred.getSymAt(iInt1, 0).equals(mayV2) && isVar2
-            && itemForm1.length > (iInt1 - 1) * 2 + 5
-            && itemForm2.length > (iInt1 - 1 + n) * 2 + 5) {
-            if (itemForm1[2 * (iInt1 - 1) + 4].equals(pos2)
-              && iInt1 < clause1Parsed.getLhs().getDim() && clause1Parsed
-                .getLhs().getArgumentByIndex(iInt1).length == jInt1) {
-              boolean vectorsMatch =
-                SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1Parsed,
-                  itemForm1, rhsPred, iInt1, clause2Parsed, itemForm2);
-              if (vectorsMatch) {
-                addNewConsequence(itemForm2, pos1, posInt1, clause2,
-                  clause2Parsed, pos2, iInt2, jInt2, itemForm1);
-              }
-            }
+        handleRhsVarWithDot(itemForm1, itemForm2, clause1Parsed, pos1, posInt1,
+            iInt1, jInt1, clause2, clause2Parsed, pos2, iInt2, jInt2, isVar2,
+            mayV2);
+      }
+    }
+  }
+
+  private void handleRhsVarWithDot(String[] itemForm1, String[] itemForm2,
+      Clause clause1Parsed, String pos1, int posInt1, int iInt1, int jInt1,
+      String clause2, Clause clause2Parsed, String pos2, int iInt2, int jInt2,
+      boolean isVar2, String mayV2) {
+    for (int n = 0; n < clause2Parsed.getRhs().size(); n++) {
+      Predicate rhsPred = clause2Parsed.getRhs().get(n);
+      if (rhsPred.getNonterminal()
+        .equals(clause1Parsed.getLhs().getNonterminal())
+        && rhsPred.getSymAt(iInt1, 0).equals(mayV2) && isVar2
+        && itemForm1.length > (iInt1 - 1) * 2 + 5
+        && itemForm2.length > (iInt1 - 1 + n) * 2 + 5) {
+        if (itemForm1[2 * (iInt1 - 1) + 4].equals(pos2)
+          && iInt1 < clause1Parsed.getLhs().getDim() && clause1Parsed
+            .getLhs().getArgumentByIndex(iInt1).length == jInt1) {
+          boolean vectorsMatch =
+            SrcgDeductionUtils.ifRhsVectorMatchesLhsVector(clause1Parsed,
+              itemForm1, rhsPred, iInt1, clause2Parsed, itemForm2);
+          if (vectorsMatch) {
+            addNewConsequence(itemForm2, pos1, posInt1, clause2,
+              clause2Parsed, pos2, iInt2, jInt2, itemForm1);
           }
         }
       }

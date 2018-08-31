@@ -47,12 +47,7 @@ public class TagEarleyPrefixValidPredictAdjoined
         && g.equals("~") && h.equals("~") && !iGamma2.equals("~")) {
         ChartItemInterface consequence = new DeductionChartItem(treeName2, node2, "lb", iGamma2, m,
           "-", "-", m, "0");
-        List<Tree> derivedTrees;
-        if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
-          derivedTrees = antecedences.get(1).getTrees();
-        } else {
-          derivedTrees = antecedences.get(0).getTrees();
-        }
+        List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name = "predict adjoined " + treeName2 + "[" + node2name + ","
             + treeName1 + "]";
@@ -61,6 +56,16 @@ public class TagEarleyPrefixValidPredictAdjoined
         consequences.add(consequence);
       }
     }
+  }
+
+  private List<Tree> generateDerivatedTrees(String[] itemForm1) {
+    List<Tree> derivedTrees;
+    if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
+      derivedTrees = antecedences.get(1).getTrees();
+    } else {
+      derivedTrees = antecedences.get(0).getTrees();
+    }
+    return derivedTrees;
   }
 
   @Override public String toString() {

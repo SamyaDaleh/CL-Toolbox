@@ -38,29 +38,10 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
       List<Integer> children = new ArrayList<>();
       String[] boundaries = new String[antNeeded * 2];
       String[] foot = new String[] {"-", "-"};
-      int i = 0;
-      for (ChartItemInterface antecedence : antecedences) {
-        String thisNodeGorn = antecedence.getItemForm()[1];
-        if ("⊤".equals(thisNodeGorn) || "⊥".equals(thisNodeGorn)) {
-          return consequences;
-        }
-        String thisParentGorn =
-          thisNodeGorn.substring(0, thisNodeGorn.lastIndexOf('.'));
-        if (antecedence.getItemForm()[0].equals(treeName)
-          && thisParentGorn.equals(parentGorn) && thisNodeGorn.endsWith("⊤")) {
-          children.add(Integer.parseInt(thisNodeGorn.substring(
-            thisNodeGorn.lastIndexOf('.') + 1, thisNodeGorn.length() - 1)));
-          boundaries[i] = antecedence.getItemForm()[2];
-          boundaries[i + 1] = antecedence.getItemForm()[5];
-          if (!"-".equals(antecedence.getItemForm()[3])) {
-            foot[0] = antecedence.getItemForm()[3];
-            foot[1] = antecedence.getItemForm()[4];
-          }
-          i += 2;
-        } else {
-          return consequences;
-        }
-      }
+      if (checkAllAntecedences(treeName, parentGorn, children, boundaries,
+          foot))
+        return consequences;
+      int i;
       int lastEntry = 0;
       for (i = 1; i <= antNeeded; i++) {
         int index = children.indexOf(i);
@@ -79,6 +60,34 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
       consequences.add(consequence);
     }
     return consequences;
+  }
+
+  private boolean checkAllAntecedences(String treeName, String parentGorn,
+      List<Integer> children, String[] boundaries, String[] foot) {
+    int i = 0;
+    for (ChartItemInterface antecedence : antecedences) {
+      String thisNodeGorn = antecedence.getItemForm()[1];
+      if ("⊤".equals(thisNodeGorn) || "⊥".equals(thisNodeGorn)) {
+        return true;
+      }
+      String thisParentGorn =
+        thisNodeGorn.substring(0, thisNodeGorn.lastIndexOf('.'));
+      if (antecedence.getItemForm()[0].equals(treeName)
+        && thisParentGorn.equals(parentGorn) && thisNodeGorn.endsWith("⊤")) {
+        children.add(Integer.parseInt(thisNodeGorn.substring(
+          thisNodeGorn.lastIndexOf('.') + 1, thisNodeGorn.length() - 1)));
+        boundaries[i] = antecedence.getItemForm()[2];
+        boundaries[i + 1] = antecedence.getItemForm()[5];
+        if (!"-".equals(antecedence.getItemForm()[3])) {
+          foot[0] = antecedence.getItemForm()[3];
+          foot[1] = antecedence.getItemForm()[4];
+        }
+        i += 2;
+      } else {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

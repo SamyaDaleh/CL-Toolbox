@@ -75,32 +75,37 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
       && adj3.equals("0")) {
       ChartItemInterface consequence = new DeductionChartItem(treeName2, node2, "rb", "~", iGamma1,
         j2, k2, l1, "1");
-      List<Tree> derivedTrees = new ArrayList<>();
-      if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
-        for (Tree tree1 : antecedences.get(1).getTrees()) {
-          for (Tree tree2 : antecedences.get(0).getTrees()) {
-            derivedTrees.add(tree1.adjoin(node2, tree2));
-          }
-        }
-      } else if (Arrays.equals(antecedences.get(1).getItemForm(), itemForm1)) {
-        for (Tree tree1 : antecedences.get(1).getTrees()) {
-          for (Tree tree2 : antecedences.get(0).getTrees()) {
-            derivedTrees.add(tree2.adjoin(node2, tree1));
-          }
-        }
-      } else {
-        for (Tree tree1 : antecedences.get(2).getTrees()) {
-          for (Tree tree2 : antecedences.get(0).getTrees()) {
-            derivedTrees.add(tree1.adjoin(node2, tree2));
-          }
-        }
-      }
-      consequence.setTrees(derivedTrees);
+      generateDerivatedTrees(itemForm1, node2, consequence);
       this.name = "adjoin " + treeName2 + "[" + node2 + "," + treeName1 + "]";
       logItemGeneration(consequence);
       consequences.add(consequence);
     }
 
+  }
+
+  private void generateDerivatedTrees(String[] itemForm1, String node2,
+      ChartItemInterface consequence) {
+    List<Tree> derivedTrees = new ArrayList<>();
+    if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
+      for (Tree tree1 : antecedences.get(1).getTrees()) {
+        for (Tree tree2 : antecedences.get(0).getTrees()) {
+          derivedTrees.add(tree1.adjoin(node2, tree2));
+        }
+      }
+    } else if (Arrays.equals(antecedences.get(1).getItemForm(), itemForm1)) {
+      for (Tree tree1 : antecedences.get(1).getTrees()) {
+        for (Tree tree2 : antecedences.get(0).getTrees()) {
+          derivedTrees.add(tree2.adjoin(node2, tree1));
+        }
+      }
+    } else {
+      for (Tree tree1 : antecedences.get(2).getTrees()) {
+        for (Tree tree2 : antecedences.get(0).getTrees()) {
+          derivedTrees.add(tree1.adjoin(node2, tree2));
+        }
+      }
+    }
+    consequence.setTrees(derivedTrees);
   }
 
   @Override public String toString() {

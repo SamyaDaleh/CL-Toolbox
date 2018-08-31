@@ -77,20 +77,25 @@ public class TagEarleyPrefixValidCompleteFoot
         && adj3.equals("0") && tag.isAdjoinable(treeName2, treeName1, node1)) {
         ChartItemInterface consequence =
           new DeductionChartItem(treeName2, node2, "rb", "~", i1, i1, l1, l1, "0");
-        List<Tree> derivedTrees;
-        if (Arrays.equals(itemForm2, antecedences.get(0).getItemForm())) {
-          derivedTrees = antecedences.get(0).getTrees();
-        } else if (Arrays.equals(itemForm2, antecedences.get(1).getItemForm())) {
-          derivedTrees = antecedences.get(1).getTrees();
-        } else {
-          derivedTrees = antecedences.get(2).getTrees();
-        }
+        List<Tree> derivedTrees = generateDerivatedTrees(itemForm2);
         consequence.setTrees(derivedTrees);
         logItemGeneration(consequence);
         consequences.add(consequence);
       }
     }
 
+  }
+
+  private List<Tree> generateDerivatedTrees(String[] itemForm2) {
+    List<Tree> derivedTrees;
+    if (Arrays.equals(itemForm2, antecedences.get(0).getItemForm())) {
+      derivedTrees = antecedences.get(0).getTrees();
+    } else if (Arrays.equals(itemForm2, antecedences.get(1).getItemForm())) {
+      derivedTrees = antecedences.get(1).getTrees();
+    } else {
+      derivedTrees = antecedences.get(2).getTrees();
+    }
+    return derivedTrees;
   }
 
   @Override public String toString() {

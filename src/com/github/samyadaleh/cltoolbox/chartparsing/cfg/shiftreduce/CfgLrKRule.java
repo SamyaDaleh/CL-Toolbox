@@ -50,19 +50,7 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
       String key =
           ArrayUtils.getSubSequenceAsString(tableKey, 0, tableKey.length);
       if (parsTable.containsKey(key)) {
-        String action = parsTable.get(key);
-        if (action.startsWith("s")) {
-          ChartItemInterface consequence = new DeductionChartItem(ArrayUtils
-              .getSubSequenceAsString(stackSplit, 0, stackSplit.length) + " "
-              + wSplit[i] + " q" + action.substring(1), String.valueOf(i + 1));
-          consequence.setTrees(antecedences.get(0).getTrees());
-          this.name = "shift " + wSplit[i];
-          logItemGeneration(consequence);
-          consequences.add(consequence);
-        } else {
-          log.error("Unexpected table entry " + action + " for " + state + ", "
-              + wSplit[i]);
-        }
+        lookUpShiftAction(i, stackSplit, state, key);
       } else {
         String halfKey = state.substring(1) + " $";
         String action = parsTable.get(halfKey);
@@ -80,38 +68,11 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
               .getSubSequenceAsString(stackSplit, 0,
                   stackSplit.length - rule.getRhs().length * 2));
           newStack.append(" ").append(rule.getLhs());
-          String[] lastTableKey = new String[] {
-              stackSplit[stackSplit.length - rule.getRhs().length * 2
-                  - 1].substring(1), rule.getLhs()};
-          String lastKey = ArrayUtils
-              .getSubSequenceAsString(lastTableKey, 0, lastTableKey.length);
-          String newState = parsTable.get(lastKey);
-          newStack.append(" q").append(newState);
-          ChartItemInterface consequence =
-              new DeductionChartItem(newStack.toString(), itemForm[1]);
-          List<Tree> derivedTrees =
-              new ArrayList<>(antecedences.get(0).getTrees());
-          Tree derivedTreeBase = new Tree(rule);
-          for (Tree tree : antecedences.get(0).getTrees()) {
-            boolean found = false;
-            for (String rhsSym : rule.getRhs()) {
-              if (tree.getRoot().getLabel().equals(rhsSym)) {
-                derivedTrees.remove(0);
-                derivedTreeBase = TreeUtils
-                    .performLeftmostSubstitution(derivedTreeBase, tree);
-                found = true;
-                break;
-              }
-            }
-            if (!found) {
-              break;
-            }
-          }
-          derivedTrees.add(0, derivedTreeBase);
-          this.name = "reduce " + rule.toString();
-          consequence.setTrees(derivedTrees);
-          logItemGeneration(consequence);
-          consequences.add(consequence);
+          lookUpGotoAction(
+              stackSplit[stackSplit.length - rule.getRhs().length * 2 - 1],
+              rule, newStack);
+          generateConsequence(
+              new DeductionChartItem(newStack.toString(), itemForm[1]), rule);
         } else if (action != null && action.equals("acc")) {
           return consequences;
         } else {
@@ -120,6 +81,59 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
       }
     }
     return consequences;
+  }
+
+  private void generateConsequence(DeductionChartItem consequence1,
+      CfgProductionRule rule) throws ParseException {
+    List<Tree> derivedTrees = new ArrayList<>(antecedences.get(0).getTrees());
+    Tree derivedTreeBase = new Tree(rule);
+    for (Tree tree : antecedences.get(0).getTrees()) {
+      boolean found = false;
+      for (String rhsSym : rule.getRhs()) {
+        if (tree.getRoot().getLabel().equals(rhsSym)) {
+          derivedTrees.remove(0);
+          derivedTreeBase =
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        break;
+      }
+    }
+    derivedTrees.add(0, derivedTreeBase);
+    this.name = "reduce " + rule.toString();
+    consequence1.setTrees(derivedTrees);
+    logItemGeneration(consequence1);
+    consequences.add(consequence1);
+  }
+
+  private void lookUpGotoAction(String s, CfgProductionRule rule,
+      StringBuilder newStack) {
+    String[] lastTableKey = new String[] {s.substring(1), rule.getLhs()};
+    String lastKey =
+        ArrayUtils.getSubSequenceAsString(lastTableKey, 0, lastTableKey.length);
+    String newState = parsTable.get(lastKey);
+    newStack.append(" q").append(newState);
+  }
+
+  private void lookUpShiftAction(int i, String[] stackSplit, String state,
+      String key) {
+    String action = parsTable.get(key);
+    if (action.startsWith("s")) {
+      ChartItemInterface consequence = new DeductionChartItem(
+          ArrayUtils.getSubSequenceAsString(stackSplit, 0, stackSplit.length)
+              + " " + wSplit[i] + " q" + action.substring(1),
+          String.valueOf(i + 1));
+      consequence.setTrees(antecedences.get(0).getTrees());
+      this.name = "shift " + wSplit[i];
+      logItemGeneration(consequence);
+      consequences.add(consequence);
+    } else {
+      log.error("Unexpected table entry " + action + " for " + state + ", "
+          + wSplit[i]);
+    }
   }
 
   @Override public String toString() {

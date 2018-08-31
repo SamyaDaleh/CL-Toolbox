@@ -50,16 +50,21 @@ public class TagEarleyPrefixValidCompleteNode
       String f2 = (k1.equals("-")) ? k2 : k1;
       ChartItemInterface consequence =
         new DeductionChartItem(treeName1, node1, "ra", iGamma1, i1, f1, f2, l2, "0");
-      List<Tree> derivedTrees;
-      if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
-        derivedTrees = antecedences.get(1).getTrees();
-      } else {
-        derivedTrees = antecedences.get(0).getTrees();
-      }
+      List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
       consequence.setTrees(derivedTrees);
       logItemGeneration(consequence);
       consequences.add(consequence);
     }
+  }
+
+  private List<Tree> generateDerivatedTrees(String[] itemForm1) {
+    List<Tree> derivedTrees;
+    if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
+      derivedTrees = antecedences.get(1).getTrees();
+    } else {
+      derivedTrees = antecedences.get(0).getTrees();
+    }
+    return derivedTrees;
   }
 
   @Override public String toString() {

@@ -51,51 +51,58 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
           logItemGeneration(consequence);
           consequences.add(consequence);
         } else {
-          for (ArrayList<Integer> sequence : getAllSeparations(fromInt, toInt,
-            rule.getRhs().length - 1)) {
-            boolean skipSequence = false;
-            if (cfg.terminalsContain(rule.getRhs()[0])
-              && sequence.get(0) - fromInt > 1) {
-              continue;
-            }
-            for (int i = 1; i < sequence.size() - 1; i++) {
-              if (cfg.terminalsContain(rule.getRhs()[i])
-                && sequence.get(i) - sequence.get(i - 1) > 1) {
-                skipSequence = true;
-                break;
-              }
-            }
-            if (skipSequence) {
-              continue;
-            }
-            if (cfg.terminalsContain(rule.getRhs()[rule.getRhs().length - 1])
-              && toInt - sequence.get(sequence.size() - 1) > 1) {
-              continue;
-            }
-            ChartItemInterface consequence = new DeductionChartItem("•" + rule.getRhs()[0], from,
-              String.valueOf(sequence.get(0)));
-            consequence.setTrees(derivedTreesNew);
-            logItemGeneration(consequence);
-            consequences.add(consequence);
-            for (int i = 1; i < sequence.size(); i++) {
-              consequence = new DeductionChartItem("•" + rule.getRhs()[i],
-                String.valueOf(sequence.get(i - 1)),
-                String.valueOf(sequence.get(i)));
-              consequence.setTrees(derivedTreesNew);
-              logItemGeneration(consequence);
-              consequences.add(consequence);
-            }
-            consequence =
-              new DeductionChartItem("•" + rule.getRhs()[rule.getRhs().length - 1],
-                String.valueOf(sequence.get(sequence.size() - 1)), to);
-            consequence.setTrees(derivedTreesNew);
-            logItemGeneration(consequence);
-            consequences.add(consequence);
-          }
+          generateAllPossibleConsequences(from, to, fromInt, toInt,
+              derivedTreesNew);
         }
       }
     }
     return consequences;
+  }
+
+  private void generateAllPossibleConsequences(String from, String to,
+      int fromInt, int toInt, List<Tree> derivedTreesNew) {
+    for (ArrayList<Integer> sequence : getAllSeparations(fromInt, toInt,
+      rule.getRhs().length - 1)) {
+      boolean skipSequence = false;
+      if (cfg.terminalsContain(rule.getRhs()[0])
+        && sequence.get(0) - fromInt > 1) {
+        continue;
+      }
+      for (int i = 1; i < sequence.size() - 1; i++) {
+        if (cfg.terminalsContain(rule.getRhs()[i])
+          && sequence.get(i) - sequence.get(i - 1) > 1) {
+          skipSequence = true;
+          break;
+        }
+      }
+      if (skipSequence) {
+        continue;
+      }
+      if (cfg.terminalsContain(rule.getRhs()[rule.getRhs().length - 1])
+        && toInt - sequence.get(sequence.size() - 1) > 1) {
+        continue;
+      }
+      ChartItemInterface
+          consequence = new DeductionChartItem("•" + rule.getRhs()[0], from,
+        String.valueOf(sequence.get(0)));
+      consequence.setTrees(derivedTreesNew);
+      logItemGeneration(consequence);
+      consequences.add(consequence);
+      for (int i = 1; i < sequence.size(); i++) {
+        consequence = new DeductionChartItem("•" + rule.getRhs()[i],
+          String.valueOf(sequence.get(i - 1)),
+          String.valueOf(sequence.get(i)));
+        consequence.setTrees(derivedTreesNew);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
+      }
+      consequence =
+        new DeductionChartItem("•" + rule.getRhs()[rule.getRhs().length - 1],
+          String.valueOf(sequence.get(sequence.size() - 1)), to);
+      consequence.setTrees(derivedTreesNew);
+      logItemGeneration(consequence);
+      consequences.add(consequence);
+    }
   }
 
   /**
