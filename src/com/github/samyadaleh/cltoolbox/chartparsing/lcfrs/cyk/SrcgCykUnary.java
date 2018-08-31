@@ -27,69 +27,22 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     this.wSplit = wSplit;
   }
 
-  @SuppressWarnings("unchecked") @Override public List<ChartItemInterface>
-    getConsequences() throws ParseException {
+  @SuppressWarnings("unchecked") @Override
+  public List<ChartItemInterface> getConsequences() throws ParseException {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String nt = itemForm[0];
 
       if (nt.equals(clause.getRhs().get(0).getNonterminal())) {
         ArrayList<Integer> overallRanges = new ArrayList<>();
-        for (String[] argument : clause.getLhs().getSymbols()) {
-          ArrayList<String> vectorRanges = new ArrayList<>();
-          for (String element : argument) {
-            addVectorRangeForElement(itemForm, vectorRanges, element);
-          }
-          int i = 0;
-          for (; i * 2 < vectorRanges.size(); i++) {
-            if (!vectorRanges.get(i * 2).equals("?")) {
-              break;
-            }
-          }
-          int prevNum = Integer.parseInt(vectorRanges.get(i * 2));
-          while (i > 0) {
-            i--;
-            vectorRanges.set(i * 2, String.valueOf(prevNum - 1));
-            vectorRanges.set(i * 2 + 1, String.valueOf(prevNum));
-            if (prevNum == 0 || !wSplit[prevNum - 1].equals(argument[i])) {
-              return this.consequences;
-            }
-            prevNum--;
-          }
-          i = 1;
-          for (; i * 2 < vectorRanges.size(); i++) {
-            prevNum = Integer.parseInt(vectorRanges.get(i * 2 - 1));
-            if (vectorRanges.get(i * 2).equals("?")) {
-              vectorRanges.set(i * 2, String.valueOf(prevNum));
-              vectorRanges.set(i * 2 + 1, String.valueOf(prevNum + 1));
-              if (!wSplit[prevNum].equals(argument[i])) {
-                return this.consequences;
-              }
-            } else if (!vectorRanges.get(i * 2)
-              .equals(vectorRanges.get(i * 2 - 1))) {
-              return this.consequences;
-            }
-          }
-          for (String elem : vectorRanges) {
-            overallRanges.add(Integer.parseInt(elem));
-          }
-          // Can't handle something like B(a,X), I would need to create all
-          // possible ranges for that and return a new item for each
-          // Why would you need that anyway? Just put an a in the string where
-          // you want it.
-        }
+        if (generateAndCheckOverallRanges(itemForm, overallRanges))
+          return this.consequences;
         if (overallRanges.size() > 0) {
           List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
-            .getRangesForArguments(overallRanges, clause.getLhs());
-          Tree derivedTreeBase =
-            TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
-          List<Tree> derivedTrees = new ArrayList<>();
-          for (Tree tree : antecedences.get(0).getTrees()) {
-            derivedTrees.add(
-              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
-          }
+              .getRangesForArguments(overallRanges, clause.getLhs());
+          List<Tree> derivedTrees = generateDerivatedTrees(overallRanges);
           ChartItemInterface consequence =
-            new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
+              new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
           consequence.setTrees(derivedTrees);
           consequences.add(consequence);
           logItemGeneration(consequence);
@@ -101,8 +54,67 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     return this.consequences;
   }
 
+  private boolean generateAndCheckOverallRanges(String[] itemForm,
+      ArrayList<Integer> overallRanges) {
+    for (String[] argument : clause.getLhs().getSymbols()) {
+      ArrayList<String> vectorRanges = new ArrayList<>();
+      for (String element : argument) {
+        addVectorRangeForElement(itemForm, vectorRanges, element);
+      }
+      int i = 0;
+      for (; i * 2 < vectorRanges.size(); i++) {
+        if (!vectorRanges.get(i * 2).equals("?")) {
+          break;
+        }
+      }
+      int prevNum = Integer.parseInt(vectorRanges.get(i * 2));
+      while (i > 0) {
+        i--;
+        vectorRanges.set(i * 2, String.valueOf(prevNum - 1));
+        vectorRanges.set(i * 2 + 1, String.valueOf(prevNum));
+        if (prevNum == 0 || !wSplit[prevNum - 1].equals(argument[i])) {
+          return true;
+        }
+        prevNum--;
+      }
+      i = 1;
+      for (; i * 2 < vectorRanges.size(); i++) {
+        prevNum = Integer.parseInt(vectorRanges.get(i * 2 - 1));
+        if (vectorRanges.get(i * 2).equals("?")) {
+          vectorRanges.set(i * 2, String.valueOf(prevNum));
+          vectorRanges.set(i * 2 + 1, String.valueOf(prevNum + 1));
+          if (!wSplit[prevNum].equals(argument[i])) {
+            return true;
+          }
+        } else if (!vectorRanges.get(i * 2)
+            .equals(vectorRanges.get(i * 2 - 1))) {
+          return true;
+        }
+      }
+      for (String elem : vectorRanges) {
+        overallRanges.add(Integer.parseInt(elem));
+      }
+      // Can't handle something like B(a,X), I would need to create all
+      // possible ranges for that and return a new item for each
+      // Why would you need that anyway? Just put an a in the string where
+      // you want it.
+    }
+    return false;
+  }
+
+  private List<Tree> generateDerivatedTrees(ArrayList<Integer> overallRanges)
+      throws ParseException {
+    List<Tree> derivedTrees = new ArrayList<>();
+    Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
+    for (Tree tree : antecedences.get(0).getTrees()) {
+      derivedTrees
+          .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
+    }
+    return derivedTrees;
+  }
+
   private void addVectorRangeForElement(String[] itemForm,
-    ArrayList<String> vectorRanges, String element) {
+      ArrayList<String> vectorRanges, String element) {
     int[] indices = clause.getRhs().get(0).find(element);
     if (indices[0] == -1) {
       vectorRanges.add("?");
@@ -115,6 +127,6 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[" + clause.getRhs().get(0).toString() + ",ρ]]" + "\n______ \n"
-      + "[" + clause.getLhs().toString() + ",ρ]";
+        + "[" + clause.getLhs().toString() + ",ρ]";
   }
 }

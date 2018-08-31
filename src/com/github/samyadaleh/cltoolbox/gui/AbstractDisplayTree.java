@@ -93,30 +93,23 @@ abstract class AbstractDisplayTree {
     case 0:
       break;
     case 6:
-      String gorn =
-        dti.getItemForm()[1].substring(0, dti.getItemForm()[1].length() - 1);
-      if (p.getGornAddress().equals(gorn)
-        || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
-        drawTagCykDot(dti, height, nodeX);
-      }
+      mayDrawTagCykDot(dti, p, height, nodeX);
       break;
     case 8:
     case 9:
-      if (p.getGornAddress().equals(dti.getItemForm()[1])
-        || (p.getGornAddress().equals("")
-          && dti.getItemForm()[1].equals("ε"))) {
-        drawTagEarleyDot(dti, height, nodeX, label);
-      }
+      mayDrawTagEarleyDot(dti, p, height, nodeX, label);
       break;
     default:
       System.err.println(
         "Unexpected item length " + String.valueOf(dti.getItemForm().length));
     }
     dti.getNodesDrawn().put(p.getGornAddress(), new Integer[] {nodeX, height});
-    if (!p.getGornAddress().equals("")) {
-      Integer[] xyParent = dti.getNodesDrawn().get(p.getGornAddressOfParent());
-      dti.drawLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
-    }
+    mayDrawLineToParent(dti, p, height, nodeX);
+    calculateAndDrawChildren(dti, p, height, widthFrom, widthDelta);
+  }
+
+  private static void calculateAndDrawChildren(DisplayTreeInterface dti,
+      Vertex p, int height, int widthFrom, int widthDelta) {
     int widthSum = 0;
     List<Vertex> children = dti.getTree().getChildren(p);
     ArrayList<Integer> widths = new ArrayList<>();
@@ -132,6 +125,33 @@ abstract class AbstractDisplayTree {
     }
     callDrawingOfChildren(dti, height, widthFrom, widthDelta, widthSum,
       children, widths);
+  }
+
+  private static void mayDrawLineToParent(DisplayTreeInterface dti, Vertex p,
+      int height, int nodeX) {
+    if (!p.getGornAddress().equals("")) {
+      Integer[] xyParent = dti.getNodesDrawn().get(p.getGornAddressOfParent());
+      dti.drawLine(nodeX, height - 10, xyParent[0], xyParent[1] + 10);
+    }
+  }
+
+  private static void mayDrawTagEarleyDot(DisplayTreeInterface dti, Vertex p,
+      int height, int nodeX, String label) {
+    if (p.getGornAddress().equals(dti.getItemForm()[1])
+      || (p.getGornAddress().equals("")
+        && dti.getItemForm()[1].equals("ε"))) {
+      drawTagEarleyDot(dti, height, nodeX, label);
+    }
+  }
+
+  private static void mayDrawTagCykDot(DisplayTreeInterface dti, Vertex p,
+      int height, int nodeX) {
+    String gorn =
+      dti.getItemForm()[1].substring(0, dti.getItemForm()[1].length() - 1);
+    if (p.getGornAddress().equals(gorn)
+      || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
+      drawTagCykDot(dti, height, nodeX);
+    }
   }
 
   private static void callDrawingOfChildren(DisplayTreeInterface dti,

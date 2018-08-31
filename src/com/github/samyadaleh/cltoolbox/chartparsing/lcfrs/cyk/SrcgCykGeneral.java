@@ -73,27 +73,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
         if (rangesAreOverlapping(rangeOverArguments)) {
           continue;
         }
-        List<Tree> derivedTrees = new ArrayList<>();
-        derivedTrees
-          .add(TreeUtils.getTreeOfSrcgClause(clause, rangeOverElements));
-        for (Predicate rhsPred : clause.getRhs()) {
-          int[] indices = lhs.find(rhsPred.getArgumentByIndex(1)[0]);
-          int pos = lhs.getAbsolutePos(indices[0], indices[1]);
-          String rangeStart = rangeOverElements.get(pos * 2).toString();
-          for (ChartItemInterface item : antecedences) {
-            if (item.getItemForm()[1].equals(rangeStart)) {
-              List<Tree> derivedTreesNew = new ArrayList<>();
-              for (Tree tree1 : derivedTrees) {
-                for (Tree tree2 : item.getTrees()) {
-                  derivedTreesNew
-                    .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
-                }
-              }
-              derivedTrees = derivedTreesNew;
-              break;
-            }
-          }
-        }
+        List<Tree> derivedTrees =
+            generateDerivatedTrees(lhs, rangeOverElements);
         ChartItemInterface consequence =
           new SrcgCykItem(clause.getLhs().getNonterminal(), rangeOverArguments);
         consequence.setTrees(derivedTrees);
@@ -102,6 +83,32 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
       }
     }
     return this.consequences;
+  }
+
+  private List<Tree> generateDerivatedTrees(Predicate lhs,
+      ArrayList<Integer> rangeOverElements) throws ParseException {
+    List<Tree> derivedTrees = new ArrayList<>();
+    derivedTrees
+      .add(TreeUtils.getTreeOfSrcgClause(clause, rangeOverElements));
+    for (Predicate rhsPred : clause.getRhs()) {
+      int[] indices = lhs.find(rhsPred.getArgumentByIndex(1)[0]);
+      int pos = lhs.getAbsolutePos(indices[0], indices[1]);
+      String rangeStart = rangeOverElements.get(pos * 2).toString();
+      for (ChartItemInterface item : antecedences) {
+        if (item.getItemForm()[1].equals(rangeStart)) {
+          List<Tree> derivedTreesNew = new ArrayList<>();
+          for (Tree tree1 : derivedTrees) {
+            for (Tree tree2 : item.getTrees()) {
+              derivedTreesNew
+                .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+            }
+          }
+          derivedTrees = derivedTreesNew;
+          break;
+        }
+      }
+    }
+    return derivedTrees;
   }
 
   private List<List<String>>

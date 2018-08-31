@@ -77,35 +77,42 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
           .getRangesForArguments(overallRanges, clause.getLhs());
         ChartItemInterface consequence =
           new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
-        List<Tree> derivedTrees = new ArrayList<>();
-        Tree derivedTreeBase =
-          TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
-        if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
-          for (Tree tree1 : antecedences.get(0).getTrees()) {
-            for (Tree tree2 : antecedences.get(1).getTrees()) {
-              derivedTreeBase =
-                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
-              derivedTreeBase =
-                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
-            }
-          }
-        } else {
-          for (Tree tree1 : antecedences.get(0).getTrees()) {
-            for (Tree tree2 : antecedences.get(1).getTrees()) {
-              derivedTreeBase =
-                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
-              derivedTreeBase =
-                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
-            }
-          }
-        }
-        derivedTrees.add(derivedTreeBase);
+        List<Tree> derivedTrees =
+            calculateDerivatedTrees(itemForm1, overallRanges);
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);
         logItemGeneration(consequence);
         this.name = "complete " + clause.toString();
       }
     }
+  }
+
+  private List<Tree> calculateDerivatedTrees(String[] itemForm1,
+      ArrayList<Integer> overallRanges) throws ParseException {
+    List<Tree> derivedTrees = new ArrayList<>();
+    Tree derivedTreeBase =
+      TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
+    if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
+      for (Tree tree1 : antecedences.get(0).getTrees()) {
+        for (Tree tree2 : antecedences.get(1).getTrees()) {
+          derivedTreeBase =
+            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+          derivedTreeBase =
+            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+        }
+      }
+    } else {
+      for (Tree tree1 : antecedences.get(0).getTrees()) {
+        for (Tree tree2 : antecedences.get(1).getTrees()) {
+          derivedTreeBase =
+            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+          derivedTreeBase =
+            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+        }
+      }
+    }
+    derivedTrees.add(derivedTreeBase);
+    return derivedTrees;
   }
 
   private void addVectorRangeForElement(String[] itemForm2, String[] itemForm1,

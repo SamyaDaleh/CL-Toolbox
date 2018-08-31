@@ -11,7 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
 public class TagEarleyPrefixValidCompleteNode
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -41,15 +41,16 @@ public class TagEarleyPrefixValidCompleteNode
     String l2 = itemForm2[7];
     Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
     if (treeName1.equals(treeName2) && node1.equals(node2) && pos1.equals("la")
-      && pos2.equals("rb") && !iGamma1.equals("~") && !i1.equals("~")
-      && !j1.equals("~") && !k1.equals("~") && !l1.equals("~") && l1.equals(i2)
-      && adj1.equals("0") && iGamma2.equals("~") && !i2.equals("~")
-      && !j2.equals("~") && !k2.equals("~") && !l2.equals("~")
-      && tag.isInNonterminals(p.getLabel())) {
+        && pos2.equals("rb") && !iGamma1.equals("~") && !i1.equals("~") && !j1
+        .equals("~") && !k1.equals("~") && !l1.equals("~") && l1.equals(i2)
+        && adj1.equals("0") && iGamma2.equals("~") && !i2.equals("~") && !j2
+        .equals("~") && !k2.equals("~") && !l2.equals("~") && tag
+        .isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;
       ChartItemInterface consequence =
-        new DeductionChartItem(treeName1, node1, "ra", iGamma1, i1, f1, f2, l2, "0");
+          new DeductionChartItem(treeName1, node1, "ra", iGamma1, i1, f1, f2,
+              l2, "0");
       List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
       consequence.setTrees(derivedTrees);
       logItemGeneration(consequence);
@@ -69,6 +70,6 @@ public class TagEarleyPrefixValidCompleteNode
 
   @Override public String toString() {
     return "[ɣ,p,la,i_ɣ,f,g,h,i,0], [ɣ,p,rb,~,i,j,k,l,adj]"
-      + "\n______ l(ɣ,p) ∈  N\n" + "[ɣ,p,ra,i_ɣ,f,g⊕j,h⊕k,l,0]";
+        + "\n______ l(ɣ,p) ∈  N\n" + "[ɣ,p,ra,i_ɣ,f,g⊕j,h⊕k,l,0]";
   }
 }

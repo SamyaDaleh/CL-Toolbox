@@ -36,7 +36,7 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
   }
 
   private void calculateConsequences(String[] itemForm1, String[] itemForm2,
-    String[] itemForm3) {
+      String[] itemForm3) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
     String pos1 = itemForm1[2];
@@ -65,22 +65,21 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
     String l3 = itemForm3[7];
     String adj3 = itemForm3[8];
     boolean adjoinable = tag.isAdjoinable(treeName1, treeName2, node2);
-    if (adjoinable && node1.equals("") && iGamma1.equals(i1)
-      && !iGamma1.equals("~") && !k1.equals("~") && adj1.equals("0")
-      && pos1.equals("ra") && pos2.equals("rb") && iGamma2.equals("~")
-      && j1.equals(i2) && k1.equals(l2) && !j2.equals("~") && !k2.equals("~")
-      && adj2.equals("0") && treeName2.equals(treeName3) && node2.equals(node3)
-      && pos3.equals("la") && iGamma3.equals("~") && i3.equals("~")
-      && j3.equals("~") && k3.equals("~") && iGamma1.equals(l3)
-      && adj3.equals("0")) {
-      ChartItemInterface consequence = new DeductionChartItem(treeName2, node2, "rb", "~", iGamma1,
-        j2, k2, l1, "1");
+    if (adjoinable && node1.equals("") && iGamma1.equals(i1) && !iGamma1
+        .equals("~") && !k1.equals("~") && adj1.equals("0") && pos1.equals("ra")
+        && pos2.equals("rb") && iGamma2.equals("~") && j1.equals(i2) && k1
+        .equals(l2) && !j2.equals("~") && !k2.equals("~") && adj2.equals("0")
+        && treeName2.equals(treeName3) && node2.equals(node3) && pos3
+        .equals("la") && iGamma3.equals("~") && i3.equals("~") && j3.equals("~")
+        && k3.equals("~") && iGamma1.equals(l3) && adj3.equals("0")) {
+      ChartItemInterface consequence =
+          new DeductionChartItem(treeName2, node2, "rb", "~", iGamma1, j2, k2,
+              l1, "1");
       generateDerivatedTrees(itemForm1, node2, consequence);
       this.name = "adjoin " + treeName2 + "[" + node2 + "," + treeName1 + "]";
       logItemGeneration(consequence);
       consequences.add(consequence);
     }
-
   }
 
   private void generateDerivatedTrees(String[] itemForm1, String node2,
@@ -109,8 +108,9 @@ public class TagEarleyPrefixValidAdjoin extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    return "[β,ε,ra,i_β,i_β,j,k,l,0], [ɣ,p,rb,~,j,g,h,k,0], [ɣ,p,la,~,~,~,~,i_β,0]"
-      + "\n______ β ∈  f_SA(ɣ,p)\n" + "[ɣ,p,rb,~,i_β,g,h,l,1]";
+    return
+        "[β,ε,ra,i_β,i_β,j,k,l,0], [ɣ,p,rb,~,j,g,h,k,0], [ɣ,p,la,~,~,~,~,i_β,0]"
+            + "\n______ β ∈  f_SA(ɣ,p)\n" + "[ɣ,p,rb,~,i_β,g,h,l,1]";
   }
 
 }

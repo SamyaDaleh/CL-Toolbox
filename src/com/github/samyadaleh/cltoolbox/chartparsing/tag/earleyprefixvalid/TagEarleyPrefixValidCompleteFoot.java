@@ -11,7 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
 public class TagEarleyPrefixValidCompleteFoot
-  extends AbstractDynamicDeductionRule {
+    extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
@@ -37,7 +37,7 @@ public class TagEarleyPrefixValidCompleteFoot
   }
 
   private void calculateConsequences(String[] itemForm1, String[] itemForm2,
-    String[] itemForm3) {
+      String[] itemForm3) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
     String pos1 = itemForm1[2];
@@ -67,16 +67,17 @@ public class TagEarleyPrefixValidCompleteFoot
     String adj3 = itemForm3[8];
     if (tag.getAuxiliaryTree(treeName2) != null) {
       Vertex pf = tag.getAuxiliaryTree(treeName2).getNodeByGornAdress(node2);
-      if (pos1.equals("rb") && iGamma1.equals("~") && i1.equals(l2)
-        && j1.equals("~") && k1.equals("~") && adj1.equals("0")
-        && pf == tag.getAuxiliaryTree(treeName2).getFoot() && pos2.equals("la")
-        && iGamma2.equals(l3) && !i2.equals("~") && j2.equals("-")
-        && k2.equals("-") && adj2.equals("0") && treeName1.equals(treeName3)
-        && node1.equals(node3) && pos3.equals("la") && iGamma3.equals("~")
-        && i3.equals("~") && j3.equals("~") && k3.equals("~")
-        && adj3.equals("0") && tag.isAdjoinable(treeName2, treeName1, node1)) {
+      if (pos1.equals("rb") && iGamma1.equals("~") && i1.equals(l2) && j1
+          .equals("~") && k1.equals("~") && adj1.equals("0") && pf == tag
+          .getAuxiliaryTree(treeName2).getFoot() && pos2.equals("la") && iGamma2
+          .equals(l3) && !i2.equals("~") && j2.equals("-") && k2.equals("-")
+          && adj2.equals("0") && treeName1.equals(treeName3) && node1
+          .equals(node3) && pos3.equals("la") && iGamma3.equals("~") && i3
+          .equals("~") && j3.equals("~") && k3.equals("~") && adj3.equals("0")
+          && tag.isAdjoinable(treeName2, treeName1, node1)) {
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName2, node2, "rb", "~", i1, i1, l1, l1, "0");
+            new DeductionChartItem(treeName2, node2, "rb", "~", i1, i1, l1, l1,
+                "0");
         List<Tree> derivedTrees = generateDerivatedTrees(itemForm2);
         consequence.setTrees(derivedTrees);
         logItemGeneration(consequence);
@@ -99,9 +100,10 @@ public class TagEarleyPrefixValidCompleteFoot
   }
 
   @Override public String toString() {
-    return "[ɣ,p,rb,~,i,~,~,l,0], [β,p_f,la,i_β,m,-,-,i,0], [ɣ,p,la,~,~,~,~,i_β,0]"
-      + "\n______ β(p_f) foot node, β ∈  f_SA(ɣ,p)\n"
-      + "[β,p_f,rb,~,m,i,l,l,0]";
+    return
+        "[ɣ,p,rb,~,i,~,~,l,0], [β,p_f,la,i_β,m,-,-,i,0], [ɣ,p,la,~,~,~,~,i_β,0]"
+            + "\n______ β(p_f) foot node, β ∈  f_SA(ɣ,p)\n"
+            + "[β,p_f,rb,~,m,i,l,l,0]";
   }
 
 }
