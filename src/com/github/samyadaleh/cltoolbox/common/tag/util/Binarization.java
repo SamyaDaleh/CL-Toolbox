@@ -48,7 +48,7 @@ public class Binarization {
     for (String treeName : oldTag.getAuxiliaryTreeNames()) {
       Tree tree = oldTag.getAuxiliaryTree(treeName);
       if (tree.isBinarized()) {
-        newTag.addInitialTree(treeName, tree.toString());
+        newTag.addAuxiliaryTree(treeName, tree.toString());
       } else {
         int i = 1;
         String newTreeName = treeName + String.valueOf(i);

@@ -36,11 +36,10 @@ public class TagEarleyPrefixValidCompleteNode
         new String[] {itemForm1[0], itemForm1[1], "rb", "~", itemForm1[7], "?",
             "?", "?", "?"};
     Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
-    if (treeName1.equals(itemForm2[0]) && itemForm1[2].equals("la") && !iGamma1
-        .equals("~") && !i1.equals("~") && !j1.equals("~") && !k1.equals("~")
-        && !itemForm1[7].equals("~") && itemForm1[8].equals("0") && !j2
-        .equals("~") && !k2.equals("~") && !l2.equals("~") && ArrayUtils
-        .match(itemForm2, itemForm2Goal) && tag
+    if (itemForm1[2].equals("la") && !iGamma1.equals("~") && !i1.equals("~")
+        && !j1.equals("~") && !k1.equals("~") && !itemForm1[7].equals("~")
+        && itemForm1[8].equals("0") && !j2.equals("~") && !k2.equals("~") && !l2
+        .equals("~") && ArrayUtils.match(itemForm2, itemForm2Goal) && tag
         .isInNonterminals(p.getLabel())) {
       String f1 = (j1.equals("-")) ? j2 : j1;
       String f2 = (k1.equals("-")) ? k2 : k1;

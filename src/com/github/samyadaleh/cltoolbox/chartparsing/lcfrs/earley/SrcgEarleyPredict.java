@@ -35,7 +35,6 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       if (itemForm[0].contains("->")) {
         Clause clauseParsed = new Clause(itemForm[0]);
-        int posInt = Integer.parseInt(itemForm[1]);
         int iInt = Integer.parseInt(itemForm[2]);
         int jInt = Integer.parseInt(itemForm[3]);
         if (clauseParsed.getLhs().ifSymExists(iInt, jInt)) {
@@ -44,9 +43,9 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
             if (rhsPred.getSymAt(1, 0).equals(mayV) && rhsPred.getNonterminal()
                 .equals(outClause.getLhs().getNonterminal())) {
               ChartItemInterface consequence =
-                  new SrcgEarleyActiveItem(outClause.toString(), posInt, 1, 0,
-                      new RangeVector(
-                          outClause.getLhs().getSymbolsAsPlainArray().length));
+                  new SrcgEarleyActiveItem(outClause.toString(),
+                      Integer.parseInt(itemForm[1]), 1, 0, new RangeVector(
+                      outClause.getLhs().getSymbolsAsPlainArray().length));
               List<Tree> derivedTrees = new ArrayList<>();
               Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(outClause);
               for (Tree tree : antecedences.get(0).getTrees()) {
