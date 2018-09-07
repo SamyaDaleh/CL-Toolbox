@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.addSymbolToCategory;
+
 /**
  * Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol.
@@ -64,52 +66,10 @@ public class Cfg extends AbstractCfg {
         handleMainCategory(validCategories, category, lineNumber, token);
         break;
       case 1:
-        if (token.equals("=")) {
-          category.add(token);
-        } else {
-          throw new ParseException("Expected = but found " + token, lineNumber);
-        }
+        addSymbolToCategory(category, lineNumber, token, "=");
         break;
       case 2:
-        switch (category.get(0)) {
-        case "P":
-          if (token.equals("{")) {
-            category.add(token);
-          } else {
-            throw new ParseException("Expected { but found " + token,
-                lineNumber);
-          }
-          break;
-        case "N":
-          if (token.equals("{")) {
-            category.add(token);
-          } else {
-            throw new ParseException("Expected { but found " + token,
-                lineNumber);
-          }
-          break;
-        case "T":
-          if (token.equals("{")) {
-            category.add(token);
-          } else {
-            throw new ParseException("Expected { but found " + token,
-                lineNumber);
-          }
-          break;
-        case "S":
-          if (this.getStartSymbol() != null) {
-            throw new ParseException("Startsymbol was declared twice: " + token,
-                lineNumber);
-          }
-          this.startSymbol = token;
-          category = new ArrayList<>();
-          break;
-        case "G":
-          if (token.equals(">")) {
-            category = new ArrayList<>();
-          }
-        default:
-        }
+        category = addStartsymbolOrAddCategory(category, lineNumber, token);
         break;
       case 3:
         switch (category.get(0)) {
@@ -140,14 +100,7 @@ public class Cfg extends AbstractCfg {
           }
           break;
         case "P":
-          if (lhs == null || !token.equals("-")) {
-            lhs = token;
-          } else if (lhs != null && token.equals("-")) {
-            category.add(token);
-          } else {
-            throw new ParseException("Unexpected situation with token " + token,
-                lineNumber);
-          }
+          lhs = findLhsOrAddCategory(category, lineNumber, lhs, token);
           break;
         default:
           if (lhs != null) {
@@ -194,6 +147,48 @@ public class Cfg extends AbstractCfg {
         break;
       }
     }
+  }
+
+  private String findLhsOrAddCategory(List<String> category, int lineNumber,
+      String lhs, String token) throws ParseException {
+    if (lhs == null || !token.equals("-")) {
+      lhs = token;
+    } else if (token.equals("-")) {
+      category.add(token);
+    } else {
+      throw new ParseException("Unexpected situation with token " + token,
+          lineNumber);
+    }
+    return lhs;
+  }
+
+  private List<String> addStartsymbolOrAddCategory(List<String> category,
+      int lineNumber, String token) throws ParseException {
+    switch (category.get(0)) {
+    case "P":
+      addSymbolToCategory(category, lineNumber, token, "{");
+      break;
+    case "N":
+      addSymbolToCategory(category, lineNumber, token, "{");
+      break;
+    case "T":
+      addSymbolToCategory(category, lineNumber, token, "{");
+      break;
+    case "S":
+      if (this.getStartSymbol() != null) {
+        throw new ParseException("Startsymbol was declared twice: " + token,
+            lineNumber);
+      }
+      this.startSymbol = token;
+      category = new ArrayList<>();
+      break;
+    case "G":
+      if (token.equals(">")) {
+        category = new ArrayList<>();
+      }
+    default:
+    }
+    return category;
   }
 
   private void handleMainCategory(Set<String> validCategories,
@@ -408,10 +403,4 @@ public class Cfg extends AbstractCfg {
     this.productionRules.add(new CfgProductionRule(rule));
   }
 
-  /**
-   * Returns true if grammar has generating symbols.
-   */
-  public boolean hasGeneratingSymbols() {
-    return UselessSymbols.hasGeneratingSymbols(this);
-  }
 }

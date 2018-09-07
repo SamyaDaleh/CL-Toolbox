@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * Parses different grammars from text files.
  */
-class GrammarParserUtils {
+public class GrammarParserUtils {
   private static final Pattern p = Pattern.compile("\"(.*?)\"");
   private static final Logger log = LogManager.getLogger();
 
@@ -74,5 +74,14 @@ class GrammarParserUtils {
     }
     grammarReader.close();
     return declarations;
+  }
+
+  public static void addSymbolToCategory(List<String> category, int lineNumber,
+      String token, String s) throws ParseException {
+    if (token.equals(s)) {
+      category.add(token);
+    } else {
+      throw new ParseException("Expected " + s + " but found " + token, lineNumber);
+    }
   }
 }

@@ -1,6 +1,8 @@
 package com.github.samyadaleh.cltoolbox.cli;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.*;
+import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
+import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;

@@ -2,9 +2,7 @@ package com.github.samyadaleh.cltoolbox.common;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 
 import com.github.samyadaleh.cltoolbox.common.parser.CfgGrammarParser;
@@ -24,12 +22,13 @@ public class GrammarParserUtilsTest {
     String cfgString =
         "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
             + "P = {S -> a S b, S -> a b}\n";
-    Cfg cfg = CfgGrammarParser.parseCfgString(cfgString);
+    Reader reader = new StringReader(cfgString);
+    Cfg cfg = CfgGrammarParser.parseCfgReader(reader);
     assert cfg != null;
     assertEquals(cfgString, cfg.toString());
   }
 
-  @Test public void testparseCfgFile() throws IOException {
+  @Test public void testparseCfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
         new BufferedReader(new FileReader("./resources/grammars/anbn.cfg"));
     Cfg cfg = CfgGrammarParser.parseCfgReader(grammarReader);
@@ -62,10 +61,9 @@ public class GrammarParserUtilsTest {
         srcg.toString());
   }
 
-  @Test public void testparseTagFile() throws IOException {
-    BufferedReader grammarReader =
-        new BufferedReader(new FileReader("./resources/grammars/anbncndn.tag"));
-    Tag tag = TagGrammarParser.parseTagReader(grammarReader);
+  @Test public void testparseTagFile() throws IOException, ParseException {
+    Reader reader = new FileReader("./resources/grammars/anbncndn.tag");
+    Tag tag = TagGrammarParser.parseTagReader(reader);
     assert tag != null;
     assertEquals("G = <N, T, I, A, S>\n" + "N = {S}\n" + "T = {a, b, c, d}\n"
             + "I = {α1 : (S_OA (ε ))}\n"
