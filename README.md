@@ -68,7 +68,7 @@ true
 <tr><td>13</td><td>[ε,4]</td><td>scan</td><td>{10}</td></tr>
 </table>
 
-Where ancb.cfg is:
+Where anbn.cfg is:
 ```
 N = {"S"}
 T = {"a", "b"}
