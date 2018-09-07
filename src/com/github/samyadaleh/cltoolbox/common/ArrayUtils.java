@@ -2,8 +2,11 @@ package com.github.samyadaleh.cltoolbox.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-/** Open collection of functions to work with arrays. */
+/**
+ * Open collection of functions to work with arrays.
+ */
 public class ArrayUtils {
 
   /**
@@ -11,7 +14,7 @@ public class ArrayUtils {
    * index and returns it as string, entries separated by space.
    */
   public static String getSubSequenceAsString(String[] sequence, int from,
-    int to) {
+      int to) {
     StringBuilder subSeq = new StringBuilder();
     for (int i = from; i < to && i < sequence.length; i++) {
       if (i > from)
@@ -26,7 +29,7 @@ public class ArrayUtils {
    * returns it as array.
    */
   public static String[] getSubSequenceAsArray(String[] sequence, int from,
-    int to) {
+      int to) {
     ArrayList<String> newSequence = new ArrayList<>();
     for (int i = from; i < to && i < sequence.length; i++) {
       newSequence.add(sequence[i]);
@@ -39,7 +42,7 @@ public class ArrayUtils {
    * returns it as list.
    */
   public static List<String> getSubSequenceAsList(String[] sequence, int from,
-    int to) {
+      int to) {
     ArrayList<String> newSequence = new ArrayList<>();
     for (int i = from; i < to && i < sequence.length; i++) {
       newSequence.add(sequence[i]);
@@ -57,15 +60,17 @@ public class ArrayUtils {
       return false;
     }
     for (int i = 0; i < itemForm1.length; i++) {
-      if (!(itemForm1[i].equals("?") || itemForm2[i].equals("?")
-        || itemForm1[i].equals(itemForm2[i]))) {
+      if (!(itemForm1[i].equals("?") || itemForm2[i].equals("?") || itemForm1[i]
+          .equals(itemForm2[i]))) {
         return false;
       }
     }
     return true;
   }
 
-  /** Returns a string representation of an array, here used for items. */
+  /**
+   * Returns a string representation of an array, here used for items.
+   */
   public static String toString(String[] item) {
     StringBuilder representation = new StringBuilder();
     representation.append("[");
@@ -88,7 +93,7 @@ public class ArrayUtils {
    * returned, else null.
    */
   public static String getStringHeadIfEndsWith(String[] seqSplit,
-    String[] rhs) {
+      String[] rhs) {
     if (seqSplit.length < rhs.length)
       return null;
     for (int i = 0; i < rhs.length; i++) {
@@ -96,11 +101,13 @@ public class ArrayUtils {
         return null;
       }
     }
-    return ArrayUtils.getSubSequenceAsString(seqSplit, 0,
-      seqSplit.length - rhs.length);
+    return ArrayUtils
+        .getSubSequenceAsString(seqSplit, 0, seqSplit.length - rhs.length);
   }
 
-  /** Returns a new array without the element at index i. */
+  /**
+   * Returns a new array without the element at index i.
+   */
   public static String[] getSequenceWithoutIAsArray(String[] array, int i) {
     ArrayList<String> newArray = new ArrayList<>();
     for (int j = 0; j < array.length; j++) {
@@ -121,5 +128,39 @@ public class ArrayUtils {
       }
     }
     return false;
+  }
+
+  /**
+   * Actually does the tokenization by throwing away spaces, returning special
+   * symbols as single tokens and all other continuous string concatenations
+   * each as a token.
+   */
+  public static List<String> tokenize(String tree, Character[] specialSymbols) {
+    List<String> tokens = new ArrayList<>();
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < tree.length(); i++) {
+      if (tree.charAt(i) == ' ') {
+        if (builder.length() > 0) {
+          tokens.add(builder.toString());
+          builder = new StringBuilder();
+        }
+      } else {
+        int finalI = i;
+        if (Stream.of(specialSymbols).anyMatch(
+            s -> tree.substring(finalI).startsWith(String.valueOf(s)))) {
+          if (builder.length() > 0) {
+            tokens.add(builder.toString());
+            builder = new StringBuilder();
+          }
+          tokens.add(String.valueOf(tree.charAt(i)));
+        } else {
+          builder.append(String.valueOf(tree.charAt(i)));
+        }
+      }
+    }
+    if (builder.length() > 0) {
+      tokens.add(builder.toString());
+    }
+    return tokens;
   }
 }

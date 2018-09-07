@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
 import com.github.samyadaleh.cltoolbox.common.parser.CfgGrammarParser;
 import com.github.samyadaleh.cltoolbox.common.parser.PcfgGrammarParser;
@@ -18,6 +19,15 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class GrammarParserUtilsTest {
+
+  @Test public void testparseCfgString() throws IOException, ParseException {
+    String cfgString =
+        "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
+            + "P = {S -> a S b, S -> a b}\n";
+    Cfg cfg = CfgGrammarParser.parseCfgString(cfgString);
+    assert cfg != null;
+    assertEquals(cfgString, cfg.toString());
+  }
 
   @Test public void testparseCfgFile() throws IOException {
     BufferedReader grammarReader =

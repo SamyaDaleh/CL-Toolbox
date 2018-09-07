@@ -5,8 +5,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +16,39 @@ import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
 public class CfgGrammarParser {
   private static List<Exception> errors;
   private static final Logger log = LogManager.getLogger();
+
+  /**
+   * Parse CFG from String representation.
+   */
+  public static Cfg parseCfgString(String cfgString)
+      throws IOException, ParseException {
+    errors = new ArrayList<>();
+    BufferedReader in = new BufferedReader(new StringReader(cfgString));
+    Cfg cfg = new Cfg(in);
+    checkForGrammarProblems(cfg);
+    if (GrammarParserUtils.printErrors(errors))
+      return null;
+    return cfg;
+  }
+
+  /**
+   * Parse CFG from file
+   */
+  public static Cfg parseCfgFile(String file)
+      throws IOException, ParseException {
+    errors = new ArrayList<>();
+    try {
+      BufferedReader in = new BufferedReader(new FileReader(file));
+      Cfg cfg = new Cfg(in);
+      checkForGrammarProblems(cfg);
+      if (GrammarParserUtils.printErrors(errors))
+        return null;
+      return cfg;
+    } catch (FileNotFoundException e) {
+      log.error(e.getMessage(), e);
+    }
+    return null;
+  }
 
   /**
    * Parses a CFG from a file and returns it as Cfg.
