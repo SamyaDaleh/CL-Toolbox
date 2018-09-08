@@ -1,6 +1,6 @@
 package com.github.samyadaleh.cltoolbox.common.parser;
 
-import com.github.samyadaleh.cltoolbox.common.cfg.AbstractCfg;
+import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +36,7 @@ public class GrammarParserUtils {
     }
   }
 
-  public static void handleMainCategory(AbstractCfg acfg,
+  public static void handleMainCategory(AbstractNTSGrammar acfg,
       Set<String> validCategories, List<String> category, Token token)
       throws ParseException {
     String tokenString = token.getString();
@@ -54,7 +54,8 @@ public class GrammarParserUtils {
     }
   }
 
-  public static List<String> addStartsymbolOrAddCategory(AbstractCfg acfg,
+  public static List<String> addStartsymbolOrAddCategory(
+      AbstractNTSGrammar acfg,
       List<String> category, Token token) throws ParseException {
     String tokenString = token.getString();
     switch (category.get(0)) {

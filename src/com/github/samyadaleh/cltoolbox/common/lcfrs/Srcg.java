@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Binarization;
@@ -23,20 +24,17 @@ import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.a
 /**
  * Representation of a sRCG - simple Range Concatenation Grammar.
  */
-public class Srcg {
-  private String[] nonterminals;
-  private String[] terminals;
+public class Srcg extends AbstractNTSGrammar {
   private String[] variables;
-  private String startSymbol;
   private final List<Clause> clauses = new ArrayList<>();
 
   /**
    * Converts a CFG to a sRCG with dimension = 1.
    */
   public Srcg(Cfg cfg) throws ParseException {
-    this.nonterminals = cfg.getNonterminals();
-    this.terminals = cfg.getTerminals();
-    this.startSymbol = cfg.getStartSymbol();
+    this.setNonterminals(cfg.getNonterminals());
+    this.setTerminals(cfg.getTerminals());
+    this.setStartSymbol(cfg.getStartSymbol());
     ArrayList<String> newVariables = new ArrayList<>();
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       StringBuilder lhs = new StringBuilder();
@@ -221,20 +219,8 @@ public class Srcg {
     }
   }
 
-  public void setNonterminals(String[] nonterminals) {
-    this.nonterminals = nonterminals;
-  }
-
-  public void setTerminals(String[] terminals) {
-    this.terminals = terminals;
-  }
-
   public void setVariables(String[] variables) {
     this.variables = variables;
-  }
-
-  public void setStartSymbol(String startSymbol) {
-    this.startSymbol = startSymbol;
   }
 
   private void addClause(String lhs, String rhs) throws ParseException {
@@ -252,8 +238,10 @@ public class Srcg {
   @Override public String toString() {
     StringBuilder repr = new StringBuilder();
     repr.append("G = <N, T, V, P, S>\n");
-    repr.append("N = {").append(String.join(", ", nonterminals)).append("}\n");
-    repr.append("T = {").append(String.join(", ", terminals)).append("}\n");
+    repr.append("N = {").append(String.join(", ", getNonterminals()))
+        .append("}\n");
+    repr.append("T = {").append(String.join(", ", getTerminals()))
+        .append("}\n");
     repr.append("V = {").append(String.join(", ", variables)).append("}\n");
     repr.append("P = {");
     for (int i = 0; i < clauses.size(); i++) {
@@ -263,7 +251,7 @@ public class Srcg {
       repr.append(clauses.get(i).toString());
     }
     repr.append("}\n");
-    repr.append("S = ").append(startSymbol).append("\n");
+    repr.append("S = ").append(getStartSymbol()).append("\n");
     return repr.toString();
   }
 
@@ -271,20 +259,8 @@ public class Srcg {
     return this.clauses;
   }
 
-  public String getStartSymbol() {
-    return this.startSymbol;
-  }
-
   public String[] getVariables() {
     return this.variables;
-  }
-
-  public String[] getTerminals() {
-    return this.terminals;
-  }
-
-  public String[] getNonterminals() {
-    return this.nonterminals;
   }
 
   /**
@@ -320,34 +296,10 @@ public class Srcg {
   }
 
   /**
-   * Returns true if mayNt is in set of nonterminals.
-   */
-  public boolean nonTerminalsContain(String mayNt) {
-    for (String nt : this.nonterminals) {
-      if (mayNt.equals(nt)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
    * Return an equivalent sRCG without epsilon as any lhs argument.
    */
   public Srcg getSrcgWithoutEmptyProductions() throws ParseException {
     return EmptyProductions.getSrcgWithoutEmptyProductions(this);
-  }
-
-  /**
-   * Returns true if mayT is one of the terminals.
-   */
-  public boolean terminalsContain(String mayT) {
-    for (String terminal : this.terminals) {
-      if (terminal.equals(mayT)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   public Srcg getBinarizedSrcg() throws ParseException {
@@ -471,7 +423,7 @@ public class Srcg {
       case "N":
         switch (tokenString) {
         case "}":
-          Srcg.this.nonterminals = symbols.toArray(new String[0]);
+          Srcg.this.setNonterminals(symbols.toArray(new String[0]));
           category = new ArrayList<>();
           symbols = new ArrayList<>();
           break;
@@ -484,7 +436,7 @@ public class Srcg {
       case "T":
         switch (tokenString) {
         case "}":
-          Srcg.this.terminals = symbols.toArray(new String[0]);
+          Srcg.this.setTerminals(symbols.toArray(new String[0]));
           category = new ArrayList<>();
           symbols = new ArrayList<>();
           break;

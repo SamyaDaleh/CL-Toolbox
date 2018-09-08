@@ -31,9 +31,9 @@ public class Cfg extends AbstractCfg {
    * Creates a CFG from a PCFG by throwing away all probabilities.
    */
   public Cfg(Pcfg pcfg) {
-    this.nonterminals = pcfg.getNonterminals();
-    this.terminals = pcfg.getTerminals();
-    this.startSymbol = pcfg.getStartSymbol();
+    this.setNonterminals(pcfg.getNonterminals());
+    this.setTerminals(pcfg.getTerminals());
+    this.setStartSymbol(pcfg.getStartSymbol());
     for (PcfgProductionRule rule : pcfg.getProductionRules()) {
       CfgProductionRule newRule =
           new CfgProductionRule(rule.getLhs(), rule.getRhs());
@@ -117,10 +117,11 @@ public class Cfg extends AbstractCfg {
    */
   public boolean isInCanonicalTwoForm() {
     for (CfgProductionRule rule : this.productionRules) {
-      if (rule.getLhs().equals(startSymbol) && rule.getRhs()[0].equals("")) {
+      if (rule.getLhs().equals(this.getStartSymbol()) && rule.getRhs()[0]
+          .equals("")) {
         for (CfgProductionRule rule2 : this.productionRules) {
-          if (rule2.getRhs()[0].equals(startSymbol) || rule2.getRhs()[1]
-              .equals(startSymbol)) {
+          if (rule2.getRhs()[0].equals(this.getStartSymbol()) || rule2
+              .getRhs()[1].equals(this.getStartSymbol())) {
             return false;
           }
         }

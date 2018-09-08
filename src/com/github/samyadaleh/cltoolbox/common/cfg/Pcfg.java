@@ -30,10 +30,10 @@ public class Pcfg extends AbstractCfg {
    * Create a PCFG from a CFG where all rules have the same probability.
    */
   public Pcfg(Cfg cfg) {
-    this.nonterminals = cfg.getNonterminals();
-    this.terminals = cfg.getTerminals();
-    this.startSymbol = cfg.getStartSymbol();
-    for (String nt : nonterminals) {
+    this.setNonterminals(cfg.getNonterminals());
+    this.setTerminals(cfg.getTerminals());
+    this.setStartSymbol(cfg.getStartSymbol());
+    for (String nt : this.getNonterminals()) {
       int ruleCount = 0;
       for (CfgProductionRule rule : cfg.getProductionRules()) {
         if (rule.getLhs().equals(nt)) {

@@ -56,7 +56,7 @@ public class EmptyProductions {
       if (candidate[0].equals(oldSrcg.getStartSymbol())
         && candidate[1].length() == 1) {
         StringBuilder newS = new StringBuilder("S'");
-        while (oldSrcg.nonTerminalsContain(newS.toString())) {
+        while (oldSrcg.nonterminalsContain(newS.toString())) {
           newS.append('\'');
         }
         newSrcg.setStartSymbol(newS.toString());

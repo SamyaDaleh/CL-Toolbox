@@ -1,7 +1,9 @@
 package com.github.samyadaleh.cltoolbox.common.tag;
 
+import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
+import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsTag;
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 import com.github.samyadaleh.cltoolbox.common.tag.util.Binarization;
@@ -17,10 +19,7 @@ import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.a
  * Tree adjoining grammar that consists of terminals, nonterminals, a start
  * symbol, some initial trees and auxiliary trees.
  */
-public class Tag {
-  private String[] nonterminals;
-  private String[] terminals;
-  private String startSymbol;
+public class Tag extends AbstractNTSGrammar {
   private final Map<String, Tree> initialTrees = new HashMap<>();
   private final Map<String, Tree> auxiliaryTrees = new HashMap<>();
 
@@ -33,9 +32,9 @@ public class Tag {
    * trees.
    */
   public Tag(Cfg cfg) throws ParseException {
-    this.nonterminals = cfg.getNonterminals();
-    this.terminals = cfg.getTerminals();
-    this.startSymbol = cfg.getStartSymbol();
+    this.setNonterminals(cfg.getNonterminals());
+    this.setTerminals(cfg.getTerminals());
+    this.setStartSymbol(cfg.getStartSymbol());
     int i = 1;
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       String treeString =
@@ -73,9 +72,9 @@ public class Tag {
         category = addStartsymbolOrAddCategory(category, token);
         break;
       case 3:
-        CollectSetContents collectSetContents =
-            new CollectSetContents(category, lhs, rhs, symbols, token,
-                tokenString).invoke();
+        CollectSetContentsTag collectSetContents =
+            (CollectSetContentsTag) new CollectSetContentsTag(this, category,
+                lhs, rhs, symbols, token).invoke();
         category = collectSetContents.getCategory();
         lhs = collectSetContents.getLhs();
         rhs = collectSetContents.getRhs();
@@ -89,20 +88,6 @@ public class Tag {
         rhs = collectTreeTokens.getRhs();
       }
     }
-  }
-
-  private String findLhsOrAddCategory(List<String> category, String lhs,
-      Token token) throws ParseException {
-    String tokenString = token.getString();
-    if (lhs == null || !tokenString.equals(":")) {
-      lhs = tokenString;
-    } else if (tokenString.equals(":")) {
-      category.add(tokenString);
-    } else {
-      throw new ParseException("Unexpected situation with token " + tokenString,
-          token.getLineNumber());
-    }
-    return lhs;
   }
 
   private List<String> addStartsymbolOrAddCategory(List<String> category,
@@ -127,7 +112,7 @@ public class Tag {
             "Startsymbol was declared twice: " + tokenString,
             token.getLineNumber());
       }
-      this.startSymbol = tokenString;
+      this.setStartSymbol(tokenString);
       category = new ArrayList<>();
       break;
     case "G":
@@ -145,7 +130,7 @@ public class Tag {
     if (validCategories.contains(tokenString)) {
       if ((tokenString.equals("N") && this.getNonterminals() != null) || (
           tokenString.equals("T") && this.getTerminals() != null) || (
-          tokenString.equals("S") && this.startSymbol != null) || (
+          tokenString.equals("S") && this.getStartSymbol() != null) || (
           tokenString.equals("A") && this.getAuxiliaryTreeNames().size() > 0)
           || (tokenString.equals("I")
           && this.getInitialTreeNames().size() > 0)) {
@@ -157,22 +142,6 @@ public class Tag {
       throw new ParseException("Unknown declaration symbol " + tokenString,
           token.getLineNumber());
     }
-  }
-
-  public void setNonterminals(String[] nonterminals) {
-    this.nonterminals = nonterminals;
-  }
-
-  public String[] getNonterminals() {
-    return this.nonterminals;
-  }
-
-  public void setTerminals(String[] terminals) {
-    this.terminals = terminals;
-  }
-
-  public String[] getTerminals() {
-    return this.terminals;
   }
 
   /**
@@ -257,14 +226,6 @@ public class Tag {
     }
   }
 
-  public void setStartSymbol(String startSymbol) {
-    this.startSymbol = startSymbol;
-  }
-
-  public String getStartSymbol() {
-    return this.startSymbol;
-  }
-
   /**
    * Returns true if the passed vertex in the named tree is a substitution
    * node, that means: it has a nonterminal label, it has no child nodes and it
@@ -272,7 +233,7 @@ public class Tag {
    */
   public boolean isSubstitutionNode(Vertex p, String treeName) {
     boolean nonterminalLabel = false;
-    for (String nt : nonterminals) {
+    for (String nt : getNonterminals()) {
       if (nt.equals(p.getLabel())) {
         nonterminalLabel = true;
         break;
@@ -307,7 +268,7 @@ public class Tag {
    * Returns true if the passed label is one of the nonterminals.
    */
   public boolean isInNonterminals(String label) {
-    for (String nt : nonterminals) {
+    for (String nt : getNonterminals()) {
       if (label.equals(nt))
         return true;
     }
@@ -318,7 +279,7 @@ public class Tag {
    * Returns true if the passed label is one of the terminals.
    */
   private boolean isInTerminals(String label) {
-    for (String t : terminals) {
+    for (String t : getTerminals()) {
       if (label.equals(t))
         return true;
     }
@@ -349,9 +310,10 @@ public class Tag {
     Set<String> auxTreesNameSet = getAuxiliaryTreeNames();
     String[] auxTreeNames = auxTreesNameSet.toArray(new String[0]);
     builder.append("G = <N, T, I, A, S>\n");
-    builder.append("N = {").append(String.join(", ", nonterminals))
+    builder.append("N = {").append(String.join(", ", getNonterminals()))
         .append("}\n");
-    builder.append("T = {").append(String.join(", ", terminals)).append("}\n");
+    builder.append("T = {").append(String.join(", ", getTerminals()))
+        .append("}\n");
     builder.append("I = {");
     for (int i = 0; i < initialTrees.size(); i++) {
       if (i > 0) {
@@ -370,7 +332,7 @@ public class Tag {
           .append(getAuxiliaryTree(auxTreeNames[i]).toString());
     }
     builder.append("}\n");
-    builder.append("S = ").append(startSymbol).append("\n");
+    builder.append("S = ").append(getStartSymbol()).append("\n");
     return builder.toString();
   }
 
@@ -432,83 +394,4 @@ public class Tag {
     }
   }
 
-  private class CollectSetContents {
-    private List<String> category;
-    private String lhs;
-    private StringBuilder rhs;
-    private List<String> symbols;
-    private Token token;
-    private String tokenString;
-
-    CollectSetContents(List<String> category, String lhs, StringBuilder rhs,
-        List<String> symbols, Token token, String tokenString) {
-      this.category = category;
-      this.lhs = lhs;
-      this.rhs = rhs;
-      this.symbols = symbols;
-      this.token = token;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    public String getLhs() {
-      return lhs;
-    }
-
-    public StringBuilder getRhs() {
-      return rhs;
-    }
-
-    public List<String> getSymbols() {
-      return symbols;
-    }
-
-    CollectSetContents invoke() throws ParseException {
-      switch (category.get(0)) {
-      case "N":
-        switch (tokenString) {
-        case "}":
-          Tag.this.nonterminals = symbols.toArray(new String[0]);
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "T":
-        switch (tokenString) {
-        case "}":
-          Tag.this.terminals = symbols.toArray(new String[0]);
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "I":
-      case "A":
-        lhs = findLhsOrAddCategory(category, lhs, token);
-        rhs = new StringBuilder();
-        break;
-      default:
-        if (lhs != null) {
-          throw new ParseException("Expected : but found " + tokenString,
-              token.getLineNumber());
-        }
-        if (!tokenString.equals(",")) {
-          lhs = tokenString;
-        }
-      }
-      return this;
-    }
-  }
 }

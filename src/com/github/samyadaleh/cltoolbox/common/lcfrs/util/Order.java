@@ -56,7 +56,7 @@ public class Order {
   }
 
   private static ArrayList<Integer> getOrderInLhs(Clause clause,
-    Predicate rhsPred) {
+      Predicate rhsPred) {
     ArrayList<Integer> posInLhs = new ArrayList<>();
     for (String symbol : rhsPred.getSymbolsAsPlainArray()) {
       int[] indices = clause.getLhs().find(symbol);
@@ -74,14 +74,14 @@ public class Order {
     Srcg newSrcg = new Srcg();
     newSrcg.setTerminals(oldSrcg.getTerminals());
     newSrcg.setVariables(oldSrcg.getVariables());
-    newSrcg.setStartSymbol(oldSrcg.getStartSymbol() + "^" + ORDER_MARKING_LEFT
-      + "1" + ORDER_MARKING_RIGHT);
+    newSrcg.setStartSymbol(
+        oldSrcg.getStartSymbol() + "^" + ORDER_MARKING_LEFT + "1"
+            + ORDER_MARKING_RIGHT);
     ArrayList<String> newNonterminals = new ArrayList<>();
     for (Clause clause : oldSrcg.getClauses()) {
       newSrcg.addClause(getClauseWithPositionVectors(clause, newNonterminals));
     }
-    newSrcg.setNonterminals(
-      newNonterminals.toArray(new String[0]));
+    newSrcg.setNonterminals(newNonterminals.toArray(new String[0]));
     boolean change = true;
     while (change) {
       change = false;
@@ -95,7 +95,7 @@ public class Order {
           }
           change = true;
           ArrayList<Integer> orderVector =
-            getNormalizedPos(getOrderInLhs(clause, rhsPred));
+              getNormalizedPos(getOrderInLhs(clause, rhsPred));
           StringBuilder newNt = new StringBuilder();
           newNt.append(oldNt).append("^" + ORDER_MARKING_LEFT);
           for (int k = 0; k < orderVector.size(); k++) {
@@ -112,9 +112,9 @@ public class Order {
             newNt = handleSecondReordering(newNt, pos1, pos2);
           }
           String newNtString = newNt.toString();
-          clause.getRhs().set(i,
-            orderedPredicate(rhsPred, newNtString, orderVector));
-          if (newSrcg.nonTerminalsContain(newNt.toString())) {
+          clause.getRhs()
+              .set(i, orderedPredicate(rhsPred, newNtString, orderVector));
+          if (newSrcg.nonterminalsContain(newNt.toString())) {
             continue;
           }
           ArrayList<String> newNts = new ArrayList<>();
@@ -122,7 +122,7 @@ public class Order {
           newNts.add(newNtString);
           newSrcg.setNonterminals(newNts.toArray(new String[0]));
           replaceUnorderedPredicateInAllLhs(newSrcg, oldNt, orderVector,
-            newNtString);
+              newNtString);
         }
       }
     }
@@ -130,13 +130,11 @@ public class Order {
   }
 
   private static StringBuilder handleSecondReordering(StringBuilder newNt,
-    int pos1, int pos2) {
+      int pos1, int pos2) {
     StringBuilder newestNt = new StringBuilder();
-    newestNt.append(newNt.substring(0, pos1))
-      .append("^" + ORDER_MARKING_LEFT);
+    newestNt.append(newNt.substring(0, pos1)).append("^" + ORDER_MARKING_LEFT);
     String[] vec1 = newNt.substring(pos1 + 2, pos2 - 1).split(",");
-    String[] vec2 =
-      newNt.substring(pos2 + 2, newNt.length() - 1).split(",");
+    String[] vec2 = newNt.substring(pos2 + 2, newNt.length() - 1).split(",");
     for (int k = 1; k <= vec1.length; k++) {
       for (int l = 0; l < vec1.length; l++) {
         if (Integer.parseInt(vec2[l]) == k) {
@@ -154,16 +152,16 @@ public class Order {
   }
 
   private static void replaceUnorderedPredicateInAllLhs(Srcg newSrcg,
-    String oldNt, ArrayList<Integer> orderVector, String newNtString)
-    throws ParseException {
+      String oldNt, ArrayList<Integer> orderVector, String newNtString)
+      throws ParseException {
     for (int l = 0; l < newSrcg.getClauses().size(); l++) {
       Clause clause2 = newSrcg.getClauses().get(l);
       if (clause2.getLhs().getNonterminal().equals(oldNt)) {
         String clause2String = clause2.toString();
         int ibrack = clause2String.indexOf(')');
-        String newClause = orderedPredicate(clause2.getLhs(),
-          newNtString, orderVector)
-          + clause2String.substring(ibrack + 1);
+        String newClause =
+            orderedPredicate(clause2.getLhs(), newNtString, orderVector)
+                + clause2String.substring(ibrack + 1);
         newSrcg.addClause(newClause);
       }
     }
@@ -175,11 +173,11 @@ public class Order {
    * yet.
    */
   private static String getClauseWithPositionVectors(Clause clause,
-    ArrayList<String> newNonterminals) {
+      ArrayList<String> newNonterminals) {
     StringBuilder newClause = new StringBuilder();
     StringBuilder newNt = new StringBuilder();
     newNt.append(clause.getLhs().getNonterminal())
-      .append("^" + ORDER_MARKING_LEFT);
+        .append("^" + ORDER_MARKING_LEFT);
     for (int i = 1; i <= clause.getLhs().getDim(); i++) {
       if (i > 1) {
         newNt.append(',');
@@ -225,7 +223,7 @@ public class Order {
    * arguments swapped places according to orderVector.
    */
   private static Predicate orderedPredicate(Predicate rhsPred, String newNt,
-    ArrayList<Integer> orderVector) throws ParseException {
+      ArrayList<Integer> orderVector) throws ParseException {
     StringBuilder newPred = new StringBuilder();
     newPred.append(newNt);
     newPred.append('(');
@@ -247,10 +245,10 @@ public class Order {
    * Normalizes the position vector to consecutive numbers starting with 1.
    * Example: 5,0,6 becomes 2,1,3
    */
-  private static ArrayList<Integer>
-    getNormalizedPos(ArrayList<Integer> posInLhs) {
+  private static ArrayList<Integer> getNormalizedPos(
+      ArrayList<Integer> posInLhs) {
     @SuppressWarnings("unchecked") ArrayList<Integer> posNormalized =
-      (ArrayList<Integer>) posInLhs.clone();
+        (ArrayList<Integer>) posInLhs.clone();
     int searchInt = 0;
     int argInt = 1;
     while (argInt <= posInLhs.size()) {

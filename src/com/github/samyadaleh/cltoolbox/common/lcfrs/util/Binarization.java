@@ -97,7 +97,7 @@ public class Binarization {
     int i = 1;
     newNt = nonterminal + String.valueOf(i);
     i++;
-    while (oldSrcg.nonTerminalsContain(newNt)) {
+    while (oldSrcg.nonterminalsContain(newNt)) {
       newNt = nonterminal + String.valueOf(i);
       i++;
     }
