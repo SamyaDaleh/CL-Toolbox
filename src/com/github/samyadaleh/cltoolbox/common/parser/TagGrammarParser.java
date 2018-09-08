@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
@@ -59,49 +58,34 @@ public class TagGrammarParser {
   }
 
   private static void checkAuxiliaryTrees(Tag tag) {
-    Iterator<String> treeNameIter;
-    treeNameIter = tag.getAuxiliaryTreeNames().iterator();
-    while (treeNameIter.hasNext()) {
-      String treeName = treeNameIter.next();
-      Tree tree = tag.getAuxiliaryTree(treeName);
-      for (Vertex v : tree.getVertexes()) {
-        if (!v.getLabel().equals("") && !contains(tag.getNonterminals(),
-            v.getLabel()) && !contains(tag.getTerminals(), v.getLabel())) {
-          errors.add(new ParseException(
-              "Label of vertex " + v.getLabel() + " of tree " + treeName
-                  + " is neither declared nonterminal nor terminal "
-                  + "and is not epsilon.", 0));
-        }
-        if (tree.getNodeByGornAdress(v.getGornAddress() + ".1") != null
-            && contains(tag.getTerminals(), v.getLabel())) {
-          errors.add(new ParseException(
-              "Node with gorn address " + v.getGornAddress() + " in tree "
-                  + treeName
-                  + " is not a leaf, but its label is declared terminal.", 0));
-        }
+    for (String treeName : tag.getAuxiliaryTreeNames()) {
+      checkTree(tag, treeName);
+    }
+  }
+
+  private static void checkTree(Tag tag, String treeName) {
+    Tree tree = tag.getTree(treeName);
+    for (Vertex v : tree.getVertexes()) {
+      if (!v.getLabel().equals("") && !contains(tag.getNonterminals(),
+          v.getLabel()) && !contains(tag.getTerminals(), v.getLabel())) {
+        errors.add(new ParseException(
+            "Label of vertex " + v.getLabel() + " of tree " + treeName
+                + " is neither declared nonterminal nor terminal "
+                + "and is not epsilon.", 0));
+      }
+      if (tree.getNodeByGornAdress(v.getGornAddress() + ".1") != null
+          && contains(tag.getTerminals(), v.getLabel())) {
+        errors.add(new ParseException(
+            "Node with gorn address " + v.getGornAddress() + " in tree "
+                + treeName
+                + " is not a leaf, but its label is declared terminal.", 0));
       }
     }
   }
 
   private static void checkInitialTrees(Tag tag) {
     for (String treeName : tag.getInitialTreeNames()) {
-      Tree tree = tag.getInitialTree(treeName);
-      for (Vertex v : tree.getVertexes()) {
-        if (!v.getLabel().equals("") && !contains(tag.getNonterminals(),
-            v.getLabel()) && !contains(tag.getTerminals(), v.getLabel())) {
-          errors.add(new ParseException(
-              "Label of vertex " + v.getLabel() + " of tree " + treeName
-                  + " is neither declared nonterminal nor terminal "
-                  + "and is not epsilon.", 0));
-        }
-        if (tree.getNodeByGornAdress(v.getGornAddress() + ".1") != null
-            && contains(tag.getTerminals(), v.getLabel())) {
-          errors.add(new ParseException(
-              "Node with gorn address " + v.getGornAddress() + " in tree "
-                  + treeName
-                  + " is not a leaf, but its label is declared terminal.", 0));
-        }
-      }
+      checkTree(tag, treeName);
     }
   }
 }
