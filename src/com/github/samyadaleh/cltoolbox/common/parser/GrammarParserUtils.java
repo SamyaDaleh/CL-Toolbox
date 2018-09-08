@@ -25,52 +25,55 @@ public class GrammarParserUtils {
     return false;
   }
 
-  public static void addSymbolToCategory(List<String> category, int lineNumber,
-      String token, String s) throws ParseException {
-    if (token.equals(s)) {
-      category.add(token);
+  public static void addSymbolToCategory(List<String> category, Token token,
+      String s) throws ParseException {
+    String tokenString = token.getString();
+    if (tokenString.equals(s)) {
+      category.add(tokenString);
     } else {
-      throw new ParseException("Expected " + s + " but found " + token, lineNumber);
+      throw new ParseException("Expected " + s + " but found " + tokenString,
+          token.getLineNumber());
     }
   }
 
   public static void handleMainCategory(AbstractCfg acfg,
-      Set<String> validCategories, List<String> category, int lineNumber,
-      String token)
+      Set<String> validCategories, List<String> category, Token token)
       throws ParseException {
-    if (validCategories.contains(token)) {
-      if ((token.equals("N") && acfg.getNonterminals() != null) || (
-          token.equals("T") && acfg.getTerminals() != null) || (
-          token.equals("S") && acfg.getStartSymbol() != null)) {
-        throw new ParseException("Category " + token + " is already set.",
-            lineNumber);
+    String tokenString = token.getString();
+    if (validCategories.contains(tokenString)) {
+      if ((tokenString.equals("N") && acfg.getNonterminals() != null) || (
+          tokenString.equals("T") && acfg.getTerminals() != null) || (
+          tokenString.equals("S") && acfg.getStartSymbol() != null)) {
+        throw new ParseException("Category " + tokenString + " is already set.",
+            token.getLineNumber());
       }
-      category.add(token);
+      category.add(tokenString);
     } else {
       throw new ParseException("Unknown declaration symbol " + token,
-          lineNumber);
+          token.getLineNumber());
     }
   }
 
   public static List<String> addStartsymbolOrAddCategory(AbstractCfg acfg,
-      List<String> category, int lineNumber, String token)
-      throws ParseException {
+      List<String> category, Token token) throws ParseException {
+    String tokenString = token.getString();
     switch (category.get(0)) {
     case "P":
     case "N":
     case "T":
-      addSymbolToCategory(category, lineNumber, token, "{");
+      addSymbolToCategory(category, token, "{");
       break;
     case "S":
       if (acfg.getStartSymbol() != null) {
-        throw new ParseException("Startsymbol was declared twice: " + token,
-            lineNumber);
+        throw new ParseException(
+            "Startsymbol was declared twice: " + tokenString,
+            token.getLineNumber());
       }
-      acfg.setStartSymbol(token);
+      acfg.setStartSymbol(tokenString);
       category = new ArrayList<>();
       break;
     case "G":
-      if (token.equals(">")) {
+      if (tokenString.equals(">")) {
         category = new ArrayList<>();
       }
     default:
@@ -78,15 +81,16 @@ public class GrammarParserUtils {
     return category;
   }
 
-  public static String findLhsOrAddCategory(List<String> category, int lineNumber,
-      String lhs, String token) throws ParseException {
-    if (lhs == null || !token.equals("-")) {
-      lhs = token;
-    } else if (token.equals("-")) {
-      category.add(token);
+  public static String findLhsOrAddCategory(List<String> category, String lhs,
+      Token token) throws ParseException {
+    String tokenString = token.getString();
+    if (lhs == null || !tokenString.equals("-")) {
+      lhs = tokenString;
+    } else if (tokenString.equals("-")) {
+      category.add(tokenString);
     } else {
-      throw new ParseException("Unexpected situation with token " + token,
-          lineNumber);
+      throw new ParseException("Unexpected situation with token " + tokenString,
+          token.getLineNumber());
     }
     return lhs;
   }

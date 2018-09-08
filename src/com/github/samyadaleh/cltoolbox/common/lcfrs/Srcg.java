@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Binarization;
@@ -16,6 +15,8 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.EmptyProductions;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.UselessRules;
 import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
+import com.github.samyadaleh.cltoolbox.common.parser.Token;
+import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 
 import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.addSymbolToCategory;
 
@@ -77,6 +78,7 @@ public class Srcg {
   public Srcg(BufferedReader in) throws IOException, ParseException {
     Character[] specialChars =
         new Character[] {'-', '>', '{', '}', ',', '|', '=', '<', '(', ')'};
+    TokenReader reader = new TokenReader(in, specialChars);
     Set<String> validCategories = new HashSet<>();
     validCategories.add("N");
     validCategories.add("T");
@@ -84,36 +86,29 @@ public class Srcg {
     validCategories.add("S");
     validCategories.add("P");
     validCategories.add("G");
-    List<String> tokens = new ArrayList<>();
-    String line = null;
     List<String> category = new ArrayList<>();
-    int lineNumber = 0;
     String lhsNT = null;
     StringBuilder lhs = new StringBuilder();
     String currentRhsNt = null;
     StringBuilder rhs = new StringBuilder();
     List<String> symbols = new ArrayList<>();
-    while (tokens.size() > 0 || (line = in.readLine()) != null) {
-      if (tokens.size() == 0) {
-        tokens = ArrayUtils.tokenize(line, specialChars);
-        lineNumber++;
-      }
-      String token = tokens.get(0);
-      tokens.remove(0);
+    Token token;
+    while ((token = reader.getNextToken()) != null) {
+      String tokenString = token.getString();
       switch (category.size()) {
       case 0:
-        handleMainCategory(validCategories, category, lineNumber, token);
+        handleMainCategory(validCategories, category, token);
         break;
       case 1:
-        addSymbolToCategory(category, lineNumber, token, "=");
+        addSymbolToCategory(category, token, "=");
         break;
       case 2:
-        category = addStartsymbolOrAddCategory(category, lineNumber, token);
+        category = addStartsymbolOrAddCategory(category, token);
         break;
       case 3:
         switch (category.get(0)) {
         case "N":
-          switch (token) {
+          switch (tokenString) {
           case "}":
             this.nonterminals = symbols.toArray(new String[0]);
             category = new ArrayList<>();
@@ -122,11 +117,11 @@ public class Srcg {
           case ",":
             break;
           default:
-            symbols.add(token);
+            symbols.add(tokenString);
           }
           break;
         case "T":
-          switch (token) {
+          switch (tokenString) {
           case "}":
             this.terminals = symbols.toArray(new String[0]);
             category = new ArrayList<>();
@@ -135,11 +130,11 @@ public class Srcg {
           case ",":
             break;
           default:
-            symbols.add(token);
+            symbols.add(tokenString);
           }
           break;
         case "V":
-          switch (token) {
+          switch (tokenString) {
           case "}":
             this.variables = symbols.toArray(new String[0]);
             category = new ArrayList<>();
@@ -148,43 +143,41 @@ public class Srcg {
           case ",":
             break;
           default:
-            symbols.add(token);
+            symbols.add(tokenString);
           }
           break;
         case "P":
           if (lhs.toString().endsWith(")")) {
-            GrammarParserUtils
-                .addSymbolToCategory(category, lineNumber, token, "-");
+            GrammarParserUtils.addSymbolToCategory(category, token, "-");
           } else {
-            lhsNT = findLhsNTOrAddCategory(category, lineNumber, lhsNT, token);
-            if (token.equals("(")) {
+            lhsNT = findLhsNTOrAddCategory(category, lhsNT, token);
+            if (tokenString.equals("(")) {
               lhs.append(lhsNT).append("(");
             }
           }
           break;
         default:
           if (lhsNT != null) {
-            throw new ParseException("Expected ( but found " + token,
-                lineNumber);
+            throw new ParseException("Expected ( but found " + tokenString,
+                token.getLineNumber());
           }
-          if (!token.equals(",")) {
-            lhsNT = token;
+          if (!tokenString.equals(",")) {
+            lhsNT = tokenString;
           }
         }
         break;
       case 4:
         if (category.get(3).equals("-")) {
-          GrammarParserUtils
-              .addSymbolToCategory(category, lineNumber, token, ">");
+          GrammarParserUtils.addSymbolToCategory(category, token, ">");
         } else {
-          lhs.append(" ").append(token);
-          if (token.equals(")")) {
+          lhs.append(" ").append(tokenString);
+          if (tokenString.equals(")")) {
             category.remove(3);
           }
         }
         break;
       case 5:
-        switch (token) {
+        switch (tokenString) {
         case ",":
           this.addClause(lhs.toString(), rhs.toString());
           currentRhsNt = null;
@@ -208,20 +201,19 @@ public class Srcg {
           lhs = new StringBuilder();
           break;
         default:
-          currentRhsNt =
-              findRhsNTOrAddCategory(category, lineNumber, currentRhsNt, token);
-          if (token.equals("(")) {
+          currentRhsNt = findRhsNTOrAddCategory(category, currentRhsNt, token);
+          if (tokenString.equals("(")) {
             rhs.append(currentRhsNt).append("(");
           }
         }
         break;
       default:
-        switch (token) {
+        switch (tokenString) {
         case ")":
           category.remove(5);
           currentRhsNt = null;
         default:
-          rhs.append(" ").append(token);
+          rhs.append(" ").append(tokenString);
           break;
         }
         break;
@@ -229,51 +221,55 @@ public class Srcg {
     }
   }
 
-  private String findLhsNTOrAddCategory(List<String> category, int lineNumber,
-      String lhs, String token) throws ParseException {
-    if (lhs == null || !token.equals("(")) {
-      lhs = token;
-    } else if (token.equals("(")) {
-      category.add(token);
+  private String findLhsNTOrAddCategory(List<String> category, String lhs,
+      Token token) throws ParseException {
+    String tokenString = token.getString();
+    if (lhs == null || !tokenString.equals("(")) {
+      lhs = tokenString;
+    } else if (tokenString.equals("(")) {
+      category.add(tokenString);
     } else {
-      throw new ParseException("Unexpected situation with token " + token,
-          lineNumber);
+      throw new ParseException("Unexpected situation with token " + tokenString,
+          token.getLineNumber());
     }
     return lhs;
   }
 
-  private String findRhsNTOrAddCategory(List<String> category, int lineNumber,
-      String rhsnt, String token) throws ParseException {
-    if (rhsnt == null || !token.equals("(")) {
-      rhsnt = token;
-    } else if (token.equals("(")) {
-      category.add(token);
+  private String findRhsNTOrAddCategory(List<String> category, String rhsnt,
+      Token token) throws ParseException {
+    String tokenString = token.getString();
+    if (rhsnt == null || !tokenString.equals("(")) {
+      rhsnt = tokenString;
+    } else if (tokenString.equals("(")) {
+      category.add(tokenString);
     } else {
-      throw new ParseException("Unexpected situation with token " + token,
-          lineNumber);
+      throw new ParseException("Unexpected situation with token " + tokenString,
+          token.getLineNumber());
     }
     return rhsnt;
   }
 
   private List<String> addStartsymbolOrAddCategory(List<String> category,
-      int lineNumber, String token) throws ParseException {
+      Token token) throws ParseException {
+    String tokenString = token.getString();
     switch (category.get(0)) {
     case "P":
     case "N":
     case "T":
     case "V":
-      addSymbolToCategory(category, lineNumber, token, "{");
+      addSymbolToCategory(category, token, "{");
       break;
     case "S":
       if (this.getStartSymbol() != null) {
-        throw new ParseException("Startsymbol was declared twice: " + token,
-            lineNumber);
+        throw new ParseException(
+            "Startsymbol was declared twice: " + tokenString,
+            token.getLineNumber());
       }
-      this.setStartSymbol(token);
+      this.setStartSymbol(tokenString);
       category = new ArrayList<>();
       break;
     case "G":
-      if (token.equals(">")) {
+      if (tokenString.equals(">")) {
         category = new ArrayList<>();
       }
     default:
@@ -282,20 +278,20 @@ public class Srcg {
   }
 
   private void handleMainCategory(Set<String> validCategories,
-      List<String> category, int lineNumber, String token)
-      throws ParseException {
-    if (validCategories.contains(token)) {
-      if ((token.equals("N") && this.getNonterminals() != null) || (
-          token.equals("T") && this.getTerminals() != null) || (
-          token.equals("S") && this.getStartSymbol() != null) || (
-          token.equals("V") && this.getVariables() != null)) {
+      List<String> category, Token token) throws ParseException {
+    String tokenString = token.getString();
+    if (validCategories.contains(tokenString)) {
+      if ((tokenString.equals("N") && this.getNonterminals() != null) || (
+          tokenString.equals("T") && this.getTerminals() != null) || (
+          tokenString.equals("S") && this.getStartSymbol() != null) || (
+          tokenString.equals("V") && this.getVariables() != null)) {
         throw new ParseException("Category " + token + " is already set.",
-            lineNumber);
+            token.getLineNumber());
       }
-      category.add(token);
+      category.add(tokenString);
     } else {
       throw new ParseException("Unknown declaration symbol " + token,
-          lineNumber);
+          token.getLineNumber());
     }
   }
 

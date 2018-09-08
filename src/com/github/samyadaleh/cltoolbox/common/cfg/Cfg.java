@@ -1,8 +1,9 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
 import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
+import com.github.samyadaleh.cltoolbox.common.parser.Token;
+import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,43 +43,36 @@ public class Cfg extends AbstractCfg {
   public Cfg(BufferedReader in) throws IOException, ParseException {
     Character[] specialChars =
         new Character[] {'-', '>', '{', '}', ',', '|', '='};
+    TokenReader reader = new TokenReader(in, specialChars);
     Set<String> validCategories = new HashSet<>();
     validCategories.add("N");
     validCategories.add("T");
     validCategories.add("S");
     validCategories.add("P");
     validCategories.add("G");
-    List<String> tokens = new ArrayList<>();
-    String line = null;
     List<String> category = new ArrayList<>();
-    int lineNumber = 0;
     String lhs = null;
     StringBuilder rhs = null;
     List<String> symbols = new ArrayList<>();
-    while (tokens.size() > 0 || (line = in.readLine()) != null) {
-      if (tokens.size() == 0) {
-        tokens = ArrayUtils.tokenize(line, specialChars);
-        lineNumber++;
-      }
-      String token = tokens.get(0);
-      tokens.remove(0);
+    Token token;
+    while ((token = reader.getNextToken()) != null) {
+      String tokenString = token.getString();
       switch (category.size()) {
       case 0:
         GrammarParserUtils
-            .handleMainCategory(this, validCategories, category, lineNumber,
-                token);
+            .handleMainCategory(this, validCategories, category, token);
         break;
       case 1:
-        addSymbolToCategory(category, lineNumber, token, "=");
+        addSymbolToCategory(category, token, "=");
         break;
       case 2:
         category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, lineNumber, token);
+            .addStartsymbolOrAddCategory(this, category, token);
         break;
       case 3:
         switch (category.get(0)) {
         case "N":
-          switch (token) {
+          switch (tokenString) {
           case "}":
             this.nonterminals = symbols.toArray(new String[0]);
             category = new ArrayList<>();
@@ -87,11 +81,11 @@ public class Cfg extends AbstractCfg {
           case ",":
             break;
           default:
-            symbols.add(token);
+            symbols.add(tokenString);
           }
           break;
         case "T":
-          switch (token) {
+          switch (tokenString) {
           case "}":
             this.terminals = symbols.toArray(new String[0]);
             category = new ArrayList<>();
@@ -100,33 +94,33 @@ public class Cfg extends AbstractCfg {
           case ",":
             break;
           default:
-            symbols.add(token);
+            symbols.add(tokenString);
           }
           break;
         case "P":
-          lhs = GrammarParserUtils
-              .findLhsOrAddCategory(category, lineNumber, lhs, token);
+          lhs = GrammarParserUtils.findLhsOrAddCategory(category, lhs, token);
           break;
         default:
           if (lhs != null) {
-            throw new ParseException("Expected - but found " + token,
-                lineNumber);
+            throw new ParseException("Expected - but found " + tokenString,
+                token.getLineNumber());
           }
-          if (!token.equals(",")) {
-            lhs = token;
+          if (!tokenString.equals(",")) {
+            lhs = tokenString;
           }
         }
         break;
       case 4:
-        if (token.equals(">")) {
-          category.add(token);
+        if (tokenString.equals(">")) {
+          category.add(tokenString);
           rhs = new StringBuilder();
         } else {
-          throw new ParseException("Expected > but found " + token, lineNumber);
+          throw new ParseException("Expected > but found " + token,
+              token.getLineNumber());
         }
         break;
       default:
-        switch (token) {
+        switch (tokenString) {
         case "}":
           category = new ArrayList<>();
           this.addProductionRule(lhs + " -> " + rhs.toString());
@@ -147,7 +141,7 @@ public class Cfg extends AbstractCfg {
           if (rhs.length() > 0) {
             rhs.append(' ');
           }
-          rhs.append(token);
+          rhs.append(tokenString);
         }
         break;
       }
