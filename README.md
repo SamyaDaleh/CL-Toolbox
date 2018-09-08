@@ -70,10 +70,10 @@ true
 
 Where anbn.cfg is:
 ```
-N = {"S"}
-T = {"a", "b"}
-S = "S"
-P = {"S -> a S b", "S -> a b"}
+N = {S}
+T = {a, b}
+S = S
+P = {S -> a S b, S -> a b}
 ```
 
 CL-Toolbox.bat ancb.tag "a c b" tag-cyk --success
@@ -95,11 +95,11 @@ true
 
 Where ancb.tag is:
 ```
-N = {"S", "T"}
-T = {"a", "b", "c"}
-S = "S"
-I = {"α1 : (S T b)", "α2 : (T c)"}
-A = {"β : (T a T*)"}
+N = {S, T}
+T = {a, b, c}
+S = S
+I = {α1 : (S T b), α2 : (T c)}
+A = {β : (T a T*)}
 ```
 
 ## Features

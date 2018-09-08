@@ -46,7 +46,7 @@ public class Tag {
 
   public Tag(BufferedReader in) throws IOException, ParseException {
     Character[] specialChars =
-        new Character[] {'>', '{', '}', ',', ':', '=', '<'};
+        new Character[] {'>', '{', '}', ',', ':', '='};
     Set<String> validCategories = new HashSet<>();
     validCategories.add("N");
     validCategories.add("T");

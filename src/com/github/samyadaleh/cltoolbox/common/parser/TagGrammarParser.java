@@ -72,6 +72,13 @@ public class TagGrammarParser {
                   + " is neither declared nonterminal nor terminal "
                   + "and is not epsilon.", 0));
         }
+        if (tree.getNodeByGornAdress(v.getGornAddress() + ".1") != null
+            && contains(tag.getTerminals(), v.getLabel())) {
+          errors.add(new ParseException(
+              "Node with gorn address " + v.getGornAddress() + " in tree "
+                  + treeName
+                  + " is not a leaf, but its label is declared terminal.", 0));
+        }
       }
     }
   }
