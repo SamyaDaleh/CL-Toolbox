@@ -146,7 +146,7 @@ public class Pcfg extends AbstractCfg {
     private String prob;
     private String lhs;
     private StringBuilder rhs;
-    private String tokenString;
+    private final String tokenString;
 
     CollectRhsSymbols(List<String> category, String prob, String lhs,
         StringBuilder rhs, String tokenString) {
@@ -165,11 +165,11 @@ public class Pcfg extends AbstractCfg {
       return prob;
     }
 
-    public String getLhs() {
+    String getLhs() {
       return lhs;
     }
 
-    public StringBuilder getRhs() {
+    StringBuilder getRhs() {
       return rhs;
     }
 

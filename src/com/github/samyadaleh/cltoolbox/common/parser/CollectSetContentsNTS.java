@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CollectSetContentsNTS {
-  protected String lhs;
-  protected List<String> symbols;
-  protected Token token;
-  protected AbstractNTSGrammar acfg;
+  String lhs;
+  List<String> symbols;
+  final Token token;
+  private final AbstractNTSGrammar acfg;
   List<String> category;
 
-  public CollectSetContentsNTS(AbstractNTSGrammar agra, List<String> category,
+  CollectSetContentsNTS(AbstractNTSGrammar agra, List<String> category,
       String lhs, List<String> symbols, Token token) {
     this.category = category;
     this.lhs = lhs;

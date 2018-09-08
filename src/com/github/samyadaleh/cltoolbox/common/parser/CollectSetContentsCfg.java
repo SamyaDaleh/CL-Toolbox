@@ -12,13 +12,6 @@ public class CollectSetContentsCfg extends CollectSetContentsNTSP {
     super(cfg, category, lhs, symbols, token);
   }
 
-   void handleOtherCategories(List<String> category, String lhs,
-      Token token) throws ParseException {
-    if (category.get(0).equals("P")){
-      findXOrAddCategory();
-    }
-   }
-
   protected void findXOrAddCategory() throws ParseException {
     lhs = GrammarParserUtils.findLhsOrAddCategory(category, getLhs(), token);
   }

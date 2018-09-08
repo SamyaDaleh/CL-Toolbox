@@ -17,7 +17,7 @@ public class TokenReader {
   private List<String> tokens = new ArrayList<>();
   private int lineNumber = 0;
   private final Character[] specialChars;
-  private BufferedReader in;
+  private final BufferedReader in;
 
   public TokenReader(Reader reader, Character[] specialChars) {
     in = new BufferedReader(reader);

@@ -15,6 +15,7 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Binarization;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.EmptyProductions;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.UselessRules;
+import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsSrcg;
 import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
@@ -104,9 +105,9 @@ public class Srcg extends AbstractNTSGrammar {
         category = addStartsymbolOrAddCategory(category, token);
         break;
       case 3:
-        CollectSetContents collectSetContents =
-            new CollectSetContents(category, lhsNT, lhs, symbols, token,
-                tokenString).invoke();
+        CollectSetContentsSrcg collectSetContents =
+            (CollectSetContentsSrcg) new CollectSetContentsSrcg(this, category,
+                lhsNT, lhs, symbols, token).invoke();
         category = collectSetContents.getCategory();
         lhsNT = collectSetContents.getLhsNT();
         symbols = collectSetContents.getSymbols();
@@ -143,20 +144,6 @@ public class Srcg extends AbstractNTSGrammar {
         break;
       }
     }
-  }
-
-  private String findLhsNTOrAddCategory(List<String> category, String lhs,
-      Token token) throws ParseException {
-    String tokenString = token.getString();
-    if (lhs == null || !tokenString.equals("(")) {
-      lhs = tokenString;
-    } else if (tokenString.equals("(")) {
-      category.add(tokenString);
-    } else {
-      throw new ParseException("Unexpected situation with token " + tokenString,
-          token.getLineNumber());
-    }
-    return lhs;
   }
 
   private String findRhsNTOrAddCategory(List<String> category, String rhsnt,
@@ -319,8 +306,8 @@ public class Srcg extends AbstractNTSGrammar {
     private StringBuilder lhs;
     private String currentRhsNt;
     private StringBuilder rhs;
-    private Token token;
-    private String tokenString;
+    private final Token token;
+    private final String tokenString;
 
     CollectOuterRhsSymbols(List<String> category, String lhsNT,
         StringBuilder lhs, String currentRhsNt, StringBuilder rhs, Token token,
@@ -342,7 +329,7 @@ public class Srcg extends AbstractNTSGrammar {
       return lhsNT;
     }
 
-    public StringBuilder getLhs() {
+    StringBuilder getLhs() {
       return lhs;
     }
 
@@ -350,7 +337,7 @@ public class Srcg extends AbstractNTSGrammar {
       return currentRhsNt;
     }
 
-    public StringBuilder getRhs() {
+    StringBuilder getRhs() {
       return rhs;
     }
 
@@ -388,97 +375,4 @@ public class Srcg extends AbstractNTSGrammar {
     }
   }
 
-  private class CollectSetContents {
-    private List<String> category;
-    private String lhsNT;
-    private StringBuilder lhs;
-    private List<String> symbols;
-    private Token token;
-    private String tokenString;
-
-    CollectSetContents(List<String> category, String lhsNT, StringBuilder lhs,
-        List<String> symbols, Token token, String tokenString) {
-      this.category = category;
-      this.lhsNT = lhsNT;
-      this.lhs = lhs;
-      this.symbols = symbols;
-      this.token = token;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    String getLhsNT() {
-      return lhsNT;
-    }
-
-    public List<String> getSymbols() {
-      return symbols;
-    }
-
-    CollectSetContents invoke() throws ParseException {
-      switch (category.get(0)) {
-      case "N":
-        switch (tokenString) {
-        case "}":
-          Srcg.this.setNonterminals(symbols.toArray(new String[0]));
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "T":
-        switch (tokenString) {
-        case "}":
-          Srcg.this.setTerminals(symbols.toArray(new String[0]));
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "V":
-        switch (tokenString) {
-        case "}":
-          Srcg.this.variables = symbols.toArray(new String[0]);
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "P":
-        if (lhs.toString().endsWith(")")) {
-          GrammarParserUtils.addSymbolToCategory(category, token, "-");
-        } else {
-          lhsNT = findLhsNTOrAddCategory(category, lhsNT, token);
-          if (tokenString.equals("(")) {
-            lhs.append(lhsNT).append("(");
-          }
-        }
-        break;
-      default:
-        if (lhsNT != null) {
-          throw new ParseException("Expected ( but found " + tokenString,
-              token.getLineNumber());
-        }
-        if (!tokenString.equals(",")) {
-          lhsNT = tokenString;
-        }
-      }
-      return this;
-    }
-  }
 }

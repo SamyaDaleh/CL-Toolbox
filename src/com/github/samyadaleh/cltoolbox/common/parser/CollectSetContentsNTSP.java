@@ -5,7 +5,7 @@ import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import java.text.ParseException;
 import java.util.List;
 
-public abstract class CollectSetContentsNTSP extends CollectSetContentsNTS {
+abstract class CollectSetContentsNTSP extends CollectSetContentsNTS {
 
   CollectSetContentsNTSP(AbstractNTSGrammar agra, List<String> category, String lhs,
       List<String> symbols, Token token) {

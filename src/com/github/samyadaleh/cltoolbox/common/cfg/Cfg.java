@@ -298,7 +298,7 @@ public class Cfg extends AbstractCfg {
     private List<String> category;
     private String lhs;
     private StringBuilder rhs;
-    private String tokenString;
+    private final String tokenString;
 
     CollectRhsSymbols(List<String> category, String lhs, StringBuilder rhs,
         String tokenString) {
@@ -312,11 +312,11 @@ public class Cfg extends AbstractCfg {
       return category;
     }
 
-    public String getLhs() {
+    String getLhs() {
       return lhs;
     }
 
-    public StringBuilder getRhs() {
+    StringBuilder getRhs() {
       return rhs;
     }
 

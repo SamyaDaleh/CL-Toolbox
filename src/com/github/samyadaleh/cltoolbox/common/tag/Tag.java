@@ -340,7 +340,7 @@ public class Tag extends AbstractNTSGrammar {
     private List<String> category;
     private String lhs;
     private StringBuilder rhs;
-    private String tokenString;
+    private final String tokenString;
 
     CollectTreeTokens(List<String> category, String lhs, StringBuilder rhs,
         String tokenString) {
@@ -354,11 +354,11 @@ public class Tag extends AbstractNTSGrammar {
       return category;
     }
 
-    public String getLhs() {
+    String getLhs() {
       return lhs;
     }
 
-    public StringBuilder getRhs() {
+    StringBuilder getRhs() {
       return rhs;
     }
 
