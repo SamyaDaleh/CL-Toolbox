@@ -1,13 +1,12 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-import com.github.samyadaleh.cltoolbox.common.parser.*;
+import com.github.samyadaleh.cltoolbox.common.parser.InnerPcfgGrammarParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Representation of a context free grammar where the rules have
@@ -45,63 +44,7 @@ public class Pcfg extends AbstractCfg {
   }
 
   public Pcfg(BufferedReader in) throws IOException, ParseException {
-    Character[] specialChars =
-        new Character[] {'-', '>', '{', '}', ',', '|', '=', ':'};
-    TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = getValidCategories();
-    List<String> category = new ArrayList<>();
-    int lineNumber = 0;
-    String prob = null;
-    String lhs = null;
-    StringBuilder rhs = null;
-    List<String> symbols = new ArrayList<>();
-    Token token;
-    while ((token = reader.getNextToken()) != null) {
-      String tokenString = token.getString();
-      switch (category.size()) {
-      case 0:
-        GrammarParserUtils
-            .handleMainCategory(this, validCategories, category, token);
-        break;
-      case 1:
-        GrammarParserUtils.addSymbolToCategory(category, token, "=");
-        break;
-      case 2:
-        category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, token,
-                validCategories);
-        break;
-      case 3:
-        CollectSetContentsPcfg collectSetContents =
-            (CollectSetContentsPcfg) new CollectSetContentsPcfg(this, category,
-                prob, lhs, symbols, token).invoke();
-        category = collectSetContents.getCategory();
-        prob = collectSetContents.getProb();
-        lhs = collectSetContents.getLhs();
-        symbols = collectSetContents.getSymbols();
-        break;
-      case 4:
-        lhs = GrammarParserUtils.findLhsOrAddCategory(category, lhs, token);
-        break;
-      case 5:
-        if (tokenString.equals(">")) {
-          category.add(tokenString);
-          rhs = new StringBuilder();
-        } else {
-          throw new ParseException("Expected > but found " + token, lineNumber);
-        }
-        break;
-      default:
-        CollectRhsSymbolsPcfg collectRhsSymbols =
-            (CollectRhsSymbolsPcfg) new CollectRhsSymbolsPcfg(this, category,
-                prob, lhs, rhs, tokenString).invoke();
-        category = collectRhsSymbols.getCategory();
-        prob = collectRhsSymbols.getProb();
-        lhs = collectRhsSymbols.getLhs();
-        rhs = collectRhsSymbols.getRhs();
-        break;
-      }
-    }
+    new InnerPcfgGrammarParser(this, in).invoke();
   }
 
   public List<PcfgProductionRule> getProductionRules() {

@@ -1,13 +1,5 @@
 package com.github.samyadaleh.cltoolbox.common.lcfrs;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -15,7 +7,13 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Binarization;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.EmptyProductions;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.UselessRules;
-import com.github.samyadaleh.cltoolbox.common.parser.*;
+import com.github.samyadaleh.cltoolbox.common.parser.InnerSrcgGrammarParser;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Representation of a sRCG - simple Range Concatenation Grammar.
@@ -70,100 +68,7 @@ public class Srcg extends AbstractNTSGrammar {
   }
 
   public Srcg(BufferedReader in) throws IOException, ParseException {
-    Character[] specialChars =
-        new Character[] {'-', '>', '{', '}', ',', '|', '=', '<', '(', ')'};
-    TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = getValidCategories();
-    List<String> category = new ArrayList<>();
-    String lhsNT = null;
-    StringBuilder lhs = new StringBuilder();
-    String currentRhsNt = null;
-    StringBuilder rhs = new StringBuilder();
-    List<String> symbols = new ArrayList<>();
-    Token token;
-    while ((token = reader.getNextToken()) != null) {
-      String tokenString = token.getString();
-      switch (category.size()) {
-      case 0:
-        handleMainCategory(validCategories, category, token);
-        break;
-      case 1:
-        GrammarParserUtils.addSymbolToCategory(category, token, "=");
-        break;
-      case 2:
-        category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, token,
-                validCategories);
-        break;
-      case 3:
-        CollectSetContentsSrcg collectSetContents =
-            (CollectSetContentsSrcg) new CollectSetContentsSrcg(this, category,
-                lhsNT, lhs, symbols, token).invoke();
-        category = collectSetContents.getCategory();
-        lhsNT = collectSetContents.getLhsNT();
-        symbols = collectSetContents.getSymbols();
-        break;
-      case 4:
-        if (category.get(3).equals("-")) {
-          GrammarParserUtils.addSymbolToCategory(category, token, ">");
-        } else {
-          lhs.append(" ").append(tokenString);
-          if (tokenString.equals(")")) {
-            category.remove(3);
-          }
-        }
-        break;
-      case 5:
-        CollectOuterRhsSymbolsSrcg collectOuterRhsSymbols =
-            (CollectOuterRhsSymbolsSrcg) new CollectOuterRhsSymbolsSrcg(this,
-                category, lhsNT, lhs, currentRhsNt, rhs, token).invoke();
-        category = collectOuterRhsSymbols.getCategory();
-        lhsNT = collectOuterRhsSymbols.getLhsNT();
-        lhs = collectOuterRhsSymbols.getLhsBuilder();
-        currentRhsNt = collectOuterRhsSymbols.getCurrentRhsNt();
-        rhs = collectOuterRhsSymbols.getRhs();
-        break;
-      default:
-        switch (tokenString) {
-        case ")":
-          category.remove(5);
-          currentRhsNt = null;
-        default:
-          rhs.append(" ").append(tokenString);
-          break;
-        }
-        break;
-      }
-    }
-  }
-
-  private Set<String> getValidCategories() {
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("V");
-    validCategories.add("S");
-    validCategories.add("P");
-    validCategories.add("G");
-    return validCategories;
-  }
-
-  private void handleMainCategory(Set<String> validCategories,
-      List<String> category, Token token) throws ParseException {
-    String tokenString = token.getString();
-    if (validCategories.contains(tokenString)) {
-      if ((tokenString.equals("N") && this.getNonterminals() != null) || (
-          tokenString.equals("T") && this.getTerminals() != null) || (
-          tokenString.equals("S") && this.getStartSymbol() != null) || (
-          tokenString.equals("V") && this.getVariables() != null)) {
-        throw new ParseException("Category " + token + " is already set.",
-            token.getLineNumber());
-      }
-      category.add(tokenString);
-    } else {
-      throw new ParseException("Unknown declaration symbol " + token,
-          token.getLineNumber());
-    }
+    new InnerSrcgGrammarParser(this, in).invoke();
   }
 
   public void setVariables(String[] variables) {

@@ -1,14 +1,13 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
-import com.github.samyadaleh.cltoolbox.common.parser.*;
+import com.github.samyadaleh.cltoolbox.common.parser.InnerCfgGrammarParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Representation of a context-free grammar consisting of nonterminals,
@@ -36,57 +35,7 @@ public class Cfg extends AbstractCfg {
   }
 
   public Cfg(BufferedReader in) throws IOException, ParseException {
-    Character[] specialChars =
-        new Character[] {'-', '>', '{', '}', ',', '|', '='};
-    TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = getValidCategories();
-    List<String> category = new ArrayList<>();
-    String lhs = null;
-    StringBuilder rhs = null;
-    List<String> symbols = new ArrayList<>();
-    Token token;
-    while ((token = reader.getNextToken()) != null) {
-      String tokenString = token.getString();
-      switch (category.size()) {
-      case 0:
-        GrammarParserUtils
-            .handleMainCategory(this, validCategories, category, token);
-        break;
-      case 1:
-        GrammarParserUtils.addSymbolToCategory(category, token, "=");
-        break;
-      case 2:
-        category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, token,
-                validCategories);
-        break;
-      case 3:
-        CollectSetContentsCfg collectSetContentsCfg =
-            (CollectSetContentsCfg) new CollectSetContentsCfg(this, category,
-                lhs, symbols, token).invoke();
-        category = collectSetContentsCfg.getCategory();
-        lhs = collectSetContentsCfg.getLhs();
-        symbols = collectSetContentsCfg.getSymbols();
-        break;
-      case 4:
-        if (tokenString.equals(">")) {
-          category.add(tokenString);
-          rhs = new StringBuilder();
-        } else {
-          throw new ParseException("Expected > but found " + token,
-              token.getLineNumber());
-        }
-        break;
-      default:
-        CollectSymbols collectRhsSymbols =
-            new CollectRhsSymbolsCfg(this, category, lhs, rhs, tokenString)
-                .invoke();
-        category = collectRhsSymbols.getCategory();
-        lhs = collectRhsSymbols.getLhs();
-        rhs = collectRhsSymbols.getRhs();
-        break;
-      }
-    }
+    new InnerCfgGrammarParser(this, in).invoke();
   }
 
   public List<CfgProductionRule> getProductionRules() {

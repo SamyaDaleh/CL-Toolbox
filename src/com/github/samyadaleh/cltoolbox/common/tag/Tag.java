@@ -41,77 +41,7 @@ public class Tag extends AbstractNTSGrammar {
   }
 
   public Tag(BufferedReader in) throws IOException, ParseException {
-    Character[] specialChars = new Character[] {'>', '{', '}', ',', ':', '='};
-    TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = getValidCategories();
-    List<String> category = new ArrayList<>();
-    String lhs = null;
-    StringBuilder rhs = null;
-    List<String> symbols = new ArrayList<>();
-    Token token;
-    while ((token = reader.getNextToken()) != null) {
-      String tokenString = token.getString();
-      switch (category.size()) {
-      case 0:
-        handleMainCategory(validCategories, category, token);
-        break;
-      case 1:
-        GrammarParserUtils.addSymbolToCategory(category, token, "=");
-        break;
-      case 2:
-        category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, token,
-                validCategories);
-        break;
-      case 3:
-        CollectSetContentsTag collectSetContents =
-            (CollectSetContentsTag) new CollectSetContentsTag(this, category,
-                lhs, rhs, symbols, token).invoke();
-        category = collectSetContents.getCategory();
-        lhs = collectSetContents.getLhs();
-        rhs = collectSetContents.getRhs();
-        symbols = collectSetContents.getSymbols();
-        break;
-      default:
-        CollectTreeSymbolsTag collectTreeTokens =
-            (CollectTreeSymbolsTag) new CollectTreeSymbolsTag(this, category,
-                lhs, rhs, tokenString).invoke();
-        category = collectTreeTokens.getCategory();
-        lhs = collectTreeTokens.getLhs();
-        rhs = collectTreeTokens.getRhs();
-      }
-    }
-  }
-
-  private Set<String> getValidCategories() {
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("S");
-    validCategories.add("I");
-    validCategories.add("A");
-    validCategories.add("G");
-    return validCategories;
-  }
-
-  private void handleMainCategory(Set<String> validCategories,
-      List<String> category, Token token) throws ParseException {
-    String tokenString = token.getString();
-    if (validCategories.contains(tokenString)) {
-      if ((tokenString.equals("N") && this.getNonterminals() != null) || (
-          tokenString.equals("T") && this.getTerminals() != null) || (
-          tokenString.equals("S") && this.getStartSymbol() != null) || (
-          tokenString.equals("A") && this.getAuxiliaryTreeNames().size() > 0)
-          || (tokenString.equals("I")
-          && this.getInitialTreeNames().size() > 0)) {
-        throw new ParseException("Category " + tokenString + " is already set.",
-            token.getLineNumber());
-      }
-      category.add(tokenString);
-    } else {
-      throw new ParseException("Unknown declaration symbol " + tokenString,
-          token.getLineNumber());
-    }
+    new InnerTagGrammarParser(this, in).invoke();
   }
 
   /**
