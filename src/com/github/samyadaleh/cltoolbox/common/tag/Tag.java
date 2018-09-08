@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
-import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.addSymbolToCategory;
-
 /**
  * Tree adjoining grammar that consists of terminals, nonterminals, a start
  * symbol, some initial trees and auxiliary trees.
@@ -61,7 +59,7 @@ public class Tag extends AbstractNTSGrammar {
         handleMainCategory(validCategories, category, token);
         break;
       case 1:
-        addSymbolToCategory(category, token, "=");
+        GrammarParserUtils.addSymbolToCategory(category, token, "=");
         break;
       case 2:
         category = GrammarParserUtils

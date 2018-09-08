@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.addSymbolToCategory;
-
 /**
  * Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol.
@@ -59,7 +57,7 @@ public class Cfg extends AbstractCfg {
             .handleMainCategory(this, validCategories, category, token);
         break;
       case 1:
-        addSymbolToCategory(category, token, "=");
+        GrammarParserUtils.addSymbolToCategory(category, token, "=");
         break;
       case 2:
         category = GrammarParserUtils
@@ -91,16 +89,6 @@ public class Cfg extends AbstractCfg {
         break;
       }
     }
-  }
-
-  private Set<String> getValidCategories() {
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("S");
-    validCategories.add("P");
-    validCategories.add("G");
-    return validCategories;
   }
 
   public List<CfgProductionRule> getProductionRules() {

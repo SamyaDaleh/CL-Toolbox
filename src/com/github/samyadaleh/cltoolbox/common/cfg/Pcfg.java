@@ -13,8 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.addSymbolToCategory;
-
 /**
  * Representation of a context free grammar where the rules have
  * probabilities.
@@ -70,7 +68,7 @@ public class Pcfg extends AbstractCfg {
             .handleMainCategory(this, validCategories, category, token);
         break;
       case 1:
-        addSymbolToCategory(category, token, "=");
+        GrammarParserUtils.addSymbolToCategory(category, token, "=");
         break;
       case 2:
         category = GrammarParserUtils
@@ -108,16 +106,6 @@ public class Pcfg extends AbstractCfg {
         break;
       }
     }
-  }
-
-  private Set<String> getValidCategories() {
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("S");
-    validCategories.add("P");
-    validCategories.add("G");
-    return validCategories;
   }
 
   public List<PcfgProductionRule> getProductionRules() {

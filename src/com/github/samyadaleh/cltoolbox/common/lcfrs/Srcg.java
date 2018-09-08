@@ -20,8 +20,6 @@ import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 
-import static com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils.addSymbolToCategory;
-
 /**
  * Representation of a sRCG - simple Range Concatenation Grammar.
  */
@@ -93,7 +91,7 @@ public class Srcg extends AbstractNTSGrammar {
         handleMainCategory(validCategories, category, token);
         break;
       case 1:
-        addSymbolToCategory(category, token, "=");
+        GrammarParserUtils.addSymbolToCategory(category, token, "=");
         break;
       case 2:
         category = GrammarParserUtils

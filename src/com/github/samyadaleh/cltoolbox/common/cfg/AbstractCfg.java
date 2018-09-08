@@ -2,6 +2,9 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class AbstractCfg
     extends AbstractNTSGrammar {
 
@@ -17,6 +20,16 @@ public abstract class AbstractCfg
     appendRuleRepresentation(builder);
     builder.append("}\n");
     return builder.toString();
+  }
+
+  protected Set<String> getValidCategories() {
+    Set<String> validCategories = new HashSet<>();
+    validCategories.add("N");
+    validCategories.add("T");
+    validCategories.add("S");
+    validCategories.add("P");
+    validCategories.add("G");
+    return validCategories;
   }
 
   protected abstract void appendRuleRepresentation(StringBuilder builder);
