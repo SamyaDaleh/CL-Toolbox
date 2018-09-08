@@ -9,14 +9,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CfgCykUtils {
+class CfgCykUtils {
   public CfgCykUtils() {
   }
 
   static List<Tree> generateDerivedTrees(String i1,
       List<ChartItemInterface> antecedences, CfgProductionRule rule)
       throws ParseException {
-    List<Tree> derivedTrees = new ArrayList<Tree>();
+    List<Tree> derivedTrees = new ArrayList<>();
     Tree derivedTreeBase = new Tree(rule);
     if (i1.equals(antecedences.get(0).getItemForm()[1])) {
       for (Tree tree1 : antecedences.get(0).getTrees()) {

@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 
 public class CfgToLrKRulesConverter {
-  public static final Logger log = LogManager.getLogger();
+  private static final Logger log = LogManager.getLogger();
 
   public static ParsingSchema cfgToLrKRules(Cfg cfg, String w, int k) {
     String[] wSplit = w.split(" ");
@@ -36,8 +36,8 @@ public class CfgToLrKRulesConverter {
     Map<String, String> parseTable =
         computeParseTable(states, initialState, wSplit, schema, cfg, k);
     printParseTable(parseTable, states.size());
-    List<String> statesWithShifts = new ArrayList<String>();
-    List<String> statesWithReduces = new ArrayList<String>();
+    List<String> statesWithShifts = new ArrayList<>();
+    List<String> statesWithReduces = new ArrayList<>();
     for (Map.Entry<String, String> entry : parseTable.entrySet()) {
       String state = entry.getKey().split(" ")[0];
       String action = entry.getValue().substring(0, 1);
@@ -70,7 +70,7 @@ public class CfgToLrKRulesConverter {
     return schema;
   }
 
-  public static void printStates(List<List<String[]>> states) {
+  private static void printStates(List<List<String[]>> states) {
     if (log.isDebugEnabled()) {
       log.debug("Generated states: ");
       for (List<String[]> state : states) {
@@ -84,10 +84,10 @@ public class CfgToLrKRulesConverter {
     }
   }
 
-  public static void printParseTable(Map<String, String> parseTable,
+  private static void printParseTable(Map<String, String> parseTable,
       int statesSize) {
     if (log.isDebugEnabled()) {
-      List<String> keysWithoutStates = new ArrayList<String>();
+      List<String> keysWithoutStates = new ArrayList<>();
       int columnWidth = 0;
       for (String key : parseTable.keySet()) {
         if (!key.endsWith(" $")) {
@@ -109,7 +109,7 @@ public class CfgToLrKRulesConverter {
     }
   }
 
-  public static void printParseTableLine(Map<String, String> parseTable,
+  private static void printParseTableLine(Map<String, String> parseTable,
       String state, List<String> keysWithoutStates, int columnWidth) {
     StringBuilder line = new StringBuilder();
     line.append(printParseTableCell(state, columnWidth));
@@ -125,7 +125,7 @@ public class CfgToLrKRulesConverter {
     log.debug(line.toString());
   }
 
-  public static String printParseTableCell(String content, int columnWidth) {
+  private static String printParseTableCell(String content, int columnWidth) {
     StringBuilder cell = new StringBuilder(content);
     for (int i = 0; i < columnWidth - content.length(); i++) {
       cell.append(' ');
@@ -133,7 +133,7 @@ public class CfgToLrKRulesConverter {
     return cell.toString();
   }
 
-  public static void printParseTableHeader(List<String> keysWithoutStates,
+  private static void printParseTableHeader(List<String> keysWithoutStates,
       int columnWidth) {
     StringBuilder line = new StringBuilder();
     line.append(printParseTableCell("", columnWidth));
@@ -143,10 +143,10 @@ public class CfgToLrKRulesConverter {
     log.debug(line.toString());
   }
 
-  public static Map<String, String> computeParseTable(
+  private static Map<String, String> computeParseTable(
       List<List<String[]>> states, String[] initialState, String[] wSplit,
       ParsingSchema schema, Cfg cfg, int k) {
-    Map<String, String> parseTable = new HashMap<String, String>();
+    Map<String, String> parseTable = new HashMap<>();
     String[] finalState = initialState.clone();
     finalState[0] = initialState[0].replaceFirst("•", "") + " •";
     for (int i = 0; i < states.size(); i++) {
@@ -163,7 +163,7 @@ public class CfgToLrKRulesConverter {
     return parseTable;
   }
 
-  public static void addGotoActionToParseTable(List<List<String[]>> states,
+  private static void addGotoActionToParseTable(List<List<String[]>> states,
       Cfg cfg, int k, Map<String, String> parseTable) {
     for (int i = 0; i < states.size(); i++) {
       for (String nt : cfg.getNonterminals()) {
@@ -181,7 +181,7 @@ public class CfgToLrKRulesConverter {
     }
   }
 
-  public static void addReduceActionToParseTable(List<List<String[]>> states,
+  private static void addReduceActionToParseTable(List<List<String[]>> states,
       Cfg cfg, int k, Map<String, String> parseTable, int i) {
     for (String[] stateEntry : states.get(i)) {
       if (stateEntry[0].endsWith("•")) {
@@ -201,7 +201,7 @@ public class CfgToLrKRulesConverter {
     }
   }
 
-  public static void addShiftActionToParseTable(List<List<String[]>> states,
+  private static void addShiftActionToParseTable(List<List<String[]>> states,
       Cfg cfg, int k, Map<String, String> parseTable, int i) {
     for (String t : cfg.getTerminals()) {
       List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
@@ -222,7 +222,7 @@ public class CfgToLrKRulesConverter {
   /**
    * Returns true if state is one of the entries in states by string comparison.
    */
-  public static boolean contains(List<String[]> states, String[] state) {
+  private static boolean contains(List<String[]> states, String[] state) {
     for (String[] stateEntry : states) {
       if (stateEntry.length != state.length) {
         return false;
@@ -241,10 +241,10 @@ public class CfgToLrKRulesConverter {
     return false;
   }
 
-  public static List<List<String[]>> computeStates(Cfg cfg,
+  private static List<List<String[]>> computeStates(Cfg cfg,
       String[] initialState, int k) {
-    List<List<String[]>> states = new ArrayList<List<String[]>>();
-    List<String[]> initialClosure = new ArrayList<String[]>();
+    List<List<String[]>> states = new ArrayList<>();
+    List<String[]> initialClosure = new ArrayList<>();
     initialClosure.add(initialState);
     states.add(computeClosure(initialClosure, cfg, k));
     boolean changed = true;
@@ -257,7 +257,7 @@ public class CfgToLrKRulesConverter {
       System.arraycopy(cfg.getTerminals(), 0, nUT, cfg.getNonterminals().length,
           cfg.getTerminals().length);
       for (String x : nUT) {
-        List<List<String[]>> statesCopy = new ArrayList<List<String[]>>(states);
+        List<List<String[]>> statesCopy = new ArrayList<>(states);
         for (List<String[]> q : statesCopy) {
           List<String[]> gotoStates = computeGotoStates(q, x, cfg, k);
           if (Union(states, gotoStates)) {
@@ -272,7 +272,7 @@ public class CfgToLrKRulesConverter {
   /**
    * Returns true if goToStates is not in states yet.
    */
-  public static boolean Union(List<List<String[]>> states,
+  private static boolean Union(List<List<String[]>> states,
       List<String[]> gotoStates) {
     if (gotoStates.size() == 0) {
       return false;
@@ -289,7 +289,8 @@ public class CfgToLrKRulesConverter {
   /**
    * Returns true if lists contain the same arrays, order in list doesn't matter.
    */
-  public static boolean equals(List<String[]> states, List<String[]> gotoStates) {
+  private static boolean equals(List<String[]> states,
+      List<String[]> gotoStates) {
     if (states.size() != gotoStates.size()) {
       return false;
     }
@@ -307,9 +308,9 @@ public class CfgToLrKRulesConverter {
     return true;
   }
 
-  public static List<String[]> computeGotoStates(List<String[]> q, String x,
+  private static List<String[]> computeGotoStates(List<String[]> q, String x,
       Cfg cfg, int k) {
-    List<String[]> gotoStates = new ArrayList<String[]>();
+    List<String[]> gotoStates = new ArrayList<>();
     for (String[] rule : q) {
       String[] newState = getGotoState(rule, x);
       if (newState != null) {
@@ -319,7 +320,7 @@ public class CfgToLrKRulesConverter {
     return computeClosure(gotoStates, cfg, k);
   }
 
-  public static String[] getGotoState(String[] rule, String x) {
+  private static String[] getGotoState(String[] rule, String x) {
     String[] ruleSplit = rule[0].split(" ");
     for (String aRuleSplit : ruleSplit) {
       if (aRuleSplit.startsWith("•")) {
@@ -347,12 +348,12 @@ public class CfgToLrKRulesConverter {
     return null;
   }
 
-  public static List<String[]> computeClosure(List<String[]> closure, Cfg cfg,
+  private static List<String[]> computeClosure(List<String[]> closure, Cfg cfg,
       int k) {
     boolean changed = true;
     while (changed) {
       changed = false;
-      List<String[]> closureCopy = new ArrayList<String[]>(closure);
+      List<String[]> closureCopy = new ArrayList<>(closure);
       for (String[] stateEntry : closureCopy) {
         String[] ruleSplit = stateEntry[0].split(" ");
         for (String sym : ruleSplit) {
@@ -405,13 +406,13 @@ public class CfgToLrKRulesConverter {
     return closure;
   }
 
-  public static List<String[]> getFirstSet(Cfg cfg, String[] ruleRest,
+  private static List<String[]> getFirstSet(Cfg cfg, String[] ruleRest,
       String[] heritage, int k) {
-    List<String[]> firstSet = new ArrayList<String[]>();
+    List<String[]> firstSet = new ArrayList<>();
     if (k == 0) {
       return firstSet;
     }
-    List<String[]> firstSetExpansions = new ArrayList<String[]>();
+    List<String[]> firstSetExpansions = new ArrayList<>();
     String[] ruleRestAndHeritage =
         new String[ruleRest.length + heritage.length];
     System.arraycopy(ruleRest, 0, ruleRestAndHeritage, 0, ruleRest.length);
@@ -463,7 +464,7 @@ public class CfgToLrKRulesConverter {
     return firstSet;
   }
 
-  public static boolean listContainsArray(List<String[]> closure,
+  private static boolean listContainsArray(List<String[]> closure,
       String[] newState) {
     for (String[] state : closure) {
       if (state.length == newState.length) {

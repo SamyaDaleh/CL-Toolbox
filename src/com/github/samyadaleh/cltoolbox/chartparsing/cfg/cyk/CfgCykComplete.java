@@ -15,7 +15,6 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final CfgProductionRule rule;
-  private final CfgCykUtils cfgCykUtils = new CfgCykUtils();
 
   public CfgCykComplete(CfgProductionRule rule) {
     this.rule = rule;
@@ -41,7 +40,7 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
           new DeductionChartItem(rule.getLhs(), String.valueOf(i1int),
               String.valueOf(j1int + j2int));
       List<Tree> derivedTrees =
-          cfgCykUtils.generateDerivedTrees(i1, antecedences, rule);
+          CfgCykUtils.generateDerivedTrees(i1, antecedences, rule);
       consequence.setTrees(derivedTrees);
       logItemGeneration(consequence);
       consequences.add(consequence);
