@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
+import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsCfg;
 import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
@@ -70,12 +71,12 @@ public class Cfg extends AbstractCfg {
             .addStartsymbolOrAddCategory(this, category, token);
         break;
       case 3:
-        CollectSetContents collectSetContents =
-            new CollectSetContents(category, lhs, symbols, token, tokenString)
-                .invoke();
-        category = collectSetContents.getCategory();
-        lhs = collectSetContents.getLhs();
-        symbols = collectSetContents.getSymbols();
+        CollectSetContentsCfg collectSetContentsCfg =
+            (CollectSetContentsCfg) new CollectSetContentsCfg(this, category,
+                lhs, symbols, token).invoke();
+        category = collectSetContentsCfg.getCategory();
+        lhs = collectSetContentsCfg.getLhs();
+        symbols = collectSetContentsCfg.getSymbols();
         break;
       case 4:
         if (tokenString.equals(">")) {
@@ -346,75 +347,4 @@ public class Cfg extends AbstractCfg {
     }
   }
 
-  private class CollectSetContents {
-    private List<String> category;
-    private String lhs;
-    private List<String> symbols;
-    private Token token;
-    private String tokenString;
-
-    CollectSetContents(List<String> category, String lhs, List<String> symbols,
-        Token token, String tokenString) {
-      this.category = category;
-      this.lhs = lhs;
-      this.symbols = symbols;
-      this.token = token;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    public String getLhs() {
-      return lhs;
-    }
-
-    public List<String> getSymbols() {
-      return symbols;
-    }
-
-    CollectSetContents invoke() throws ParseException {
-      switch (category.get(0)) {
-      case "N":
-        switch (tokenString) {
-        case "}":
-          Cfg.this.nonterminals = symbols.toArray(new String[0]);
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "T":
-        switch (tokenString) {
-        case "}":
-          Cfg.this.terminals = symbols.toArray(new String[0]);
-          category = new ArrayList<>();
-          symbols = new ArrayList<>();
-          break;
-        case ",":
-          break;
-        default:
-          symbols.add(tokenString);
-        }
-        break;
-      case "P":
-        lhs = GrammarParserUtils.findLhsOrAddCategory(category, lhs, token);
-        break;
-      default:
-        if (lhs != null) {
-          throw new ParseException("Expected - but found " + tokenString,
-              token.getLineNumber());
-        }
-        if (!tokenString.equals(",")) {
-          lhs = tokenString;
-        }
-      }
-      return this;
-    }
-  }
 }
