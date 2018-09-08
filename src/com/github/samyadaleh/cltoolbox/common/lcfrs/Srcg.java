@@ -15,10 +15,7 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Binarization;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.EmptyProductions;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.UselessRules;
-import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsSrcg;
-import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
-import com.github.samyadaleh.cltoolbox.common.parser.Token;
-import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
+import com.github.samyadaleh.cltoolbox.common.parser.*;
 
 /**
  * Representation of a sRCG - simple Range Concatenation Grammar.
@@ -117,12 +114,12 @@ public class Srcg extends AbstractNTSGrammar {
         }
         break;
       case 5:
-        CollectOuterRhsSymbols collectOuterRhsSymbols =
-            new CollectOuterRhsSymbols(category, lhsNT, lhs, currentRhsNt, rhs,
-                token, tokenString).invoke();
+        CollectOuterRhsSymbolsSrcg collectOuterRhsSymbols =
+            (CollectOuterRhsSymbolsSrcg) new CollectOuterRhsSymbolsSrcg(this,
+                category, lhsNT, lhs, currentRhsNt, rhs, token).invoke();
         category = collectOuterRhsSymbols.getCategory();
         lhsNT = collectOuterRhsSymbols.getLhsNT();
-        lhs = collectOuterRhsSymbols.getLhs();
+        lhs = collectOuterRhsSymbols.getLhsBuilder();
         currentRhsNt = collectOuterRhsSymbols.getCurrentRhsNt();
         rhs = collectOuterRhsSymbols.getRhs();
         break;
@@ -151,20 +148,6 @@ public class Srcg extends AbstractNTSGrammar {
     return validCategories;
   }
 
-  private String findRhsNTOrAddCategory(List<String> category, String rhsnt,
-      Token token) throws ParseException {
-    String tokenString = token.getString();
-    if (rhsnt == null || !tokenString.equals("(")) {
-      rhsnt = tokenString;
-    } else if (tokenString.equals("(")) {
-      category.add(tokenString);
-    } else {
-      throw new ParseException("Unexpected situation with token " + tokenString,
-          token.getLineNumber());
-    }
-    return rhsnt;
-  }
-
   private void handleMainCategory(Set<String> validCategories,
       List<String> category, Token token) throws ParseException {
     String tokenString = token.getString();
@@ -187,7 +170,7 @@ public class Srcg extends AbstractNTSGrammar {
     this.variables = variables;
   }
 
-  private void addClause(String lhs, String rhs) throws ParseException {
+  public void addClause(String lhs, String rhs) throws ParseException {
     this.clauses.add(new Clause(lhs, rhs));
   }
 
@@ -275,81 +258,6 @@ public class Srcg extends AbstractNTSGrammar {
    */
   public Srcg getSrcgWithoutUselessRules() {
     return UselessRules.getSrcgWithoutUselessRules(this);
-  }
-
-  private class CollectOuterRhsSymbols {
-    private List<String> category;
-    private String lhsNT;
-    private StringBuilder lhs;
-    private String currentRhsNt;
-    private StringBuilder rhs;
-    private final Token token;
-    private final String tokenString;
-
-    CollectOuterRhsSymbols(List<String> category, String lhsNT,
-        StringBuilder lhs, String currentRhsNt, StringBuilder rhs, Token token,
-        String tokenString) {
-      this.category = category;
-      this.lhsNT = lhsNT;
-      this.lhs = lhs;
-      this.currentRhsNt = currentRhsNt;
-      this.rhs = rhs;
-      this.token = token;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    String getLhsNT() {
-      return lhsNT;
-    }
-
-    StringBuilder getLhs() {
-      return lhs;
-    }
-
-    String getCurrentRhsNt() {
-      return currentRhsNt;
-    }
-
-    StringBuilder getRhs() {
-      return rhs;
-    }
-
-    CollectOuterRhsSymbols invoke() throws ParseException {
-      switch (tokenString) {
-      case ",":
-        Srcg.this.addClause(lhs.toString(), rhs.toString());
-        currentRhsNt = null;
-        rhs = new StringBuilder();
-        lhsNT = null;
-        lhs = new StringBuilder();
-        category.remove(4);
-        category.remove(3);
-        break;
-      case "|":
-        Srcg.this.addClause(lhs.toString(), rhs.toString());
-        currentRhsNt = null;
-        rhs = new StringBuilder();
-        break;
-      case "}":
-        Srcg.this.addClause(lhs.toString(), rhs.toString());
-        category = new ArrayList<>();
-        currentRhsNt = null;
-        rhs = new StringBuilder();
-        lhsNT = null;
-        lhs = new StringBuilder();
-        break;
-      default:
-        currentRhsNt = findRhsNTOrAddCategory(category, currentRhsNt, token);
-        if (tokenString.equals("(")) {
-          rhs.append(currentRhsNt).append("(");
-        }
-      }
-      return this;
-    }
   }
 
 }

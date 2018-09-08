@@ -3,10 +3,7 @@ package com.github.samyadaleh.cltoolbox.common.tag;
 import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
-import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsTag;
-import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
-import com.github.samyadaleh.cltoolbox.common.parser.Token;
-import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
+import com.github.samyadaleh.cltoolbox.common.parser.*;
 import com.github.samyadaleh.cltoolbox.common.tag.util.Binarization;
 
 import java.io.BufferedReader;
@@ -76,8 +73,9 @@ public class Tag extends AbstractNTSGrammar {
         symbols = collectSetContents.getSymbols();
         break;
       default:
-        CollectTreeTokens collectTreeTokens =
-            new CollectTreeTokens(category, lhs, rhs, tokenString).invoke();
+        CollectTreeSymbolsTag collectTreeTokens =
+            (CollectTreeSymbolsTag) new CollectTreeSymbolsTag(this, category,
+                lhs, rhs, tokenString).invoke();
         category = collectTreeTokens.getCategory();
         lhs = collectTreeTokens.getLhs();
         rhs = collectTreeTokens.getRhs();
@@ -306,64 +304,6 @@ public class Tag extends AbstractNTSGrammar {
     builder.append("}\n");
     builder.append("S = ").append(getStartSymbol()).append("\n");
     return builder.toString();
-  }
-
-  private class CollectTreeTokens {
-    private List<String> category;
-    private String lhs;
-    private StringBuilder rhs;
-    private final String tokenString;
-
-    CollectTreeTokens(List<String> category, String lhs, StringBuilder rhs,
-        String tokenString) {
-      this.category = category;
-      this.lhs = lhs;
-      this.rhs = rhs;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    String getLhs() {
-      return lhs;
-    }
-
-    StringBuilder getRhs() {
-      return rhs;
-    }
-
-    CollectTreeTokens invoke() throws ParseException {
-      switch (tokenString) {
-      case "}":
-        if (category.get(0).equals("I")) {
-          Tag.this.addInitialTree(lhs, rhs.toString());
-        } else {
-          Tag.this.addAuxiliaryTree(lhs, rhs.toString());
-        }
-        category = new ArrayList<>();
-        lhs = null;
-        break;
-      case ",":
-        if (category.get(0).equals("I")) {
-          Tag.this.addInitialTree(lhs, rhs.toString());
-        } else {
-          Tag.this.addAuxiliaryTree(lhs, rhs.toString());
-        }
-        rhs = new StringBuilder();
-        lhs = null;
-        category.remove(4);
-        category.remove(3);
-        break;
-      default:
-        if (rhs.length() > 0) {
-          rhs.append(' ');
-        }
-        rhs.append(tokenString);
-      }
-      return this;
-    }
   }
 
 }

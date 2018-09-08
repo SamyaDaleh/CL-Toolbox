@@ -1,15 +1,11 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsPcfg;
-import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
-import com.github.samyadaleh.cltoolbox.common.parser.Token;
-import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
+import com.github.samyadaleh.cltoolbox.common.parser.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -96,9 +92,9 @@ public class Pcfg extends AbstractCfg {
         }
         break;
       default:
-        CollectRhsSymbols collectRhsSymbols =
-            new CollectRhsSymbols(category, prob, lhs, rhs, tokenString)
-                .invoke();
+        CollectRhsSymbolsPcfg collectRhsSymbols =
+            (CollectRhsSymbolsPcfg) new CollectRhsSymbolsPcfg(this, category,
+                prob, lhs, rhs, tokenString).invoke();
         category = collectRhsSymbols.getCategory();
         prob = collectRhsSymbols.getProb();
         lhs = collectRhsSymbols.getLhs();
@@ -131,74 +127,8 @@ public class Pcfg extends AbstractCfg {
    * Creates a PcfgProductionRule from the string representation and adds it to
    * its set of rules.
    */
-  private void addProductionRule(String rule) throws ParseException {
+  public void addProductionRule(String rule) throws ParseException {
     this.productionRules.add(new PcfgProductionRule(rule));
-  }
-
-  private class CollectRhsSymbols {
-    private List<String> category;
-    private String prob;
-    private String lhs;
-    private StringBuilder rhs;
-    private final String tokenString;
-
-    CollectRhsSymbols(List<String> category, String prob, String lhs,
-        StringBuilder rhs, String tokenString) {
-      this.category = category;
-      this.prob = prob;
-      this.lhs = lhs;
-      this.rhs = rhs;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    String getProb() {
-      return prob;
-    }
-
-    String getLhs() {
-      return lhs;
-    }
-
-    StringBuilder getRhs() {
-      return rhs;
-    }
-
-    CollectRhsSymbols invoke() throws ParseException {
-      switch (tokenString) {
-      case "}":
-        category = new ArrayList<>();
-        Pcfg.this
-            .addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
-        prob = null;
-        lhs = null;
-        break;
-      case "|":
-        Pcfg.this
-            .addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
-        rhs = new StringBuilder();
-        break;
-      case ",":
-        Pcfg.this
-            .addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
-        rhs = new StringBuilder();
-        lhs = null;
-        prob = null;
-        category.remove(5);
-        category.remove(4);
-        category.remove(3);
-        break;
-      default:
-        if (rhs.length() > 0) {
-          rhs.append(' ');
-        }
-        rhs.append(tokenString);
-      }
-      return this;
-    }
   }
 
 }

@@ -1,16 +1,12 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
-import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsCfg;
-import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
-import com.github.samyadaleh.cltoolbox.common.parser.Token;
-import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
+import com.github.samyadaleh.cltoolbox.common.parser.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,7 +57,8 @@ public class Cfg extends AbstractCfg {
         break;
       case 2:
         category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, token, validCategories);
+            .addStartsymbolOrAddCategory(this, category, token,
+                validCategories);
         break;
       case 3:
         CollectSetContentsCfg collectSetContentsCfg =
@@ -81,8 +78,9 @@ public class Cfg extends AbstractCfg {
         }
         break;
       default:
-        CollectRhsSymbols collectRhsSymbols =
-            new CollectRhsSymbols(category, lhs, rhs, tokenString).invoke();
+        CollectSymbols collectRhsSymbols =
+            new CollectRhsSymbolsCfg(this, category, lhs, rhs, tokenString)
+                .invoke();
         category = collectRhsSymbols.getCategory();
         lhs = collectRhsSymbols.getLhs();
         rhs = collectRhsSymbols.getRhs();
@@ -285,60 +283,6 @@ public class Cfg extends AbstractCfg {
    */
   public void addProductionRule(String rule) throws ParseException {
     this.productionRules.add(new CfgProductionRule(rule));
-  }
-
-  private class CollectRhsSymbols {
-    private List<String> category;
-    private String lhs;
-    private StringBuilder rhs;
-    private final String tokenString;
-
-    CollectRhsSymbols(List<String> category, String lhs, StringBuilder rhs,
-        String tokenString) {
-      this.category = category;
-      this.lhs = lhs;
-      this.rhs = rhs;
-      this.tokenString = tokenString;
-    }
-
-    List<String> getCategory() {
-      return category;
-    }
-
-    String getLhs() {
-      return lhs;
-    }
-
-    StringBuilder getRhs() {
-      return rhs;
-    }
-
-    CollectRhsSymbols invoke() throws ParseException {
-      switch (tokenString) {
-      case "}":
-        category = new ArrayList<>();
-        Cfg.this.addProductionRule(lhs + " -> " + rhs.toString());
-        lhs = null;
-        break;
-      case "|":
-        Cfg.this.addProductionRule(lhs + " -> " + rhs.toString());
-        rhs = new StringBuilder();
-        break;
-      case ",":
-        Cfg.this.addProductionRule(lhs + " -> " + rhs.toString());
-        rhs = new StringBuilder();
-        lhs = null;
-        category.remove(4);
-        category.remove(3);
-        break;
-      default:
-        if (rhs.length() > 0) {
-          rhs.append(' ');
-        }
-        rhs.append(tokenString);
-      }
-      return this;
-    }
   }
 
 }
