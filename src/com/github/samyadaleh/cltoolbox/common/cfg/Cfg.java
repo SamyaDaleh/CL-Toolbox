@@ -70,45 +70,12 @@ public class Cfg extends AbstractCfg {
             .addStartsymbolOrAddCategory(this, category, token);
         break;
       case 3:
-        switch (category.get(0)) {
-        case "N":
-          switch (tokenString) {
-          case "}":
-            this.nonterminals = symbols.toArray(new String[0]);
-            category = new ArrayList<>();
-            symbols = new ArrayList<>();
-            break;
-          case ",":
-            break;
-          default:
-            symbols.add(tokenString);
-          }
-          break;
-        case "T":
-          switch (tokenString) {
-          case "}":
-            this.terminals = symbols.toArray(new String[0]);
-            category = new ArrayList<>();
-            symbols = new ArrayList<>();
-            break;
-          case ",":
-            break;
-          default:
-            symbols.add(tokenString);
-          }
-          break;
-        case "P":
-          lhs = GrammarParserUtils.findLhsOrAddCategory(category, lhs, token);
-          break;
-        default:
-          if (lhs != null) {
-            throw new ParseException("Expected - but found " + tokenString,
-                token.getLineNumber());
-          }
-          if (!tokenString.equals(",")) {
-            lhs = tokenString;
-          }
-        }
+        CollectSetContents collectSetContents =
+            new CollectSetContents(category, lhs, symbols, token, tokenString)
+                .invoke();
+        category = collectSetContents.getCategory();
+        lhs = collectSetContents.getLhs();
+        symbols = collectSetContents.getSymbols();
         break;
       case 4:
         if (tokenString.equals(">")) {
@@ -120,29 +87,11 @@ public class Cfg extends AbstractCfg {
         }
         break;
       default:
-        switch (tokenString) {
-        case "}":
-          category = new ArrayList<>();
-          this.addProductionRule(lhs + " -> " + rhs.toString());
-          lhs = null;
-          break;
-        case "|":
-          this.addProductionRule(lhs + " -> " + rhs.toString());
-          rhs = new StringBuilder();
-          break;
-        case ",":
-          this.addProductionRule(lhs + " -> " + rhs.toString());
-          rhs = new StringBuilder();
-          lhs = null;
-          category.remove(4);
-          category.remove(3);
-          break;
-        default:
-          if (rhs.length() > 0) {
-            rhs.append(' ');
-          }
-          rhs.append(tokenString);
-        }
+        CollectRhsSymbols collectRhsSymbols =
+            new CollectRhsSymbols(category, lhs, rhs, tokenString).invoke();
+        category = collectRhsSymbols.getCategory();
+        lhs = collectRhsSymbols.getLhs();
+        rhs = collectRhsSymbols.getRhs();
         break;
       }
     }
@@ -343,4 +292,129 @@ public class Cfg extends AbstractCfg {
     this.productionRules.add(new CfgProductionRule(rule));
   }
 
+  private class CollectRhsSymbols {
+    private List<String> category;
+    private String lhs;
+    private StringBuilder rhs;
+    private String tokenString;
+
+    CollectRhsSymbols(List<String> category, String lhs, StringBuilder rhs,
+        String tokenString) {
+      this.category = category;
+      this.lhs = lhs;
+      this.rhs = rhs;
+      this.tokenString = tokenString;
+    }
+
+    List<String> getCategory() {
+      return category;
+    }
+
+    public String getLhs() {
+      return lhs;
+    }
+
+    public StringBuilder getRhs() {
+      return rhs;
+    }
+
+    CollectRhsSymbols invoke() throws ParseException {
+      switch (tokenString) {
+      case "}":
+        category = new ArrayList<>();
+        Cfg.this.addProductionRule(lhs + " -> " + rhs.toString());
+        lhs = null;
+        break;
+      case "|":
+        Cfg.this.addProductionRule(lhs + " -> " + rhs.toString());
+        rhs = new StringBuilder();
+        break;
+      case ",":
+        Cfg.this.addProductionRule(lhs + " -> " + rhs.toString());
+        rhs = new StringBuilder();
+        lhs = null;
+        category.remove(4);
+        category.remove(3);
+        break;
+      default:
+        if (rhs.length() > 0) {
+          rhs.append(' ');
+        }
+        rhs.append(tokenString);
+      }
+      return this;
+    }
+  }
+
+  private class CollectSetContents {
+    private List<String> category;
+    private String lhs;
+    private List<String> symbols;
+    private Token token;
+    private String tokenString;
+
+    CollectSetContents(List<String> category, String lhs, List<String> symbols,
+        Token token, String tokenString) {
+      this.category = category;
+      this.lhs = lhs;
+      this.symbols = symbols;
+      this.token = token;
+      this.tokenString = tokenString;
+    }
+
+    List<String> getCategory() {
+      return category;
+    }
+
+    public String getLhs() {
+      return lhs;
+    }
+
+    public List<String> getSymbols() {
+      return symbols;
+    }
+
+    CollectSetContents invoke() throws ParseException {
+      switch (category.get(0)) {
+      case "N":
+        switch (tokenString) {
+        case "}":
+          Cfg.this.nonterminals = symbols.toArray(new String[0]);
+          category = new ArrayList<>();
+          symbols = new ArrayList<>();
+          break;
+        case ",":
+          break;
+        default:
+          symbols.add(tokenString);
+        }
+        break;
+      case "T":
+        switch (tokenString) {
+        case "}":
+          Cfg.this.terminals = symbols.toArray(new String[0]);
+          category = new ArrayList<>();
+          symbols = new ArrayList<>();
+          break;
+        case ",":
+          break;
+        default:
+          symbols.add(tokenString);
+        }
+        break;
+      case "P":
+        lhs = GrammarParserUtils.findLhsOrAddCategory(category, lhs, token);
+        break;
+      default:
+        if (lhs != null) {
+          throw new ParseException("Expected - but found " + tokenString,
+              token.getLineNumber());
+        }
+        if (!tokenString.equals(",")) {
+          lhs = tokenString;
+        }
+      }
+      return this;
+    }
+  }
 }

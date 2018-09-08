@@ -73,76 +73,20 @@ public class Tag {
         category = addStartsymbolOrAddCategory(category, token);
         break;
       case 3:
-        switch (category.get(0)) {
-        case "N":
-          switch (tokenString) {
-          case "}":
-            this.nonterminals = symbols.toArray(new String[0]);
-            category = new ArrayList<>();
-            symbols = new ArrayList<>();
-            break;
-          case ",":
-            break;
-          default:
-            symbols.add(tokenString);
-          }
-          break;
-        case "T":
-          switch (tokenString) {
-          case "}":
-            this.terminals = symbols.toArray(new String[0]);
-            category = new ArrayList<>();
-            symbols = new ArrayList<>();
-            break;
-          case ",":
-            break;
-          default:
-            symbols.add(tokenString);
-          }
-          break;
-        case "I":
-        case "A":
-          lhs = findLhsOrAddCategory(category, lhs, token);
-          rhs = new StringBuilder();
-          break;
-        default:
-          if (lhs != null) {
-            throw new ParseException("Expected : but found " + tokenString,
-                token.getLineNumber());
-          }
-          if (!tokenString.equals(",")) {
-            lhs = tokenString;
-          }
-        }
+        CollectSetContents collectSetContents =
+            new CollectSetContents(category, lhs, rhs, symbols, token,
+                tokenString).invoke();
+        category = collectSetContents.getCategory();
+        lhs = collectSetContents.getLhs();
+        rhs = collectSetContents.getRhs();
+        symbols = collectSetContents.getSymbols();
         break;
       default:
-        switch (tokenString) {
-        case "}":
-          if (category.get(0).equals("I")) {
-            this.addInitialTree(lhs, rhs.toString());
-          } else {
-            this.addAuxiliaryTree(lhs, rhs.toString());
-          }
-          category = new ArrayList<>();
-          lhs = null;
-          break;
-        case ",":
-          if (category.get(0).equals("I")) {
-            this.addInitialTree(lhs, rhs.toString());
-          } else {
-            this.addAuxiliaryTree(lhs, rhs.toString());
-          }
-          rhs = new StringBuilder();
-          lhs = null;
-          category.remove(4);
-          category.remove(3);
-          break;
-        default:
-          if (rhs.length() > 0) {
-            rhs.append(' ');
-          }
-          rhs.append(tokenString);
-        }
+        CollectTreeTokens collectTreeTokens =
+            new CollectTreeTokens(category, lhs, rhs, tokenString).invoke();
+        category = collectTreeTokens.getCategory();
+        lhs = collectTreeTokens.getLhs();
+        rhs = collectTreeTokens.getRhs();
       }
     }
   }
@@ -201,7 +145,10 @@ public class Tag {
     if (validCategories.contains(tokenString)) {
       if ((tokenString.equals("N") && this.getNonterminals() != null) || (
           tokenString.equals("T") && this.getTerminals() != null) || (
-          tokenString.equals("S") && this.startSymbol != null)) {
+          tokenString.equals("S") && this.startSymbol != null) || (
+          tokenString.equals("A") && this.getAuxiliaryTreeNames().size() > 0)
+          || (tokenString.equals("I")
+          && this.getInitialTreeNames().size() > 0)) {
         throw new ParseException("Category " + tokenString + " is already set.",
             token.getLineNumber());
       }
@@ -425,5 +372,143 @@ public class Tag {
     builder.append("}\n");
     builder.append("S = ").append(startSymbol).append("\n");
     return builder.toString();
+  }
+
+  private class CollectTreeTokens {
+    private List<String> category;
+    private String lhs;
+    private StringBuilder rhs;
+    private String tokenString;
+
+    CollectTreeTokens(List<String> category, String lhs, StringBuilder rhs,
+        String tokenString) {
+      this.category = category;
+      this.lhs = lhs;
+      this.rhs = rhs;
+      this.tokenString = tokenString;
+    }
+
+    List<String> getCategory() {
+      return category;
+    }
+
+    public String getLhs() {
+      return lhs;
+    }
+
+    public StringBuilder getRhs() {
+      return rhs;
+    }
+
+    CollectTreeTokens invoke() throws ParseException {
+      switch (tokenString) {
+      case "}":
+        if (category.get(0).equals("I")) {
+          Tag.this.addInitialTree(lhs, rhs.toString());
+        } else {
+          Tag.this.addAuxiliaryTree(lhs, rhs.toString());
+        }
+        category = new ArrayList<>();
+        lhs = null;
+        break;
+      case ",":
+        if (category.get(0).equals("I")) {
+          Tag.this.addInitialTree(lhs, rhs.toString());
+        } else {
+          Tag.this.addAuxiliaryTree(lhs, rhs.toString());
+        }
+        rhs = new StringBuilder();
+        lhs = null;
+        category.remove(4);
+        category.remove(3);
+        break;
+      default:
+        if (rhs.length() > 0) {
+          rhs.append(' ');
+        }
+        rhs.append(tokenString);
+      }
+      return this;
+    }
+  }
+
+  private class CollectSetContents {
+    private List<String> category;
+    private String lhs;
+    private StringBuilder rhs;
+    private List<String> symbols;
+    private Token token;
+    private String tokenString;
+
+    CollectSetContents(List<String> category, String lhs, StringBuilder rhs,
+        List<String> symbols, Token token, String tokenString) {
+      this.category = category;
+      this.lhs = lhs;
+      this.rhs = rhs;
+      this.symbols = symbols;
+      this.token = token;
+      this.tokenString = tokenString;
+    }
+
+    List<String> getCategory() {
+      return category;
+    }
+
+    public String getLhs() {
+      return lhs;
+    }
+
+    public StringBuilder getRhs() {
+      return rhs;
+    }
+
+    public List<String> getSymbols() {
+      return symbols;
+    }
+
+    CollectSetContents invoke() throws ParseException {
+      switch (category.get(0)) {
+      case "N":
+        switch (tokenString) {
+        case "}":
+          Tag.this.nonterminals = symbols.toArray(new String[0]);
+          category = new ArrayList<>();
+          symbols = new ArrayList<>();
+          break;
+        case ",":
+          break;
+        default:
+          symbols.add(tokenString);
+        }
+        break;
+      case "T":
+        switch (tokenString) {
+        case "}":
+          Tag.this.terminals = symbols.toArray(new String[0]);
+          category = new ArrayList<>();
+          symbols = new ArrayList<>();
+          break;
+        case ",":
+          break;
+        default:
+          symbols.add(tokenString);
+        }
+        break;
+      case "I":
+      case "A":
+        lhs = findLhsOrAddCategory(category, lhs, token);
+        rhs = new StringBuilder();
+        break;
+      default:
+        if (lhs != null) {
+          throw new ParseException("Expected : but found " + tokenString,
+              token.getLineNumber());
+        }
+        if (!tokenString.equals(",")) {
+          lhs = tokenString;
+        }
+      }
+      return this;
+    }
   }
 }

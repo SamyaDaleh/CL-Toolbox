@@ -76,45 +76,13 @@ public class Pcfg extends AbstractCfg{
             .addStartsymbolOrAddCategory(this, category, token);
         break;
       case 3:
-        switch (category.get(0)) {
-        case "N":
-          switch (tokenString) {
-          case "}":
-            this.nonterminals = symbols.toArray(new String[0]);
-            category = new ArrayList<>();
-            symbols = new ArrayList<>();
-            break;
-          case ",":
-            break;
-          default:
-            symbols.add(tokenString);
-          }
-          break;
-        case "T":
-          switch (tokenString) {
-          case "}":
-            this.terminals = symbols.toArray(new String[0]);
-            category = new ArrayList<>();
-            symbols = new ArrayList<>();
-            break;
-          case ",":
-            break;
-          default:
-            symbols.add(tokenString);
-          }
-          break;
-        case "P":
-          prob = findProbabilityOrAddCategory(category, prob, token);
-          break;
-        default:
-          if (lhs != null) {
-            throw new ParseException("Expected - but found " + token,
-                lineNumber);
-          }
-          if (!tokenString.equals(",")) {
-            lhs = tokenString;
-          }
-        }
+        CollectSetContents collectSetContents =
+            new CollectSetContents(category, lineNumber, prob, lhs, symbols,
+                token, tokenString).invoke();
+        category = collectSetContents.getCategory();
+        prob = collectSetContents.getProb();
+        lhs = collectSetContents.getLhs();
+        symbols = collectSetContents.getSymbols();
         break;
       case 4:
         lhs = GrammarParserUtils
@@ -129,32 +97,13 @@ public class Pcfg extends AbstractCfg{
         }
         break;
       default:
-        switch (tokenString) {
-        case "}":
-          category = new ArrayList<>();
-          this.addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
-          prob = null;
-          lhs = null;
-          break;
-        case "|":
-          this.addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
-          rhs = new StringBuilder();
-          break;
-        case ",":
-          this.addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
-          rhs = new StringBuilder();
-          lhs = null;
-          prob = null;
-          category.remove(5);
-          category.remove(4);
-          category.remove(3);
-          break;
-        default:
-          if (rhs.length() > 0) {
-            rhs.append(' ');
-          }
-          rhs.append(tokenString);
-        }
+        CollectRhsSymbols collectRhsSymbols =
+            new CollectRhsSymbols(category, prob, lhs, rhs, tokenString)
+                .invoke();
+        category = collectRhsSymbols.getCategory();
+        prob = collectRhsSymbols.getProb();
+        lhs = collectRhsSymbols.getLhs();
+        rhs = collectRhsSymbols.getRhs();
         break;
       }
     }
@@ -194,9 +143,152 @@ public class Pcfg extends AbstractCfg{
   }
 
   /** Creates a PcfgProductionRule from the string representation and adds it to
-   * its set of rules. 
+   * its set of rules.
    */
   private void addProductionRule(String rule) throws ParseException {
     this.productionRules.add(new PcfgProductionRule(rule));
+  }
+
+  private class CollectRhsSymbols {
+    private List<String> category;
+    private String prob;
+    private String lhs;
+    private StringBuilder rhs;
+    private String tokenString;
+
+    CollectRhsSymbols(List<String> category, String prob, String lhs,
+        StringBuilder rhs, String tokenString) {
+      this.category = category;
+      this.prob = prob;
+      this.lhs = lhs;
+      this.rhs = rhs;
+      this.tokenString = tokenString;
+    }
+
+    List<String> getCategory() {
+      return category;
+    }
+
+    String getProb() {
+      return prob;
+    }
+
+    public String getLhs() {
+      return lhs;
+    }
+
+    public StringBuilder getRhs() {
+      return rhs;
+    }
+
+    CollectRhsSymbols invoke() throws ParseException {
+      switch (tokenString) {
+      case "}":
+        category = new ArrayList<>();
+        Pcfg.this.addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
+        prob = null;
+        lhs = null;
+        break;
+      case "|":
+        Pcfg.this.addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
+        rhs = new StringBuilder();
+        break;
+      case ",":
+        Pcfg.this.addProductionRule(prob + " : " + lhs + " -> " + rhs.toString());
+        rhs = new StringBuilder();
+        lhs = null;
+        prob = null;
+        category.remove(5);
+        category.remove(4);
+        category.remove(3);
+        break;
+      default:
+        if (rhs.length() > 0) {
+          rhs.append(' ');
+        }
+        rhs.append(tokenString);
+      }
+      return this;
+    }
+  }
+
+  private class CollectSetContents {
+    private List<String> category;
+    private int lineNumber;
+    private String prob;
+    private String lhs;
+    private List<String> symbols;
+    private Token token;
+    private String tokenString;
+
+    CollectSetContents(List<String> category, int lineNumber, String prob,
+        String lhs, List<String> symbols, Token token, String tokenString) {
+      this.category = category;
+      this.lineNumber = lineNumber;
+      this.prob = prob;
+      this.lhs = lhs;
+      this.symbols = symbols;
+      this.token = token;
+      this.tokenString = tokenString;
+    }
+
+    List<String> getCategory() {
+      return category;
+    }
+
+    String getProb() {
+      return prob;
+    }
+
+    public String getLhs() {
+      return lhs;
+    }
+
+    public List<String> getSymbols() {
+      return symbols;
+    }
+
+    CollectSetContents invoke() throws ParseException {
+      switch (category.get(0)) {
+      case "N":
+        switch (tokenString) {
+        case "}":
+          Pcfg.this.nonterminals = symbols.toArray(new String[0]);
+          category = new ArrayList<>();
+          symbols = new ArrayList<>();
+          break;
+        case ",":
+          break;
+        default:
+          symbols.add(tokenString);
+        }
+        break;
+      case "T":
+        switch (tokenString) {
+        case "}":
+          Pcfg.this.terminals = symbols.toArray(new String[0]);
+          category = new ArrayList<>();
+          symbols = new ArrayList<>();
+          break;
+        case ",":
+          break;
+        default:
+          symbols.add(tokenString);
+        }
+        break;
+      case "P":
+        prob = findProbabilityOrAddCategory(category, prob, token);
+        break;
+      default:
+        if (lhs != null) {
+          throw new ParseException("Expected - but found " + token,
+              lineNumber);
+        }
+        if (!tokenString.equals(",")) {
+          lhs = tokenString;
+        }
+      }
+      return this;
+    }
   }
 }
