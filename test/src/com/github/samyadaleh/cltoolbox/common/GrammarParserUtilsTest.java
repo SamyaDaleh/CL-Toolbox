@@ -37,7 +37,7 @@ public class GrammarParserUtilsTest {
         + "P = {S -> a S b, S -> a b}\n", cfg.toString());
   }
 
-  @Test public void testparsePcfgFile() throws IOException {
+  @Test public void testparsePcfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
         new BufferedReader(new FileReader("./resources/grammars/a0n.pcfg"));
     Pcfg pcfg = PcfgGrammarParser.parsePcfgReader(grammarReader);
@@ -48,7 +48,7 @@ public class GrammarParserUtilsTest {
             + "1.0 : B -> 0}\n", pcfg.toString());
   }
 
-  @Test public void testparseSrcgFile() throws IOException {
+  @Test public void testparseSrcgFile() throws IOException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
         new FileReader("./resources/grammars/anbmcndm.srcg"));
     Srcg srcg = SrcgGrammarParser.parseSrcgReader(grammarReader);

@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
+import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,13 +64,16 @@ public class Cfg extends AbstractCfg {
       tokens.remove(0);
       switch (category.size()) {
       case 0:
-        handleMainCategory(validCategories, category, lineNumber, token);
+        GrammarParserUtils
+            .handleMainCategory(this, validCategories, category, lineNumber,
+                token);
         break;
       case 1:
         addSymbolToCategory(category, lineNumber, token, "=");
         break;
       case 2:
-        category = addStartsymbolOrAddCategory(category, lineNumber, token);
+        category = GrammarParserUtils
+            .addStartsymbolOrAddCategory(this, category, lineNumber, token);
         break;
       case 3:
         switch (category.get(0)) {
@@ -100,7 +104,8 @@ public class Cfg extends AbstractCfg {
           }
           break;
         case "P":
-          lhs = findLhsOrAddCategory(category, lineNumber, lhs, token);
+          lhs = GrammarParserUtils
+              .findLhsOrAddCategory(category, lineNumber, lhs, token);
           break;
         default:
           if (lhs != null) {
@@ -146,65 +151,6 @@ public class Cfg extends AbstractCfg {
         }
         break;
       }
-    }
-  }
-
-  private String findLhsOrAddCategory(List<String> category, int lineNumber,
-      String lhs, String token) throws ParseException {
-    if (lhs == null || !token.equals("-")) {
-      lhs = token;
-    } else if (token.equals("-")) {
-      category.add(token);
-    } else {
-      throw new ParseException("Unexpected situation with token " + token,
-          lineNumber);
-    }
-    return lhs;
-  }
-
-  private List<String> addStartsymbolOrAddCategory(List<String> category,
-      int lineNumber, String token) throws ParseException {
-    switch (category.get(0)) {
-    case "P":
-      addSymbolToCategory(category, lineNumber, token, "{");
-      break;
-    case "N":
-      addSymbolToCategory(category, lineNumber, token, "{");
-      break;
-    case "T":
-      addSymbolToCategory(category, lineNumber, token, "{");
-      break;
-    case "S":
-      if (this.getStartSymbol() != null) {
-        throw new ParseException("Startsymbol was declared twice: " + token,
-            lineNumber);
-      }
-      this.startSymbol = token;
-      category = new ArrayList<>();
-      break;
-    case "G":
-      if (token.equals(">")) {
-        category = new ArrayList<>();
-      }
-    default:
-    }
-    return category;
-  }
-
-  private void handleMainCategory(Set<String> validCategories,
-      List<String> category, int lineNumber, String token)
-      throws ParseException {
-    if (validCategories.contains(token)) {
-      if ((token.equals("N") && this.getNonterminals() != null) || (
-          token.equals("T") && this.getTerminals() != null) || (
-          token.equals("S") && this.startSymbol != null)) {
-        throw new ParseException("Category " + token + " is already set.",
-            lineNumber);
-      }
-      category.add(token);
-    } else {
-      throw new ParseException("Unknown declaration symbol " + token,
-          lineNumber);
     }
   }
 

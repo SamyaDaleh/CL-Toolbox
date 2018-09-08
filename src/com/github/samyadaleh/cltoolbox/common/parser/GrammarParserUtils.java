@@ -1,23 +1,16 @@
 package com.github.samyadaleh.cltoolbox.common.parser;
 
+import com.github.samyadaleh.cltoolbox.common.cfg.AbstractCfg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
 /**
  * Parses different grammars from text files.
  */
 public class GrammarParserUtils {
-  private static final Pattern p = Pattern.compile("\"(.*?)\"");
   private static final Logger log = LogManager.getLogger();
 
   static boolean printErrors(List<Exception> errors) {
@@ -32,50 +25,6 @@ public class GrammarParserUtils {
     return false;
   }
 
-  /**
-   * For a line like "A", "S" it gets the content of each quote and makes each
-   * an element of the returned array.
-   */
-  private static List<String> parseNT(String lineTrim) {
-    Matcher m = p.matcher(lineTrim);
-    List<String> nList = new ArrayList<>();
-    while (m.find()) {
-      String n = m.group();
-      nList.add(n.substring(1, n.length() - 1));
-    }
-    return nList;
-  }
-
-  static Map<String, List<String>> parseDeclarations(
-      BufferedReader grammarReader, List<Exception> errors) throws IOException {
-    Map<String, List<String>> declarations = new LinkedHashMap<>();
-    String line = grammarReader.readLine().trim();
-    while (line != null) {
-      String lineTrim = line.trim();
-      int quotes = lineTrim.length() - lineTrim.replace("\"", "").length();
-      if (quotes % 2 > 0) {
-        errors.add(
-            new ParseException("Uneven number of quotes in line " + lineTrim,
-                0));
-      }
-      String[] splitEquals = lineTrim.split("=");
-      if (splitEquals.length == 1) {
-        errors.add(
-            new ParseException("No equals symbol found in line " + lineTrim,
-                0));
-        continue;
-      }
-      String symbol = splitEquals[0].trim();
-      if (declarations.containsKey(symbol)) {
-        errors.add(new ParseException(symbol + " was declared twice.", 0));
-      }
-      declarations.put(symbol, parseNT(lineTrim));
-      line = grammarReader.readLine();
-    }
-    grammarReader.close();
-    return declarations;
-  }
-
   public static void addSymbolToCategory(List<String> category, int lineNumber,
       String token, String s) throws ParseException {
     if (token.equals(s)) {
@@ -83,5 +32,62 @@ public class GrammarParserUtils {
     } else {
       throw new ParseException("Expected " + s + " but found " + token, lineNumber);
     }
+  }
+
+  public static void handleMainCategory(AbstractCfg acfg,
+      Set<String> validCategories, List<String> category, int lineNumber,
+      String token)
+      throws ParseException {
+    if (validCategories.contains(token)) {
+      if ((token.equals("N") && acfg.getNonterminals() != null) || (
+          token.equals("T") && acfg.getTerminals() != null) || (
+          token.equals("S") && acfg.getStartSymbol() != null)) {
+        throw new ParseException("Category " + token + " is already set.",
+            lineNumber);
+      }
+      category.add(token);
+    } else {
+      throw new ParseException("Unknown declaration symbol " + token,
+          lineNumber);
+    }
+  }
+
+  public static List<String> addStartsymbolOrAddCategory(AbstractCfg acfg,
+      List<String> category, int lineNumber, String token)
+      throws ParseException {
+    switch (category.get(0)) {
+    case "P":
+    case "N":
+    case "T":
+      addSymbolToCategory(category, lineNumber, token, "{");
+      break;
+    case "S":
+      if (acfg.getStartSymbol() != null) {
+        throw new ParseException("Startsymbol was declared twice: " + token,
+            lineNumber);
+      }
+      acfg.setStartSymbol(token);
+      category = new ArrayList<>();
+      break;
+    case "G":
+      if (token.equals(">")) {
+        category = new ArrayList<>();
+      }
+    default:
+    }
+    return category;
+  }
+
+  public static String findLhsOrAddCategory(List<String> category, int lineNumber,
+      String lhs, String token) throws ParseException {
+    if (lhs == null || !token.equals("-")) {
+      lhs = token;
+    } else if (token.equals("-")) {
+      category.add(token);
+    } else {
+      throw new ParseException("Unexpected situation with token " + token,
+          lineNumber);
+    }
+    return lhs;
   }
 }

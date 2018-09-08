@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,51 +22,11 @@ public class SrcgGrammarParser {
   /**
    * Parses a sRCG from a file and returns it as Srcg.
    */
-  public static Srcg parseSrcgReader(BufferedReader grammarReader)
-      throws IOException {
-    Srcg srcg = new Srcg();
+  public static Srcg parseSrcgReader(Reader reader)
+      throws IOException, ParseException {
     errors = new ArrayList<>();
-    Map<String, List<String>> declarations =
-        GrammarParserUtils.parseDeclarations(grammarReader, errors);
-    for (Map.Entry<String, List<String>> entry : declarations.entrySet()) {
-      switch (entry.getKey()) {
-      case "N":
-        String[] nts = entry.getValue().toArray(new String[0]);
-        srcg.setNonterminals(nts);
-        break;
-      case "V":
-        String[] vs = entry.getValue().toArray(new String[0]);
-        srcg.setVariables(vs);
-        break;
-      case "T":
-        String[] ts = entry.getValue().toArray(new String[0]);
-        srcg.setTerminals(ts);
-        break;
-      case "S":
-        if (entry.getValue().size() > 1) {
-          errors.add(new ParseException("Too many start symbols declared", 0));
-          continue;
-        }
-        srcg.setStartSymbol(entry.getValue().get(0));
-        break;
-      case "P":
-        for (String clauseDec : entry.getValue()) {
-          try {
-            srcg.addClause(clauseDec);
-          } catch (ParseException e) {
-            errors.add(e);
-          }
-        }
-        break;
-      case "G":
-        log.info("Grammar declaration detected. Nothing to do.");
-        break;
-      default:
-        errors.add(
-            new ParseException("Unknown declaration symbol: " + entry.getKey(),
-                0));
-      }
-    }
+    BufferedReader in = new BufferedReader(reader);
+    Srcg srcg = new Srcg(in);
     checkForGrammarProblems(srcg);
     if (GrammarParserUtils.printErrors(errors))
       return null;

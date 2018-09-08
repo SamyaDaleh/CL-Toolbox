@@ -1,6 +1,6 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-abstract class AbstractCfg {
+public abstract class AbstractCfg {
   String[] nonterminals;
   String startSymbol;
   String[] terminals;
