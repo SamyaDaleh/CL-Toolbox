@@ -102,7 +102,9 @@ public class Srcg extends AbstractNTSGrammar {
         addSymbolToCategory(category, token, "=");
         break;
       case 2:
-        category = addStartsymbolOrAddCategory(category, token);
+        category = GrammarParserUtils
+            .addStartsymbolOrAddCategory(this, category, token,
+                validCategories);
         break;
       case 3:
         CollectSetContentsSrcg collectSetContents =
@@ -158,34 +160,6 @@ public class Srcg extends AbstractNTSGrammar {
           token.getLineNumber());
     }
     return rhsnt;
-  }
-
-  private List<String> addStartsymbolOrAddCategory(List<String> category,
-      Token token) throws ParseException {
-    String tokenString = token.getString();
-    switch (category.get(0)) {
-    case "P":
-    case "N":
-    case "T":
-    case "V":
-      addSymbolToCategory(category, token, "{");
-      break;
-    case "S":
-      if (this.getStartSymbol() != null) {
-        throw new ParseException(
-            "Startsymbol was declared twice: " + tokenString,
-            token.getLineNumber());
-      }
-      this.setStartSymbol(tokenString);
-      category = new ArrayList<>();
-      break;
-    case "G":
-      if (tokenString.equals(">")) {
-        category = new ArrayList<>();
-      }
-    default:
-    }
-    return category;
   }
 
   private void handleMainCategory(Set<String> validCategories,

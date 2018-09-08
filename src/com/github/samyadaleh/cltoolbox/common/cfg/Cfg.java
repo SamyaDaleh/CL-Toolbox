@@ -68,7 +68,7 @@ public class Cfg extends AbstractCfg {
         break;
       case 2:
         category = GrammarParserUtils
-            .addStartsymbolOrAddCategory(this, category, token);
+            .addStartsymbolOrAddCategory(this, category, token, validCategories);
         break;
       case 3:
         CollectSetContentsCfg collectSetContentsCfg =

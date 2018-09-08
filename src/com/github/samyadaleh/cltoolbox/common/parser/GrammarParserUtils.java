@@ -55,29 +55,24 @@ public class GrammarParserUtils {
   }
 
   public static List<String> addStartsymbolOrAddCategory(
-      AbstractNTSGrammar acfg,
-      List<String> category, Token token) throws ParseException {
+      AbstractNTSGrammar antsgra, List<String> category, Token token,
+      Set<String> validCategories) throws ParseException {
     String tokenString = token.getString();
-    switch (category.get(0)) {
-    case "P":
-    case "N":
-    case "T":
-      addSymbolToCategory(category, token, "{");
-      break;
-    case "S":
-      if (acfg.getStartSymbol() != null) {
+    if ("S".equals(category.get(0))) {
+      if (antsgra.getStartSymbol() != null) {
         throw new ParseException(
             "Startsymbol was declared twice: " + tokenString,
             token.getLineNumber());
       }
-      acfg.setStartSymbol(tokenString);
+      antsgra.setStartSymbol(tokenString);
       category = new ArrayList<>();
-      break;
-    case "G":
+
+    } else if ("G".equals(category.get(0))) {
       if (tokenString.equals(">")) {
         category = new ArrayList<>();
       }
-    default:
+    } else if (validCategories.contains(category.get(0))) {
+      addSymbolToCategory(category, token, "{");
     }
     return category;
   }

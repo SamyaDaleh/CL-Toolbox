@@ -4,6 +4,7 @@ import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.parser.CollectSetContentsTag;
+import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 import com.github.samyadaleh.cltoolbox.common.tag.util.Binarization;
@@ -69,7 +70,9 @@ public class Tag extends AbstractNTSGrammar {
         addSymbolToCategory(category, token, "=");
         break;
       case 2:
-        category = addStartsymbolOrAddCategory(category, token);
+        category = GrammarParserUtils
+            .addStartsymbolOrAddCategory(this, category, token,
+                validCategories);
         break;
       case 3:
         CollectSetContentsTag collectSetContents =
@@ -88,40 +91,6 @@ public class Tag extends AbstractNTSGrammar {
         rhs = collectTreeTokens.getRhs();
       }
     }
-  }
-
-  private List<String> addStartsymbolOrAddCategory(List<String> category,
-      Token token) throws ParseException {
-    String tokenString = token.getString();
-    switch (category.get(0)) {
-    case "I":
-      addSymbolToCategory(category, token, "{");
-      break;
-    case "A":
-      addSymbolToCategory(category, token, "{");
-      break;
-    case "N":
-      addSymbolToCategory(category, token, "{");
-      break;
-    case "T":
-      addSymbolToCategory(category, token, "{");
-      break;
-    case "S":
-      if (this.getStartSymbol() != null) {
-        throw new ParseException(
-            "Startsymbol was declared twice: " + tokenString,
-            token.getLineNumber());
-      }
-      this.setStartSymbol(tokenString);
-      category = new ArrayList<>();
-      break;
-    case "G":
-      if (tokenString.equals(">")) {
-        category = new ArrayList<>();
-      }
-    default:
-    }
-    return category;
   }
 
   private void handleMainCategory(Set<String> validCategories,
