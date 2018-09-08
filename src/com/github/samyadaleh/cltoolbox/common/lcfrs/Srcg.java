@@ -78,13 +78,7 @@ public class Srcg extends AbstractNTSGrammar {
     Character[] specialChars =
         new Character[] {'-', '>', '{', '}', ',', '|', '=', '<', '(', ')'};
     TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("V");
-    validCategories.add("S");
-    validCategories.add("P");
-    validCategories.add("G");
+    Set<String> validCategories = getValidCategories();
     List<String> category = new ArrayList<>();
     String lhsNT = null;
     StringBuilder lhs = new StringBuilder();
@@ -146,6 +140,17 @@ public class Srcg extends AbstractNTSGrammar {
         break;
       }
     }
+  }
+
+  private Set<String> getValidCategories() {
+    Set<String> validCategories = new HashSet<>();
+    validCategories.add("N");
+    validCategories.add("T");
+    validCategories.add("V");
+    validCategories.add("S");
+    validCategories.add("P");
+    validCategories.add("G");
+    return validCategories;
   }
 
   private String findRhsNTOrAddCategory(List<String> category, String rhsnt,

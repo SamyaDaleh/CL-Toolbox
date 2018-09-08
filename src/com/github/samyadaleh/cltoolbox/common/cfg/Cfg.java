@@ -45,12 +45,7 @@ public class Cfg extends AbstractCfg {
     Character[] specialChars =
         new Character[] {'-', '>', '{', '}', ',', '|', '='};
     TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("S");
-    validCategories.add("P");
-    validCategories.add("G");
+    Set<String> validCategories = getValidCategories();
     List<String> category = new ArrayList<>();
     String lhs = null;
     StringBuilder rhs = null;
@@ -96,6 +91,16 @@ public class Cfg extends AbstractCfg {
         break;
       }
     }
+  }
+
+  private Set<String> getValidCategories() {
+    Set<String> validCategories = new HashSet<>();
+    validCategories.add("N");
+    validCategories.add("T");
+    validCategories.add("S");
+    validCategories.add("P");
+    validCategories.add("G");
+    return validCategories;
   }
 
   public List<CfgProductionRule> getProductionRules() {

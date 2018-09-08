@@ -48,13 +48,7 @@ public class Tag extends AbstractNTSGrammar {
   public Tag(BufferedReader in) throws IOException, ParseException {
     Character[] specialChars = new Character[] {'>', '{', '}', ',', ':', '='};
     TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("S");
-    validCategories.add("I");
-    validCategories.add("A");
-    validCategories.add("G");
+    Set<String> validCategories = getValidCategories();
     List<String> category = new ArrayList<>();
     String lhs = null;
     StringBuilder rhs = null;
@@ -91,6 +85,17 @@ public class Tag extends AbstractNTSGrammar {
         rhs = collectTreeTokens.getRhs();
       }
     }
+  }
+
+  private Set<String> getValidCategories() {
+    Set<String> validCategories = new HashSet<>();
+    validCategories.add("N");
+    validCategories.add("T");
+    validCategories.add("S");
+    validCategories.add("I");
+    validCategories.add("A");
+    validCategories.add("G");
+    return validCategories;
   }
 
   private void handleMainCategory(Set<String> validCategories,

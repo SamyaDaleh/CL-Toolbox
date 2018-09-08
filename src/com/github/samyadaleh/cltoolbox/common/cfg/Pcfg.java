@@ -54,12 +54,7 @@ public class Pcfg extends AbstractCfg {
     Character[] specialChars =
         new Character[] {'-', '>', '{', '}', ',', '|', '=', ':'};
     TokenReader reader = new TokenReader(in, specialChars);
-    Set<String> validCategories = new HashSet<>();
-    validCategories.add("N");
-    validCategories.add("T");
-    validCategories.add("S");
-    validCategories.add("P");
-    validCategories.add("G");
+    Set<String> validCategories = getValidCategories();
     List<String> category = new ArrayList<>();
     int lineNumber = 0;
     String prob = null;
@@ -113,6 +108,16 @@ public class Pcfg extends AbstractCfg {
         break;
       }
     }
+  }
+
+  private Set<String> getValidCategories() {
+    Set<String> validCategories = new HashSet<>();
+    validCategories.add("N");
+    validCategories.add("T");
+    validCategories.add("S");
+    validCategories.add("P");
+    validCategories.add("G");
+    return validCategories;
   }
 
   public List<PcfgProductionRule> getProductionRules() {
