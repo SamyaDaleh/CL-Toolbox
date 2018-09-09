@@ -9,7 +9,7 @@ import java.util.List;
 public class CollectTreeSymbolsTag extends CollectSymbols {
   private Tag tag;
 
-  public CollectTreeSymbolsTag(Tag tag, List<String> category, String lhs,
+  CollectTreeSymbolsTag(Tag tag, List<String> category, String lhs,
       StringBuilder rhs, String tokenString) {
     super(category, lhs, rhs, tokenString);
     this.tag = tag;
@@ -30,11 +30,10 @@ public class CollectTreeSymbolsTag extends CollectSymbols {
     }
     rhs = new StringBuilder();
     lhs = null;
-    category.remove(4);
     category.remove(3);
   }
 
-  @Override protected void handlePipe() throws ParseException {
+  @Override protected void handlePipe() {
     handleDefault();
   }
 
