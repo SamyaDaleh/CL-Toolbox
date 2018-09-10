@@ -40,7 +40,7 @@ class ParsingTraceTableFx {
   private final JfxWindowHolder parent;
   private static final Logger log = LogManager.getLogger();
 
-  public ParsingTraceTableFx(JfxWindowHolder parent, String[][] rowData,
+  ParsingTraceTableFx(JfxWindowHolder parent, String[][] rowData,
       String[] columnNames, Tag tag) {
     this.rowData = rowData;
     this.columnNames = columnNames;
@@ -61,13 +61,12 @@ class ParsingTraceTableFx {
     displayTable();
   }
 
-  private DisplayTreeFx disposePopup() {
+  private void disposePopup() {
     DisplayTreeFx popup = getTreePopup();
     popup.dispose();
-    return popup;
   }
 
-  private Object showPopup() {
+  private void showPopup() {
     if (popupRow != null) {
       disposeTimer.stop();
       DisplayTreeFx popup = getTreePopup();
@@ -75,7 +74,6 @@ class ParsingTraceTableFx {
         disposeTimer.playFromStart();
       }
     }
-    return popup;
   }
 
   private DisplayTreeFx getTreePopup() {
@@ -136,13 +134,13 @@ class ParsingTraceTableFx {
     stage.show();
   }
 
-  public void close() {
+  void close() {
     stage.close();
   }
 
   public static class HoverCell extends TableCell<ParsingStep, String> {
 
-    public HoverCell(ParsingTraceTableFx pttf) {
+    HoverCell(ParsingTraceTableFx pttf) {
       setOnMouseMoved(e -> showPopup(pttf));
     }
 

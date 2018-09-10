@@ -1,16 +1,15 @@
 package com.github.samyadaleh.cltoolbox.gui;
 
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DisplayTreeFx implements DisplayTreeInterface {
 
@@ -20,9 +19,9 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   private GraphicsContext gc;
   private Stage stage;
   private JfxWindowHolder parent;
+  private Canvas canvas;
 
-  public DisplayTreeFx(JfxWindowHolder parent, String[] args)
-      throws ParseException {
+  DisplayTreeFx(JfxWindowHolder parent, String[] args) throws ParseException {
     this.tree = new Tree(args[0]);
     this.parent = parent;
     if (args.length > 1) {
@@ -36,16 +35,27 @@ public class DisplayTreeFx implements DisplayTreeInterface {
   private void displayTree() {
     stage = new Stage();
     stage.setTitle("Tree");
-    Group root = new Group();
-    Canvas canvas = new Canvas(80 * tree.getWidth(), 80 * tree.getHeight());
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-    paint(gc);
-    root.getChildren().add(canvas);
-    stage.setScene(new Scene(root));
+    StackPane stackPane = new StackPane();
+    canvas = new Canvas(80 * tree.getWidth(), 80 * tree.getHeight());
+    canvas.widthProperty().bind(stackPane.widthProperty());
+    canvas.heightProperty().bind(stackPane.heightProperty());
+    stackPane.getChildren().add(canvas);
+    Scene scene = new Scene(stackPane);
+    scene.widthProperty().addListener(observable -> draw());
+    scene.heightProperty().addListener(observable -> draw());
+    stage.setScene(scene);
+    stage.setWidth(80 * tree.getWidth());
+    stage.setHeight(80 * tree.getHeight());
     stage.setX(X);
     stage.setY(Y);
-    stage.setOnCloseRequest( e -> parent.close());
+    stage.setOnCloseRequest(e -> parent.close());
+    draw();
     stage.show();
+  }
+
+  private void draw() {
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    paint(gc);
   }
 
   /**
@@ -89,16 +99,16 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     return (int) gc.getCanvas().getHeight();
   }
 
-  public void dispose() {
+  void dispose() {
     stage.hide();
   }
 
-  public void setLocation(double x, double y) {
+  void setLocation(double x, double y) {
     stage.setX(x);
     stage.setY(y);
   }
 
-  public void close() {
+  void close() {
     stage.close();
   }
 }

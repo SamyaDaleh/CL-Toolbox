@@ -8,7 +8,7 @@ public class ParsingStep {
   private final SimpleStringProperty rules;
   private final SimpleStringProperty backpointers;
 
-  public ParsingStep(String[] date) {
+  ParsingStep(String[] date) {
     this.id = new SimpleStringProperty(date[0]);
     this.item = new SimpleStringProperty(date[1]);
     this.rules = new SimpleStringProperty(date[2]);

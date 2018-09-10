@@ -70,7 +70,7 @@ public class JfxWindowHolder {
     this.rowData = rowData;
   }
 
-  public void close() {
+  void close() {
     if(displayTreeFx != null) {
       displayTreeFx.close();
     }
