@@ -43,9 +43,9 @@ Run it in your IDE. Or download the jar from folder releases and run it from the
 
 Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters. Or call CL-Toolbox.bat (Windows) or CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have to type in the encoding.
 
-Video demonstration (a bit outdated by now, without GUI):
-[German](https://www.youtube.com/watch?v=GCTfJZxG9FM)
-[English](https://www.youtube.com/watch?v=MU3u1QFR7As)
+Video series about background and demonstration :
+[English](https://www.youtube.com/playlist?list=PLlnJDVO5phqbKLKRvvQcrBK0VQjc6y7BH)
+[German](https://www.youtube.com/playlist?list=PLt6jZ7OSaZOXEF-Bj18L8kpxZzt3rzhro)
 
 Examples:
 
