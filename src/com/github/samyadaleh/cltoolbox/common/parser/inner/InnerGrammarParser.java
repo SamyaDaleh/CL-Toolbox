@@ -1,4 +1,7 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.inner;
+
+import com.github.samyadaleh.cltoolbox.common.parser.Token;
+import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;

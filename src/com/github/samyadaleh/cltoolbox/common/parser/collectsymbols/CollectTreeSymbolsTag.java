@@ -1,4 +1,4 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.collectsymbols;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
@@ -9,7 +9,7 @@ import java.util.List;
 public class CollectTreeSymbolsTag extends CollectSymbols {
   private Tag tag;
 
-  CollectTreeSymbolsTag(Tag tag, List<String> category, String lhs,
+  public CollectTreeSymbolsTag(Tag tag, List<String> category, String lhs,
       StringBuilder rhs, String tokenString) {
     super(category, lhs, rhs, tokenString);
     this.tag = tag;

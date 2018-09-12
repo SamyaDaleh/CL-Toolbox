@@ -1,5 +1,6 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.collectsymbols;
 
+import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 import java.text.ParseException;

@@ -7,7 +7,7 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Binarization;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.EmptyProductions;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.UselessRules;
-import com.github.samyadaleh.cltoolbox.common.parser.InnerSrcgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerSrcgGrammarParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

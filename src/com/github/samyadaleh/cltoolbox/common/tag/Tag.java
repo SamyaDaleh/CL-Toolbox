@@ -3,7 +3,7 @@ package com.github.samyadaleh.cltoolbox.common.tag;
 import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
-import com.github.samyadaleh.cltoolbox.common.parser.*;
+import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerTagGrammarParser;
 import com.github.samyadaleh.cltoolbox.common.tag.util.Binarization;
 
 import java.io.BufferedReader;

@@ -32,8 +32,11 @@ public class LcfrsToCykRulesConverter {
       StringBuilder treeString =
           new StringBuilder("( " + clause.getLhs().getNonterminal() + " ");
       for (int i = 0; i * 2 < ranges.size(); i++) {
-        treeString.append(clause.getLhs().getSymAt(i + 1, 0)).append('<')
-            .append(ranges.get(2 * i)).append("> ");
+        String[] arg = clause.getLhs().getArgumentByIndex(i + 1);
+        for (int j = 0; j < arg.length; j++) {
+          treeString.append(clause.getLhs().getSymAt(i + 1, j)).append('<')
+              .append(ranges.get(2 * i) + j).append("> ");
+        }
       }
       treeString.append(")");
       List<Tree> derivedTrees = new ArrayList<>();
@@ -130,7 +133,7 @@ public class LcfrsToCykRulesConverter {
             break;
           }
         }
-        if (match) {
+        if (match && rangesFitArguments(tryOutRange, lhs)) {
           ranges.add((List<Integer>) SrcgDeductionUtils
               .getRangesForArguments(tryOutRange, lhs));
         }
@@ -152,5 +155,22 @@ public class LcfrsToCykRulesConverter {
       }
     }
     return ranges;
+  }
+
+  /**
+   * Returns true if ranges of consecutive terminals meet.
+   */
+  private static boolean rangesFitArguments(ArrayList<Integer> tryOutRange,
+      Predicate lhs) {
+    for (int i = 0; i < lhs.getDim(); i++) {
+      String[] arg = lhs.getArgumentByIndex(i + 1);
+      for (int j = 1; j < arg.length; j++) {
+        int pos = lhs.getAbsolutePos(i + 1, j);
+        if (!tryOutRange.get(pos * 2).equals(tryOutRange.get(pos * 2 - 1))) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

@@ -1,7 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
-import com.github.samyadaleh.cltoolbox.common.parser.InnerCfgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerCfgGrammarParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;

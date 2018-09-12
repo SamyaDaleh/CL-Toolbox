@@ -14,6 +14,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
@@ -220,6 +221,18 @@ public class DeductionTest {
             .equals(deduction.getDerivedTrees().get(0).toString())
             || "(S (A (A (a<0> )(a<4> )(a<8> ))(C (a<1> )(c<5> )(c<9> )))(B (B (b<2> )(b<7> ))(B (b<3> )(b<6> ))))"
             .equals(deduction.getDerivedTrees().get(0).toString()));
+  }
+
+  @Test public void testSrcgCykGeneral2() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = LcfrsToCykRulesConverter
+        .srcgToCykGeneralRules(new Srcg(TestGrammarLibrary.anBnCfg()),
+            w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (a<0> )(S (a<1> )(b<2> ))(b<3> ))",
+        deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testSrcgEarley() throws ParseException {

@@ -1,6 +1,10 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.inner;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
+import com.github.samyadaleh.cltoolbox.common.parser.collectsymbols.CollectRhsSymbolsCfg;
+import com.github.samyadaleh.cltoolbox.common.parser.collectsymbols.CollectSetContentsCfg;
+import com.github.samyadaleh.cltoolbox.common.parser.collectsymbols.CollectSymbols;
+import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 
 import java.io.BufferedReader;
 import java.text.ParseException;

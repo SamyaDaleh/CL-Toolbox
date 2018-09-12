@@ -1,5 +1,8 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.inner;
 
+import com.github.samyadaleh.cltoolbox.common.parser.collectsymbols.CollectSetContentsTag;
+import com.github.samyadaleh.cltoolbox.common.parser.collectsymbols.CollectTreeSymbolsTag;
+import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 import java.io.BufferedReader;

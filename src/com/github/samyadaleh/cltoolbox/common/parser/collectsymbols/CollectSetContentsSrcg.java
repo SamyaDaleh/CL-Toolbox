@@ -1,6 +1,8 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.collectsymbols;
 
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import com.github.samyadaleh.cltoolbox.common.parser.GrammarParserUtils;
+import com.github.samyadaleh.cltoolbox.common.parser.Token;
 
 import java.text.ParseException;
 import java.util.ArrayList;

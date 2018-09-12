@@ -1,4 +1,4 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.collectsymbols;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 

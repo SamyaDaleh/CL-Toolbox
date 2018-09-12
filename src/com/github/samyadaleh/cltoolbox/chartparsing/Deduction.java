@@ -19,9 +19,13 @@ import org.apache.logging.log4j.Logger;
  * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
  */
 public class Deduction {
-  /** All items derived in the process. */
+  /**
+   * All items derived in the process.
+   */
   private List<ChartItemInterface> chart;
-  /** Items waiting to be used for further derivation. */
+  /**
+   * Items waiting to be used for further derivation.
+   */
   private List<ChartItemInterface> agenda;
   /**
    * List of the same length of chart, elements at same indexes belong to each
@@ -34,9 +38,13 @@ public class Deduction {
    * of the rules that were applied to retrieve new items.
    */
   private ArrayList<ArrayList<String>> appliedRule;
-  /** When true print only items that lead to a goal. */
+  /**
+   * When true print only items that lead to a goal.
+   */
   private boolean successfulTrace = false;
-  /** Markers if items lead to goal */
+  /**
+   * Markers if items lead to goal
+   */
   private boolean[] usefulItem;
   /**
    * Specify if new items shall replace same existing items in the chart. If
@@ -64,7 +72,7 @@ public class Deduction {
    * derived.
    */
   public boolean doParse(ParsingSchema schema, boolean success)
-    throws ParseException {
+      throws ParseException {
     successfulTrace = success;
     chart = new ArrayList<>();
     agenda = new ArrayList<>();
@@ -123,16 +131,18 @@ public class Deduction {
         if (!usefulItem[i]) {
           continue;
         }
-        String[] line = prettyPrint(i, chart.get(i).toString(),
-          appliedRule.get(i), deductedFrom.get(i), iMaxWidth + 3,
-          chartMaxWidth + 3, appliedRuleMaxWidth + 3);
+        String[] line =
+            prettyPrint(i, chart.get(i).toString(), appliedRule.get(i),
+                deductedFrom.get(i), iMaxWidth + 3, chartMaxWidth + 3,
+                appliedRuleMaxWidth + 3);
         chartData.add(line);
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
-        String[] line = prettyPrint(i, chart.get(i).toString(),
-          appliedRule.get(i), deductedFrom.get(i), iMaxWidth + 3,
-          chartMaxWidth + 3, appliedRuleMaxWidth + 3);
+        String[] line =
+            prettyPrint(i, chart.get(i).toString(), appliedRule.get(i),
+                deductedFrom.get(i), iMaxWidth + 3, chartMaxWidth + 3,
+                appliedRuleMaxWidth + 3);
         chartData.add(line);
       }
     }
@@ -163,9 +173,11 @@ public class Deduction {
     }
   }
 
-  /** Returns the backpointers in this list of lists as plain list. */
-  private static ArrayList<Integer>
-    getPointersAsArray(ArrayList<ArrayList<Integer>> backpointers) {
+  /**
+   * Returns the backpointers in this list of lists as plain list.
+   */
+  private static ArrayList<Integer> getPointersAsArray(
+      ArrayList<ArrayList<Integer>> backpointers) {
     ArrayList<Integer> pointerList = new ArrayList<>();
     for (ArrayList<Integer> pointerTuple : backpointers) {
       pointerList.addAll(pointerTuple);
@@ -186,10 +198,12 @@ public class Deduction {
           switch (replace) {
           case 'h':
             if (pGoal == null) {
-              pGoal = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
+              pGoal = ((ProbabilisticChartItemInterface) chart.get(i))
+                  .getProbability();
               derivedTrees = trees;
             } else {
-              Double newP = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
+              Double newP = ((ProbabilisticChartItemInterface) chart.get(i))
+                  .getProbability();
               if (newP > pGoal) {
                 pGoal = newP;
                 derivedTrees = trees;
@@ -198,10 +212,12 @@ public class Deduction {
             break;
           case 'l':
             if (pGoal == null) {
-              pGoal = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
+              pGoal = ((ProbabilisticChartItemInterface) chart.get(i))
+                  .getProbability();
               derivedTrees = trees;
             } else {
-              Double newP = ((ProbabilisticChartItemInterface) chart.get(i)).getProbability();
+              Double newP = ((ProbabilisticChartItemInterface) chart.get(i))
+                  .getProbability();
               if (newP < pGoal) {
                 pGoal = newP;
                 derivedTrees = trees;
@@ -222,8 +238,8 @@ public class Deduction {
    * Applies an axiom rule, that is a rule without antecedence items and adds
    * the consequence items to chart and agenda.
    */
-  @SuppressWarnings("serial") private void
-    applyAxiomRule(StaticDeductionRule rule) {
+  @SuppressWarnings("serial") private void applyAxiomRule(
+      StaticDeductionRule rule) {
     for (ChartItemInterface item : rule.consequences) {
       if (chart.contains(item)) {
         continue;
@@ -249,8 +265,8 @@ public class Deduction {
    * and adds new consequence items to chart and agenda if all antecedences were
    * found.
    */
-  private void applyRule(ChartItemInterface item, DynamicDeductionRuleInterface rule)
-    throws ParseException {
+  private void applyRule(ChartItemInterface item,
+      DynamicDeductionRuleInterface rule) throws ParseException {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() < itemsNeeded) {
       return;
@@ -258,8 +274,8 @@ public class Deduction {
     List<List<ChartItemInterface>> startList = new ArrayList<>();
     startList.add(new ArrayList<>());
     startList.get(0).add(item);
-    for (List<ChartItemInterface> tryAntecedences : antecedenceListGenerator(startList, 0,
-      itemsNeeded - 1)) {
+    for (List<ChartItemInterface> tryAntecedences : antecedenceListGenerator(
+        startList, 0, itemsNeeded - 1)) {
       rule.clearItems();
       rule.setAntecedences(tryAntecedences);
       List<ChartItemInterface> newItems = rule.getConsequences();
@@ -273,8 +289,8 @@ public class Deduction {
    * Returns itemsNeeded items from the chart. All items appear only once per
    * list, no list is the permutation of another one.
    */
-  private List<List<ChartItemInterface>> antecedenceListGenerator(List<List<ChartItemInterface>> oldList,
-    int i, int itemsNeeded) {
+  private List<List<ChartItemInterface>> antecedenceListGenerator(
+      List<List<ChartItemInterface>> oldList, int i, int itemsNeeded) {
     if (itemsNeeded == 0) {
       return oldList;
     }
@@ -288,14 +304,17 @@ public class Deduction {
           newList.get(newList.size() - 1).add(chart.get(j));
         }
         finalList
-          .addAll(antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
+            .addAll(antecedenceListGenerator(newList, j + 1, itemsNeeded - 1));
       }
     }
     return finalList;
   }
 
-  /** Adds new items to chart and agenda if they are not in the chart yet. */
-  private void processNewItems(List<ChartItemInterface> newItems, DynamicDeductionRuleInterface rule) {
+  /**
+   * Adds new items to chart and agenda if they are not in the chart yet.
+   */
+  private void processNewItems(List<ChartItemInterface> newItems,
+      DynamicDeductionRuleInterface rule) {
     ArrayList<Integer> newItemsDeductedFrom = new ArrayList<>();
     for (ChartItemInterface itemToCheck : rule.getAntecedences()) {
       newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
@@ -313,8 +332,10 @@ public class Deduction {
           }
           break;
         case 'h':
-          Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId)).getProbability();
-          Double newValue = ((ProbabilisticChartItemInterface) newItem).getProbability();
+          Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
+              .getProbability();
+          Double newValue =
+              ((ProbabilisticChartItemInterface) newItem).getProbability();
           if (newValue > oldValue) {
             chart.set(oldId, newItem);
             appliedRule.get(oldId).set(0, rule.getName());
@@ -322,8 +343,10 @@ public class Deduction {
           }
           break;
         case 'l':
-          oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId)).getProbability();
-          newValue = ((ProbabilisticChartItemInterface) newItem).getProbability();
+          oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
+              .getProbability();
+          newValue =
+              ((ProbabilisticChartItemInterface) newItem).getProbability();
           if (newValue < oldValue) {
             chart.set(oldId, newItem);
             appliedRule.get(oldId).set(0, rule.getName());
@@ -331,8 +354,7 @@ public class Deduction {
           }
           break;
         default:
-          log.info(
-            "Unknown replace parameter " + replace + ", doing nothing.");
+          log.info("Unknown replace parameter " + replace + ", doing nothing.");
         }
       } else {
         chart.add(newItem);
@@ -350,8 +372,8 @@ public class Deduction {
    * specific length with spaces. Returns the data it prints as string array.
    */
   private static String[] prettyPrint(int i, String item,
-    ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers,
-    int column1, int column2, int column3) {
+      ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers,
+      int column1, int column2, int column3) {
     StringBuilder line = new StringBuilder();
     line.append(String.valueOf(i + 1));
     for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
@@ -370,7 +392,7 @@ public class Deduction {
     line.append(backpointersRep);
     log.info(line.toString());
     return new String[] {String.valueOf(i + 1), item, rulesRep,
-      backpointersRep};
+        backpointersRep};
   }
 
   /**
@@ -393,8 +415,8 @@ public class Deduction {
    * Returns a string representation of a list of lists of backpointers in a
    * human friendly form.
    */
-  private static String
-    backpointersToString(ArrayList<ArrayList<Integer>> backpointers) {
+  private static String backpointersToString(
+      ArrayList<ArrayList<Integer>> backpointers) {
     if (backpointers.size() == 0)
       return "";
     StringBuilder builder = new StringBuilder();
@@ -410,18 +432,6 @@ public class Deduction {
       builder.append("}");
     }
     return builder.toString();
-  }
-
-  public List<ChartItemInterface> getChart() {
-    return this.chart;
-  }
-
-  public ArrayList<ArrayList<ArrayList<Integer>>> getBackpointers() {
-    return this.deductedFrom;
-  }
-
-  public ArrayList<ArrayList<String>> getAppliedRules() {
-    return this.appliedRule;
   }
 
   public void setReplace(char replace) {

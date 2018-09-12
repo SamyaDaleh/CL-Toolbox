@@ -1,6 +1,7 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.collectsymbols;
 
 import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
+import com.github.samyadaleh.cltoolbox.common.parser.Token;
 
 import java.text.ParseException;
 import java.util.List;

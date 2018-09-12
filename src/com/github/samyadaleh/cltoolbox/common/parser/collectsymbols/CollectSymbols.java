@@ -1,4 +1,4 @@
-package com.github.samyadaleh.cltoolbox.common.parser;
+package com.github.samyadaleh.cltoolbox.common.parser.collectsymbols;
 
 import java.text.ParseException;
 import java.util.List;
