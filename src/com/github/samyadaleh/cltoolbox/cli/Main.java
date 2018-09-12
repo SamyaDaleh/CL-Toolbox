@@ -136,7 +136,11 @@ class Main { // NO_UCD (test only)
       if (call.length() > 0) {
         call.append(" ");
       }
-      call.append(arg);
+      if(arg.contains(" ")) {
+        call.append('"').append(arg).append('"');
+      } else {
+        call.append(arg);
+      }
     }
     log.info("Call: " + call.toString());
   }
