@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
 
-public class CfgGrammarParser {
+public class CfgParser {
   private static List<Exception> errors;
 
   /**

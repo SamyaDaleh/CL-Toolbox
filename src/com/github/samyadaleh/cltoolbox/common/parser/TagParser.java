@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
 
-public class TagGrammarParser {
+public class TagParser {
   private static List<Exception> errors;
 
   /**

@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SrcgGrammarParser {
+public class SrcgParser {
   private static List<Exception> errors;
 
   /**

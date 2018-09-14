@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.Objects;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
-import com.github.samyadaleh.cltoolbox.common.parser.SrcgGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
@@ -136,7 +136,7 @@ public class SrcgTest {
       throws IOException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
         new FileReader("./resources/grammars/anbmcndm.srcg"));
-    Srcg srcg = SrcgGrammarParser.parseSrcgReader(grammarReader);
+    Srcg srcg = SrcgParser.parseSrcgReader(grammarReader);
     Srcg srcgEpsFree =
         Objects.requireNonNull(srcg).getSrcgWithoutEmptyProductions();
     ParsingSchema schema =

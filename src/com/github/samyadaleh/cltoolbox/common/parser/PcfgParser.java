@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PcfgGrammarParser {
+public class PcfgParser {
   private static List<Exception> errors;
 
   /**

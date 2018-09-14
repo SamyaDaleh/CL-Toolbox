@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.io.*;
 import java.text.ParseException;
 
-import com.github.samyadaleh.cltoolbox.common.parser.CfgGrammarParser;
-import com.github.samyadaleh.cltoolbox.common.parser.PcfgGrammarParser;
-import com.github.samyadaleh.cltoolbox.common.parser.SrcgGrammarParser;
-import com.github.samyadaleh.cltoolbox.common.parser.TagGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
+import com.github.samyadaleh.cltoolbox.common.parser.PcfgParser;
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
+import com.github.samyadaleh.cltoolbox.common.parser.TagParser;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
@@ -23,7 +23,7 @@ public class GrammarParserUtilsTest {
         "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
             + "P = {S -> a S b, S -> a b}\n";
     Reader reader = new StringReader(cfgString);
-    Cfg cfg = CfgGrammarParser.parseCfgReader(reader);
+    Cfg cfg = CfgParser.parseCfgReader(reader);
     assert cfg != null;
     assertEquals(cfgString, cfg.toString());
   }
@@ -31,7 +31,7 @@ public class GrammarParserUtilsTest {
   @Test public void testparseCfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
         new BufferedReader(new FileReader("./resources/grammars/anbn.cfg"));
-    Cfg cfg = CfgGrammarParser.parseCfgReader(grammarReader);
+    Cfg cfg = CfgParser.parseCfgReader(grammarReader);
     assert cfg != null;
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
         + "P = {S -> a S b, S -> a b}\n", cfg.toString());
@@ -40,7 +40,7 @@ public class GrammarParserUtilsTest {
   @Test public void testparsePcfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
         new BufferedReader(new FileReader("./resources/grammars/a0n.pcfg"));
-    Pcfg pcfg = PcfgGrammarParser.parsePcfgReader(grammarReader);
+    Pcfg pcfg = PcfgParser.parsePcfgReader(grammarReader);
     assert pcfg != null;
     assertEquals(
         "G = <N, T, S, P>\n" + "N = {S, A, B}\n" + "T = {0, 1}\n" + "S = S\n"
@@ -51,7 +51,7 @@ public class GrammarParserUtilsTest {
   @Test public void testparseSrcgFile() throws IOException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
         new FileReader("./resources/grammars/anbmcndm.srcg"));
-    Srcg srcg = SrcgGrammarParser.parseSrcgReader(grammarReader);
+    Srcg srcg = SrcgParser.parseSrcgReader(grammarReader);
     assert srcg != null;
     assertEquals(
         "G = <N, T, V, P, S>\n" + "N = {A, B, S}\n" + "T = {a, b, c, d}\n"
@@ -63,7 +63,7 @@ public class GrammarParserUtilsTest {
 
   @Test public void testparseTagFile() throws IOException, ParseException {
     Reader reader = new FileReader("./resources/grammars/anbncndn.tag");
-    Tag tag = TagGrammarParser.parseTagReader(reader);
+    Tag tag = TagParser.parseTagReader(reader);
     assert tag != null;
     assertEquals("G = <N, T, I, A, S>\n" + "N = {S}\n" + "T = {a, b, c, d}\n"
             + "I = {α1 : (S_OA (ε ))}\n"

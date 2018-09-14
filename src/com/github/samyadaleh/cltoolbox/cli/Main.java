@@ -9,10 +9,10 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
-import com.github.samyadaleh.cltoolbox.common.parser.CfgGrammarParser;
-import com.github.samyadaleh.cltoolbox.common.parser.PcfgGrammarParser;
-import com.github.samyadaleh.cltoolbox.common.parser.SrcgGrammarParser;
-import com.github.samyadaleh.cltoolbox.common.parser.TagGrammarParser;
+import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
+import com.github.samyadaleh.cltoolbox.common.parser.PcfgParser;
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
+import com.github.samyadaleh.cltoolbox.common.parser.TagParser;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.gui.DisplayTree;
@@ -208,7 +208,7 @@ class Main { // NO_UCD (test only)
   private static void parseSrcgFileAndConvertToSchema(
       BufferedReader grammarFile, String w, String algorithm)
       throws IOException, ParseException {
-    srcg = SrcgGrammarParser.parseSrcgReader(grammarFile);
+    srcg = SrcgParser.parseSrcgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + srcg.toString());
     }
@@ -242,7 +242,7 @@ class Main { // NO_UCD (test only)
 
   private static void parseTagFileAndConvertToSchema(BufferedReader grammarFile,
       String w, String algorithm) throws IOException, ParseException {
-    tag = TagGrammarParser.parseTagReader(grammarFile);
+    tag = TagParser.parseTagReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + tag.toString());
     }
@@ -277,7 +277,7 @@ class Main { // NO_UCD (test only)
   private static void parsePcfgFileAndConvertToSchema(
       BufferedReader grammarFile, String w, String algorithm)
       throws IOException, ParseException {
-    pcfg = PcfgGrammarParser.parsePcfgReader(grammarFile);
+    pcfg = PcfgParser.parsePcfgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + pcfg.toString());
     }
@@ -335,7 +335,7 @@ class Main { // NO_UCD (test only)
 
   private static void parseCfgFileAndConvertToSchema(BufferedReader grammarFile,
       String w, String algorithm) throws IOException, ParseException {
-    cfg = CfgGrammarParser.parseCfgReader(grammarFile);
+    cfg = CfgParser.parseCfgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + cfg.toString());
     }
