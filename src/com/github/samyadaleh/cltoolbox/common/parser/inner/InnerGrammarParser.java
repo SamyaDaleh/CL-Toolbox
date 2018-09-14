@@ -16,17 +16,15 @@ public abstract class InnerGrammarParser {
   protected StringBuilder rhs;
   protected List<String> symbols;
   protected Token token;
-  protected Set<String> validCategories;
-  private TokenReader reader;
-  private Character[] specialChars;
+  Set<String> validCategories;
 
-  public InnerGrammarParser(BufferedReader in) {
+  InnerGrammarParser(BufferedReader in) {
     this.in = in;
   }
 
   public void invoke() throws IOException, ParseException {
-    specialChars = getSpecialChars();
-    reader = new TokenReader(in, specialChars);
+    Character[] specialChars = getSpecialChars();
+    TokenReader reader = new TokenReader(in, specialChars);
     validCategories = getValidCategories();
     category = new ArrayList<>();
     rhs = new StringBuilder();
