@@ -2,6 +2,8 @@ package com.github.samyadaleh.cltoolbox.gui;
 
 import java.awt.MouseInfo;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
@@ -35,7 +37,7 @@ class ParsingTraceTableFx {
   private final Timeline disposeTimer;
   private TableRow<?> popupRow;
   private TableColumn<ParsingStep, String> popupColumn;
-  private DisplayTreeFx popup;
+  private List<DisplayTreeFx> popups = new ArrayList<>();
   private Stage stage;
   private final JfxWindowHolder parent;
   private static final Logger log = LogManager.getLogger();
@@ -62,39 +64,40 @@ class ParsingTraceTableFx {
   }
 
   private void disposePopup() {
-    DisplayTreeFx popup = getTreePopup();
-    popup.dispose();
+    for(DisplayTreeFx popup : getTreePopup()) {
+      popup.dispose();
+    }
   }
 
   private void showPopup() {
     if (popupRow != null) {
       disposeTimer.stop();
-      DisplayTreeFx popup = getTreePopup();
-      if (popup != null) {
+      List<DisplayTreeFx> popups = getTreePopup();
+      if (popups.size() >0) {
         disposeTimer.playFromStart();
       }
     }
   }
 
-  private DisplayTreeFx getTreePopup() {
-    if (popup != null) {
-      popup.dispose();
-      popup = null;
+  private List<DisplayTreeFx> getTreePopup() {
+    for( int i = popups.size()-1; i>=0; i--) {
+      popups.get(i).dispose();
+      popups.remove(i);
     }
     String value = popupColumn.getCellData(popupRow.getIndex());
     if (value.charAt(0) == '[') {
       String treeName = value.substring(1, value.indexOf(','));
       try {
-        popup = new DisplayTreeFx(parent,
-            new String[] {tag.getTree(treeName).toString(), value});
-        popup.setLocation(Math.round(
+        popups.add(new DisplayTreeFx(parent,
+            new String[] {tag.getTree(treeName).toString(), value}));
+        popups.get(0).setLocation(Math.round(
             MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()),
             Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
       } catch (ParseException e) {
         log.error(e.getMessage(),e);
       }
     }
-    return popup;
+    return popups;
   }
 
   private void displayTable() {

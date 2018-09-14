@@ -45,7 +45,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     scene.heightProperty().addListener(observable -> draw());
     stage.setScene(scene);
     stage.setWidth(80 * tree.getWidth());
-    stage.setHeight(80 * tree.getHeight());
+    stage.setHeight(80 * tree.getHeight() + 40);
     stage.setX(X);
     stage.setY(Y);
     stage.setOnCloseRequest(e -> parent.close());
