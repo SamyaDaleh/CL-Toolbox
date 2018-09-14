@@ -1,7 +1,11 @@
 package com.github.samyadaleh.cltoolbox.common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.text.ParseException;
 
+import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
@@ -483,5 +487,13 @@ public class TestGrammarLibrary {
       log.error(e.getMessage(), e);
       return null;
     }
+  }
+
+  public static Ccg dedCcg() throws IOException {
+    String ccgString =
+        "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
+            + "certainly\t(S\\NP)/(S\\NP)\n";
+    Ccg ccg = new Ccg(new BufferedReader(new StringReader(ccgString)));
+    return ccg;
   }
 }

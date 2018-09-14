@@ -3,9 +3,11 @@ package com.github.samyadaleh.cltoolbox.chartparsing;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Objects;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg.CcgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
@@ -225,9 +227,8 @@ public class DeductionTest {
 
   @Test public void testSrcgCykGeneral2() throws ParseException {
     String w = "a a b b";
-    ParsingSchema schema = LcfrsToCykRulesConverter
-        .srcgToCykGeneralRules(new Srcg(TestGrammarLibrary.anBnCfg()),
-            w);
+    ParsingSchema schema = LcfrsToCykRulesConverter.srcgToCykGeneralRules(
+        new Srcg(Objects.requireNonNull(TestGrammarLibrary.anBnCfg())), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     deduction.printTrace();
@@ -306,6 +307,14 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
    /* schema = cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 2);
     assertTrue(deduction.doParse(schema, false)); //*/
+  }
+
+  @Test public void testCcg() throws IOException, ParseException {
+    String w = "Trip certainly likes merengue";
+    ParsingSchema schema = CcgToDeductionRulesConverter
+        .ccgToDeductionRules(TestGrammarLibrary.dedCcg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
   }
 
 }

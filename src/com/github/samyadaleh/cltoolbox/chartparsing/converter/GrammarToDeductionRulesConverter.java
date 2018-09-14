@@ -3,6 +3,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 import java.text.ParseException;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg.CcgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
@@ -11,6 +12,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
@@ -38,7 +40,8 @@ public class GrammarToDeductionRulesConverter {
     case "cfg-leftcorner":
       return CfgToLeftCornerRulesConverter.cfgToLeftCornerRules(cfg, w);
     case "cfg-leftcorner-chart":
-      return CfgToLeftCornerChartRulesConverter.cfgToLeftCornerChartRules(cfg, w);
+      return CfgToLeftCornerChartRulesConverter
+          .cfgToLeftCornerChartRules(cfg, w);
     case "cfg-cyk":
       return CfgToCykRulesConverter.cfgToCykRules(cfg, w);
     case "cfg-cyk-extended":
@@ -117,4 +120,15 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
+  public static ParsingSchema convertToSchema(Ccg ccg, String w,
+      String algorithm) {
+    switch (algorithm) {
+    case "ccg-deduction":
+      return CcgToDeductionRulesConverter.ccgToDeductionRules(ccg, w);
+    default:
+      log.info(
+          "I did not understand. Please check the spelling of your parsing algorithm.");
+      return null;
+    }
+  }
 }

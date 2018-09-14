@@ -6,13 +6,11 @@ import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
-import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
-import com.github.samyadaleh.cltoolbox.common.parser.PcfgParser;
-import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
-import com.github.samyadaleh.cltoolbox.common.parser.TagParser;
+import com.github.samyadaleh.cltoolbox.common.parser.*;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.gui.DisplayTree;
@@ -41,6 +39,7 @@ class Main { // NO_UCD (test only)
   private static Srcg srcg;
   private static Pcfg pcfg;
   private static final Logger log = LogManager.getLogger();
+  private static Ccg ccg;
 
   /**
    * Command line arguments are passed here. Call without arguments displays
@@ -136,7 +135,7 @@ class Main { // NO_UCD (test only)
       if (call.length() > 0) {
         call.append(" ");
       }
-      if(arg.contains(" ")) {
+      if (arg.contains(" ")) {
         call.append('"').append(arg).append('"');
       } else {
         call.append(arg);
@@ -200,9 +199,20 @@ class Main { // NO_UCD (test only)
     case "srcg":
       parseSrcgFileAndConvertToSchema(grammarReader, w, algorithm);
       break;
+    case "ccg":
+      parseCcgFileAndConvertToSchema(grammarReader, w, algorithm);
+      break;
     default:
       log.warn("Unknown file format of file " + grammarFile);
     }
+  }
+
+  private static void parseCcgFileAndConvertToSchema(
+      BufferedReader grammarReader, String w, String algorithm)
+      throws IOException {
+    ccg = CcgParser.parseCcgReader(grammarReader);
+    schema =
+        GrammarToDeductionRulesConverter.convertToSchema(ccg, w, algorithm);
   }
 
   private static void parseSrcgFileAndConvertToSchema(
@@ -407,9 +417,9 @@ class Main { // NO_UCD (test only)
   private static void printHelp() {
     log.info("Please pass at least 3 parameters: [grammar file] [input string] "
         + "[parsing algorithm] [<optional parameters>]");
-    log.info("Parsing algorithm can be one of: \n   cfg-cyk"
-        + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general" + "\n   cfg-earley"
-        + "\n   cfg-earley-passive" + "\n   cfg-leftcorner"
+    log.info("Parsing algorithm can be one of: " + "\n   ccg-deduction"
+        + "\n   cfg-cyk" + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general"
+        + "\n   cfg-earley" + "\n   cfg-earley-passive" + "\n   cfg-leftcorner"
         + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
         + "\n   cfg-shiftreduce" + "\n   cfg-lr-k   (with k >=0)"
         + "\n   cfg-unger" + "\n   pcfg-astar" + "\n   tag-cyk-extended"
