@@ -36,7 +36,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     stage = new Stage();
     stage.setTitle("Tree");
     StackPane stackPane = new StackPane();
-    canvas = new Canvas(80 * tree.getWidth(), 80 * tree.getHeight());
+    canvas = new Canvas(0, 0);
     canvas.widthProperty().bind(stackPane.widthProperty());
     canvas.heightProperty().bind(stackPane.heightProperty());
     stackPane.getChildren().add(canvas);
@@ -44,7 +44,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     scene.widthProperty().addListener(observable -> draw());
     scene.heightProperty().addListener(observable -> draw());
     stage.setScene(scene);
-    stage.setWidth(80 * tree.getWidth());
+    stage.setWidth(15 * tree.getWidthInChars());
     stage.setHeight(80 * tree.getHeight() + 40);
     stage.setX(X);
     stage.setY(Y);

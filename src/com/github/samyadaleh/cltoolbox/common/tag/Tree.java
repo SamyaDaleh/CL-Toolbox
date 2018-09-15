@@ -297,6 +297,28 @@ public class Tree {
   }
 
   /**
+   * Returns the max width of the tree, that is the most number of characters in
+   * any layer.
+   */
+  public int getWidthInChars() {
+    return getWidthInChars(this.getRoot());
+  }
+
+  /**
+   * Returns the max width of the subtree below the vertex. If it has children,
+   * it sums up the width of its children and returns their width or its own in
+   * chars, whatever is bigger. If it has no children, it returns its own width.
+   */
+  private int getWidthInChars(Vertex v) {
+    int ownWidth = v.getLabel().length() + 1;
+    int childWidth = 0;
+    for (Vertex c : this.getChildren(v)) {
+      childWidth += getWidthInChars(c) + 1;
+    }
+    return Math.max(ownWidth, childWidth);
+  }
+
+  /**
    * Returns the max width of the subtree below node p, that is the most nodes
    * in one layer where all nodes are dominated by p.
    */
