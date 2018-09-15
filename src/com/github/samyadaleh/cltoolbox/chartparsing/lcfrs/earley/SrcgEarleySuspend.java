@@ -32,35 +32,38 @@ public class SrcgEarleySuspend
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-      throws ParseException {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
       String clause1 = itemForm1[0];
       Clause clause1Parsed;
-      clause1Parsed = new Clause(clause1);
-      int posInt1 = Integer.parseInt(itemForm1[1]);
-      int iInt1 = Integer.parseInt(itemForm1[2]);
-      int jInt1 = Integer.parseInt(itemForm1[3]);
-      String clause2 = itemForm2[0];
-      Clause clause2Parsed;
-      clause2Parsed = new Clause(clause2);
-      String pos2 = itemForm2[1];
-      String i2 = itemForm2[2];
-      int iInt2 = Integer.parseInt(i2);
-      String j2 = itemForm2[3];
-      int jInt2 = Integer.parseInt(j2);
-      boolean isVar2 = false;
-      if (clause2Parsed.getLhs().ifSymExists(iInt2, jInt2)) {
-        String mayV2 = clause2Parsed.getLhsSymAt(iInt2, jInt2);
-        for (String var : variables) {
-          if (var.equals(mayV2)) {
-            isVar2 = true;
-            break;
+      try {
+        clause1Parsed = new Clause(clause1);
+        int posInt1 = Integer.parseInt(itemForm1[1]);
+        int iInt1 = Integer.parseInt(itemForm1[2]);
+        int jInt1 = Integer.parseInt(itemForm1[3]);
+        String clause2 = itemForm2[0];
+        Clause clause2Parsed;
+        clause2Parsed = new Clause(clause2);
+        String pos2 = itemForm2[1];
+        String i2 = itemForm2[2];
+        int iInt2 = Integer.parseInt(i2);
+        String j2 = itemForm2[3];
+        int jInt2 = Integer.parseInt(j2);
+        boolean isVar2 = false;
+        if (clause2Parsed.getLhs().ifSymExists(iInt2, jInt2)) {
+          String mayV2 = clause2Parsed.getLhsSymAt(iInt2, jInt2);
+          for (String var : variables) {
+            if (var.equals(mayV2)) {
+              isVar2 = true;
+              break;
+            }
           }
+          handleRhsVarWithDot(itemForm1, itemForm2, clause1Parsed, itemForm1[1],
+              posInt1, iInt1, jInt1, clause2, clause2Parsed, pos2, iInt2, jInt2,
+              isVar2, mayV2);
         }
-        handleRhsVarWithDot(itemForm1, itemForm2, clause1Parsed, itemForm1[1],
-            posInt1, iInt1, jInt1, clause2, clause2Parsed, pos2, iInt2, jInt2,
-            isVar2, mayV2);
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
       }
     }
   }

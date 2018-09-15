@@ -29,15 +29,15 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       if (itemForm[0].contains("->")) {
-        Clause clauseParsed = new Clause(itemForm[0]);
+        try {
+          Clause clauseParsed = new Clause(itemForm[0]);
         int iInt = Integer.parseInt(itemForm[2]);
         int jInt = Integer.parseInt(itemForm[3]);
-        if (clauseParsed.getLhs().ifSymExists(iInt, jInt)) {
+          if (clauseParsed.getLhs().ifSymExists(iInt, jInt)) {
           String mayV = clauseParsed.getLhsSymAt(iInt, jInt);
           for (Predicate rhsPred : clauseParsed.getRhs()) {
             if (rhsPred.getSymAt(1, 0).equals(mayV) && rhsPred.getNonterminal()
@@ -50,6 +50,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
               Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(outClause);
               for (Tree tree : antecedences.get(0).getTrees()) {
                 try {
+                  assert derivedTreeBase != null;
                   derivedTrees.add(TreeUtils
                       .performLeftmostSubstitution(tree, derivedTreeBase));
                 } catch (IndexOutOfBoundsException e) {
@@ -61,6 +62,9 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
               consequences.add(consequence);
             }
           }
+        }
+        } catch (ParseException e) {
+          log.error(e.getMessage(), e);
         }
       }
     }

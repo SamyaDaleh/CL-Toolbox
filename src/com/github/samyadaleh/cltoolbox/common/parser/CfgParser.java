@@ -4,7 +4,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class CfgParser {
    * Hand CFG reader to parse from, can come from string or multiline file.
    */
   public static Cfg parseCfgReader(Reader reader)
-      throws IOException, ParseException {
+      throws ParseException {
     errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Cfg cfg = new Cfg(in);

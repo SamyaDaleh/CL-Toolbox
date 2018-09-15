@@ -39,7 +39,6 @@ class Main { // NO_UCD (test only)
   private static Srcg srcg;
   private static Pcfg pcfg;
   private static final Logger log = LogManager.getLogger();
-  private static Ccg ccg;
 
   /**
    * Command line arguments are passed here. Call without arguments displays
@@ -78,12 +77,7 @@ class Main { // NO_UCD (test only)
     } else if (algorithm.equals("pcfg-cyk")) {
       deduction.setReplace('l');
     }
-    try {
-      log.info(deduction.doParse(schema, success));
-    } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return;
-    }
+    log.info(deduction.doParse(schema, success));
     if (displayParsingTraceTable(jwh, deduction))
       return;
     if (schema != null) {
@@ -210,14 +204,14 @@ class Main { // NO_UCD (test only)
   private static void parseCcgFileAndConvertToSchema(
       BufferedReader grammarReader, String w, String algorithm)
       throws IOException {
-    ccg = CcgParser.parseCcgReader(grammarReader);
+    Ccg ccg = CcgParser.parseCcgReader(grammarReader);
     schema =
         GrammarToDeductionRulesConverter.convertToSchema(ccg, w, algorithm);
   }
 
   private static void parseSrcgFileAndConvertToSchema(
       BufferedReader grammarFile, String w, String algorithm)
-      throws IOException, ParseException {
+      throws ParseException {
     srcg = SrcgParser.parseSrcgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + srcg.toString());
@@ -251,7 +245,7 @@ class Main { // NO_UCD (test only)
   }
 
   private static void parseTagFileAndConvertToSchema(BufferedReader grammarFile,
-      String w, String algorithm) throws IOException, ParseException {
+      String w, String algorithm) throws ParseException {
     tag = TagParser.parseTagReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + tag.toString());
@@ -286,7 +280,7 @@ class Main { // NO_UCD (test only)
 
   private static void parsePcfgFileAndConvertToSchema(
       BufferedReader grammarFile, String w, String algorithm)
-      throws IOException, ParseException {
+      throws ParseException {
     pcfg = PcfgParser.parsePcfgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + pcfg.toString());
@@ -344,7 +338,7 @@ class Main { // NO_UCD (test only)
   }
 
   private static void parseCfgFileAndConvertToSchema(BufferedReader grammarFile,
-      String w, String algorithm) throws IOException, ParseException {
+      String w, String algorithm) throws ParseException {
     cfg = CfgParser.parseCfgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + cfg.toString());

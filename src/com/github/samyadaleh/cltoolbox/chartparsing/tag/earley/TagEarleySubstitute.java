@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earley;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];

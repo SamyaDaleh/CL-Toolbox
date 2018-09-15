@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectTreeSymbolsTag extends CollectSymbols {
-  private Tag tag;
+  private final Tag tag;
 
   public CollectTreeSymbolsTag(Tag tag, List<String> category, String lhs,
       StringBuilder rhs, String tokenString) {

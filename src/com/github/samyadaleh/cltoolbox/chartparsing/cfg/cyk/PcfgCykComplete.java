@@ -9,7 +9,6 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +46,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
     this.antecedences = inAntecedences;
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antneeded) {
       String[] itemForm1 = antecedences.get(0).getItemForm();
       String[] itemForm2 = antecedences.get(1).getItemForm();
@@ -58,8 +56,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
     return new ArrayList<>(this.consequences);
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-      throws ParseException {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String nt1 = itemForm1[0];
     String i1 = itemForm1[1];
     int i1Int = Integer.parseInt(i1);
@@ -86,7 +83,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   protected void addTreesToConsequence(String i1,
-      ProbabilisticChartItemInterface consequence) throws ParseException {
+      ProbabilisticChartItemInterface consequence) {
     CfgProductionRule rule =
         new CfgProductionRule(pRule.getLhs(), pRule.getRhs());
     List<Tree> derivedTrees =

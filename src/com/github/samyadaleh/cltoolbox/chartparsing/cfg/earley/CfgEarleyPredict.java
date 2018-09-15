@@ -26,7 +26,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
@@ -34,27 +34,32 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
       int j = Integer.parseInt(itemForm[2]);
 
       for (String stackSymbol : stackSplit) {
-        if (stackSymbol.startsWith("•") && stackSymbol
-          .substring(1).equals(rule.getLhs())) {
+        if (stackSymbol.startsWith("•") && stackSymbol.substring(1)
+            .equals(rule.getLhs())) {
           String newStack;
           if (rule.getRhs()[0].equals("")) {
             newStack = rule.getLhs() + " -> •";
           } else {
             newStack =
-              rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
+                rule.getLhs() + " -> " + "•" + String.join(" ", rule.getRhs());
           }
           ChartItemInterface consequence =
-            new DeductionChartItem(newStack, String.valueOf(j), String.valueOf(j));
-          Tree derivedTreeBase = new Tree(rule);
-          List<Tree> derivedTrees = new ArrayList<>();
-          for (Tree tree : antecedences.get(0).getTrees()) {
-            derivedTrees.add(
-              TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+              new DeductionChartItem(newStack, String.valueOf(j),
+                  String.valueOf(j));
+          try {
+            Tree derivedTreeBase = new Tree(rule);
+            List<Tree> derivedTrees = new ArrayList<>();
+            for (Tree tree : antecedences.get(0).getTrees()) {
+              derivedTrees.add(
+                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+            }
+            consequence.setTrees(derivedTrees);
+            logItemGeneration(consequence);
+            consequences.add(consequence);
+            break;
+          } catch (ParseException e) {
+            log.error(e.getMessage(), e);
           }
-          consequence.setTrees(derivedTrees);
-          logItemGeneration(consequence);
-          consequences.add(consequence);
-          break;
         }
       }
     }
@@ -62,9 +67,9 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
   }
 
   @Override public String toString() {
-    return "[A -> α •" + rule.getLhs() + "β,i,j]" + "\n______ "
-      + rule.toString() + "\n" + "[" + rule.getLhs() + " -> •"
-      + ArrayUtils.toString(rule.getRhs()) + ",j,j]";
+    return "[A -> α •" + rule.getLhs() + "β,i,j]" + "\n______ " + rule
+        .toString() + "\n" + "[" + rule.getLhs() + " -> •" + ArrayUtils
+        .toString(rule.getRhs()) + ",j,j]";
   }
 
 }

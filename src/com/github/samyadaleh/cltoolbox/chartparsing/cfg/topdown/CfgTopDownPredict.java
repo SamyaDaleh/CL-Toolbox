@@ -26,8 +26,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
@@ -45,16 +44,24 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
           }
           if (derivedTrees.size() == 0) {
             List<Tree> derivedTreesNew = new ArrayList<>();
-            derivedTreesNew.add(new Tree(rule));
+            try {
+              derivedTreesNew.add(new Tree(rule));
+            } catch (ParseException e) {
+              log.error(e.getMessage(), e);
+            }
             consequence.setTrees(derivedTreesNew);
           } else {
             List<Tree> derivedTreesNew = new ArrayList<>();
-            Tree derivedTreeBase = new Tree(rule);
-            for (Tree tree : derivedTrees) {
-              derivedTreesNew.add(
-                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+            try {
+              Tree derivedTreeBase = new Tree(rule);
+              for (Tree tree : derivedTrees) {
+                derivedTreesNew.add(TreeUtils
+                    .performLeftmostSubstitution(tree, derivedTreeBase));
+              }
+              consequence.setTrees(derivedTreesNew);
+            } catch (ParseException e) {
+              log.error(e.getMessage(), e);
             }
-            consequence.setTrees(derivedTreesNew);
           }
           logItemGeneration(consequence);
           consequences.add(consequence);
@@ -70,14 +77,22 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
                 i);
           }
           if (derivedTrees.size() == 0) {
-            derivedTrees.add(new Tree(rule));
+            try {
+              derivedTrees.add(new Tree(rule));
+            } catch (ParseException e) {
+              log.error(e.getMessage(), e);
+            }
             consequence.setTrees(derivedTrees);
           } else {
             List<Tree> derivedTreesNew = new ArrayList<>();
-            Tree derivedTreeBase = new Tree(rule);
-            for (Tree tree : derivedTrees) {
-              derivedTreesNew.add(
-                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
+            try {
+              Tree derivedTreeBase = new Tree(rule);
+              for (Tree tree : derivedTrees) {
+                derivedTreesNew.add(TreeUtils
+                    .performLeftmostSubstitution(tree, derivedTreeBase));
+              }
+            } catch (ParseException e) {
+              log.error(e.getMessage(), e);
             }
             consequence.setTrees(derivedTreesNew);
           }

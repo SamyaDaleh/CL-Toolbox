@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectOuterRhsSymbolsSrcg extends CollectSymbols {
-  private Srcg srcg;
+  private final Srcg srcg;
   private String lhsNT;
   private String currentRhsNt;
   private StringBuilder lhsBuilder;
-  Token token;
+  private final Token token;
 
   public String getCurrentRhsNt() {
     return currentRhsNt;

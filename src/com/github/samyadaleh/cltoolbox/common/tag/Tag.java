@@ -7,7 +7,6 @@ import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerTagGrammarParser
 import com.github.samyadaleh.cltoolbox.common.tag.util.Binarization;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -40,7 +39,7 @@ public class Tag extends AbstractNTSGrammar {
     }
   }
 
-  public Tag(BufferedReader in) throws IOException, ParseException {
+  public Tag(BufferedReader in) throws ParseException {
     new InnerTagGrammarParser(this, in).invoke();
   }
 

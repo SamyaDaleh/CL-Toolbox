@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class InnerTagGrammarParser extends InnerGrammarParser {
-  private Tag tag;
+  private final Tag tag;
   private String lhs;
 
   public InnerTagGrammarParser(Tag tag, BufferedReader in) {

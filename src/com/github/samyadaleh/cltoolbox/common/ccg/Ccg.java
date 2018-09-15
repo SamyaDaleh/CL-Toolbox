@@ -12,7 +12,7 @@ import java.util.Map;
  * words to their categories.
  */
 public class Ccg {
-  private Map<String, List<String>> lexicon = new HashMap<>();
+  private final Map<String, List<String>> lexicon = new HashMap<>();
 
   public Ccg(BufferedReader in) throws IOException {
     String line;

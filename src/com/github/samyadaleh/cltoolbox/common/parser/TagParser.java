@@ -5,7 +5,6 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class TagParser {
    * Parses a TAG from a text file and returns it as a Tag object.
    */
   public static Tag parseTagReader(Reader reader)
-      throws ParseException, IOException {
+      throws ParseException {
     errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Tag tag = new Tag(in);

@@ -8,7 +8,6 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
   }
 
   @SuppressWarnings("unchecked") @Override
-  public List<ChartItemInterface> getConsequences() throws ParseException {
+  public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       Predicate lhs = clause.getLhs();
       List<List<String>> solutionRangesList =
@@ -87,7 +86,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
   }
 
   private List<Tree> generateDerivatedTrees(Predicate lhs,
-      ArrayList<Integer> rangeOverElements) throws ParseException {
+      ArrayList<Integer> rangeOverElements) {
     List<Tree> derivedTrees = new ArrayList<>();
     derivedTrees.add(TreeUtils.getTreeOfSrcgClause(clause, rangeOverElements));
     for (Predicate rhsPred : clause.getRhs()) {

@@ -4,7 +4,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
 import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerCfgGrammarParser;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class Cfg extends AbstractCfg {
     }
   }
 
-  public Cfg(BufferedReader in) throws IOException, ParseException {
+  public Cfg(BufferedReader in) throws ParseException {
     new InnerCfgGrammarParser(this, in).invoke();
   }
 

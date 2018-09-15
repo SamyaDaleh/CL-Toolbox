@@ -10,7 +10,6 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.UselessRules;
 import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerSrcgGrammarParser;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class Srcg extends AbstractNTSGrammar {
     super();
   }
 
-  public Srcg(BufferedReader in) throws IOException, ParseException {
+  public Srcg(BufferedReader in) throws ParseException {
     new InnerSrcgGrammarParser(this, in).invoke();
   }
 

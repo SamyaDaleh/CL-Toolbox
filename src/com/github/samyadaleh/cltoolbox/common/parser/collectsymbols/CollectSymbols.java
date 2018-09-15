@@ -4,10 +4,10 @@ import java.text.ParseException;
 import java.util.List;
 
 public abstract class CollectSymbols {
-  protected List<String> category;
-  protected String lhs;
-  protected StringBuilder rhs;
-  protected final String tokenString;
+  List<String> category;
+  String lhs;
+  StringBuilder rhs;
+  final String tokenString;
 
   CollectSymbols(List<String> category, String lhs, StringBuilder rhs,
       String tokenString) {

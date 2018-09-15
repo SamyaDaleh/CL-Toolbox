@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectRhsSymbolsCfg extends CollectSymbols {
-  private Cfg cfg;
+  private final Cfg cfg;
 
   public CollectRhsSymbolsCfg(Cfg cfg, List<String> category, String lhs,
       StringBuilder rhs, String tokenString) {

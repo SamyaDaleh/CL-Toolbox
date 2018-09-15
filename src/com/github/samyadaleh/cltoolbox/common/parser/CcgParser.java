@@ -13,7 +13,6 @@ public class CcgParser {
    */
   public static Ccg parseCcgReader(Reader reader) throws IOException {
     BufferedReader in = new BufferedReader(reader);
-    Ccg ccg = new Ccg(in);
-    return ccg;
+    return new Ccg(in);
   }
 }

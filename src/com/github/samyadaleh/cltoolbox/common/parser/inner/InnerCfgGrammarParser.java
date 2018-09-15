@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class InnerCfgGrammarParser extends InnerGrammarParser {
-  private Cfg cfg;
+  private final Cfg cfg;
   private String lhs;
 
   public InnerCfgGrammarParser(Cfg cfg, BufferedReader in) {

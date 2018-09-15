@@ -8,18 +8,23 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 
-/** Active item that has not been fully seen yet. */
-public class SrcgEarleyActiveItem extends AbstractChartItem implements ChartItemInterface {
+/**
+ * Active item that has not been fully seen yet.
+ */
+public class SrcgEarleyActiveItem extends AbstractChartItem
+    implements ChartItemInterface {
 
   private RangeVector p;
 
-  /** Constructor with a clause, where a dot marked up until which point the
+  /**
+   * Constructor with a clause, where a dot marked up until which point the
    * clause has been macthed with the input. p is the position up to which we
    * have processed the input. We have processed up to the jith element of the
    * ith argument. RangeVector contains the bindings of the variables of the
-   * lhs. */
+   * lhs.
+   */
   public SrcgEarleyActiveItem(String clause, int pos, int i, int j,
-    RangeVector p) {
+      RangeVector p) {
     String[] pRanges = p.getRangesAsPlainArray();
     this.itemForm = new String[pRanges.length + 4];
     this.itemForm[0] = clause;
@@ -30,10 +35,12 @@ public class SrcgEarleyActiveItem extends AbstractChartItem implements ChartItem
     this.p = p;
   }
 
-  /** Constructor with string array instead of a range vector to spare me a lot
-   * of conversions. */
+  /**
+   * Constructor with string array instead of a range vector to spare me a lot
+   * of conversions.
+   */
   SrcgEarleyActiveItem(String clause, int pos, int i, int j,
-    List<String> rangeVector) {
+      List<String> rangeVector) {
     this.itemForm = new String[rangeVector.size() + 4];
     this.itemForm[0] = clause;
     this.itemForm[1] = String.valueOf(pos);
@@ -51,10 +58,10 @@ public class SrcgEarleyActiveItem extends AbstractChartItem implements ChartItem
     try {
       Clause clause = new Clause(clauseSplit[0], clauseSplit[1]);
       String dottedClause = clause.setDotAt(Integer.parseInt(itemForm[2]),
-        Integer.parseInt(itemForm[3]));
+          Integer.parseInt(itemForm[3]));
       if (p != null) {
         return "[" + dottedClause + ", " + itemForm[1] + ", <" + itemForm[2]
-          + "," + itemForm[3] + ">, " + p.toString() + "]";
+            + "," + itemForm[3] + ">, " + p.toString() + "]";
       } else {
         StringBuilder builder = new StringBuilder();
         builder.append("(");
@@ -63,16 +70,16 @@ public class SrcgEarleyActiveItem extends AbstractChartItem implements ChartItem
             builder.append(", ");
           }
           builder.append("<").append(itemForm[i * 2 + 4]).append(",")
-            .append(itemForm[i * 2 + 5]).append(">");
+              .append(itemForm[i * 2 + 5]).append(">");
         }
         builder.append(")");
         return "[" + dottedClause + ", " + itemForm[1] + ", <" + itemForm[2]
-          + "," + itemForm[3] + ">, " + builder.toString() + "]";
+            + "," + itemForm[3] + ">, " + builder.toString() + "]";
       }
     } catch (ParseException e) {
       if (p != null) {
         return "[A(ɸ) -> A_1(ɸ_1) ... A_m(ɸ_m), " + itemForm[1] + ", <"
-          + itemForm[2] + "," + itemForm[3] + ">, " + p.toString() + "]";
+            + itemForm[2] + "," + itemForm[3] + ">, " + p.toString() + "]";
       } else {
         StringBuilder builder = new StringBuilder();
         builder.append("(");
@@ -81,11 +88,12 @@ public class SrcgEarleyActiveItem extends AbstractChartItem implements ChartItem
             builder.append(", ");
           }
           builder.append("<").append(itemForm[i * 2 + 4]).append(",")
-            .append(itemForm[i * 2 + 5]).append(">");
+              .append(itemForm[i * 2 + 5]).append(">");
         }
         builder.append(")");
         return "[A(ɸ) -> A_1(ɸ_1) ... A_m(ɸ_m), " + itemForm[1] + ", <"
-          + itemForm[2] + "," + itemForm[3] + ">, " + builder.toString() + "]";
+            + itemForm[2] + "," + itemForm[3] + ">, " + builder.toString()
+            + "]";
       }
     }
   }

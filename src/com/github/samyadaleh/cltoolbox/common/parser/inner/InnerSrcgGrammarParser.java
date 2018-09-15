@@ -14,9 +14,9 @@ import java.util.Set;
 
 public class InnerSrcgGrammarParser extends InnerGrammarParser {
   private String lhsNT;
-  StringBuilder lhs;
+  private StringBuilder lhs;
   private String currentRhsNt;
-  private Srcg srcg;
+  private final Srcg srcg;
 
   public InnerSrcgGrammarParser(Srcg srcg, BufferedReader in) {
     super(in);

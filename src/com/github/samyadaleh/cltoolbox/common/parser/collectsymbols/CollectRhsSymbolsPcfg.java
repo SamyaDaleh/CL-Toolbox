@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CollectRhsSymbolsPcfg extends CollectSymbols {
   private String prob;
-  private Pcfg pcfg;
+  private final Pcfg pcfg;
 
   public CollectRhsSymbolsPcfg(Pcfg pcfg, List<String> category, String prob,
       String lhs, StringBuilder rhs, String tokenString) {

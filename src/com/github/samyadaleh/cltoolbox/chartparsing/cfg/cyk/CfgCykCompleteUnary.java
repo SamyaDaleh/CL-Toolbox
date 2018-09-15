@@ -25,7 +25,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemForm();
       String nt1 = itemForm1[0];
@@ -35,24 +35,29 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
       int j1int = Integer.parseInt(j1);
 
       if (nt1.equals(rule.getRhs()[0])) {
-        ChartItemInterface consequence = new DeductionChartItem(rule.getLhs(),
-          String.valueOf(i1int), String.valueOf(j1int));
-        Tree derivedTreeBase = new Tree(rule);
-        List<Tree> derivedTrees = new ArrayList<>();
-        for (Tree tree : antecedences.get(0).getTrees()) {
-          derivedTrees
-            .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
+        ChartItemInterface consequence =
+            new DeductionChartItem(rule.getLhs(), String.valueOf(i1int),
+                String.valueOf(j1int));
+        try {
+          Tree derivedTreeBase = new Tree(rule);
+          List<Tree> derivedTrees = new ArrayList<>();
+          for (Tree tree : antecedences.get(0).getTrees()) {
+            derivedTrees.add(
+                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
+          }
+          consequence.setTrees(derivedTrees);
+          logItemGeneration(consequence);
+          consequences.add(consequence);
+        } catch (ParseException e) {
+          log.error(e.getMessage(), e);
         }
-        consequence.setTrees(derivedTrees);
-        logItemGeneration(consequence);
-        consequences.add(consequence);
       }
     }
     return this.consequences;
   }
 
   @Override public String toString() {
-    return "[" + rule.getRhs()[0] + ",i,j]]" + "\n______ \n" + "["
-      + rule.getLhs() + ",i,j]";
+    return "[" + rule.getRhs()[0] + ",i,j]]" + "\n______ \n" + "[" + rule
+        .getLhs() + ",i,j]";
   }
 }

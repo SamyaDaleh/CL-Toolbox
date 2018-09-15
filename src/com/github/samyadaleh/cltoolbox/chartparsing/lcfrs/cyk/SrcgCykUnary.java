@@ -1,15 +1,14 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Similar to the Unary rule in extended CYK for CFG. If there is a chain rule
@@ -28,7 +27,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
   }
 
   @SuppressWarnings("unchecked") @Override
-  public List<ChartItemInterface> getConsequences() throws ParseException {
+  public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String nt = itemForm[0];
@@ -102,11 +101,11 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     return false;
   }
 
-  private List<Tree> generateDerivatedTrees(ArrayList<Integer> overallRanges)
-      throws ParseException {
+  private List<Tree> generateDerivatedTrees(ArrayList<Integer> overallRanges) {
     List<Tree> derivedTrees = new ArrayList<>();
     Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
     for (Tree tree : antecedences.get(0).getTrees()) {
+      assert derivedTreeBase != null;
       derivedTrees
           .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
     }

@@ -24,8 +24,7 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
     this.antNeeded = rule.getRhs().length;
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       int minI = Integer.MAX_VALUE;
       int prevItemStart = 0;
@@ -39,42 +38,46 @@ public class CfgCykCompleteGeneral extends AbstractDynamicDeductionRule {
       }
       int lSum = 0;
       List<Tree> derivedTrees = new ArrayList<>();
-      derivedTrees.add(new Tree(rule));
-      for (int j = 0; j < rule.getRhs().length; j++) {
-        boolean found = false;
-        for (ChartItemInterface mayRhsItem : antecedences) {
-          int i = Integer.parseInt(mayRhsItem.getItemForm()[1]);
-          if (i == prevItemStart && mayRhsItem.getItemForm()[0]
-              .equals(rule.getRhs()[j])) {
-            found = true;
-            if (mayRhsItem.getTrees() != null) {
-              List<Tree> derivedTreesNew = new ArrayList<>();
-              for (Tree tree1 : mayRhsItem.getTrees()) {
-                for (Tree tree2 : derivedTrees) {
-                  derivedTreesNew
-                      .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
+      try {
+        derivedTrees.add(new Tree(rule));
+        for (int j = 0; j < rule.getRhs().length; j++) {
+          boolean found = false;
+          for (ChartItemInterface mayRhsItem : antecedences) {
+            int i = Integer.parseInt(mayRhsItem.getItemForm()[1]);
+            if (i == prevItemStart && mayRhsItem.getItemForm()[0]
+                .equals(rule.getRhs()[j])) {
+              found = true;
+              if (mayRhsItem.getTrees() != null) {
+                List<Tree> derivedTreesNew = new ArrayList<>();
+                for (Tree tree1 : mayRhsItem.getTrees()) {
+                  for (Tree tree2 : derivedTrees) {
+                    derivedTreesNew.add(
+                        TreeUtils.performLeftmostSubstitution(tree2, tree1));
+                  }
+                }
+                if (derivedTreesNew.size() > 0) {
+                  derivedTrees = derivedTreesNew;
                 }
               }
-              if (derivedTreesNew.size() > 0) {
-                derivedTrees = derivedTreesNew;
-              }
+              int l = Integer.parseInt(mayRhsItem.getItemForm()[2]);
+              prevItemStart = i + l;
+              lSum += l;
+              break;
             }
-            int l = Integer.parseInt(mayRhsItem.getItemForm()[2]);
-            prevItemStart = i + l;
-            lSum += l;
-            break;
+          }
+          if (!found) {
+            return this.consequences;
           }
         }
-        if (!found) {
-          return this.consequences;
-        }
+        ChartItemInterface consequence =
+            new DeductionChartItem(rule.getLhs(), String.valueOf(minI),
+                String.valueOf(lSum));
+        consequence.setTrees(derivedTrees);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
       }
-      ChartItemInterface consequence =
-          new DeductionChartItem(rule.getLhs(), String.valueOf(minI),
-              String.valueOf(lSum));
-      consequence.setTrees(derivedTrees);
-      logItemGeneration(consequence);
-      consequences.add(consequence);
     }
     return this.consequences;
   }

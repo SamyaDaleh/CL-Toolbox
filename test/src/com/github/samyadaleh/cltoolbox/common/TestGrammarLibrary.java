@@ -493,7 +493,6 @@ public class TestGrammarLibrary {
     String ccgString =
         "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
             + "certainly\t(S\\NP)/(S\\NP)\n";
-    Ccg ccg = new Ccg(new BufferedReader(new StringReader(ccgString)));
-    return ccg;
+    return new Ccg(new BufferedReader(new StringReader(ccgString)));
   }
 }

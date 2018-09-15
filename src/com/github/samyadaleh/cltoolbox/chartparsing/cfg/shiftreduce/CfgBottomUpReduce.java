@@ -25,8 +25,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     this.name = "reduce " + rule.toString();
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == this.antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String stack = itemForm[0];
@@ -43,30 +42,35 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
         }
         List<Tree> derivedTrees =
             new ArrayList<>(antecedences.get(0).getTrees());
-        Tree derivedTreeBase = new Tree(rule);
-        for (Tree tree : antecedences.get(0).getTrees()) {
-          boolean found = false;
-          for (String rhsSym : rule.getRhs()) {
-            if (tree.getRoot().getLabel().equals(rhsSym)) {
-              derivedTrees.remove(0);
-              try {
-                derivedTreeBase = TreeUtils
-                    .performLeftmostSubstitution(derivedTreeBase, tree);
-              } catch (IndexOutOfBoundsException e) {
-                log.debug(e.getMessage(), e);
+        try {
+          Tree derivedTreeBase = new Tree(rule);
+          for (Tree tree : antecedences.get(0).getTrees()) {
+            boolean found = false;
+            for (String rhsSym : rule.getRhs()) {
+              if (tree.getRoot().getLabel().equals(rhsSym)) {
+                derivedTrees.remove(0);
+                try {
+                  assert derivedTreeBase != null;
+                  derivedTreeBase = TreeUtils
+                      .performLeftmostSubstitution(derivedTreeBase, tree);
+                } catch (IndexOutOfBoundsException e) {
+                  log.debug(e.getMessage(), e);
+                }
+                found = true;
+                break;
               }
-              found = true;
+            }
+            if (!found) {
               break;
             }
           }
-          if (!found) {
-            break;
-          }
+          derivedTrees.add(0, derivedTreeBase);
+          consequence.setTrees(derivedTrees);
+          logItemGeneration(consequence);
+          consequences.add(consequence);
+        } catch (ParseException e) {
+          log.error(e.getMessage(), e);
         }
-        derivedTrees.add(0, derivedTreeBase);
-        consequence.setTrees(derivedTrees);
-        logItemGeneration(consequence);
-        consequences.add(consequence);
       }
     }
     return consequences;

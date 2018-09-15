@@ -6,7 +6,6 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class SrcgParser {
    * Parses a sRCG from a file and returns it as Srcg.
    */
   public static Srcg parseSrcgReader(Reader reader)
-      throws IOException, ParseException {
+      throws ParseException {
     errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Srcg srcg = new Srcg(in);

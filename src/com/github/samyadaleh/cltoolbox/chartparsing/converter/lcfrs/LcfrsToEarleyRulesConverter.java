@@ -20,8 +20,7 @@ import java.util.List;
 public class LcfrsToEarleyRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
-  public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w)
-      throws ParseException {
+  public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w) {
     if (srcg.hasEpsilonProductions()) {
       log.info(
           "sRCG is not allowed to have epsilon productions for this Earley algorithm.");

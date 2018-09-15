@@ -4,25 +4,24 @@ import com.github.samyadaleh.cltoolbox.common.parser.Token;
 import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public abstract class InnerGrammarParser {
-  protected BufferedReader in;
-  protected List<String> category;
-  protected StringBuilder rhs;
-  protected List<String> symbols;
-  protected Token token;
+  private final BufferedReader in;
+  List<String> category;
+  StringBuilder rhs;
+  List<String> symbols;
+  Token token;
   Set<String> validCategories;
 
   InnerGrammarParser(BufferedReader in) {
     this.in = in;
   }
 
-  public void invoke() throws IOException, ParseException {
+  public void invoke() throws ParseException {
     Character[] specialChars = getSpecialChars();
     TokenReader reader = new TokenReader(in, specialChars);
     validCategories = getValidCategories();

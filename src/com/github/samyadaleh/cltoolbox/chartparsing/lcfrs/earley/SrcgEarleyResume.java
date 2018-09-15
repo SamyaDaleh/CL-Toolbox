@@ -30,40 +30,41 @@ public class SrcgEarleyResume
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-      throws ParseException {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String clause1 = itemForm1[0];
     String clause2 = itemForm2[0];
     if (itemForm1[0].contains("->") && itemForm2[0].contains("->")) {
-      Clause clause1Parsed;
-      clause1Parsed = new Clause(clause1);
+      try {
+        Clause clause1Parsed = new Clause(clause1);
       int posInt1 = Integer.parseInt(itemForm1[1]);
       int iInt1 = Integer.parseInt(itemForm1[2]);
       int jInt1 = Integer.parseInt(itemForm1[3]);
-      Clause clause2Parsed;
-      clause2Parsed = new Clause(clause2);
-      int iInt2 = Integer.parseInt(itemForm2[2]);
-      int jInt2 = Integer.parseInt(itemForm2[3]);
-      boolean mayV1FirstArg = false;
-      boolean isVar1 = false;
-      if (clause1Parsed.getLhs().ifSymExists(iInt1, jInt1)) {
-        String mayV1 = clause1Parsed.getLhsSymAt(iInt1, jInt1);
-        for (String var : variables) {
-          if (var.equals(mayV1)) {
-            isVar1 = true;
-            break;
+        Clause clause2Parsed = new Clause(clause2);
+        int iInt2 = Integer.parseInt(itemForm2[2]);
+        int jInt2 = Integer.parseInt(itemForm2[3]);
+        boolean mayV1FirstArg = false;
+        boolean isVar1 = false;
+        if (clause1Parsed.getLhs().ifSymExists(iInt1, jInt1)) {
+          String mayV1 = clause1Parsed.getLhsSymAt(iInt1, jInt1);
+          for (String var : variables) {
+            if (var.equals(mayV1)) {
+              isVar1 = true;
+              break;
+            }
+          }
+          for (Predicate rhs : clause1Parsed.getRhs()) {
+            if (rhs.getSymAt(1, 0).equals(mayV1)) {
+              mayV1FirstArg = true;
+            }
+          }
+          for (Predicate rhs : clause1Parsed.getRhs()) {
+            handleRhsPredicate(itemForm1, itemForm2, clause1Parsed, posInt1,
+                iInt1, clause2Parsed, iInt2, jInt2, mayV1FirstArg, isVar1,
+                mayV1, rhs);
           }
         }
-        for (Predicate rhs : clause1Parsed.getRhs()) {
-          if (rhs.getSymAt(1, 0).equals(mayV1)) {
-            mayV1FirstArg = true;
-          }
-        }
-        for (Predicate rhs : clause1Parsed.getRhs()) {
-          handleRhsPredicate(itemForm1, itemForm2, clause1Parsed, posInt1,
-              iInt1, clause2Parsed, iInt2, jInt2, mayV1FirstArg, isVar1, mayV1,
-              rhs);
-        }
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
       }
     }
   }

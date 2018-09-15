@@ -23,28 +23,31 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
   }
 
   @SuppressWarnings("unchecked") @Override
-  public List<ChartItemInterface> getConsequences() throws ParseException {
+  public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String clause = itemForm[0];
       if (itemForm[0].contains("->")) {
-        Clause clauseParsed;
-        clauseParsed = new Clause(clause);
-        int iInt = Integer.parseInt(itemForm[2]);
-        int jInt = Integer.parseInt(itemForm[3]);
-        if (clauseParsed.getLhs().getDim() == iInt
-            && clauseParsed.getLhs().getArgumentByIndex(iInt).length == jInt) {
-          ArrayList<String> rangesForElements = new ArrayList<>(
-              Arrays.asList(itemForm).subList(4, itemForm.length));
-          Predicate lhs = clauseParsed.getLhs();
-          List<String> newVector = (List<String>) SrcgDeductionUtils
-              .getRangesForArguments(rangesForElements, lhs);
-          ChartItemInterface consequence =
-              new SrcgEarleyPassiveItem(clauseParsed.getLhs().getNonterminal(),
-                  newVector);
-          consequence.setTrees(antecedences.get(0).getTrees());
-          logItemGeneration(consequence);
-          consequences.add(consequence);
+        try {
+          Clause clauseParsed = new Clause(clause);
+          int iInt = Integer.parseInt(itemForm[2]);
+          int jInt = Integer.parseInt(itemForm[3]);
+          if (clauseParsed.getLhs().getDim() == iInt
+              && clauseParsed.getLhs().getArgumentByIndex(iInt).length
+              == jInt) {
+            ArrayList<String> rangesForElements = new ArrayList<>(
+                Arrays.asList(itemForm).subList(4, itemForm.length));
+            Predicate lhs = clauseParsed.getLhs();
+            List<String> newVector = (List<String>) SrcgDeductionUtils
+                .getRangesForArguments(rangesForElements, lhs);
+            ChartItemInterface consequence = new SrcgEarleyPassiveItem(
+                clauseParsed.getLhs().getNonterminal(), newVector);
+            consequence.setTrees(antecedences.get(0).getTrees());
+            logItemGeneration(consequence);
+            consequences.add(consequence);
+          }
+        } catch (ParseException e) {
+          log.error(e.getMessage(), e);
         }
       }
     }

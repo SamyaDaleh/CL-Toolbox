@@ -3,7 +3,6 @@ package com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.ccg.*;
-import com.github.samyadaleh.cltoolbox.chartparsing.ccg.CcgForwardComposition1;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;

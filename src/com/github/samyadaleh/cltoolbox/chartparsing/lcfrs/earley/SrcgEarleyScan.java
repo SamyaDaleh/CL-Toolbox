@@ -27,39 +27,42 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
     this.antNeeded = 1;
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm = antecedences.get(0).getItemForm();
       if (itemForm[0].contains("->")) {
-        Clause clauseParsed = new Clause(itemForm[0]);
-        int posInt = Integer.parseInt(itemForm[1]);
-        int iInt = Integer.parseInt(itemForm[2]);
-        int jInt = Integer.parseInt(itemForm[3]);
-        int place = clauseParsed.getLhs().getAbsolutePos(iInt, jInt);
-        if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
-            && posInt < wSplit.length && clauseParsed.getLhsSymAt(iInt, jInt)
-            .equals(wSplit[posInt])) {
-          this.name = "scan " + wSplit[posInt];
-          ArrayList<String> newVector = new ArrayList<>();
-          for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
-            newVector.add(itemForm[2 * k + 4]);
-            newVector.add(itemForm[2 * k + 5]);
+        try {
+          Clause clauseParsed = new Clause(itemForm[0]);
+          int posInt = Integer.parseInt(itemForm[1]);
+          int iInt = Integer.parseInt(itemForm[2]);
+          int jInt = Integer.parseInt(itemForm[3]);
+          int place = clauseParsed.getLhs().getAbsolutePos(iInt, jInt);
+          if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
+              && posInt < wSplit.length && clauseParsed.getLhsSymAt(iInt, jInt)
+              .equals(wSplit[posInt])) {
+            this.name = "scan " + wSplit[posInt];
+            ArrayList<String> newVector = new ArrayList<>();
+            for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
+              newVector.add(itemForm[2 * k + 4]);
+              newVector.add(itemForm[2 * k + 5]);
+            }
+            newVector.set(place * 2, itemForm[1]);
+            newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
+            ChartItemInterface consequence =
+                new SrcgEarleyActiveItem(itemForm[0], posInt + 1, iInt,
+                    jInt + 1, newVector);
+            List<Tree> derivedTrees = new ArrayList<>();
+            for (Tree tree : antecedences.get(0).getTrees()) {
+              derivedTrees.add(TreeUtils
+                  .performPositionSubstitution(tree, wSplit[posInt],
+                      itemForm[1]));
+            }
+            consequence.setTrees(derivedTrees);
+            logItemGeneration(consequence);
+            consequences.add(consequence);
           }
-          newVector.set(place * 2, itemForm[1]);
-          newVector.set(place * 2 + 1, String.valueOf(posInt + 1));
-          ChartItemInterface consequence =
-              new SrcgEarleyActiveItem(itemForm[0], posInt + 1, iInt, jInt + 1,
-                  newVector);
-          List<Tree> derivedTrees = new ArrayList<>();
-          for (Tree tree : antecedences.get(0).getTrees()) {
-            derivedTrees.add(TreeUtils
-                .performPositionSubstitution(tree, wSplit[posInt],
-                    itemForm[1]));
-          }
-          consequence.setTrees(derivedTrees);
-          logItemGeneration(consequence);
-          consequences.add(consequence);
+        } catch (ParseException e) {
+          log.error(e.getMessage(), e);
         }
       }
     }

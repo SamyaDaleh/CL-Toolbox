@@ -2,13 +2,12 @@ package com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
-import java.text.ParseException;
 import java.util.List;
 
 public abstract class AbstractDynamicDecutionRuleTwoAntecedences
   extends AbstractDynamicDeductionRule {
 
-  @Override public List<ChartItemInterface> getConsequences() throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antecedences.size() == antNeeded) {
       String[] itemForm1 = antecedences.get(0).getItemForm();
       String[] itemForm2 = antecedences.get(1).getItemForm();
@@ -19,6 +18,6 @@ public abstract class AbstractDynamicDecutionRuleTwoAntecedences
   }
 
   protected abstract void calculateConsequences(String[] itemForm1,
-    String[] itemForm2) throws ParseException;
+    String[] itemForm2);
 
 }

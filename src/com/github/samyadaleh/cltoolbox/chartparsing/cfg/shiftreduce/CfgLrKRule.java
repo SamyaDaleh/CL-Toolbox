@@ -31,8 +31,7 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
     this.name = "LR(k) parse table lookup";
   }
 
-  @Override public List<ChartItemInterface> getConsequences()
-      throws ParseException {
+  @Override public List<ChartItemInterface> getConsequences() {
     if (antNeeded == antecedences.size()) {
       String[] itemForm = antecedences.get(0).getItemForm();
       int i = Integer.parseInt(itemForm[1]);
@@ -84,29 +83,34 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
   }
 
   private void generateConsequence(DeductionChartItem consequence1,
-      CfgProductionRule rule) throws ParseException {
+      CfgProductionRule rule) {
     List<Tree> derivedTrees = new ArrayList<>(antecedences.get(0).getTrees());
-    Tree derivedTreeBase = new Tree(rule);
-    for (Tree tree : antecedences.get(0).getTrees()) {
-      boolean found = false;
-      for (String rhsSym : rule.getRhs()) {
-        if (tree.getRoot().getLabel().equals(rhsSym)) {
-          derivedTrees.remove(0);
-          derivedTreeBase =
-              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree);
-          found = true;
+    try {
+      Tree derivedTreeBase = new Tree(rule);
+      for (Tree tree : antecedences.get(0).getTrees()) {
+        boolean found = false;
+        for (String rhsSym : rule.getRhs()) {
+          if (tree.getRoot().getLabel().equals(rhsSym)) {
+            derivedTrees.remove(0);
+            assert derivedTreeBase != null;
+            derivedTreeBase =
+                TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree);
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
           break;
         }
       }
-      if (!found) {
-        break;
-      }
+      derivedTrees.add(0, derivedTreeBase);
+      this.name = "reduce " + rule.toString();
+      consequence1.setTrees(derivedTrees);
+      logItemGeneration(consequence1);
+      consequences.add(consequence1);
+    } catch (ParseException e) {
+      log.error(e.getMessage(), e);
     }
-    derivedTrees.add(0, derivedTreeBase);
-    this.name = "reduce " + rule.toString();
-    consequence1.setTrees(derivedTrees);
-    logItemGeneration(consequence1);
-    consequences.add(consequence1);
   }
 
   private void lookUpGotoAction(String s, CfgProductionRule rule,

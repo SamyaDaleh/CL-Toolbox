@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,8 +24,7 @@ public class TagEarleyPrefixValidSubstitute
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-      throws ParseException {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String treeName1 = itemForm1[0];
     String node1 = itemForm1[1];
     String l1 = itemForm1[7];
@@ -54,8 +52,7 @@ public class TagEarleyPrefixValidSubstitute
     }
   }
 
-  private List<Tree> generateDerivatedTrees(String[] itemForm1)
-      throws ParseException {
+  private List<Tree> generateDerivatedTrees(String[] itemForm1) {
     List<Tree> derivedTrees = new ArrayList<>();
     if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
       for (Tree tree1 : antecedences.get(0).getTrees()) {

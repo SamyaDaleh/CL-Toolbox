@@ -1,16 +1,15 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A deduction system that derives consequences from antecendence items and
@@ -71,8 +70,7 @@ public class Deduction {
    * to the items until all items were used. Returns true if a goal item was
    * derived.
    */
-  public boolean doParse(ParsingSchema schema, boolean success)
-      throws ParseException {
+  public boolean doParse(ParsingSchema schema, boolean success) {
     successfulTrace = success;
     chart = new ArrayList<>();
     agenda = new ArrayList<>();
@@ -266,7 +264,7 @@ public class Deduction {
    * found.
    */
   private void applyRule(ChartItemInterface item,
-      DynamicDeductionRuleInterface rule) throws ParseException {
+      DynamicDeductionRuleInterface rule) {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() < itemsNeeded) {
       return;

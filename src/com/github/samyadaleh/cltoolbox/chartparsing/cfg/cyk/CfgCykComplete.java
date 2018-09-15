@@ -1,13 +1,12 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
 
-import java.text.ParseException;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.List;
 
 /**
  * If two items match the rhs of a rule, get a new item that represents the lhs.
@@ -22,8 +21,7 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-      throws ParseException {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String nt1 = itemForm1[0];
     String i1 = itemForm1[1];
     int i1int = Integer.parseInt(i1);

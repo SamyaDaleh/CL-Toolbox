@@ -14,7 +14,7 @@ public class InnerPcfgGrammarParser extends InnerGrammarParser {
 
   private String prob;
   private String lhs;
-  private Pcfg pcfg;
+  private final Pcfg pcfg;
 
   public InnerPcfgGrammarParser(Pcfg pcfg, BufferedReader in) {
     super(in);

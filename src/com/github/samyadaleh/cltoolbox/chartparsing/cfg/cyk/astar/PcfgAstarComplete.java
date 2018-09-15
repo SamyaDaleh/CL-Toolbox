@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar;
 
-import java.text.ParseException;
 import java.util.Map;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
@@ -25,7 +24,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
   }
 
   @Override protected void calculateConsequences(String[] itemForm1,
-    String[] itemForm2) throws ParseException {
+    String[] itemForm2) {
     String nt1 = itemForm1[0];
     String i1 = itemForm1[1];
     int i1Int = Integer.parseInt(i1);

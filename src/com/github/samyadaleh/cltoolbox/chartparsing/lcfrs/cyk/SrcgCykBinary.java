@@ -1,16 +1,15 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.cyk;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.lcfrs.SrcgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Similar to the binary complete rule in CYK for CFG. If there is a clause and
@@ -29,21 +28,20 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
     this.wSplit = wSplit;
   }
 
-  @SuppressWarnings("unchecked") protected void calculateConsequences(
-    String[] itemForm2, String[] itemForm1) throws ParseException {
+  protected void calculateConsequences(String[] itemForm2, String[] itemForm1) {
     String nt1 = itemForm1[0];
     String nt2 = itemForm2[0];
-    if (nt2.equals(clause.getRhs().get(0).getNonterminal())
-      && nt1.equals(clause.getRhs().get(1).getNonterminal())) {
-      boolean looksGood = true;
+    if (nt2.equals(clause.getRhs().get(0).getNonterminal()) && nt1
+        .equals(clause.getRhs().get(1).getNonterminal())) {
       ArrayList<Integer> overallRanges = new ArrayList<>();
-      looksGood =
-          isVectorRangesMatch(itemForm2, itemForm1, looksGood, overallRanges);
+      boolean looksGood =
+          isVectorRangesMatch(itemForm2, itemForm1, overallRanges);
       if (looksGood && overallRanges.size() > 0) {
-        List<Integer> newVector = (List<Integer>) SrcgDeductionUtils
-          .getRangesForArguments(overallRanges, clause.getLhs());
+        @SuppressWarnings("unchecked") List<Integer> newVector =
+            (List<Integer>) SrcgDeductionUtils
+                .getRangesForArguments(overallRanges, clause.getLhs());
         ChartItemInterface consequence =
-          new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
+            new SrcgCykItem(clause.getLhs().getNonterminal(), newVector);
         List<Tree> derivedTrees =
             calculateDerivatedTrees(itemForm1, overallRanges);
         consequence.setTrees(derivedTrees);
@@ -55,7 +53,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
   }
 
   private boolean isVectorRangesMatch(String[] itemForm2, String[] itemForm1,
-      boolean looksGood, ArrayList<Integer> overallRanges) {
+      ArrayList<Integer> overallRanges) {
+    boolean looksGood = true;
     for (String[] argument : clause.getLhs().getSymbols()) {
       ArrayList<String> vectorRanges = new ArrayList<>();
       for (String element : argument) {
@@ -82,7 +81,7 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
               looksGood = false;
             }
           } else if (!vectorRanges.get(i * 2)
-            .equals(vectorRanges.get(i * 2 - 1))) {
+              .equals(vectorRanges.get(i * 2 - 1))) {
             looksGood = false;
           }
         }
@@ -95,26 +94,29 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
   }
 
   private List<Tree> calculateDerivatedTrees(String[] itemForm1,
-      ArrayList<Integer> overallRanges) throws ParseException {
+      ArrayList<Integer> overallRanges) {
     List<Tree> derivedTrees = new ArrayList<>();
-    Tree derivedTreeBase =
-      TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
+    Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
     if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
       for (Tree tree1 : antecedences.get(0).getTrees()) {
         for (Tree tree2 : antecedences.get(1).getTrees()) {
+          assert derivedTreeBase != null;
           derivedTreeBase =
-            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+          assert derivedTreeBase != null;
           derivedTreeBase =
-            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
         }
       }
     } else {
       for (Tree tree1 : antecedences.get(0).getTrees()) {
         for (Tree tree2 : antecedences.get(1).getTrees()) {
+          assert derivedTreeBase != null;
           derivedTreeBase =
-            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
+          assert derivedTreeBase != null;
           derivedTreeBase =
-            TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
         }
       }
     }
@@ -123,7 +125,7 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
   }
 
   private void addVectorRangeForElement(String[] itemForm2, String[] itemForm1,
-    ArrayList<String> vectorRanges, String element) {
+      ArrayList<String> vectorRanges, String element) {
     int[] indices = clause.getRhs().get(0).find(element);
     if (indices[0] == -1) {
       indices = clause.getRhs().get(1).find(element);
@@ -141,9 +143,9 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
   }
 
   @Override public String toString() {
-    return "[" + clause.getRhs().get(0).toString() + ",ρ_B], ["
-      + clause.getRhs().get(1).toString() + ",ρ_C]" + "\n______ \n" + "["
-      + clause.getLhs().toString() + ",ρ_A]";
+    return "[" + clause.getRhs().get(0).toString() + ",ρ_B], [" + clause
+        .getRhs().get(1).toString() + ",ρ_C]" + "\n______ \n" + "[" + clause
+        .getLhs().toString() + ",ρ_A]";
   }
 
 }

@@ -1,16 +1,15 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * If topmost symbol on stacks completed and predicted are the same, remove
@@ -24,8 +23,7 @@ public class CfgLeftCornerChartRemove
     this.antNeeded = 2;
   }
 
-  protected void calculateConsequences(String[] itemForm1, String[] itemForm2)
-    throws ParseException {
+  protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
     String[] mayDottedRuleSplit = itemForm1[0].split(" ");
     for (int k = 0; k < mayDottedRuleSplit.length; k++) {
       if (mayDottedRuleSplit[k].startsWith("•")) {
@@ -51,8 +49,7 @@ public class CfgLeftCornerChartRemove
   }
 
   private void handleDotBeforeNotLastSymbol(String[] itemForm1,
-      String[] mayDottedRuleSplit, int k, int i, int l1, int l2)
-      throws ParseException {
+      String[] mayDottedRuleSplit, int k, int i, int l1, int l2) {
     ChartItemInterface consequence = new DeductionChartItem(
       ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
         + mayDottedRuleSplit[k].substring(1) + " •"
@@ -83,8 +80,7 @@ public class CfgLeftCornerChartRemove
   }
 
   private void handleDotBeforeLastSymbol(String[] itemForm1,
-      String[] mayDottedRuleSplit, int k, int i, int l1, int l2)
-      throws ParseException {
+      String[] mayDottedRuleSplit, int k, int i, int l1, int l2) {
     ChartItemInterface consequence = new DeductionChartItem(
       ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
         + mayDottedRuleSplit[k].substring(1) + " •",

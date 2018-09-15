@@ -18,7 +18,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class GrammarParserUtilsTest {
 
-  @Test public void testparseCfgString() throws IOException, ParseException {
+  @Test public void testparseCfgString() throws ParseException {
     String cfgString =
         "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
             + "P = {S -> a S b, S -> a b}\n";
