@@ -1,7 +1,6 @@
 package com.github.samyadaleh.cltoolbox.gui;
 
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
-import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,18 +11,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.StringReader;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ParsingTraceTable {
+public class ParsingTraceTable extends AbstractParsingTraceTable {
 
   private final Timer showTimer;
   private final Timer disposeTimer;
   private final JTable table;
   private Point hintCell;
-  private List<DisplayTree> popups = new ArrayList<>();
   private final Tag tag;
   private static final Logger log = LogManager.getLogger();
 
@@ -64,77 +60,38 @@ public class ParsingTraceTable {
     }
   }
 
-  private List<DisplayTree> getTreePopups() {
-    for (int i = popups.size() - 1; i >= 0; i--) {
-      popups.get(i).dispose();
-      popups.remove(i);
-    }
-    String value = (String) table.getValueAt(hintCell.y, hintCell.x);
-    if (value.charAt(0) == '[') {
-      try {
-        DisplayTree popup = drawTreeInRelationToTable(0, 0, value);
-        popups.add(popup);
-      } catch (ParseException e) {
-        log.error(e.getMessage(), e);
-      }
-    } else if (value.charAt(0) == '{') {
-      Character[] specialChars = new Character[] {'{', '}', ','};
-      TokenReader reader =
-          new TokenReader(new StringReader(value), specialChars);
-      Token token;
-      int xCorrect = 0;
-      int yCorrect = 0;
-      while ((token = reader.getNextToken()) != null) {
-        switch (token.getString()) {
-        case "{":
-          if (popups.size() > 0) {
-            yCorrect -= popups.get(popups.size() - 1).getHeight() + 10;
-          }
-        case "}":
-          xCorrect = 0;
-          break;
-        case ",":
-          xCorrect += popups.get(popups.size() - 1).getWidth() + 10;
-          break;
-        default:
-          try {
-            String itemForm = (String) table
-                .getValueAt(Integer.parseInt(token.getString()) - 1, 1);
-            int widthOfFirstThreeColumns = -30;
-            widthOfFirstThreeColumns +=
-                table.getCellRect(0, 0, true).getWidth();
-            widthOfFirstThreeColumns +=
-                table.getCellRect(0, 1, true).getWidth();
-            widthOfFirstThreeColumns +=
-                table.getCellRect(0, 2, true).getWidth();
-            DisplayTree popup =
-                drawTreeInRelationToTable((xCorrect - widthOfFirstThreeColumns),
-                    yCorrect, itemForm);
-            popups.add(popup);
-          } catch (ParseException e) {
-            log.error(e.getMessage(), e);
-          }
-        }
-      }
-    }
-    return popups;
+  protected DisplayTree generateBackpointerPopup(Token token, int xCorrect,
+      int yCorrect) {
+    String itemForm =
+        (String) table.getValueAt(Integer.parseInt(token.getString()) - 1, 1);
+    int widthOfFirstThreeColumns = -30;
+    widthOfFirstThreeColumns += table.getCellRect(0, 0, true).getWidth();
+    widthOfFirstThreeColumns += table.getCellRect(0, 1, true).getWidth();
+    widthOfFirstThreeColumns += table.getCellRect(0, 2, true).getWidth();
+    return generateItemPopup((xCorrect - widthOfFirstThreeColumns), yCorrect,
+        itemForm);
   }
 
-  private DisplayTree drawTreeInRelationToTable(int xCorrect, int yCorrect,
-      String itemForm) throws ParseException {
+  protected DisplayTree generateItemPopup(int xCorrect, int yCorrect,
+      String itemForm) {
     String treeName = itemForm.substring(1, itemForm.indexOf(','));
-    DisplayTree popup = new DisplayTree(
-        new String[] {tag.getTree(treeName).toString(), itemForm});
-    popup.setVisible(false);
-    Rectangle bounds = table.getCellRect(hintCell.y, hintCell.x, true);
-    bounds.setSize(popup.getWidth(), popup.getHeight());
-    bounds.setLocation(
-        (int) Math.round(bounds.getX() + table.getWidth() + xCorrect),
-        (int) Math.round(MouseInfo.getPointerInfo().getLocation().getY())
-            + yCorrect);
-    popup.setBounds(bounds);
-    popup.setAlwaysOnTop(true);
-    popup.setVisible(true);
+    DisplayTree popup = null;
+    try {
+      popup = new DisplayTree(
+          new String[] {tag.getTree(treeName).toString(), itemForm});
+      popup.setVisible(false);
+      Rectangle bounds = table.getCellRect(hintCell.y, hintCell.x, true);
+      bounds.setSize(popup.getWidth(), popup.getHeight());
+      bounds.setLocation(
+          (int) Math.round(bounds.getX() + table.getWidth() + xCorrect),
+          (int) Math.round(MouseInfo.getPointerInfo().getLocation().getY())
+              + yCorrect);
+      popup.setBounds(bounds);
+      popup.setAlwaysOnTop(true);
+      popup.setVisible(true);
+    } catch (ParseException e) {
+      log.error(e.getMessage(), e);
+    }
     return popup;
   }
 
@@ -143,7 +100,7 @@ public class ParsingTraceTable {
       if (hintCell != null) {
         assert disposeTimer != null;
         disposeTimer.stop();
-        List<DisplayTree> popups = getTreePopups();
+        List<DisplayTreeInterface> popups = getTreePopups();
         if (popups.size() > 0) {
           disposeTimer.start();
         }
@@ -153,9 +110,13 @@ public class ParsingTraceTable {
 
   private class DisposePopupActionHandler implements ActionListener {
     @Override public void actionPerformed(ActionEvent e) {
-      for (DisplayTree popup : getTreePopups()) {
-        popup.setVisible(false);
+      for (DisplayTreeInterface popup : getTreePopups()) {
+        ((DisplayTree) popup).setVisible(false);
       }
     }
+  }
+
+  protected String getHoverCellContent() {
+    return (String) table.getValueAt(hintCell.y, hintCell.x);
   }
 }

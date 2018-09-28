@@ -99,7 +99,7 @@ public class DisplayTreeFx implements DisplayTreeInterface {
     return (int) gc.getCanvas().getHeight();
   }
 
-  void dispose() {
+  public void dispose() {
     stage.hide();
   }
 

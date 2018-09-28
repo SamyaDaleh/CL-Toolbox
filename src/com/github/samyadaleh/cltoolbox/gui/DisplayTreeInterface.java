@@ -18,4 +18,5 @@ interface DisplayTreeInterface {
   int getWidth();
   int getHeight();
   void clearRect(int width, int height);
+  void dispose();
 }

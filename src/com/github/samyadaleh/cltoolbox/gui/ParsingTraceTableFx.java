@@ -1,15 +1,7 @@
 package com.github.samyadaleh.cltoolbox.gui;
 
-import java.awt.MouseInfo;
-import java.io.StringReader;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.common.parser.Token;
-import com.github.samyadaleh.cltoolbox.common.parser.TokenReader;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -28,7 +20,11 @@ import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-class ParsingTraceTableFx {
+import java.awt.*;
+import java.text.ParseException;
+import java.util.List;
+
+class ParsingTraceTableFx extends AbstractParsingTraceTable {
 
   private final String[][] rowData;
   private final Tag tag;
@@ -40,7 +36,6 @@ class ParsingTraceTableFx {
   private final Timeline disposeTimer;
   private TableRow<?> popupRow;
   private TableColumn<ParsingStep, String> popupColumn;
-  private List<DisplayTreeFx> popups = new ArrayList<>();
   private Stage stage;
   private final JfxWindowHolder parent;
   private static final Logger log = LogManager.getLogger();
@@ -67,7 +62,7 @@ class ParsingTraceTableFx {
   }
 
   private void disposePopup() {
-    for (DisplayTreeFx popup : getTreePopup()) {
+    for (DisplayTreeInterface popup : getTreePopups()) {
       popup.dispose();
     }
   }
@@ -75,70 +70,48 @@ class ParsingTraceTableFx {
   private void showPopup() {
     if (popupRow != null) {
       disposeTimer.stop();
-      List<DisplayTreeFx> popups = getTreePopup();
+      List<DisplayTreeInterface> popups = getTreePopups();
       if (popups.size() > 0) {
         disposeTimer.playFromStart();
       }
     }
   }
 
-  private List<DisplayTreeFx> getTreePopup() {
-    for (int i = popups.size() - 1; i >= 0; i--) {
-      popups.get(i).dispose();
-      popups.remove(i);
+  protected DisplayTreeFx generateItemPopup(int xCorrect, int yCorrect,
+      String value) {
+    String treeName = value.substring(1, value.indexOf(','));
+    DisplayTreeFx popup = null;
+    try {
+      popup = new DisplayTreeFx(parent,
+          new String[] {tag.getTree(treeName).toString(), value});
+    } catch (ParseException e) {
+      log.error(e.getMessage(), e);
     }
-    String value = popupColumn.getCellData(popupRow.getIndex());
-    if (value.charAt(0) == '[') {
-      String treeName = value.substring(1, value.indexOf(','));
-      try {
-        DisplayTreeFx popup = new DisplayTreeFx(parent,
-            new String[] {tag.getTree(treeName).toString(), value});
-        popup.setLocation(Math.round(
-            MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()),
-            Math.round(MouseInfo.getPointerInfo().getLocation().getY()));
-        popups.add(popup);
-      } catch (ParseException e) {
-        log.error(e.getMessage(), e);
-      }
-    } else if (value.charAt(0) == '{') {
-      Character[] specialChars = new Character[] {'{', '}', ','};
-      TokenReader reader =
-          new TokenReader(new StringReader(value), specialChars);
-      Token token;
-      int xCorrect = 0;
-      int yCorrect = 0;
-      while ((token = reader.getNextToken()) != null) {
-        switch (token.getString()) {
-        case "{":
-          if (popups.size() > 0) {
-            yCorrect -= popups.get(popups.size() - 1).getHeight() + 10;
-          }
-        case "}":
-          xCorrect = 0;
-          break;
-        case ",":
-          xCorrect += popups.get(popups.size() - 1).getWidth() + 10;
-          break;
-        default:
-          try {
-            String itemForm = (String) table.getColumns().get(1)
-                .getCellObservableValue(Integer.parseInt(token.getString()) - 1)
-                .getValue();
-            String treeName = itemForm.substring(1, itemForm.indexOf(','));
-            DisplayTreeFx popup = new DisplayTreeFx(parent,
-                new String[] {tag.getTree(treeName).toString(), itemForm});
-            popup.setLocation(Math.round(
-                MouseInfo.getPointerInfo().getLocation().getX() + table
-                    .getColumns().get(3).getWidth() + xCorrect), Math.round(
-                MouseInfo.getPointerInfo().getLocation().getY() + yCorrect));
-            popups.add(popup);
-          } catch (ParseException e) {
-            log.error(e.getMessage(), e);
-          }
-        }
-      }
+    popup.setLocation(Math.round(
+        MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()
+            + xCorrect),
+        Math.round(MouseInfo.getPointerInfo().getLocation().getY()) + yCorrect);
+    return popup;
+  }
+
+  protected DisplayTreeFx generateBackpointerPopup(Token token, int xCorrect,
+      int yCorrect)  {
+    String itemForm = (String) table.getColumns().get(1)
+        .getCellObservableValue(Integer.parseInt(token.getString()) - 1)
+        .getValue();
+    String treeName = itemForm.substring(1, itemForm.indexOf(','));
+    DisplayTreeFx popup = null;
+    try {
+      popup = new DisplayTreeFx(parent,
+          new String[] {tag.getTree(treeName).toString(), itemForm});
+    } catch (ParseException e) {
+      log.error(e.getMessage(), e);
     }
-    return popups;
+    popup.setLocation(Math.round(
+        MouseInfo.getPointerInfo().getLocation().getX() + table.getColumns()
+            .get(3).getWidth() + xCorrect),
+        Math.round(MouseInfo.getPointerInfo().getLocation().getY() + yCorrect));
+    return popup;
   }
 
   private void displayTable() {
@@ -226,6 +199,10 @@ class ParsingTraceTableFx {
 
   private void setPopupRow(TableRow<?> row) {
     this.popupRow = row;
+  }
+
+  protected String getHoverCellContent() {
+    return popupColumn.getCellData(popupRow.getIndex());
   }
 
 }
