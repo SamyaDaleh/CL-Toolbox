@@ -42,27 +42,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
             consequence =
                 new DeductionChartItem(String.join(" ", rule.getRhs()), i);
           }
-          if (derivedTrees.size() == 0) {
-            List<Tree> derivedTreesNew = new ArrayList<>();
-            try {
-              derivedTreesNew.add(new Tree(rule));
-            } catch (ParseException e) {
-              log.error(e.getMessage(), e);
-            }
-            consequence.setTrees(derivedTreesNew);
-          } else {
-            List<Tree> derivedTreesNew = new ArrayList<>();
-            try {
-              Tree derivedTreeBase = new Tree(rule);
-              for (Tree tree : derivedTrees) {
-                derivedTreesNew.add(TreeUtils
-                    .performLeftmostSubstitution(tree, derivedTreeBase));
-              }
-              consequence.setTrees(derivedTreesNew);
-            } catch (ParseException e) {
-              log.error(e.getMessage(), e);
-            }
-          }
+          generateDerivedTreesFirstSymbol(derivedTrees, consequence);
           logItemGeneration(consequence);
           consequences.add(consequence);
         } else {
@@ -76,32 +56,62 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
                     .getSubSequenceAsString(stackSplit, 1, stackSplit.length),
                 i);
           }
-          if (derivedTrees.size() == 0) {
-            try {
-              derivedTrees.add(new Tree(rule));
-            } catch (ParseException e) {
-              log.error(e.getMessage(), e);
-            }
-            consequence.setTrees(derivedTrees);
-          } else {
-            List<Tree> derivedTreesNew = new ArrayList<>();
-            try {
-              Tree derivedTreeBase = new Tree(rule);
-              for (Tree tree : derivedTrees) {
-                derivedTreesNew.add(TreeUtils
-                    .performLeftmostSubstitution(tree, derivedTreeBase));
-              }
-            } catch (ParseException e) {
-              log.error(e.getMessage(), e);
-            }
-            consequence.setTrees(derivedTreesNew);
-          }
+          generateDerivedTreesSubsequentSymbols(derivedTrees, consequence);
           logItemGeneration(consequence);
           consequences.add(consequence);
         }
       }
     }
     return consequences;
+  }
+
+  private void generateDerivedTreesSubsequentSymbols(List<Tree> derivedTrees,
+      ChartItemInterface consequence) {
+    if (derivedTrees.size() == 0) {
+      try {
+        derivedTrees.add(new Tree(rule));
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
+      }
+      consequence.setTrees(derivedTrees);
+    } else {
+      List<Tree> derivedTreesNew = new ArrayList<>();
+      try {
+        Tree derivedTreeBase = new Tree(rule);
+        for (Tree tree : derivedTrees) {
+          derivedTreesNew.add(TreeUtils
+              .performLeftmostSubstitution(tree, derivedTreeBase));
+        }
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
+      }
+      consequence.setTrees(derivedTreesNew);
+    }
+  }
+
+  private void generateDerivedTreesFirstSymbol(List<Tree> derivedTrees,
+      ChartItemInterface consequence) {
+    if (derivedTrees.size() == 0) {
+      List<Tree> derivedTreesNew = new ArrayList<>();
+      try {
+        derivedTreesNew.add(new Tree(rule));
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
+      }
+      consequence.setTrees(derivedTreesNew);
+    } else {
+      List<Tree> derivedTreesNew = new ArrayList<>();
+      try {
+        Tree derivedTreeBase = new Tree(rule);
+        for (Tree tree : derivedTrees) {
+          derivedTreesNew.add(TreeUtils
+              .performLeftmostSubstitution(tree, derivedTreeBase));
+        }
+        consequence.setTrees(derivedTreesNew);
+      } catch (ParseException e) {
+        log.error(e.getMessage(), e);
+      }
+    }
   }
 
   @Override public String toString() {
