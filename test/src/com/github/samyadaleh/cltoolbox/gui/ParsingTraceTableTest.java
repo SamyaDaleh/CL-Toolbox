@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.gui;
 
+import static com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary.anCBTag;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
@@ -12,26 +13,16 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class ParsingTraceTableTest {
-  private static Tag gentag() throws ParseException {
-    Tag g = new Tag();
-    g.setNonterminals(new String[] {"S", "T"});
-    g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartSymbol("S");
-    g.addInitialTree("α1", "(S T b)");
-    g.addInitialTree("α2", "(T c)");
-    g.addAuxiliaryTree("β", "(T a T*)");
-    return g;
-  }
-  
+
   @Test public void testParsingTraceTable() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
-        TagToEarleyRulesConverter.tagToEarleyRules(gentag(), w2);
+        TagToEarleyRulesConverter.tagToEarleyRules(anCBTag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     String[][] data = deduction.printTrace();
     new ParsingTraceTable(data,
-      new String[] {"Id", "Item", "Rules", "Backpointers"}, gentag());
+        new String[] {"Id", "Item", "Rules", "Backpointers"}, anCBTag());
     assertTrue(true);
   }
 }

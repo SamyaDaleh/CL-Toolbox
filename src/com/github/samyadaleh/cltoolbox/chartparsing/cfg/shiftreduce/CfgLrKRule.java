@@ -92,7 +92,6 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
         for (String rhsSym : rule.getRhs()) {
           if (tree.getRoot().getLabel().equals(rhsSym)) {
             derivedTrees.remove(0);
-            assert derivedTreeBase != null;
             derivedTreeBase =
                 TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree);
             found = true;
@@ -109,7 +108,7 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
       logItemGeneration(consequence1);
       consequences.add(consequence1);
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
+      throw new RuntimeException(e);
     }
   }
 

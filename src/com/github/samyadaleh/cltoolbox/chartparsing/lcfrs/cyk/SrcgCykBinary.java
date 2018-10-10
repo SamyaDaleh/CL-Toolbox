@@ -100,10 +100,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
     if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
       for (Tree tree1 : antecedences.get(0).getTrees()) {
         for (Tree tree2 : antecedences.get(1).getTrees()) {
-          assert derivedTreeBase != null;
           derivedTreeBase =
               TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
-          assert derivedTreeBase != null;
           derivedTreeBase =
               TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
         }
@@ -111,10 +109,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
     } else {
       for (Tree tree1 : antecedences.get(0).getTrees()) {
         for (Tree tree2 : antecedences.get(1).getTrees()) {
-          assert derivedTreeBase != null;
           derivedTreeBase =
               TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree2);
-          assert derivedTreeBase != null;
           derivedTreeBase =
               TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree1);
         }

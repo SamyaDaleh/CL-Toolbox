@@ -69,6 +69,10 @@ public class InnerCfgGrammarParser extends InnerGrammarParser {
   }
 
   @Override protected Set<String> getValidCategories() {
+    return getValidCfgCategories();
+  }
+
+  static Set<String> getValidCfgCategories() {
     Set<String> validCategories = new HashSet<>();
     validCategories.add("N");
     validCategories.add("T");

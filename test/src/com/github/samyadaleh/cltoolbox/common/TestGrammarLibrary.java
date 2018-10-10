@@ -1,20 +1,17 @@
 package com.github.samyadaleh.cltoolbox.common;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.text.ParseException;
-
 import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.text.ParseException;
 
 public class TestGrammarLibrary {
-  private static final Logger log = LogManager.getLogger();
 
   public static Cfg anBnCfg() {
     Cfg cfg = new Cfg();
@@ -26,8 +23,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -41,8 +37,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -57,8 +52,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -74,8 +68,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("NP");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -122,8 +115,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -142,8 +134,7 @@ public class TestGrammarLibrary {
       cfgeps.setStartSymbol("S");
       return cfgeps;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -167,8 +158,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("E");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -185,8 +175,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -201,8 +190,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -216,8 +204,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -231,8 +218,7 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("G -> b");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -247,8 +233,7 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("G -> G b");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -276,8 +261,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -295,8 +279,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -356,8 +339,7 @@ public class TestGrammarLibrary {
       cfgeps.setStartSymbol("S");
       return cfgeps;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -455,8 +437,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -484,8 +465,7 @@ public class TestGrammarLibrary {
       cfg.setStartSymbol("S");
       return cfg;
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 

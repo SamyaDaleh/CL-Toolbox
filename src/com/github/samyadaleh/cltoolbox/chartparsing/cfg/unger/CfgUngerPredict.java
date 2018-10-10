@@ -41,7 +41,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
           try {
             derivedTreesNew.add(new Tree(rule));
           } catch (ParseException e) {
-            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
           }
         } else {
           try {
@@ -51,7 +51,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
                   TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
             }
           } catch (ParseException e) {
-            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
           }
         }
         if (rule.getRhs().length == 1) {

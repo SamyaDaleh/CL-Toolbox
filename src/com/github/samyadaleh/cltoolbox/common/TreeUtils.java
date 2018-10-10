@@ -1,17 +1,14 @@
 package com.github.samyadaleh.cltoolbox.common;
 
-import java.text.ParseException;
-import java.util.List;
-
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
+import java.util.List;
 
 public class TreeUtils {
-  private static final Logger log = LogManager.getLogger();
 
   public static Tree getTreeOfSrcgClause(Clause clause, List<Integer> vector) {
     StringBuilder extractedRule = new StringBuilder();
@@ -48,8 +45,7 @@ public class TreeUtils {
     try {
       return new Tree(new CfgProductionRule(extractedRule.toString()));
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -62,8 +58,7 @@ public class TreeUtils {
                     clause.getLhs().getSymbolsAsPlainArray(), 0,
                     clause.getLhs().getSymbolsAsPlainArray().length)));
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
-        return null;
+        throw new RuntimeException(e);
       }
     }
     StringBuilder cfgRuleString =
@@ -88,8 +83,7 @@ public class TreeUtils {
     try {
       return new Tree(new CfgProductionRule(cfgRuleString.toString()));
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
-      return null;
+      throw new RuntimeException(e);
     }
   }
 
@@ -117,9 +111,8 @@ public class TreeUtils {
           derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )")
               + tree.getRoot().getLabel().length() + 3));
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
+      throw new RuntimeException(e);
     }
-    return null;
   }
 
   /**
@@ -136,9 +129,8 @@ public class TreeUtils {
           derivedTreeString.substring(0, index) + terminal + "<" + pos + ">"
               + derivedTreeString.substring(index + searchFor.length()));
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
+      throw new RuntimeException(e);
     }
-    return null;
   }
 
 }

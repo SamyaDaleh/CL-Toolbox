@@ -4,13 +4,11 @@ import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.Dynamic
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
+import java.util.List;
 
 public class CcgDeductionUtils {
-  private static final Logger log = LogManager.getLogger();
 
   public CcgDeductionUtils() {
   }
@@ -40,25 +38,25 @@ public class CcgDeductionUtils {
     newMother = newMother.replace('(', '[').replace(')', ']');
     if (ArrayUtils
         .match(rule.getAntecedences().get(0).getItemForm(), itemForm1)) {
-      for (Tree tree1 : rule.getAntecedences().get(0).getTrees()) {
-        for (Tree tree2 : rule.getAntecedences().get(1).getTrees()) {
-          try {
-            consequence.getTrees().add(
-                new Tree("(" + newMother + " " + tree1 + " " + tree2 + " )"));
-          } catch (ParseException e) {
-            log.error(e.getMessage(), e);
-          }
-        }
-      }
+      List<Tree> leftTrees = rule.getAntecedences().get(0).getTrees();
+      List<Tree> rightTrees = rule.getAntecedences().get(1).getTrees();
+      generateNewTrees(consequence, newMother, leftTrees, rightTrees);
     } else {
-      for (Tree tree1 : rule.getAntecedences().get(0).getTrees()) {
-        for (Tree tree2 : rule.getAntecedences().get(1).getTrees()) {
-          try {
-            consequence.getTrees().add(
-                new Tree("(" + newMother + " " + tree2 + " " + tree1 + " )"));
-          } catch (ParseException e) {
-            log.error(e.getMessage(), e);
-          }
+      List<Tree> leftTrees = rule.getAntecedences().get(1).getTrees();
+      List<Tree> rightTrees = rule.getAntecedences().get(0).getTrees();
+      generateNewTrees(consequence, newMother, leftTrees, rightTrees);
+    }
+  }
+
+  private static void generateNewTrees(DeductionChartItem consequence,
+      String newMother, List<Tree> leftTrees, List<Tree> rightTrees) {
+    for (Tree tree1 : leftTrees) {
+      for (Tree tree2 : rightTrees) {
+        try {
+          consequence.getTrees().add(
+              new Tree("(" + newMother + " " + tree1 + " " + tree2 + " )"));
+        } catch (ParseException e) {
+          throw new RuntimeException(e);
         }
       }
     }

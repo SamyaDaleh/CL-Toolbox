@@ -1,5 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.ChartParsingUtils;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
@@ -56,24 +57,8 @@ public class CfgLeftCornerChartRemove
         + ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, k + 1,
           mayDottedRuleSplit.length),
       String.valueOf(i), String.valueOf(l1 + l2));
-    List<Tree> derivedTrees = new ArrayList<>();
-    if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
-      for (Tree tree1 : antecedences.get(0).getTrees()) {
-        for (Tree tree2 : antecedences.get(1).getTrees()) {
-          derivedTrees
-            .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
-        }
-
-      }
-    } else {
-      for (Tree tree1 : antecedences.get(0).getTrees()) {
-        for (Tree tree2 : antecedences.get(1).getTrees()) {
-          derivedTrees
-            .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
-        }
-
-      }
-    }
+    List<Tree> derivedTrees =
+        ChartParsingUtils.generateDerivatedTrees(antecedences, itemForm1);
     consequence.setTrees(derivedTrees);
     logItemGeneration(consequence);
     consequences.add(consequence);

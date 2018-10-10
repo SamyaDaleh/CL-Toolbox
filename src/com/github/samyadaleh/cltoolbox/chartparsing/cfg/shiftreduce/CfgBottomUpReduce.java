@@ -50,7 +50,6 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
               if (tree.getRoot().getLabel().equals(rhsSym)) {
                 derivedTrees.remove(0);
                 try {
-                  assert derivedTreeBase != null;
                   derivedTreeBase = TreeUtils
                       .performLeftmostSubstitution(derivedTreeBase, tree);
                 } catch (IndexOutOfBoundsException e) {
@@ -69,7 +68,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
           logItemGeneration(consequence);
           consequences.add(consequence);
         } catch (ParseException e) {
-          log.error(e.getMessage(), e);
+          throw new RuntimeException(e);
         }
       }
     }

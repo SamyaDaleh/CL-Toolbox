@@ -71,7 +71,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       try {
         derivedTrees.add(new Tree(rule));
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
       }
       consequence.setTrees(derivedTrees);
     } else {
@@ -83,7 +83,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
               .performLeftmostSubstitution(tree, derivedTreeBase));
         }
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
       }
       consequence.setTrees(derivedTreesNew);
     }
@@ -96,7 +96,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       try {
         derivedTreesNew.add(new Tree(rule));
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
       }
       consequence.setTrees(derivedTreesNew);
     } else {
@@ -109,7 +109,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
         }
         consequence.setTrees(derivedTreesNew);
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
       }
     }
   }

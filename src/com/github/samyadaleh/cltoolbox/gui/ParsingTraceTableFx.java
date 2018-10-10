@@ -85,7 +85,7 @@ class ParsingTraceTableFx extends AbstractParsingTraceTable {
       popup = new DisplayTreeFx(parent,
           new String[] {tag.getTree(treeName).toString(), value});
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
+      throw new RuntimeException(e);
     }
     popup.setLocation(Math.round(
         MouseInfo.getPointerInfo().getLocation().getX() + table.getWidth()
@@ -105,7 +105,7 @@ class ParsingTraceTableFx extends AbstractParsingTraceTable {
       popup = new DisplayTreeFx(parent,
           new String[] {tag.getTree(treeName).toString(), itemForm});
     } catch (ParseException e) {
-      log.error(e.getMessage(), e);
+      throw new RuntimeException(e);
     }
     popup.setLocation(Math.round(
         MouseInfo.getPointerInfo().getLocation().getX() + table.getColumns()

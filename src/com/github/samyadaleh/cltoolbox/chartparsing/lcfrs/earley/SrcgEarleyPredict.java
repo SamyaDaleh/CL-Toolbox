@@ -50,7 +50,6 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
               Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(outClause);
               for (Tree tree : antecedences.get(0).getTrees()) {
                 try {
-                  assert derivedTreeBase != null;
                   derivedTrees.add(TreeUtils
                       .performLeftmostSubstitution(tree, derivedTreeBase));
                 } catch (IndexOutOfBoundsException e) {
@@ -64,7 +63,7 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
           }
         }
         } catch (ParseException e) {
-          log.error(e.getMessage(), e);
+          throw new RuntimeException(e);
         }
       }
     }

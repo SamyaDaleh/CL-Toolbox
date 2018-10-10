@@ -63,7 +63,7 @@ public class SrcgEarleySuspend
               isVar2, mayV2);
         }
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
       }
     }
   }

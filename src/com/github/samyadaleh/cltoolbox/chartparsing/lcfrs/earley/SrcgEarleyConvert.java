@@ -47,7 +47,7 @@ public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
             consequences.add(consequence);
           }
         } catch (ParseException e) {
-          log.error(e.getMessage(), e);
+          throw new RuntimeException(e);
         }
       }
     }

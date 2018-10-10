@@ -37,7 +37,7 @@ public class CcgToDeductionRulesConverter {
           axiom.setName("axiom");
           schema.addAxiom(axiom);
         } catch (ParseException e) {
-          log.error(e.getMessage(), e);
+          throw new RuntimeException(e);
         }
       }
     }

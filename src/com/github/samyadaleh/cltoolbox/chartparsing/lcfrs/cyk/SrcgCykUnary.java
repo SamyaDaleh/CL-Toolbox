@@ -105,7 +105,6 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
     List<Tree> derivedTrees = new ArrayList<>();
     Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(clause, overallRanges);
     for (Tree tree : antecedences.get(0).getTrees()) {
-      assert derivedTreeBase != null;
       derivedTrees
           .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
     }

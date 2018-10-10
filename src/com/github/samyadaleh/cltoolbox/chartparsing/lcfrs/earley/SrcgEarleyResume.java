@@ -64,7 +64,7 @@ public class SrcgEarleyResume
           }
         }
       } catch (ParseException e) {
-        log.error(e.getMessage(), e);
+        throw new RuntimeException(e);
       }
     }
   }
