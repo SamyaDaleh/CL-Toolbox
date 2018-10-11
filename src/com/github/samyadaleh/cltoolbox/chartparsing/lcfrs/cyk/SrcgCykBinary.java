@@ -125,13 +125,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
     int[] indices = clause.getRhs().get(0).find(element);
     if (indices[0] == -1) {
       indices = clause.getRhs().get(1).find(element);
-      if (indices[0] == -1) {
-        vectorRanges.add("?");
-        vectorRanges.add("?");
-      } else {
-        vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 1]);
-        vectorRanges.add(itemForm1[(indices[0] - 1) * 2 + 2]);
-      }
+      SrcgDeductionUtils
+          .addIndicesToVectorRanges(itemForm1, vectorRanges, indices[0]);
     } else {
       vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 1]);
       vectorRanges.add(itemForm2[(indices[0] - 1) * 2 + 2]);

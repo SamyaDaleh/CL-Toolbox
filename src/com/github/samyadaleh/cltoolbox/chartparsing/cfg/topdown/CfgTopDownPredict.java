@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
@@ -76,15 +77,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
       consequence.setTrees(derivedTrees);
     } else {
       List<Tree> derivedTreesNew = new ArrayList<>();
-      try {
-        Tree derivedTreeBase = new Tree(rule);
-        for (Tree tree : derivedTrees) {
-          derivedTreesNew.add(TreeUtils
-              .performLeftmostSubstitution(tree, derivedTreeBase));
-        }
-      } catch (ParseException e) {
-        throw new RuntimeException(e);
-      }
+      CfgDeductionUtils.generateDerivedTrees(derivedTrees, derivedTreesNew, rule);
       consequence.setTrees(derivedTreesNew);
     }
   }

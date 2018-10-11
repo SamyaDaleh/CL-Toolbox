@@ -82,4 +82,15 @@ public class SrcgDeductionUtils {
     }
     return rangeOverArguments;
   }
+
+   public static void addIndicesToVectorRanges(String[] itemForm,
+       ArrayList<String> vectorRanges, int index) {
+    if (index == -1) {
+      vectorRanges.add("?");
+      vectorRanges.add("?");
+    } else {
+      vectorRanges.add(itemForm[(index - 1) * 2 + 1]);
+      vectorRanges.add(itemForm[(index - 1) * 2 + 2]);
+    }
+  }
 }

@@ -233,4 +233,11 @@ public class Cfg extends AbstractCfg {
     this.productionRules.add(new CfgProductionRule(rule));
   }
 
+  /**
+   * Returns true if grammar has generating symbols.
+   */
+  public boolean hasGeneratingSymbols() {
+    return UselessSymbols.hasGeneratingSymbols(this);
+  }
+
 }

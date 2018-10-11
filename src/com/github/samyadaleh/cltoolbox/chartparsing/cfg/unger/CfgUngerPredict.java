@@ -1,16 +1,16 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.common.TreeUtils;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Predict all possible separations of the rhs of a rule.
@@ -44,15 +44,8 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
             throw new RuntimeException(e);
           }
         } else {
-          try {
-            Tree derivedTreeBase = new Tree(rule);
-            for (Tree tree : derivedTrees) {
-              derivedTreesNew.add(
-                  TreeUtils.performLeftmostSubstitution(tree, derivedTreeBase));
-            }
-          } catch (ParseException e) {
-            throw new RuntimeException(e);
-          }
+          CfgDeductionUtils
+              .generateDerivedTrees(derivedTrees, derivedTreesNew, rule);
         }
         if (rule.getRhs().length == 1) {
           ChartItemInterface consequence =

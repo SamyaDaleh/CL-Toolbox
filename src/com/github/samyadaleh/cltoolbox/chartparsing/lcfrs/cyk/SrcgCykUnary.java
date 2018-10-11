@@ -114,13 +114,8 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
   private void addVectorRangeForElement(String[] itemForm,
       ArrayList<String> vectorRanges, String element) {
     int[] indices = clause.getRhs().get(0).find(element);
-    if (indices[0] == -1) {
-      vectorRanges.add("?");
-      vectorRanges.add("?");
-    } else {
-      vectorRanges.add(itemForm[(indices[0] - 1) * 2 + 1]);
-      vectorRanges.add(itemForm[(indices[0] - 1) * 2 + 2]);
-    }
+    SrcgDeductionUtils
+        .addIndicesToVectorRanges(itemForm, vectorRanges, indices[0]);
   }
 
   @Override public String toString() {
