@@ -5,7 +5,6 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.astar.SxCalc;
-import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 
 import static com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary.banPcfg;
 import static org.junit.Assert.assertEquals;

@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
-import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class ParsingTraceTableTest {
 

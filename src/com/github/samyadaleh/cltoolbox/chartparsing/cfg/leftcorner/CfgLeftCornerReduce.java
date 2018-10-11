@@ -6,7 +6,6 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
