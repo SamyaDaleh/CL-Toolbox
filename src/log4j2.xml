@@ -4,7 +4,7 @@
         <RollingFile name="file" filename="cltoolbox.log"
                      filePattern="cltoolbox.log.%d{yyyy-MM-dd}">
             <PatternLayout
-                    pattern="%d{yyyy-MM-dd}T%d{HH:mm:ss}.%d{SSS}Z&#9;%level&#9;%class&#9;%threadName-%threadId&#9;%m%n"/>
+                    pattern="%d{yyyy-MM-dd'T'HH:mm:ss'.'SSSzzz}&#9;%level&#9;%class&#9;%threadName-%threadId&#9;%m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
             </Policies>

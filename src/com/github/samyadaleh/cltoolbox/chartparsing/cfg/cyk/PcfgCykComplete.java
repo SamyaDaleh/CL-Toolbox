@@ -1,7 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
@@ -16,22 +16,17 @@ import java.util.List;
  * Similar to the complete rule for CYK, but used for a PCFG and with weights
  * for probabilistic CYK parsing.
  */
-public class PcfgCykComplete implements DynamicDeductionRuleInterface {
-
-  protected List<ProbabilisticChartItemInterface> antecedences =
-      new ArrayList<>();
-  protected List<ProbabilisticChartItemInterface> consequences =
-      new ArrayList<>();
-  protected String name;
+public class PcfgCykComplete
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   protected final PcfgProductionRule pRule;
 
-  private final int antneeded = 2;
   private static final Logger log = LogManager.getLogger();
 
   public PcfgCykComplete(PcfgProductionRule pRule) {
     this.pRule = pRule;
     this.name = "complete " + pRule.toString();
+    this.antNeeded = 2;
   }
 
   @Override public List<ChartItemInterface> getAntecedences() {
@@ -39,21 +34,8 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   @Override public void setAntecedences(List<ChartItemInterface> antecedences) {
-    List<ProbabilisticChartItemInterface> inAntecedences = new ArrayList<>();
-    for (ChartItemInterface item : antecedences) {
-      inAntecedences.add((ProbabilisticChartItemInterface) item);
-    }
+    List<ChartItemInterface> inAntecedences = new ArrayList<>(antecedences);
     this.antecedences = inAntecedences;
-  }
-
-  @Override public List<ChartItemInterface> getConsequences() {
-    if (antecedences.size() == antneeded) {
-      String[] itemForm1 = antecedences.get(0).getItemForm();
-      String[] itemForm2 = antecedences.get(1).getItemForm();
-      calculateConsequences(itemForm1, itemForm2);
-      calculateConsequences(itemForm2, itemForm1);
-    }
-    return new ArrayList<>(this.consequences);
   }
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
@@ -62,14 +44,16 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
     int i1Int = Integer.parseInt(i1);
     String j1 = itemForm1[2];
     int j1Int = Integer.parseInt(j1);
-    Double x1 = antecedences.get(0).getProbability();
+    Double x1 = ((ProbabilisticChartItemInterface) antecedences.get(0))
+        .getProbability();
 
     String nt2 = itemForm2[0];
     String i2 = itemForm2[1];
     int i2Int = Integer.parseInt(i2);
     String j2 = itemForm2[2];
     int j2Int = Integer.parseInt(j2);
-    Double x2 = antecedences.get(1).getProbability();
+    Double x2 = ((ProbabilisticChartItemInterface) antecedences.get(1))
+        .getProbability();
 
     if (nt1.equals(pRule.getRhs()[0]) && nt2.equals(pRule.getRhs()[1])
         && j1Int == i2Int) {
@@ -96,7 +80,7 @@ public class PcfgCykComplete implements DynamicDeductionRuleInterface {
   }
 
   @Override public int getAntecedencesNeeded() {
-    return this.antneeded;
+    return this.antNeeded;
   }
 
   @Override public String toString() {
