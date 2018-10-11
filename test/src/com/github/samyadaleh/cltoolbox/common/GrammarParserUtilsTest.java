@@ -18,16 +18,6 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 public class GrammarParserUtilsTest {
 
-  @Test public void testparseCfgString() throws ParseException {
-    String cfgString =
-        "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
-            + "P = {S -> a S b, S -> a b}\n";
-    Reader reader = new StringReader(cfgString);
-    Cfg cfg = CfgParser.parseCfgReader(reader);
-    assert cfg != null;
-    assertEquals(cfgString, cfg.toString());
-  }
-
   @Test public void testparseCfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
         new BufferedReader(new FileReader("./resources/grammars/anbn.cfg"));

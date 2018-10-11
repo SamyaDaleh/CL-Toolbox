@@ -236,7 +236,7 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testSrcgEarley() throws ParseException {
+  @Test public void testSrcgEarley() {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToEarleyRulesConverter
         .srcgToEarleyRules(TestGrammarLibrary.anBnSrcg(), w3);

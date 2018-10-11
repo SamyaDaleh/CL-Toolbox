@@ -93,15 +93,20 @@ public class TestGrammarLibrary {
     return g;
   }
 
-  public static Srcg anBnSrcg() throws ParseException {
+  public static Srcg anBnSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});
     srcg.setTerminals(new String[] {"a", "b"});
     srcg.setVariables(new String[] {"X1", "X2"});
     srcg.setStartSymbol("S");
-    srcg.addClause("S (X1 X2) -> A(X1, X2)");
-    srcg.addClause("A (a X1, b X2) -> A(X1, X2)");
-    srcg.addClause("A (a,b) -> ε");
+    try {
+      srcg.addClause("S (X1 X2) -> A(X1, X2)");
+      srcg.addClause("A (a X1, b X2) -> A(X1, X2)");
+      srcg.addClause("A (a,b) -> ε");
+
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     return srcg;
   }
 
@@ -299,30 +304,38 @@ public class TestGrammarLibrary {
     return pcfg;
   }
 
-  public static Srcg longStringsSrcg() throws ParseException {
+  public static Srcg longStringsSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
     srcg.setTerminals(new String[] {"a", "b", "c"});
     srcg.setVariables(new String[] {"U", "V", "W", "X", "Y", "Z"});
     srcg.setStartSymbol("S");
-    srcg.addClause("S(V Y W Z X ) -> A(V,W,X) B(Y,Z)");
-    srcg.addClause("A(a,a,a) -> ε");
-    srcg.addClause("A(X U, Y V, Z W) -> A(X,Y,Z) C(U,V,W)");
-    srcg.addClause("B(b,b) -> ε");
-    srcg.addClause("B(X V,W Y) -> B(X,Y) B(V,W)");
-    srcg.addClause("C(a,c,c) -> ε");
+    try {
+      srcg.addClause("S(V Y W Z X ) -> A(V,W,X) B(Y,Z)");
+      srcg.addClause("A(a,a,a) -> ε");
+      srcg.addClause("A(X U, Y V, Z W) -> A(X,Y,Z) C(U,V,W)");
+      srcg.addClause("B(b,b) -> ε");
+      srcg.addClause("B(X V,W Y) -> B(X,Y) B(V,W)");
+      srcg.addClause("C(a,c,c) -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     return srcg;
   }
 
-  public static Srcg anbnUnorderedEpsSrcg() throws ParseException {
+  public static Srcg anbnUnorderedEpsSrcg() {
     Srcg srcg1 = new Srcg();
     srcg1.setNonterminals(new String[] {"S", "A"});
     srcg1.setTerminals(new String[] {"a"});
     srcg1.setVariables(new String[] {"X1", "X2"});
     srcg1.setStartSymbol("S");
-    srcg1.addClause("S (X1 X2) -> A(X2, X1)");
-    srcg1.addClause("A (a X1, b X2) -> A(X1, X2)");
-    srcg1.addClause("A (ε,ε) -> ε");
+    try {
+      srcg1.addClause("S (X1 X2) -> A(X2, X1)");
+      srcg1.addClause("A (a X1, b X2) -> A(X1, X2)");
+      srcg1.addClause("A (ε,ε) -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     return srcg1;
   }
 
@@ -343,87 +356,113 @@ public class TestGrammarLibrary {
     }
   }
 
-  public static Srcg unorderedSrcg() throws ParseException {
+  public static Srcg unorderedSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});
     srcg.setTerminals(new String[] {"a", "b"});
     srcg.setVariables(new String[] {"X", "Y"});
-    srcg.addClause("S(X Y) -> A(X,Y)");
-    srcg.addClause("A(X, Y) -> A(Y,X)");
-    srcg.addClause("A(a X,b Y) -> A(X,Y)");
-    srcg.addClause("A(a,b) -> ε");
+    try {
+      srcg.addClause("S(X Y) -> A(X,Y)");
+      srcg.addClause("A(X, Y) -> A(Y,X)");
+      srcg.addClause("A(a X,b Y) -> A(X,Y)");
+      srcg.addClause("A(a,b) -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     srcg.setStartSymbol("S");
     return srcg;
   }
 
-  public static Srcg withEmptyProductionsSrcg() throws ParseException {
+  public static Srcg withEmptyProductionsSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});
     srcg.setTerminals(new String[] {"a", "b"});
     srcg.setVariables(new String[] {"X", "Y"});
-    srcg.addClause("S(X Y) -> A(X,Y)");
-    srcg.addClause("A(a, ε) -> ε");
-    srcg.addClause("A(ε, b) -> ε");
-    srcg.addClause("A(a, b) -> ε");
+    try {
+      srcg.addClause("S(X Y) -> A(X,Y)");
+      srcg.addClause("A(a, ε) -> ε");
+      srcg.addClause("A(ε, b) -> ε");
+      srcg.addClause("A(a, b) -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     srcg.setStartSymbol("S");
     return srcg;
   }
 
-  public static Srcg testBinarizationSrcg() throws ParseException {
+  public static Srcg testBinarizationSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
     srcg.setTerminals(new String[] {"a", "b", "c"});
     srcg.setVariables(new String[] {"X", "Y", "Z", "U", "V", "W"});
-    srcg.addClause("S(X Y Z U V W) -> A(X,U) B(Y,V) C(Z,W)");
-    srcg.addClause("A(a X, a Y) -> A(X, Y)");
-    srcg.addClause("B(b X, b Y) -> B(X, Y)");
-    srcg.addClause("C(c X, c Y) -> C(X, Y)");
-    srcg.addClause("A(a, a) -> ε");
-    srcg.addClause("B(b, b) -> ε");
-    srcg.addClause("C(c, c) -> ε");
+    try {
+      srcg.addClause("S(X Y Z U V W) -> A(X,U) B(Y,V) C(Z,W)");
+      srcg.addClause("A(a X, a Y) -> A(X, Y)");
+      srcg.addClause("B(b X, b Y) -> B(X, Y)");
+      srcg.addClause("C(c X, c Y) -> C(X, Y)");
+      srcg.addClause("A(a, a) -> ε");
+      srcg.addClause("B(b, b) -> ε");
+      srcg.addClause("C(c, c) -> ε");
+
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     srcg.setStartSymbol("S");
     return srcg;
   }
 
-  public static Srcg testOptimalBinarizationSrcg() throws ParseException {
+  public static Srcg testOptimalBinarizationSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C", "D"});
     srcg.setTerminals(new String[] {"a", "c", "d"});
     srcg.setVariables(new String[] {"X", "Y", "Z", "U"});
-    srcg.addClause("S(X Y Z) -> A(X, Y, Z)");
-    srcg.addClause("A(a X Y, c Z, d U) -> B(X) C(Y, Z) D(U)");
-    srcg.addClause("B(a) -> ε");
-    srcg.addClause("C(c, c) -> ε");
-    srcg.addClause("D(d) -> ε");
+    try {
+      srcg.addClause("S(X Y Z) -> A(X, Y, Z)");
+      srcg.addClause("A(a X Y, c Z, d U) -> B(X) C(Y, Z) D(U)");
+      srcg.addClause("B(a) -> ε");
+      srcg.addClause("C(c, c) -> ε");
+      srcg.addClause("D(d) -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     srcg.setStartSymbol("S");
     return srcg;
   }
 
-  public static Srcg testOptimostBinarizationSrcg() throws ParseException {
+  public static Srcg testOptimostBinarizationSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C", "D"});
     srcg.setTerminals(new String[] {"a", "b", "c", "d"});
     srcg.setVariables(new String[] {"X", "Y", "V", "U"});
-    srcg.addClause("S(X Y) -> A(X, Y)");
-    srcg.addClause("A(U V, X Y) -> A(U) B(V) C(X) D(Y)");
-    srcg.addClause("A(a) -> ε");
-    srcg.addClause("B(b) -> ε");
-    srcg.addClause("C(c) -> ε");
-    srcg.addClause("D(d) -> ε");
+    try {
+      srcg.addClause("S(X Y) -> A(X, Y)");
+      srcg.addClause("A(U V, X Y) -> A(U) B(V) C(X) D(Y)");
+      srcg.addClause("A(a) -> ε");
+      srcg.addClause("B(b) -> ε");
+      srcg.addClause("C(c) -> ε");
+      srcg.addClause("D(d) -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     srcg.setStartSymbol("S");
     return srcg;
   }
 
-  public static Srcg testSrcgWUselessRules() throws ParseException {
+  public static Srcg testSrcgWUselessRules() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
     srcg.setTerminals(new String[] {"a", "b", "c"});
     srcg.setVariables(new String[] {"X", "Y", "Z", "U", "V", "W"});
-    srcg.addClause("S(X Y Z U V W) -> A(X,U)");
-    srcg.addClause("A(a X, a Y) -> A(X, Y)");
-    srcg.addClause("A(b X, b Y) -> B(X, Y)");
-    srcg.addClause("A(a, a) -> ε");
-    srcg.addClause("C(c, c) -> ε");
+    try {
+      srcg.addClause("S(X Y Z U V W) -> A(X,U)");
+      srcg.addClause("A(a X, a Y) -> A(X, Y)");
+      srcg.addClause("A(b X, b Y) -> B(X, Y)");
+      srcg.addClause("A(a, a) -> ε");
+      srcg.addClause("C(c, c) -> ε");
+
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
     srcg.setStartSymbol("S");
     return srcg;
   }
@@ -470,9 +509,26 @@ public class TestGrammarLibrary {
   }
 
   public static Ccg dedCcg() throws IOException {
-    String ccgString =
-        "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
-            + "certainly\t(S\\NP)/(S\\NP)\n";
+    String ccgString = "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
+        + "certainly\t(S\\NP)/(S\\NP)\n";
     return new Ccg(new BufferedReader(new StringReader(ccgString)));
+  }
+
+  public static Srcg anbmcndmSrcg() {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[] {"S", "A", "B"});
+    srcg.setTerminals(new String[] {"a", "b", "c", "d"});
+    srcg.setVariables(new String[] {"X", "Y", "V", "W"});
+    try {
+      srcg.addClause("S( X V Y W ) -> A(X,Y) B(V,W)");
+      srcg.addClause("B(ε,ε) -> ε");
+      srcg.addClause("B(b X,d Y) -> B(X,Y)");
+      srcg.addClause("A(a,c) -> ε");
+      srcg.addClause("A(a X,c Y) -> A(X,Y)");
+      srcg.setStartSymbol("S");
+      return srcg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

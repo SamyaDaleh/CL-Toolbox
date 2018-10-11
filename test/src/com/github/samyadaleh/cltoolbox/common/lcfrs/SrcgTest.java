@@ -3,14 +3,10 @@ package com.github.samyadaleh.cltoolbox.common.lcfrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.Objects;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
-import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
@@ -20,11 +16,11 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 
 public class SrcgTest {
 
-  @Test public void testOrder() throws ParseException {
+  @Test public void testOrder() {
     assertTrue(!TestGrammarLibrary.anbnUnorderedEpsSrcg().isOrdered());
   }
 
-  @Test public void testEmptyProductions() throws ParseException {
+  @Test public void testEmptyProductions() {
     assertTrue(
         TestGrammarLibrary.anbnUnorderedEpsSrcg().hasEpsilonProductions());
   }
@@ -133,10 +129,8 @@ public class SrcgTest {
   }
 
   @Test public void testRemoveEmptyProductionsForEarley()
-      throws IOException, ParseException {
-    BufferedReader grammarReader = new BufferedReader(
-        new FileReader("./resources/grammars/anbmcndm.srcg"));
-    Srcg srcg = SrcgParser.parseSrcgReader(grammarReader);
+      throws ParseException {
+    Srcg srcg = TestGrammarLibrary.anbmcndmSrcg();
     Srcg srcgEpsFree =
         Objects.requireNonNull(srcg).getSrcgWithoutEmptyProductions();
     ParsingSchema schema =
@@ -145,7 +139,7 @@ public class SrcgTest {
     assertTrue(deduction.doParse(schema, false));
   }
 
-  @Test public void testRemoveUselessRules() throws ParseException {
+  @Test public void testRemoveUselessRules() {
     Srcg srcg = TestGrammarLibrary.testSrcgWUselessRules();
     Srcg srcg2 = srcg.getSrcgWithoutUselessRules();
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A}\n" + "T = {a, b}\n"
