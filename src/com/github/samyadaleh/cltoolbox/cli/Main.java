@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.text.ParseException;
 import java.util.List;
 
@@ -33,7 +34,6 @@ class Main { // NO_UCD (test only)
   private static boolean success = false;
   private static boolean please = false;
   private static boolean javafx = false;
-  private static ParsingSchema schema = null;
   private static Cfg cfg;
   private static Tag tag = null;
   private static Srcg srcg;
@@ -62,30 +62,29 @@ class Main { // NO_UCD (test only)
     }
     handleOptionalParameters(args);
     JfxWindowHolder jwh = new JfxWindowHolder();
+    ParsingSchema schema;
     try {
-      parseGrammarFileAndConvertToParsingSchema(grammarFile, w, algorithm);
-    } catch (IOException | ParseException e) {
-      log.error(e.getMessage(), e);
-      return;
-    } catch (IllegalArgumentException e) {
-      log.warn(e.getMessage(), e);
-    }
-    logParsingSchema();
-    Deduction deduction = new Deduction();
-    if (algorithm.equals("pcfg-astar")) {
-      deduction.setReplace('l');
-    } else if (algorithm.equals("pcfg-cyk")) {
-      deduction.setReplace('l');
-    }
-    log.info(deduction.doParse(schema, success));
-    if (displayParsingTraceTable(jwh, deduction))
-      return;
-    if (schema != null) {
-      try {
-        drawDerivedTree(deduction, javafx, jwh);
-      } catch (Exception e) {
-        log.error(e.getMessage(), e);
+      Reader reader = new FileReader(grammarFile);
+      String[] grammarFileSplit = grammarFile.split("[.]");
+      String formalism = grammarFileSplit[grammarFileSplit.length - 1];
+      schema = parseGrammarReaderAndConvertToParsingSchema(reader, formalism, w,
+          algorithm);
+
+      logParsingSchema(schema);
+      Deduction deduction = new Deduction();
+      if (algorithm.equals("pcfg-astar")) {
+        deduction.setReplace('l');
+      } else if (algorithm.equals("pcfg-cyk")) {
+        deduction.setReplace('l');
       }
+      log.info(deduction.doParse(schema, success));
+      if (displayParsingTraceTable(jwh, deduction))
+        return;
+      if (schema != null) {
+        drawDerivedTree(deduction, javafx, jwh);
+      }
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
     }
   }
 
@@ -138,7 +137,7 @@ class Main { // NO_UCD (test only)
     log.info("Call: " + call.toString());
   }
 
-  private static void logParsingSchema() {
+  private static void logParsingSchema(ParsingSchema schema) {
     if (log.isDebugEnabled() && schema != null) {
       log.debug("Parsing Schema with " + schema.getAxioms().size() + " axioms, "
           + schema.getRules().size() + " deduction rules and " + schema
@@ -174,42 +173,34 @@ class Main { // NO_UCD (test only)
     }
   }
 
-  private static void parseGrammarFileAndConvertToParsingSchema(
-      String grammarFile, String w, String algorithm)
+  public static ParsingSchema parseGrammarReaderAndConvertToParsingSchema(
+      Reader reader, String formalism, String w, String algorithm)
       throws IOException, ParseException {
-    String[] grammarFileSplit = grammarFile.split("[.]");
-    BufferedReader grammarReader =
-        new BufferedReader(new FileReader(grammarFile));
-    switch (grammarFileSplit[grammarFileSplit.length - 1]) {
+    BufferedReader grammarReader = new BufferedReader(reader);
+    switch (formalism) {
     case "cfg":
-      parseCfgFileAndConvertToSchema(grammarReader, w, algorithm);
-      break;
+      return parseCfgFileAndConvertToSchema(grammarReader, w, algorithm);
     case "pcfg":
-      parsePcfgFileAndConvertToSchema(grammarReader, w, algorithm);
-      break;
+      return parsePcfgFileAndConvertToSchema(grammarReader, w, algorithm);
     case "tag":
-      parseTagFileAndConvertToSchema(grammarReader, w, algorithm);
-      break;
+      return parseTagFileAndConvertToSchema(grammarReader, w, algorithm);
     case "srcg":
-      parseSrcgFileAndConvertToSchema(grammarReader, w, algorithm);
-      break;
+      return parseSrcgFileAndConvertToSchema(grammarReader, w, algorithm);
     case "ccg":
-      parseCcgFileAndConvertToSchema(grammarReader, w, algorithm);
-      break;
+      return parseCcgFileAndConvertToSchema(grammarReader, w, algorithm);
     default:
-      log.warn("Unknown file format of file " + grammarFile);
+      throw new IllegalArgumentException("Unknown formalism: " + formalism);
     }
   }
 
-  private static void parseCcgFileAndConvertToSchema(
+  private static ParsingSchema parseCcgFileAndConvertToSchema(
       BufferedReader grammarReader, String w, String algorithm)
       throws IOException {
     Ccg ccg = CcgParser.parseCcgReader(grammarReader);
-    schema =
-        GrammarToDeductionRulesConverter.convertToSchema(ccg, w, algorithm);
+    return GrammarToDeductionRulesConverter.convertToSchema(ccg, w, algorithm);
   }
 
-  private static void parseSrcgFileAndConvertToSchema(
+  private static ParsingSchema parseSrcgFileAndConvertToSchema(
       BufferedReader grammarFile, String w, String algorithm)
       throws ParseException {
     srcg = SrcgParser.parseSrcgReader(grammarFile);
@@ -230,22 +221,20 @@ class Main { // NO_UCD (test only)
     case "srcg":
       srcg = GrammarToGrammarConverter
           .checkAndMayConvertToSrcg(srcg, algorithm, please);
-      if (srcg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + srcg.toString());
-        }
-        schema = GrammarToDeductionRulesConverter
-            .convertToSchema(srcg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + srcg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(srcg, w, algorithm);
     default:
       throw new IllegalArgumentException("I don't know formalism \"" + algorithm
           + "\", please check the spelling.");
     }
   }
 
-  private static void parseTagFileAndConvertToSchema(BufferedReader grammarFile,
-      String w, String algorithm) throws ParseException {
+  private static ParsingSchema parseTagFileAndConvertToSchema(
+      BufferedReader grammarFile, String w, String algorithm)
+      throws ParseException {
     tag = TagParser.parseTagReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + tag.toString());
@@ -261,14 +250,11 @@ class Main { // NO_UCD (test only)
     case "tag":
       tag = GrammarToGrammarConverter
           .checkAndMayConvertToTag(tag, algorithm, please);
-      if (tag != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + tag.toString());
-        }
-        schema =
-            GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + tag.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(tag, w, algorithm);
     case "srcg":
       throw new IllegalArgumentException(
           "I can't convert a tree language to a string language.");
@@ -278,7 +264,7 @@ class Main { // NO_UCD (test only)
     }
   }
 
-  private static void parsePcfgFileAndConvertToSchema(
+  private static ParsingSchema parsePcfgFileAndConvertToSchema(
       BufferedReader grammarFile, String w, String algorithm)
       throws ParseException {
     pcfg = PcfgParser.parsePcfgReader(grammarFile);
@@ -290,55 +276,44 @@ class Main { // NO_UCD (test only)
     case "cfg":
       cfg = GrammarToGrammarConverter
           .checkAndMayConvertToCfg(pcfg, algorithm, please);
-      if (cfg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + cfg.toString());
-        }
-        schema =
-            GrammarToDeductionRulesConverter.convertToSchema(cfg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + cfg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(cfg, w, algorithm);
     case "pcfg":
       pcfg = GrammarToGrammarConverter
           .checkAndMayConvertToPcfg(pcfg, algorithm, please);
-      if (pcfg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + pcfg.toString());
-        }
-        schema = GrammarToDeductionRulesConverter
-            .convertToSchema(pcfg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + pcfg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(pcfg, w, algorithm);
     case "tag":
       tag = GrammarToGrammarConverter
           .checkAndMayConvertToTag(pcfg, algorithm, please);
-      if (tag != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + tag.toString());
-        }
-        schema =
-            GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + tag.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(tag, w, algorithm);
     case "srcg":
       srcg = GrammarToGrammarConverter
           .checkAndMayConvertToSrcg(pcfg, algorithm, please);
-      if (srcg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + srcg.toString());
-        }
-        schema = GrammarToDeductionRulesConverter
-            .convertToSchema(srcg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + srcg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(srcg, w, algorithm);
     default:
       throw new IllegalArgumentException("I don't know formalism \"" + algorithm
           + "\", please check the spelling.");
     }
   }
 
-  private static void parseCfgFileAndConvertToSchema(BufferedReader grammarFile,
-      String w, String algorithm) throws ParseException {
+  private static ParsingSchema parseCfgFileAndConvertToSchema(
+      BufferedReader grammarFile, String w, String algorithm)
+      throws ParseException {
     cfg = CfgParser.parseCfgReader(grammarFile);
     if (log.isDebugEnabled()) {
       log.debug("Grammar read from file: " + cfg.toString());
@@ -348,47 +323,35 @@ class Main { // NO_UCD (test only)
     case "cfg":
       cfg = GrammarToGrammarConverter
           .checkAndMayConvertToCfg(cfg, algorithm, please);
-      if (cfg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + cfg.toString());
-        }
-        schema =
-            GrammarToDeductionRulesConverter.convertToSchema(cfg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + cfg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(cfg, w, algorithm);
     case "tag":
       tag = GrammarToGrammarConverter
           .checkAndMayConvertToTag(cfg, algorithm, please);
-      if (tag != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + tag.toString());
-        }
-        schema =
-            GrammarToDeductionRulesConverter.convertToSchema(tag, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + tag.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(tag, w, algorithm);
     case "pcfg":
       pcfg = GrammarToGrammarConverter
           .checkAndMayConvertToPcfg(cfg, algorithm, please);
-      if (pcfg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + pcfg.toString());
-        }
-        schema = GrammarToDeductionRulesConverter
-            .convertToSchema(pcfg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + pcfg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(pcfg, w, algorithm);
     case "srcg":
       srcg = GrammarToGrammarConverter
           .checkAndMayConvertToSrcg(cfg, algorithm, please);
-      if (srcg != null) {
-        if (log.isDebugEnabled()) {
-          log.debug("Grammar after conversion: " + srcg.toString());
-        }
-        schema = GrammarToDeductionRulesConverter
-            .convertToSchema(srcg, w, algorithm);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + srcg.toString());
       }
-      break;
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(srcg, w, algorithm);
     default:
       throw new IllegalArgumentException("I don't know formalism \"" + algorithm
           + "\", please check the spelling.");

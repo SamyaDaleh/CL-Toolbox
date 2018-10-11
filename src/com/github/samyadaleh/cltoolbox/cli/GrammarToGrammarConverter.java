@@ -127,9 +127,8 @@ class GrammarToGrammarConverter {
         return getSrcgForCykGeneral((Srcg) gra, please);
       }
     default:
-      log.info(
+      throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
     }
   }
 
@@ -147,8 +146,8 @@ class GrammarToGrammarConverter {
         if (please) {
           return tag.getBinarizedTag();
         } else {
-          log.info("TAG must be binarized to apply CYK parsing.");
-          return null;
+          throw new IllegalArgumentException(
+              "TAG must be binarized to apply CYK parsing.");
         }
       } else {
         return tag;
@@ -160,9 +159,8 @@ class GrammarToGrammarConverter {
     case "tag-earley-prefixvalid":
       return tag;
     default:
-      log.info(
+      throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
     }
   }
 
