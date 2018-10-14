@@ -49,7 +49,7 @@ public class GrammarParserUtils {
       }
       category.add(tokenString);
     } else {
-      throw new ParseException("Unknown declaration symbol " + token,
+      throw new ParseException("Unknown declaration symbol " + tokenString,
           token.getLineNumber());
     }
   }

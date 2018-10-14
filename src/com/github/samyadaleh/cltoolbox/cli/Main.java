@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Entry point into toolbox for the calls by command line
  */
-class Main { // NO_UCD (test only)
+public class Main { // NO_UCD (test only)
 
   private static boolean success = false;
   private static boolean please = false;
