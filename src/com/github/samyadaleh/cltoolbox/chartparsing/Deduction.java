@@ -18,6 +18,7 @@ import java.util.List;
  * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
  */
 public class Deduction {
+
   /**
    * All items derived in the process.
    */
@@ -438,5 +439,9 @@ public class Deduction {
 
   public List<Tree> getDerivedTrees() {
     return this.derivedTrees;
+  }
+
+  public List<ChartItemInterface> getChart() {
+    return chart;
   }
 }

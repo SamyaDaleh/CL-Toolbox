@@ -24,7 +24,7 @@ public class CfgParser {
     Cfg cfg = new Cfg(in);
     checkForGrammarProblems(cfg);
     if (GrammarParserUtils.printErrors(errors))
-      return null; // TODO throw ParseException instead
+      throw (ParseException) errors.get(0);
     return cfg;
   }
 
