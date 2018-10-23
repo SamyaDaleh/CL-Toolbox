@@ -26,7 +26,7 @@ Use it to generate examples, play around with grammars etc.
 
 ## Installation
 
-Download the jar from /releases and that's it. The jar already contains needed third-party libraries. You need Java 8 or higher installed for the jar to run, or else compile it for yourself.
+Download the standalone-jar from /releases and that's it. The jar already contains needed third-party libraries. You need Java 8 or higher installed for the jar to run, or else compile it for yourself.
 
 Or if you want to tinker with the code, for me it worked like this:
 - use your favorite IDE to clone/checkout the project
