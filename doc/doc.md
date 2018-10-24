@@ -338,6 +338,45 @@ side is left away and put directly into the string of the left hand side.
 The conversion of a PCFG to a CFG is nothing else than tossing away all 
 probabilities.
 
+##### TAG to SRCG
+
+The converion to an sRCG preserves the string language, but the derivated trees
+change. Tree names in the TAG become nonterminal symbols in the sRCG. 
+Nonterminals in the TAG are dismissed. The initial tree with start symbol as 
+root becomes the start symbol in the sRCG. If there are several trees that 
+qualify for the new start symbol, a new start symbol is introduced and clauses
+of the form `S1(X) -> S(X)` are added for each initial tree where is name is S.
+For each tree at least one clause is added, maybe more dependending on how many
+and what adjunctions are possible in the tree and how many substitutions. 
+Terminal symbols are simply included in the lhs of a clause in the same order as 
+they appear in the tree. A substitution node can be seen as unknown material 
+that will be provided by another tree. At this position a variable is included
+with a corresponding predicate on the rhs where the nonterminal is the tree name
+that can be substituted here and the same variable in the argument. One clause
+like this is added for every possible tree that can be substituted here.
+Similarly an adjunction can be seen as two points where unknown material from
+another tree will be included, one left of the span below, one right of it. The
+first variable is added to the lhs and the first half of the predicate is pushed
+on a stack, afterwards whatever is in the span is handled first. When a node is
+reached that is no child of the adjunction node, a second variable is added to
+the lhs which is also used to complete the predicate that was pushed onto the 
+stack. If adjunction is obligatory, only the clause with those variables is 
+created. If adjunction is disallowed, no variables are added. If adjunction is
+optional, both a clause with and one without variables are created to cover both
+possibilities. If a foot node is encountered, hence the parts left and right of
+it will not be consecutive to each other, a comma is added to the lhs to handle
+the part right of the foot node in a new predicate. If a tree has neither
+substitution nodes nor is any adjunction possible, no rhs predicates are created
+hence it becomes an epsilon production.
+
+Example: Consider a TAG with the following trees: `α: (S a (A b c) D)`, 
+`β: (A a A* a)`, `ɣ: (D d)` In α in node A is an adjunction possible, hence 
+there might or might not be other material before b and after c. In D a 
+substitution is oligatory. In β in the root also an adjunction is possible. From
+this TAG the following clauses of an sRCG are generated: `α(a b c X3) -> γ(X3)`,
+`α(a X1 b c X2 X3) -> β(X1,X2) γ(X3)`, `β(a,a) -> ε`, `β(X1 a,a X2) -> β(X1,X2)`, 
+`γ(d) -> ε`
+
 ##### CFG Binarization
 
 When a CFG is binarized all rules with a right hand side of length greater than
@@ -1047,6 +1086,12 @@ Kallmeyer, Laura: Parsing beyond context-free grammars. Heidelberg : Springer,
 
 Kallmeyer, Laura: Tree Adjoining Grammar Parsing (Parsing Beyond Context-Free 
 Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf) – last checked 2017-27-05 p. 11-19
+
+### Converting a TAG to SRCG
+
+Pierre Boullier. On TAG and Multicomponent TAG Parsing. [Research Report] RR-3668, INRIA.
+1999 <inria-00073004> 
+URL [https://hal.inria.fr/inria-00073004/document](https://hal.inria.fr/inria-00073004/document)
 
 ### Earley for CFG
 
