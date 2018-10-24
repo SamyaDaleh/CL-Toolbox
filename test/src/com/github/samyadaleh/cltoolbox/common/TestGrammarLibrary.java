@@ -72,25 +72,48 @@ public class TestGrammarLibrary {
     }
   }
 
-  public static Tag anCBTag() throws ParseException {
-    Tag g = new Tag();
-    g.setNonterminals(new String[] {"S", "T"});
-    g.setTerminals(new String[] {"a", "b", "c"});
-    g.setStartSymbol("S");
-    g.addInitialTree("α1", "(S T b)");
-    g.addInitialTree("α2", "(T c)");
-    g.addAuxiliaryTree("β", "(T a T*)");
-    return g;
+  public static Tag anCBTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"S", "T"});
+      g.setTerminals(new String[] {"a", "b", "c"});
+      g.setStartSymbol("S");
+      g.addInitialTree("α1", "(S T b)");
+      g.addInitialTree("α2", "(T c)");
+      g.addAuxiliaryTree("β", "(T a T*)");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  public static Tag binarizeTag() throws ParseException {
-    Tag g = new Tag();
-    g.setNonterminals(new String[] {"S"});
-    g.setTerminals(new String[] {"a", "b", "c", "d"});
-    g.setStartSymbol("S");
-    g.addInitialTree("α", "(S ε)");
-    g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
-    return g;
+  public static Tag binarizeTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"S"});
+      g.setTerminals(new String[] {"a", "b", "c", "d"});
+      g.setStartSymbol("S");
+      g.addInitialTree("α", "(S ε)");
+      g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Tag convertToLcfrsTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"S", "A", "D"});
+      g.setTerminals(new String[] {"a", "b", "c", "d"});
+      g.setStartSymbol("S");
+      g.addInitialTree("α", "(S a (A b c) D)");
+      g.addInitialTree("γ", "(D d)");
+      g.addAuxiliaryTree("β", "(A a A* a)");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static Srcg anBnSrcg() {

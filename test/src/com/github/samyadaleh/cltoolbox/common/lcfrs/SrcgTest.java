@@ -148,4 +148,14 @@ public class SrcgTest {
         + "A(b X,b Y) -> B(X,Y), A(a,a) -> ε}\n" + "S = S\n", srcg2.toString());
   }
 
+  @Test public void testConvertTagToLcfrs() {
+    Srcg srcg = new Srcg(TestGrammarLibrary.convertToLcfrsTag());
+    assertEquals(
+        "G = <N, T, V, P, S>\n" + "N = {α, β, γ}\n" + "T = {a, b, c, d}\n"
+            + "V = {X1, X2, X3}\n"
+            + "P = {α(a b c X3) -> γ(X3), α(a X1 b c X2 X3) -> β(X1,X2) γ(X3), "
+            + "β(a,a) -> ε, β(X1 a,a X2) -> β(X1,X2), γ(d) -> ε}\n" + "S = S\n",
+        srcg.toString());
+  }
+
 }

@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.cli;
 
-import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
@@ -102,30 +101,15 @@ class GrammarToGrammarConverter {
     }
   }
 
-  static Srcg checkAndMayConvertToSrcg(AbstractNTSGrammar gra, String algorithm,
+  static Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm,
       boolean please) {
     switch (algorithm) {
     case "srcg-earley":
-      if (gra instanceof Cfg) {
-        return getSrcgForEarley((Cfg) gra, please);
-      }
-      if (gra instanceof Srcg) {
-        return getSrcgForEarley((Srcg) gra, please);
-      }
+      return getSrcgForEarley(srcg, please);
     case "srcg-cyk-extended":
-      if (gra instanceof Cfg) {
-        return getSrcgForCykExtended((Cfg) gra, please);
-      }
-      if (gra instanceof Srcg) {
-        return getSrcgForCykExtended((Srcg) gra, please);
-      }
+      return getSrcgForCykExtended(srcg, please);
     case "srcg-cyk-general":
-      if (gra instanceof Cfg) {
-        return getSrcgForCykGeneral((Cfg) gra, please);
-      }
-      if (gra instanceof Srcg) {
-        return getSrcgForCykGeneral((Srcg) gra, please);
-      }
+      return getSrcgForCykGeneral(srcg, please);
     default:
       throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");
@@ -133,9 +117,21 @@ class GrammarToGrammarConverter {
   }
 
   static Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm,
-      boolean please) {
+      boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToSrcg(cfg, algorithm, please);
+  }
+
+  static Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm,
+      boolean please) throws ParseException {
+    Srcg srcg = new Srcg(cfg);
+    return checkAndMayConvertToSrcg(srcg, algorithm, please);
+  }
+
+  static Srcg checkAndMayConvertToSrcg(Tag tag, String algorithm,
+      boolean please) {
+    Srcg srcg = new Srcg(tag);
+    return checkAndMayConvertToSrcg(srcg, algorithm, please);
   }
 
   static Tag checkAndMayConvertToTag(Tag tag, String algorithm, boolean please)
@@ -166,30 +162,8 @@ class GrammarToGrammarConverter {
 
   static Tag checkAndMayConvertToTag(Cfg cfg, String algorithm, boolean please)
       throws ParseException {
-    switch (algorithm) {
-    case "tag-cyk-extended":
-      if (!cfg.isBinarized()) {
-        if (please) {
-          return new Tag(cfg.getBinarizedCfg());
-        } else {
-          log.info(
-              "CFG must be binarized to convert it into a TAG where CYK parsing is possible.");
-          return null;
-        }
-      } else {
-        return new Tag(cfg);
-      }
-    case "tag-cyk-general":
-      return new Tag(cfg);
-    case "tag-earley":
-      return new Tag(cfg);
-    case "tag-earley-prefixvalid":
-      return new Tag(cfg);
-    default:
-      log.info(
-          "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
-    }
+    Tag tag = new Tag(cfg);
+    return checkAndMayConvertToTag(tag, algorithm, please);
   }
 
   static Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm,
@@ -302,26 +276,6 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private static Srcg getSrcgForCykExtended(Cfg cfg, boolean please) {
-    try {
-      if (!cfg.isBinarized() || cfg.hasMixedRhs()) {
-        if (please) {
-          return new Srcg(cfg.getBinarizedCfg()
-              .getCfgWithEitherOneTerminalOrNonterminalsOnRhs())
-              .getSrcgWithoutUselessRules();
-        } else {
-          log.info(
-              "CFG must be binarized and not contain mixed rhs sides to convert it into a sRCG where extended CYK parsing is possible.");
-          return null;
-        }
-      } else {
-        return new Srcg(cfg);
-      }
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   private static Srcg getSrcgForCykGeneral(Srcg srcg, boolean please) {
     try {
       if (srcg.hasEpsilonProductions()) {
@@ -341,26 +295,6 @@ class GrammarToGrammarConverter {
     }
   }
 
-  private static Srcg getSrcgForCykGeneral(Cfg cfg, boolean please) {
-    try {
-      if (cfg.hasEpsilonProductions()) {
-        if (please) {
-          return new Srcg(cfg.getCfgWithoutEmptyProductions())
-              .getSrcgWithoutUselessRules();
-        } else {
-          log.info(
-              "CFG must not contain empty productions to be converted into a sRCG where general CYK parsing is possible.");
-          return null;
-        }
-      } else {
-        return new Srcg(cfg);
-      }
-
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   private static Srcg getSrcgForEarley(Srcg srcg, boolean please) {
     try {
       if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
@@ -374,24 +308,6 @@ class GrammarToGrammarConverter {
         }
       } else {
         return srcg;
-      }
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private static Srcg getSrcgForEarley(Cfg cfg, boolean please) {
-    try {
-      if (!cfg.isBinarized()) {
-        if (please) {
-          return new Srcg(cfg.getBinarizedCfg()).getSrcgWithoutUselessRules();
-        } else {
-          log.info(
-              "CFG must be binarized to convert it into a sRCG where Earley parsing is possible.");
-          return null;
-        }
-      } else {
-        return new Srcg(cfg);
       }
     } catch (ParseException e) {
       throw new RuntimeException(e);

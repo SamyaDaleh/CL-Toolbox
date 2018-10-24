@@ -256,8 +256,13 @@ public class Main { // NO_UCD (test only)
       return GrammarToDeductionRulesConverter
           .convertToSchema(tag, w, algorithm);
     case "srcg":
-      throw new IllegalArgumentException(
-          "I can't convert a tree language to a string language.");
+      srcg = GrammarToGrammarConverter
+          .checkAndMayConvertToSrcg(tag, algorithm, please);
+      if (log.isDebugEnabled()) {
+        log.debug("Grammar after conversion: " + srcg.toString());
+      }
+      return GrammarToDeductionRulesConverter
+          .convertToSchema(tag, w, algorithm);
     default:
       throw new IllegalArgumentException("I don't know formalism \"" + algorithm
           + "\", please check the spelling.");
