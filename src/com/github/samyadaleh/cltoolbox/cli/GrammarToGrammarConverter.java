@@ -9,10 +9,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 
-class GrammarToGrammarConverter {
+public class GrammarToGrammarConverter {
   private static final Logger log = LogManager.getLogger();
 
-  static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm, boolean please)
+  public static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm, boolean please)
       throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
@@ -43,13 +43,13 @@ class GrammarToGrammarConverter {
     }
   }
 
-  static Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm,
+  public static Cfg checkAndMayConvertToCfg(Pcfg pcfg, String algorithm,
       boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToCfg(cfg, algorithm, please);
   }
 
-  static Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm,
+  public static Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm,
       boolean please) {
     switch (algorithm) {
     case "pcfg-astar":
@@ -77,7 +77,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  static Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm,
+  public static Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm,
       boolean please) {
     switch (algorithm) {
     case "pcfg-astar":
@@ -101,7 +101,7 @@ class GrammarToGrammarConverter {
     }
   }
 
-  static Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm,
+  public static Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm,
       boolean please) {
     switch (algorithm) {
     case "srcg-earley":
@@ -116,25 +116,25 @@ class GrammarToGrammarConverter {
     }
   }
 
-  static Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm,
+  public static Srcg checkAndMayConvertToSrcg(Pcfg pcfg, String algorithm,
       boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToSrcg(cfg, algorithm, please);
   }
 
-  static Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm,
+  public static Srcg checkAndMayConvertToSrcg(Cfg cfg, String algorithm,
       boolean please) throws ParseException {
     Srcg srcg = new Srcg(cfg);
     return checkAndMayConvertToSrcg(srcg, algorithm, please);
   }
 
-  static Srcg checkAndMayConvertToSrcg(Tag tag, String algorithm,
+  public static Srcg checkAndMayConvertToSrcg(Tag tag, String algorithm,
       boolean please) {
     Srcg srcg = new Srcg(tag);
     return checkAndMayConvertToSrcg(srcg, algorithm, please);
   }
 
-  static Tag checkAndMayConvertToTag(Tag tag, String algorithm, boolean please)
+  public static Tag checkAndMayConvertToTag(Tag tag, String algorithm, boolean please)
       throws ParseException {
     switch (algorithm) {
     case "tag-cyk-extended":
@@ -160,13 +160,13 @@ class GrammarToGrammarConverter {
     }
   }
 
-  static Tag checkAndMayConvertToTag(Cfg cfg, String algorithm, boolean please)
+  public static Tag checkAndMayConvertToTag(Cfg cfg, String algorithm, boolean please)
       throws ParseException {
     Tag tag = new Tag(cfg);
     return checkAndMayConvertToTag(tag, algorithm, please);
   }
 
-  static Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm,
+  public static Tag checkAndMayConvertToTag(Pcfg pcfg, String algorithm,
       boolean please) throws ParseException {
     Cfg cfg = new Cfg(pcfg);
     return checkAndMayConvertToTag(cfg, algorithm, please);

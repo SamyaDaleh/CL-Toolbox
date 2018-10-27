@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import org.junit.Test;
 
@@ -67,6 +69,21 @@ public class DeductionTest {
     deduction.printTrace();
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgEarleyEpsilon() throws ParseException {
+    String w = "t0 t1";
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[]{"N0"});
+    cfg.setTerminals(new String[]{"t0", "t1"});
+    cfg.setStartSymbol("N0");
+    cfg.addProductionRule("N0 -> N0 N0");
+    cfg.addProductionRule("N0 -> ε");
+    ParsingSchema schema = CfgToEarleyRulesConverter
+        .cfgToEarleyRules(cfg,
+            w);
+    Deduction deduction = new Deduction();
+    assertFalse(deduction.doParse(schema, false));
   }
 
   @Test public void testCfgLeftcorner() {
