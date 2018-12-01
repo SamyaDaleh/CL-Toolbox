@@ -632,7 +632,28 @@ how many input symbols have been shifted. That means if a "shift" occurs, one
 more input symbol is moved onto the stack and the index is increased. The other
 rule called "reduce" takes stack symbol from the left or rather top if they 
 match the complete right hand side of a production rule and replaces them by 
-its left hand side. The outcome of the algorithm is a rightmost derivation.
+its left hand side. The outcome of the algorithm is a rightmost derivation. The 
+production rules are:
+
+Axiom:<br/>
+_____<br/>
+[ε, 0]<br/>
+Instantiated once.
+
+Shift:<br/>
+[Γ, i]<br/>
+_____ w<sub>i + 1</sub> = a<br/>
+[Γ a, i+1]<br/>
+Instantiated once.
+
+Reduce:<br/>
+[Γ α, i]<br/>
+_____ A -> α ∈ P<br/>
+[Γ A, i]<br/>
+Instantiated for every production rule.
+
+Goal item: [S, n]<br/>
+Where n is the number of tokens in the input.
 
 ##### CFG LR(k)
 
@@ -642,7 +663,26 @@ the lookahead, the number of symbols following a rule to consider in the
 decision. The algorithm is deterministic, but works only with grammars that 
 allow for deterministic LR(k) parsing with the respective k. If a conflict is 
 detected when creating the parse table, the process is stopped. No grammar 
-conversion is performed.
+conversion is performed. The deduction rules are:
+
+Initialize:<br/>
+[q0, 0]
+
+And one dynamic rules that performs lookups in the parse table and behaves like
+one of the following rules:
+
+Shift:<br/>
+[Γ, i]
+_____ w<sub>i + 1</sub> = a<br/>
+[Γ a qn, i + 1]
+
+Reduce:<br/>
+[Γ α1 qm α2 qm+1 ... , i]<br/>
+___________________ A -> α ∈ P<br/>
+[Γ A qn, i]
+
+Goal item: [q0 S qn, n] <br/>
+where S is the start symbol, qn an accepting state and n the length of the input. 
 
 ##### CFG CYK
 
@@ -655,7 +695,20 @@ production rules with one terminal are considered to reduce the input symbols.
 Then with complete rules and production rules with two nonterminals on the 
 right hand side are used to combine two nonterminals and replacing them by the 
 left hand side of the matching production rule. The items include the 
-respective nonterminal, the start index of the span and its length.
+respective nonterminal, the start index of the span and its length. The 
+deduction rules are:
+
+Scan:<br/>
+_________ A -> w<sub>i</sub> ∈ P<br/>
+[A, i, 1]
+
+Complete:<br/>
+[B, i, l<sub>1</sub>], [C, i + l<sub>1</sub>, l<sub>2</sub>]<br/>
+________________ A -> B C ∈ P<br/>
+[A, i, l<sub>1</sub> + l<sub>2</sub>]
+
+Goal item: [S, 0, n]<br/>
+Where S is the start symbol and n the length of the input.
 
 ##### CFG CYK Extended
 
@@ -663,7 +716,13 @@ This algorithm is an extension to the common CYK algorithm and works similar to
 that one. The grammar is also allowed to contain chain rules, that are rules 
 with one nonterminal on the right hand side. Because the removal of chain rules
 increases the grammar size exponentially, this algorithm has the same parsing 
-complexity regarding the input, but is much cheaper regarding grammar size.
+complexity regarding the input, but is much cheaper regarding grammar size. The
+deduction rules are the same as CYK plus the following:
+
+Complete unary:<br/>
+[B, i, j]<br/>
+_____ A -> B ∈ P<br/>
+[A, i, j]
 
 ##### CFG CYK General
 
