@@ -633,7 +633,7 @@ more input symbol is moved onto the stack and the index is increased. The other
 rule called "reduce" takes stack symbol from the left or rather top if they 
 match the complete right hand side of a production rule and replaces them by 
 its left hand side. The outcome of the algorithm is a rightmost derivation. The 
-production rules are:
+deduction rules are:
 
 Axiom:<br/>
 _____<br/>
@@ -700,12 +700,14 @@ deduction rules are:
 
 Scan:<br/>
 _________ A -> w<sub>i</sub> ∈ P<br/>
-[A, i, 1]
+[A, i, 1]<br/>
+Instantiated for every input token and every applying production rule.
 
 Complete:<br/>
 [B, i, l<sub>1</sub>], [C, i + l<sub>1</sub>, l<sub>2</sub>]<br/>
 ________________ A -> B C ∈ P<br/>
-[A, i, l<sub>1</sub> + l<sub>2</sub>]
+[A, i, l<sub>1</sub> + l<sub>2</sub>]<br/>
+Instantiated for each production rule of that form.
 
 Goal item: [S, 0, n]<br/>
 Where S is the start symbol and n the length of the input.
@@ -722,14 +724,28 @@ deduction rules are the same as CYK plus the following:
 Complete unary:<br/>
 [B, i, j]<br/>
 _____ A -> B ∈ P<br/>
-[A, i, j]
+[A, i, j]<br/>
+Instantiated for each production rule of that form.
 
 ##### CFG CYK General
 
 CYK General works similar to the previously mentioned CYK algorithms, but it 
 can handle any input grammar without restriction, which comes with worse 
 performance, as the handling of any number of items for completing the right 
-hand side of a rule is costly.
+hand side of a rule is costly. The deduction rules include the same scan rule 
+and goal item as for CYK plus:
+
+Scan ε:<br/>
+______ A -> ε ∈ P, i ∈ [0...n]<br/>
+[A, i, 0]<br/>
+instantiated for every i.
+
+Complete:<br/>
+[A<sub>1</sub>, i<sub>1</sub>, l<sub>1</sub>] ... [A<sub>k</sub>, i<sub>k</sub>, l<sub>k</sub>]<br/>
+_____ A -> A<sub>1</sub> ... A<sub>k</sub> ∈ P, l = l<sub>1</sub> + ... + l<sub>k</sub>, 
+i<sub>j</sub> = i<sub>j-1</sub> + l<sub>j-1</sub><br/>
+[A, i<sub>1</sub>, l]<br/>
+instantiated for every production rule.
 
 ##### CFG Earley
 
@@ -742,7 +758,33 @@ whose right hand side has been completely seen with the nonterminal in another
 right hand side yet to see. Its items encode the rule where a dot marks up 
 until which point the right hand side has been seen, an index saying where this
 item starts and another index saying where the dot is located regarding the 
-input string.
+input string. The deduction rules are:
+
+Axiom:<br/>
+____ S -> α ∈ P<br/>
+[S -> •α, 0, 0]<br/>
+instantiated for every production rule with the start symbol as lhs.
+
+Scan:<br/>
+[A -> α •a β, i, j]<br/>
+_______ w<sub>j+1</sub> = a<br/>
+[A -> α a •β, i, j + 1]<br/>
+instantiated once.
+
+Predict:<br/>
+[A -> α •B β, i, j]<br/>
+________ B -> γ ∈ P<br/>
+[B -> •γ, j, j]<br/>
+instantiated for every production rule.
+
+Complete:
+[A → α •B β, i, j], [B → γ•, j, k]<br/>
+________________________________<br/>
+[A → α B •β, i, k]<br/>
+instantiated once.
+
+Goal items: [S -> α •, 0, n]<br/>
+for every production rule with the start symbol as lhs.
 
 ##### CFG Earley Passive
 
@@ -750,7 +792,21 @@ This works like Earley with the difference that it uses passive items that are
 complete items that don't care which rule they are derived from. They are used 
 in a new complete rule instead if the item with the dot at the end. Also this 
 algorithm has a new convert rule that converts items with a dot at the end into
-passive items.
+passive items. Deduction rules are Axiom, Scan and Predict like Earley plus:
+
+Convert:<br/>
+[B → γ •, j, k]<br/>
+_________<br/>
+[B, j, k]<br/>
+instantiated once.
+
+Complete:<br/>
+[A → α •B β, i, j], [B, j, k]<br/>
+_____________________<br/>
+[A → α B •β, i, k]<br/>
+instantiated once.
+
+Goal item: [S, 0, n]
 
 ##### CFG Left Corner
 
@@ -771,7 +827,32 @@ symbols on first and second stack if they both are the same. A move step can be
 applied when a dollar sign is on top or better to say leftmost on the second 
 stack, that means a complete right hand side of a rule has been seen and the 
 left hand side nonterminal which is on top of the third stack is moved to the 
-first stack.
+first stack. Deduction rules are:
+
+Axiom:<br/>
+____________<br/>
+[w, S, ε]<br/>
+instantiated once.
+
+Reduce:<br/>
+[X<sub>1</sub> α, B β, γ]<br/>
+______________A → X<sub>1</sub> X<sub>2</sub> ... X<sub>k</sub> ∈ P, B ≠ $<br/>
+[α, X<sub>2</sub> ... X<sub>k</sub> $ B β, A γ]<br/>
+instantiated for every production rule.
+
+Move:<br/>
+[α, $ β, A γ]<br/>
+________A ∈ N<br/>
+[A α, β, γ]<br/>
+instantiated once.
+
+Remove:<br/>
+[X α, X β, γ]<br/>
+___________<br/>
+[α, β, γ]<br/>
+instantiated once.
+
+Goal item: [ε, ε, ε]
 
 ##### CFG Left Corner Chart
 
@@ -787,7 +868,32 @@ and produces an active item with the dot after that first item. Remove can be
 applied on matching passive and active items to move the dot over another 
 symbol in the right hand side. Whenever a dot is located at the end of a right 
 hand side, the whole rule is completed and can be turned to a passive item with
-the left hand side symbol as entry.
+the left hand side symbol as entry. Deduction rules are:
+
+Scan:<br/>
+___________0 ≤ i ≤ n-1<br/>
+[w<sub>i+1</sub>, i, 1]<br/>
+instantiated for every token in the input.
+
+Reduce:<br/>
+[X, i, l]<br/>
+____________A → X α ∈ P<br/>
+[A → X •α, i, l]<br/>
+instantiated for every production rule.
+
+Remove:<br/>
+[A → α •X β, i, l<sub>1</sub>], [X, j, l<sub>2</sub>]<br/>
+________________j = i + l<sub>1</sub><br/>
+[A → α X •β, i, l<sub>1</sub> + l<sub>2</sub>]<br/>
+instantiated once.
+
+Move:<br/>
+[A → α X •, i, l]<br/>
+______________<br/>
+[A, i, l]<br/>
+instantiated once.
+
+Goal item: [S, 1, n]
 
 ##### CFG Top Down
 
