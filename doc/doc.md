@@ -57,6 +57,7 @@ Currently this only works if the user is located in the same folder as the jar
 and the script. The following is a list of the currently supported parsing 
 algorithms. See later sections on details about what each one of them means and
 how they work.
+* ccg-deduction
 * cfg-cyk
 * cfg-cyk-extended
 * cfg-cyk-general
@@ -116,6 +117,23 @@ commas from each other. The user can freely use both uppercase and lowercase
 strings both as terminals and nonterminals and even mixed. Using special 
 characters in terminals or nonterminals is not possible at the moment. If 
 parsing the grammar was successful a check for consistency is performed.
+
+#### CCG
+
+A Combinatory Categorial Grammar consists of only a lexicon with words and their
+respective categories. The categories specify how they can be combined with one
+another. Here is an example:
+```
+Trip	NP
+merengue	NP
+likes	(S\NP)/NP
+certainly	(S\NP)/(S\NP)
+```
+The / specifies that the other category has to be found to the right, \ that it
+expects it to the left. In this example ``likes`` demands a NP to the right and
+afterwards another NP to the left to form a sentence. No other elements of the
+grammar are specified. The algorithm expects ``S`` as start symbol and therefore
+as last entry for the goal item.
 
 #### CFG
 
@@ -621,6 +639,54 @@ This section covers the currently implemented parsing algorithm. See here which
 properties an appropriate grammar must have in order to work with this 
 algorithm, the working of the algorithm in general and its different rules.
 
+##### CCG Deduction
+This is the only algorithm for CCG and therefore just called "deduction", but
+there are varieties that use different set of rules. This implementation uses
+these deduction rules:
+
+Axioms:<br/>
+______________ where X ∈ f(w<sub>i+l</sub>)<br/>
+[X, i, i + 1]<br/>
+instantiated for every lexicon entry for each matching input token.
+
+Forward Application:<br/>
+[X/Y, i, j], [Y, j, k]<br/>
+_________________<br/>
+[X, i, k]<br/>
+instantiated once.
+
+Backward Application:<br/>
+[Y, i, j], [X\Y, j, k]<br/>
+______________<br/>
+[X, i, k]<br/>
+instantiated once.
+
+Forward Composition 1:<br/>
+[X/Y, i, j], [Y/Z, j, k]<br/>
+__________________<br/>
+[X/Z, i, k]<br/>
+instantiated once.
+
+Forward Composition 2:<br/>
+[X/Y, i, j], [Y\Z, j, k] <br/>
+__________________<br/>
+[X\Z, i, k]<br/>
+instantiated once.
+
+Backward Composition 1:
+[Y/Z, i, j], [X\Y, j, k]<br/>
+_______________<br/>
+[X/Z, i, k]<br/>
+instantiated once.
+
+Backward Composition 2:<br/>
+[Y\Z, i, j] [X\Y, j, k] <br/>
+_______________<br/>
+[X\Z, i, k] <br/>
+instantiated once.
+
+Goal item: [S, O, n]
+
 ##### CFG Shift Reduce
 
 Shift reduce or bottom-up parsing demands a grammar without epsilon 
@@ -742,7 +808,7 @@ instantiated for every i.
 
 Complete:<br/>
 [A<sub>1</sub>, i<sub>1</sub>, l<sub>1</sub>] ... [A<sub>k</sub>, i<sub>k</sub>, l<sub>k</sub>]<br/>
-_______________________________________________ A -> A<sub>1</sub> ... A<sub>k</sub> ∈ P, l = l<sub>1</sub> + ... + l<sub>k</sub>, 
+__________________________ A -> A<sub>1</sub> ... A<sub>k</sub> ∈ P, l = l<sub>1</sub> + ... + l<sub>k</sub>, 
 i<sub>j</sub> = i<sub>j-1</sub> + l<sub>j-1</sub><br/>
 [A, i<sub>1</sub>, l]<br/>
 instantiated for every production rule.
@@ -777,7 +843,7 @@ __________________ B -> γ ∈ P<br/>
 [B -> •γ, j, j]<br/>
 instantiated for every production rule.
 
-Complete:
+Complete:<br/>
 [A → α •B β, i, j], [B → γ•, j, k]<br/>
 ________________________________<br/>
 [A → α B •β, i, k]<br/>
@@ -1656,6 +1722,18 @@ Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kall
 Pierre Boullier. On TAG and Multicomponent TAG Parsing. [Research Report] RR-3668, INRIA.
 1999 <inria-00073004> 
 URL [https://hal.inria.fr/inria-00073004/document](https://hal.inria.fr/inria-00073004/document)
+
+### Deduction for CCG
+
+Stuart M. Shieber, Yves Schabes, Fernando C.N. Pereira,
+Principles and implementation of deductive parsing,
+The Journal of Logic Programming,
+Volume 24, Issues 1–2,
+1995,
+Pages 3-36,
+ISSN 0743-1066,
+https://doi.org/10.1016/0743-1066(95)00035-I.
+(http://www.sciencedirect.com/science/article/pii/074310669500035I)
 
 ### Earley for CFG
 
