@@ -642,8 +642,8 @@ Instantiated once.
 
 Shift:<br/>
 [Γ, i]<br/>
-_____ w<sub>i + 1</sub> = a<br/>
-[Γ a, i+1]<br/>
+_____ w<sub>i+1</sub> = a<br/>
+[Γ a, i + 1]<br/>
 Instantiated once.
 
 Reduce:<br/>
@@ -666,22 +666,22 @@ detected when creating the parse table, the process is stopped. No grammar
 conversion is performed. The deduction rules are:
 
 Initialize:<br/>
-[q0, 0]
+[q<sub>0</sub>, 0]
 
 And one dynamic rules that performs lookups in the parse table and behaves like
 one of the following rules:
 
 Shift:<br/>
-[Γ, i]
-_____ w<sub>i + 1</sub> = a<br/>
-[Γ a qn, i + 1]
+[Γ, i]<br/>
+_____ w<sub>i+1</sub> = a<br/>
+[Γ a q<sub>n</sub>, i + 1]
 
 Reduce:<br/>
-[Γ α1 qm α2 qm+1 ... , i]<br/>
+[Γ α<sub>1</sub> q<sub>m</sub> α<sub>2</sub> q<sub>m+1</sub> ... , i]<br/>
 ___________________ A -> α ∈ P<br/>
-[Γ A qn, i]
+[Γ A q<sub>n</sub>, i]
 
-Goal item: [q0 S qn, n] <br/>
+Goal item: [q<sub>0</sub> S q<sub>n</sub>, n] <br/>
 where S is the start symbol, qn an accepting state and n the length of the input. 
 
 ##### CFG CYK
@@ -742,7 +742,7 @@ instantiated for every i.
 
 Complete:<br/>
 [A<sub>1</sub>, i<sub>1</sub>, l<sub>1</sub>] ... [A<sub>k</sub>, i<sub>k</sub>, l<sub>k</sub>]<br/>
-_____ A -> A<sub>1</sub> ... A<sub>k</sub> ∈ P, l = l<sub>1</sub> + ... + l<sub>k</sub>, 
+_______________________________________________ A -> A<sub>1</sub> ... A<sub>k</sub> ∈ P, l = l<sub>1</sub> + ... + l<sub>k</sub>, 
 i<sub>j</sub> = i<sub>j-1</sub> + l<sub>j-1</sub><br/>
 [A, i<sub>1</sub>, l]<br/>
 instantiated for every production rule.
@@ -761,19 +761,19 @@ item starts and another index saying where the dot is located regarding the
 input string. The deduction rules are:
 
 Axiom:<br/>
-____ S -> α ∈ P<br/>
+________________ S -> α ∈ P<br/>
 [S -> •α, 0, 0]<br/>
 instantiated for every production rule with the start symbol as lhs.
 
 Scan:<br/>
 [A -> α •a β, i, j]<br/>
-_______ w<sub>j+1</sub> = a<br/>
+_______________________ w<sub>j+1</sub> = a<br/>
 [A -> α a •β, i, j + 1]<br/>
 instantiated once.
 
 Predict:<br/>
 [A -> α •B β, i, j]<br/>
-________ B -> γ ∈ P<br/>
+__________________ B -> γ ∈ P<br/>
 [B -> •γ, j, j]<br/>
 instantiated for every production rule.
 
@@ -836,13 +836,13 @@ instantiated once.
 
 Reduce:<br/>
 [X<sub>1</sub> α, B β, γ]<br/>
-______________A → X<sub>1</sub> X<sub>2</sub> ... X<sub>k</sub> ∈ P, B ≠ $<br/>
+_______________________A → X<sub>1</sub> X<sub>2</sub> ... X<sub>k</sub> ∈ P, B ≠ $<br/>
 [α, X<sub>2</sub> ... X<sub>k</sub> $ B β, A γ]<br/>
 instantiated for every production rule.
 
 Move:<br/>
 [α, $ β, A γ]<br/>
-________A ∈ N<br/>
+_____________A ∈ N<br/>
 [A α, β, γ]<br/>
 instantiated once.
 
@@ -883,7 +883,7 @@ instantiated for every production rule.
 
 Remove:<br/>
 [A → α •X β, i, l<sub>1</sub>], [X, j, l<sub>2</sub>]<br/>
-________________j = i + l<sub>1</sub><br/>
+__________________________j = i + l<sub>1</sub><br/>
 [A → α X •β, i, l<sub>1</sub> + l<sub>2</sub>]<br/>
 instantiated once.
 
@@ -960,14 +960,14 @@ instantiated once.
 
 Predict:<br/>
 [•A, i<sub>0</sub>, i<sub>k</sub>]<br/>
-________________A → A<sub>1</sub> ... A<sub>k</sub> ∈ P, i<sub>j</sub> < i<sub>j+1</sub><br/>
+_________________________________A → A<sub>1</sub> ... A<sub>k</sub> ∈ P, i<sub>j</sub> < i<sub>j+1</sub><br/>
 [•A<sub>1</sub>, i<sub>0</sub>, i<sub>1</sub>], ... , [•A<sub>k</sub>, i<sub>k−1</sub>, i<sub>k</sub>]<br/>
 instantiated for every production rule. It produces all possible separations as 
 consequences.
 
 Complete:<br/>
 [•A, i<sub>0</sub>, i<sub>k</sub>], [A<sub>1</sub> •, i<sub>0</sub>, i<sub>1</sub>], ... , [A<sub>k</sub> •, i<sub>k−1</sub>, i<sub>k</sub>]<br/>
-________________A → A<sub>1</sub> ... A<sub>k</sub> ∈ P<br/>
+___________________________________________A → A<sub>1</sub> ... A<sub>k</sub> ∈ P<br/>
 [A•, i<sub>0</sub>, i<sub>k</sub>]<br/>
 instantiated for every production rule.
 
@@ -1115,7 +1115,7 @@ same as for TAG CYK Extended, except move unary and move binary are replaced by:
 Move general:<br/>
 [γ,(p · 1)<sub>⊤</sub>, i<sub>1</sub>, f<sub>1</sub>, f<sub>2</sub>, k<sub>1</sub>], ... , 
 [γ,(p · j)<sub>⊤</sub>, i<sub>j</sub>, f'<sup>j</sup><sub>1</sub>, f'<sup>j</sup><sub>2</sub>, k<sub>j</sub>]<br/>
-_______________________i<sub>l</sub> = i<sub>l-1</sub> + k<sub>l-1</sub><br/>
+__________________________________________________i<sub>l</sub> = i<sub>l-1</sub> + k<sub>l-1</sub><br/>
 [γ, p<sub>⊥</sub>, i, f<sub>1</sub> ⊕ ... ⊕ f'<sup>j</sup><sub>1</sub>, f<sub>2</sub> ⊕ ... ⊕ f'<sup>j</sup><sub>2</sub>, j]<br/>
 which is instantiated for every number of child nodes in any tree.
 
@@ -1368,12 +1368,12 @@ instantiated for every clause where the rhs is not empty.
 
 Suspend:<br/>
 [B(ψ-vec) → Ψ-vec, pos', <i, j>, ρ<sub>B</sub>-vec], [A(φ-vec) → ... B(ξ-vec) ... , pos, <k, l>, ρ<sub>A</sub>-vec]<br/>
-________________<br/>
+_________________________________________________________________<br/>
 [A(φ-vec) → ... B(ξ-vec) ... , pos', <k, l + 1>, ρ-vec]<br/>
 instantiated once.
 
 Convert:<br/>
-[B(ψ-vec) → Ψ-vec, pos, <i, j>, ρ<sub>B</sub>-vec]
+[B(ψ-vec) → Ψ-vec, pos, <i, j>, ρ<sub>B</sub>-vec]<br/>
 __________________________________|ψ-vec(i)| = j, |ψ-vec| = i, ρ<sub>B</sub>(ψ-vec) = ρ<br/>
 [B, ρ]<br/>
 instantiated once.
@@ -1381,7 +1381,7 @@ instantiated once.
 Resume:<br/>
 [A(φ-vec) → ... B(ξ-vec) ... , pos, <i, j>, ρ<sub>A</sub>-vec], [B(ψ-vec) → Ψ-vec, pos', <k − 1, l>, ρ<sub>B</sub>-vec]
 ____________________________________________<br/>
-[B(ψ-vec) → Ψ-vec, pos, <k, 0>, ρ<sub>B</sub>-vec]
+[B(ψ-vec) → Ψ-vec, pos, <k, 0>, ρ<sub>B</sub>-vec]<br/>
 instantiated once.
 
 Goal Item: [S(φ-vec) → Φ-vec, n, <1, j>, ψ] with |φ-vec(1)| = j (i.e., dot at 
