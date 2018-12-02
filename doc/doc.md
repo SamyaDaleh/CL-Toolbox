@@ -893,7 +893,8 @@ ______________<br/>
 [A, i, l]<br/>
 instantiated once.
 
-Goal item: [S, 1, n]
+Goal item: [S, 1, n]<br/>
+with |w| = n.
 
 ##### CFG Top Down
 
@@ -906,6 +907,25 @@ input that was already matched. Starting with the start symbol and length 0 a
 predict step does the derivation and replaces the nonterminal. The scan step 
 matches the first symbol in the working string with the input in which case the
 terminal is removed from the working string and the length is increased by 1.
+Deduction rules are:
+
+Axiom:<br/>
+________<br/>
+[S, 0]
+
+Scan:<br/>
+[a α, i]<br/>
+__________w<sub>i+1</sub> = a<br/>
+[α, i + 1]<br/>
+instantiated once.
+
+Predict:<br/>
+[A α, i]<br/>
+_________A → γ ∈ P<br/>
+[γ α, i]<br/>
+instantiated for every production rule.
+
+Goal: [ε, n] with |w| = n
 
 ##### CFG Unger
 
@@ -925,7 +945,33 @@ can be applied. If the terminal matches the input string at the respective
 position the dot can be moved behind the terminal. Similar if for a production 
 rule matching items with dots at their ends for every right hand side symbol 
 are present the rule complete can move the dot after the corresponding 
-nonterminal item with a matching span.
+nonterminal item with a matching span. The deduction rules are:
+
+Axiom:<br/>
+__________ |w| = n<br/>
+[•S, 0, n]<br/>
+instantiated once.
+
+Scan:<br/>
+[•a, i, i + 1]<br/>
+_________w<sub>i+1</sub> = a<br/>
+[a•, i, i + 1 ]<br/>
+instantiated once.
+
+Predict:<br/>
+[•A, i<sub>0</sub>, i<sub>k</sub>]<br/>
+________________A → A<sub>1</sub> ... A<sub>k</sub> ∈ P, i<sub>j</sub> < i<sub>j+1</sub><br/>
+[•A<sub>1</sub>, i<sub>0</sub>, i<sub>1</sub>], ... , [•A<sub>k</sub>, i<sub>k−1</sub>, i<sub>k</sub>]<br/>
+instantiated for every production rule. It produces all possible separations as 
+consequences.
+
+Complete:<br/>
+[•A, i<sub>0</sub>, i<sub>k</sub>], [A<sub>1</sub> •, i<sub>0</sub>, i<sub>1</sub>], ... , [A<sub>k</sub> •, i<sub>k−1</sub>, i<sub>k</sub>]<br/>
+________________A → A<sub>1</sub> ... A<sub>k</sub> ∈ P<br/>
+[A•, i<sub>0</sub>, i<sub>k</sub>]<br/>
+instantiated for every production rule.
+
+Goal item: [S •, 0, n] where n = |w|
 
 ##### PCFG A*
 
@@ -940,13 +986,40 @@ estimation of the outside weight. For comparison of the weights the overall
 weight of an item is considered while when deriving a new item only the rule 
 weights are further used and the own outside weight of the new item is added to
 that. The items beside the weight and the nonterminal like in CYK include the 
-from and to indices rather then the length of the span.
+from and to indices rather then the length of the span. Deduction rules are:
+
+Scan:<br/>
+_______________________p : A → w<sub>i</sub><br/>
+|log(p)| + out(A, i − 1, 1, n − i) : [A, i − 1, i]<br/>
+instantiated for every token in the input and every matching production rule.
+
+Complete:<br/>
+x<sub>1</sub> + out(B, i, j − i, n − j) : [B, i, j], x<sub>2</sub> + out(C, j, k − j, n − k) : [C, j, k]<br/>
+____________________________________________where p : A → B C ∈ P <br/>
+x<sub>1</sub> + x<sub>2</sub> + |log(p)| + out(A, i, k − i, n − k) : [A, i, k]<br/>
+instantiated for every matching production rule.
+
+Goal item is the same as for PCFG CYK.
 
 ##### PCFG CYK
 
 This is directly the probabilistic implementation of the CYK algorithm and 
 needs a grammar in Chomsky normal form. Like A Star parsing the items include a
 weight rather than the probability and items encode start and end indices.
+Deduction rules are:
+
+Scan:<br/>
+__________________p : A → w<sub>i</sub><br/>
+|log(p)| : [A, i − 1, i]<br/>
+instantiated for every token in the input and every matching production rule.
+
+Complete:<br/>
+x<sub>1</sub> : [B, i, j], x<sub>2</sub> : [C, j, k]<br/>
+________________p : A → B C<br/>
+x<sub>1</sub> + x<sub>2</sub> + |log(p)| : [A, i, k]<br/>
+instantiated for every matching production rule.
+
+Goal item: [S, 0, n] with lowest weight.
 
 ##### TAG CYK
 
@@ -980,13 +1053,71 @@ name of the tree they represent, a gorn address with some position marker
 either in the top (⊤) or bottom (⊥) position of a node, the beginning index of 
 the items span, two indices of beginning and end of the foot node's span which 
 is not set if no range has been determined or no foot node exists and finally 
-the last index of the overall item span.
+the last index of the overall item span. Deduction rules are:
+
+Lex-scan:<br/>
+___________________l(γ, p) = w<sub>i+1</sub><br/>
+[γ, p<sub>⊤</sub>, i, −, −, i + 1]<br/>
+instantiated for every token in the input and every leaf in every tree where the
+leaf has the same label as the token.
+
+Eps-scan:<br/>
+________________l(γ, p) = ε<br/>
+[γ, p<sub>⊤</sub>, i, −, −, i]<br/>
+instantiated for every leaf with an empty label in every tree at every position 
+in the input.
+
+Foot-predict:<br/>
+___________________β ∈ A, p foot node address in β, i ≤ j<br/>
+[β, p<sub>⊤</sub>, i, i, j, j]<br/>
+instantiated for every auxiliary tree over every possible input span.
+
+Move-unary:<br/>
+[γ,(p · 1)<sub>⊤</sub>, i, f<sub>1</sub>, f<sub>2</sub>, j]<br/>
+_________________________node address p · 2 does not exist in γ<br/>
+[γ, p<sub>⊥</sub>, i, f<sub>1</sub>, f<sub>2</sub>, j]<br/>
+instantiated once.
+
+Move-binary:<br/>
+[γ,(p · 1)<sub>⊤</sub>, i, f<sub>1</sub>, f<sub>2</sub>, k], [γ,(p · 2)<sub>⊤</sub>, k, f'<sub>1</sub>, f'<sub>2</sub>, j]<br/>
+_______________________<br/>
+[γ, p<sub>⊥</sub>, i, f<sub>1</sub> ⊕ f'<sub>1</sub>, f<sub>2</sub> ⊕ f'<sub>2</sub>, j]<br/>
+instantiated once.
+
+Null-adjoin:<br/>
+[γ, p<sub>⊥</sub>, i, f<sub>1</sub>, f<sub>2</sub>, j]<br/>
+________________________f<sub>OA</sub>(γ, p) = 0<br/>
+[γ, p<sub>⊤</sub>, i, f<sub>1</sub>, f<sub>2</sub>, j]<br/>
+instantiated once.
+
+Substitute:<br/>
+[α, ε<sub>⊤</sub>, i, −, −, j]<br/>
+__________________l(α, ε) = l(γ, p)<br/>
+[γ, p<sub>⊤</sub>, i, −, −, j]<br/>
+instantiated once.
+
+Adjoin:<br/>
+[β, ε<sub>⊤</sub>, i, f<sub>1</sub>, f<sub>2</sub>, j], [γ, p<sub>⊥</sub>, f<sub>1</sub>, f'<sub>1</sub>, f'<sub>2</sub>, f<sub>2</sub>]<br/>
+___________________β ∈ f<sub>SA</sub>(γ, p)<br/>
+[γ, p<sub>⊤</sub>, i, f'<sub>1</sub>, f'<sub>2</sub>, j]<br/>
+instantiated once.
+
+Goal items: [α, ε<sub>⊤</sub>, 0, −, −, n] where α ∈ I<br/>
+instantiated for every initial tree.
 
 ##### TAG CYK General
 
 Works similar to the previous one, except that it handles arbitrary many child 
 nodes by creating one instance of the rule for every number of child nodes 
-found in the grammar. This also makes it less efficient.
+found in the grammar. This also makes it less efficient. Deduction rules are the
+same as for TAG CYK Extended, except move unary and move binary are replaced by:
+
+Move general:<br/>
+[γ,(p · 1)<sub>⊤</sub>, i<sub>1</sub>, f<sub>1</sub>, f<sub>2</sub>, k<sub>1</sub>], ... , 
+[γ,(p · j)<sub>⊤</sub>, i<sub>j</sub>, f'<sup>j</sup><sub>1</sub>, f'<sup>j</sup><sub>2</sub>, k<sub>j</sub>]<br/>
+_______________________i<sub>l</sub> = i<sub>l-1</sub> + k<sub>l-1</sub><br/>
+[γ, p<sub>⊥</sub>, i, f<sub>1</sub> ⊕ ... ⊕ f'<sup>j</sup><sub>1</sub>, f<sub>2</sub> ⊕ ... ⊕ f'<sup>j</sup><sub>2</sub>, j]<br/>
+which is instantiated for every number of child nodes in any tree.
 
 ##### TAG Earley
 
@@ -1022,6 +1153,93 @@ rb and an auxiliary tree item in root node ra adjoin can be completed and the
 span of the auxiliary tree item is added to the indices of the other tree item.
 Finally, with an initial tree item in root node rb a substitution can be 
 completed and a new item located in a substitution node in rb can be derived.
+Deduction rules are:
+
+Initialize:<br/>
+_______________________α ∈ I, l(α, ε) = S<br/>
+[α, ε, la, 0, −, −, 0, 0]<br/>
+instantiated for every initial tree.
+
+ScanTerm:<br/>
+[γ, dot, la, i, j, k, l, 0]<br/>
+__________________________l(γ, dot) = w<sub>l+1</sub><br/>
+[γ, dot, ra, i, j, k, l + 1, 0]<br/>
+instantiated for every token in the input and every leaf in every tree where the
+leaf has the same label as the token.
+
+Scan-ε:<br/>
+[γ, dot, la, i, j, k, l, 0]<br/>
+_________________________l(γ, dot) = ε<br/>
+[γ, dot, ra, i, j, k, l, 0]<br/>
+instantiated for every leaf with an empty label in every tree at every position 
+in the input.
+
+PredictAdjoinable:<br/>
+[γ, dot, la, i, j, k, l, 0]<br/>
+__________________________β ∈ f<sub>SA</sub>(γ, dot)<br/>
+[β, ε, la, l, −, −, l, 0]<br/>
+instantiated for every auxiliary tree.
+
+PredictNoAdj:<br/>
+[γ, dot, la, i, j, k, l, 0]<br/>
+__________________________f<sub>OA</sub>(γ, dot) = 0<br/>
+[γ, dot, lb, l, −, −, l, 0]<br/>
+instantiated once.
+
+PredictAdjoined:<br/>
+[β, dot, lb, l, −, −, l, 0]<br/>
+_______________________dot = foot(β), β ∈ f<sub>SA</sub>(γ, dot')<br/>
+[γ, dot', lb, l, −, −, l, 0]<br/>
+instantiated for every node in every tree.
+
+CompleteFoot:<br/>
+[γ, dot, rb, i, j, k, l, 0], [β, dot', lb, i, −, −, i, 0]<br/>
+________________________________dot' = foot(β), β ∈ f<sub>SA</sub>(γ,dot')<br/>
+[β, dot', rb, i, i, l, l, 0]<br/>
+instantiated once.
+
+CompleteNode:<br/>
+[γ, dot, la, f, g, h, i, 0], [γ, dot, rb, i, j, k, l, sat?]<br/>
+__________________________________l(β, dot) ∈ N<br/>
+[γ, dot, ra, f, g ⊕ j, h ⊕ k, l, 0]
+instantiated once.
+
+Adjoin:<br/>
+[β, ε, ra, i, j, k, l, 0], [γ, dot,rb, j, p, q, k, 0]<br/>
+_________________________________________β ∈ f<sub>SA</sub>(γ, p)<br/>
+[γ, dot, rb, i, p, q, l, 1]<br/>
+instantiated once.
+
+MoveDown: [γ, dot, lb, i, j, k, l, 0]<br/>
+_______________________________γ(dot · 1) is defined<br/>
+[γ, dot · 1, la, i, j, k, l, 0]<br/>
+instantiated once.
+
+MoveRight:<br/>
+[γ, dot, ra, i, j, k, l, 0]<br/>
+______________________γ(dot + 1) is defined<br/>
+[γ, dot + 1, la, i, j, k, l, 0]<br/>
+instantiated once.
+
+MoveUp:<br/>
+[γ, dot · m, ra, i, j, k, l, 0]<br/>
+_______________________________γ(dot · m + 1) is not defined<br/>
+[γ, dot,rb, i, j, k, l, 0]<br/>
+instantiated once.
+
+PredictSubst:<br/>
+[γ, p, lb, i, −, −, i, 0]<br/>
+________________________γ(p) a substitution node, α ∈ I, l(γ, p) = l(α, ε)<br/>
+[α, ε, la, i, −, −, i, 0]<br/>
+instantiated for every initial tree.
+
+Substitute:<br/>
+[α, ε, ra, i, −, −, j, 0]<br/>
+______________________γ(p) a substitution node, α ∈ I, l(γ, p) = l(α, ε)<br/>
+[γ, p, rb, i, −, −, j, 0]<br/>
+instantiated for every substitution node in every tree.
+
+Goal item: [α, ε, ra, 0, −, −, n, 0], α ∈ I
 
 ##### TAG Earley Prefix Valid
 
@@ -1057,12 +1275,46 @@ predicate might not precede each other. After that complete steps combine items
 that match the right hand sides of a rule to derive an item that represents the
 left hand side of the rule. The items consist of a nonterminal and a span 
 vector that stores start and end span of every argument of the left hand side.
+Deduction rules are:
+
+Scan:<br/>
+______________A(w<sub>i+1</sub>) → ε ∈ P<br/>
+[A, <<i, i + 1>>]<br/>
+instantiated for every clause with empty rhs over all possible spans.
+
+Unary:<br/>
+[B, ρ-vec]<br/>
+___________A(α-vec) → B(α-vec) ∈ P<br/>
+[A, ρ-vec]<br/>
+instantiated for every unary production rule.
+
+Binary:<br/>
+[B, ρ<sub>B</sub>-vec], [C, ρ<sub>C</sub>-vec]<br/>
+___________________A(ρ<sub>A</sub>-vec) → B(ρ<sub>B</sub>-vec) C(ρ<sub>C</sub>-vec) is a range instantiated rule<br/>
+[A, ρ<sub>A</sub>-vec]<br/>
+instantiated for every binary production rule.
+
+Goal item: [S, <<0, n>>]
 
 ##### SRCG CYG General
 
 This algorithm works the same as the previous one except that it handles any 
 grammar that contains no rules with empty right hand side arguments and thus is
-very expensive.
+very expensive. Deduction rules are:
+
+Axioms (scan):<br/>
+_____________A(ρ-vec) → ε a range instantiated rule<br/>
+[A, ρ-vec]<br/>
+instantiated for every clause with empty rhs.
+
+Complete:<br/>
+[A<sub>1</sub>, ρ<sub>1</sub>-vec], ... , [A<sub>m</sub>, ρ<sub>m</sub>-vec]<br/>
+_______________________A(ρ-vec) → A<sub>1</sub>(ρ<sub>1</sub>-vec), ... , 
+A<sub>m</sub>(ρ<sub>m</sub>-vec) a range instantiated rule<br/>
+[A, ρ-vec]<br/>
+instantiated for every production rule where the rhs is not empty.
+
+Goal item is the same as for SRCG CYK Extended.
 
 ##### SRCG Earley
 
@@ -1075,26 +1327,66 @@ There are two kinds of items: active and passive ones. Active items consist of
 a clause where a dot in the left hand side marks up to which position the 
 arguments have been matched with the input string. One index says how much of 
 the input has been matched. Two more indices say where the dot is located in
- the lhs. After that a range vector which is as long as the number of elements 
- in the lhs times 2 say for each lhs element which span it has. Passive items 
- consist of a nonterminal whose span has fully been seen and two indices per 
- argument give the span for each argument. As usual the chart is initialized 
- with every rule that has the start symbol as lhs nonterminal with the dot 
- located at the beginning and no ranges are known. If a dot is located before a
- variable a predict step triggers a new item for each production rule whose lhs
- nonterminal is the same as for the rhs predicate where the variable belongs 
- to. If the dot is located before a terminal, a scan step moves the dot over 
- the terminal and updates the respective indices. If the dot reaches the end of
- an argument that is not the last one, the item is suspended and the parsing 
- process returns to the clause that triggered the prediction, moving the dot 
- over the variable that has been matched with the input. A resume step with 
- both the suspended item and the one that now wants to process the variable 
- returns to the next argument in the lower item. If a dot reaches the end of 
- the last argument of a lhs, the items has been fully seen and is converted to 
- a passive item while the spans for each element are converted to spans for 
- each argument. Finally a complete step combines a passive item with an active 
- item to move the dot over the last missing variable belonging to that 
- nonterminal.
+the lhs. After that a range vector which is as long as the number of elements 
+in the lhs times 2 say for each lhs element which span it has. Passive items 
+consist of a nonterminal whose span has fully been seen and two indices per 
+argument give the span for each argument. As usual the chart is initialized 
+with every rule that has the start symbol as lhs nonterminal with the dot 
+located at the beginning and no ranges are known. If a dot is located before a
+variable a predict step triggers a new item for each production rule whose lhs
+nonterminal is the same as for the rhs predicate where the variable belongs 
+to. If the dot is located before a terminal, a scan step moves the dot over 
+the terminal and updates the respective indices. If the dot reaches the end of
+an argument that is not the last one, the item is suspended and the parsing 
+process returns to the clause that triggered the prediction, moving the dot 
+over the variable that has been matched with the input. A resume step with 
+both the suspended item and the one that now wants to process the variable 
+-returns to the next argument in the lower item. If a dot reaches the end of 
+the last argument of a lhs, the items has been fully seen and is converted to 
+a passive item while the spans for each element are converted to spans for 
+each argument. Finally a complete step combines a passive item with an active 
+item to move the dot over the last missing variable belonging to that 
+nonterminal. Deduction rules are:
+
+Initialize:<br/>
+____________________________S(φ-vec) → Φ-vec ∈ P<br/>
+[S(φ-vec) → Φ-vec, 0, <1, 0>, ρ<sub>init</sub>-vec]<br/>
+instantiated for every production rule with the start symbol as nonterminal in 
+the lhs.
+
+Scan:<br/>
+[A(φ-vec) → Φ-vec, pos, <i, j>, ρ-vec]<br/>
+______________________________________φ-vec(i, j + 1) = w<sub>pos+1</sub><br/>
+[A(φ-vec) → Φ-vec, pos + 1, <i, j + 1>, ρ'-vec]<br/>
+instantiated once.
+
+Predict:<br/>
+[A(φ-vec) → ... B(X, ...) ... , pos, <i, j>, ρ<sub>A</sub>-vec]<br/>
+___________________________________where φ-vec(i, j + 1) = X, B(ψ-vec) → Ψ-vec ∈ P<br/>
+[B(ψ-vec) → Ψ-vec, pos, <1, 0>, ρ<sub>init</sub>-vec]<br/>
+instantiated for every clause where the rhs is not empty.
+
+Suspend:<br/>
+[B(ψ-vec) → Ψ-vec, pos', <i, j>, ρ<sub>B</sub>-vec], [A(φ-vec) → ... B(ξ-vec) ... , pos, <k, l>, ρ<sub>A</sub>-vec]<br/>
+________________<br/>
+[A(φ-vec) → ... B(ξ-vec) ... , pos', <k, l + 1>, ρ-vec]<br/>
+instantiated once.
+
+Convert:<br/>
+[B(ψ-vec) → Ψ-vec, pos, <i, j>, ρ<sub>B</sub>-vec]
+__________________________________|ψ-vec(i)| = j, |ψ-vec| = i, ρ<sub>B</sub>(ψ-vec) = ρ<br/>
+[B, ρ]<br/>
+instantiated once.
+
+Resume:<br/>
+[A(φ-vec) → ... B(ξ-vec) ... , pos, <i, j>, ρ<sub>A</sub>-vec], [B(ψ-vec) → Ψ-vec, pos', <k − 1, l>, ρ<sub>B</sub>-vec]
+____________________________________________<br/>
+[B(ψ-vec) → Ψ-vec, pos, <k, 0>, ρ<sub>B</sub>-vec]
+instantiated once.
+
+Goal Item: [S(φ-vec) → Φ-vec, n, <1, j>, ψ] with |φ-vec(1)| = j (i.e., dot at 
+the end of lhs argument).
+
 
 ### Graphical output
 
