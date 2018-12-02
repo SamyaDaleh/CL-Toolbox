@@ -1224,7 +1224,7 @@ instantiated once.
 MoveUp:<br/>
 [γ, dot · m, ra, i, j, k, l, 0]<br/>
 _______________________________γ(dot · m + 1) is not defined<br/>
-[γ, dot,rb, i, j, k, l, 0]<br/>
+[γ, dot, rb, i, j, k, l, 0]<br/>
 instantiated once.
 
 PredictSubst:<br/>
@@ -1239,7 +1239,9 @@ ______________________γ(p) a substitution node, α ∈ I, l(γ, p) = l(α, ε)<
 [γ, p, rb, i, −, −, j, 0]<br/>
 instantiated for every substitution node in every tree.
 
-Goal item: [α, ε, ra, 0, −, −, n, 0], α ∈ I
+Goal items: [α, ε, ra, 0, −, −, n, 0], α ∈ I<br/>
+initialized for every initial tree where the root is labeled with the start 
+symbol.
 
 ##### TAG Earley Prefix Valid
 
@@ -1255,7 +1257,112 @@ were added: Convert la1 takes any item with position la and turns the start
 index and both foot node indices to `~` Convert la2 takes any item with 
 position la and turns the new predict flag and all but the last indices to `~`.
 The last new rule is called Convert rb and turns the predict flag and both foot
-node indices to `~`.
+node indices to `~`. Deduction rules are:
+
+Initialize:<br/>
+____________________________ α ∈ I, l(α, ε) = S<br/>
+[α, ε, la, 0, 0, -, -, 0, 0]<br/>
+initialized for every intial tree where the root is labeled with the start 
+symbol.
+
+ScanTerm:<br/>
+[γ, p, la, i_γ, i, j, k, l, 0]<br/>
+___________________________________ l(γ, p_γ times p) = w_l+1<br/>
+[γ, p, ra, i_0, i, j, k, l + 1, 0]<br/>
+initialized once.
+
+Scan-ε:
+[γ, p, la, i_γ, i, j, k, l, 0]<br/>
+_______________________________ l(γ, p_γ times p) = ε<br/>
+[γ, p, ra, i_γ, i, j, k, l, 0]<br/>
+initialized once.
+
+Convert-rb:<br/>
+[γ, p, rb, ~, i, j, k, l, 0]<br/>
+________________________________<br/>
+[γ, p, rb, ~, i, ~, ~, l, 0]<br/>
+initialized once.
+
+Convert-la rom1:<br/>
+[γ, p, la, i_γ, i, j, k, l, 0]<br/>
+_______________________________<br/>
+[γ, p, la, i_γ, ~, ~, ~, l, 0]<br/>
+initialized once.
+
+Convert-la rom2:<br/>
+[γ, p, la, i_γ, i, j, k, l, 0]<br/>
+_______________________________<br/>
+[γ, p, la, ~, ~, ~, ~, l, 0]<br/>
+initialized once.
+
+PredictNoAdj:<br/>
+[γ, p, la, i_γ, i, j, k, l, 0]<br/>
+_______________________________ f_OA(γ, p) = 0<br/>
+[γ, p, lb, i_γ, l, -, -, l, 0]<br/>
+initialized once.
+
+PredictAdjoinable:<br/>
+[γ, p, la, ~, ~, ~, ~, l, 0]<br/>
+_____________________________ β ∈ f_SA(γ, p)<br/>
+[β, ε, la, l, l, -, -, l, 0]<br/>
+initialized for every auxiliry tree.
+
+PredictAdjoined:<br/>
+[β, p_f, la, i_β, i, -, -, m, 0], [γ, p, la, i_γ, ~, ~, ~, i_β, 0]<br/>
+__________________________________________________________________ β(p_f) foot node, β ∈ f_SA(γ, p)
+[γ, p, lb, i_γ, m, -, -, m, 0]<br/>
+initialized once.
+
+CompleteFoot:<br/>
+[γ, p, rb, ~, ~, i, ~, ~, l, 0], [β, p_f, la, i_β, m, -, -, i], [γ, p, la, ~, ~, ~, ~, i_β, 0]<br/>
+_____________________________________________________________________________________________ β(p_f) foot node, β ∈ f_SA (γ, p)<br/>
+[β, p_f, rb, ~, m, i, l, l, 0]<br/>
+initialzed once.
+
+Adjoin:<br/>
+[β, ε, ra, i_β, i_β, j, k, l, 0], [γ, p, rb, ~, j, g, h, k, 0], [γ, p, la, ~, ~, ~, ~, i_β, 0]<br/>
+___________________________________________________________________________________________ β ∈ f_SA(γ, p)<br/>
+[γ, p, rb, ~, i_β, g, h, l, 1]<br/>
+initialized once.
+
+CompleteNode:<br/>
+[γ, p, la, i_γ, f, g, h, i, 0], [γ, p, rb, ~, i, j, k, l, adj]<br/>
+_____________________________________________________________ l(β, p) ∈ N<br/>
+[γ, p, ra, i_γ, f, g ⊕ j, h ⊕ k, l, 0]<br/>
+initialized once.
+
+MoveDown:<br/>
+[γ, p, lb, i_γ, i, j, k, l, 0]<br/>
+_________________________________<br/>
+[γ, p · 1, la, i_γ, i, j, k, l, 0]<br/>
+initialized once.
+
+MoveRight:<br/>
+[γ, p, ra, i_γ, i, j, k, l, 0]<br/>
+______________________________<br/>
+[γ, p + 1, la, i_γ, i, j, k, l, 0]<br/>
+initialized once.
+
+MoveUp:<br/>
+[γ, p · m, ra, i_γ, i, j, k, l, 0]<br/>
+__________________________________ γ(p · m + 1) is not defined<br/>
+[γ, p, rb, ~, i, j, k, l, 0]<br/>
+initialized once.
+
+PredictSubstituted:<br/>
+[γ, p, la, ~, ~, ~, ~, i, 0]<br/>
+_____________________________ α ∈ I, γ(p) substitution node, l(γ, p) = l(α, ε)<br/>
+[α, ε, la, i, i, -, -, i, 0]
+initialized for every initial tree.
+
+Substitute:<br/>
+[γ, p, la, ~, ~, ~, ~, i, 0], [α, ε, ra, i, i, -, -, j, 0]<br/>
+________________________________________________________ α ∈ I, γ(p) substitution node, l(γ, p) = l(α, ε)<br/>
+[γ, p, rb, ~, i, -, -, j, 0]<br/>
+initialized once.
+
+Goal items: [α, ε, ra, 0, 0, -, -, n, 0]
+for every initial tree with start symbol as root.
 
 ##### SRCG CYK
 
