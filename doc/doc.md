@@ -852,6 +852,17 @@ instantiated once.
 Goal items: [S -> α •, 0, n]<br/>
 for every production rule with the start symbol as lhs.
 
+##### CFG Earley Bottom-up
+
+This version processes the input from left to right like Earley, but starts at
+the input string. Deduction rules are Scan, Complete and Goal item like the
+usual Earley plus:
+
+Initialize:<br/>
+__________ A -> α ∈ P<br/>
+[A -> •α, i, i]<br/>
+instantiated for every production rule at every index 0 <= i < n.
+
 ##### CFG Earley Passive
 
 This works like Earley with the difference that it uses passive items that are 
@@ -1739,6 +1750,12 @@ https://doi.org/10.1016/0743-1066(95)00035-I.
 
 Kallmeyer, Laura: Earley Parsing (Parsing). Düsseldorf, Wintersemester 16/17. 
 URL [https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/earley.pdf](https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/earley.pdf) – last checked 2017-05-27, p. 6-8
+
+### Earley Bottom-up
+
+Sikkel, Klaas:Parsing schemata : a framework for specification and analysis of 
+parsing algorithms. Berlin : Springer, 
+1997 (Texts in theo­re­ti­cal com­pu­ter sci­ence). – ISBN 978-3-540-61650-4 p. 79
 
 ### Earley for sRCG
 
