@@ -20,6 +20,7 @@ public class GrammarToGrammarConverter {
     case "cfg-shiftreduce":
       return getCfgForShiftReduce(cfg, please);
     case "cfg-earley":
+    case "cfg-earley-bottomup":
     case "cfg-earley-passive":
     case "cfg-leftcorner-chart":
       return cfg;

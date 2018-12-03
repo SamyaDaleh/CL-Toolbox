@@ -1,14 +1,12 @@
 package com.github.samyadaleh.cltoolbox.cli;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.github.samyadaleh.cltoolbox.cli.Main;
+import java.util.Arrays;
+import java.util.Collection;
 
 @RunWith(Parameterized.class) public class MainTest {
 
@@ -18,10 +16,10 @@ import com.github.samyadaleh.cltoolbox.cli.Main;
     return Arrays.asList(
         new String[][] {{"cfg-neverheardofthis"}, {"cfg-topdown"},
             {"cfg-shiftreduce"}, {"cfg-lr-0"}, {"cfg-lr-1"}, {"cfg-earley"},
-            {"cfg-passive"}, {"cfg-leftcorner"}, {"cfg-leftcorner-chart"},
-            {"cfg-cyk"}, {"cfg-cyk-extended"}, {"cfg-cyk-general"},
-            {"cfg-unger"}, {"pcfg-astar"}, {"pcfg-cyk"}, {"tag-earley"},
-            {"tag-cyk-extended"}, {"tag-cyk-general"},
+            {"cfg-earley-bottomup"}, {"cfg-earley-passive"}, {"cfg-leftcorner"},
+            {"cfg-leftcorner-chart"}, {"cfg-cyk"}, {"cfg-cyk-extended"},
+            {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"}, {"pcfg-cyk"},
+            {"tag-earley"}, {"tag-cyk-extended"}, {"tag-cyk-general"},
             {"tag-earley-prefixvalid"}, {"srcg-cyk-extended"},
             {"srcg-cyk-general"}, {"srcg-earley"}});
   }

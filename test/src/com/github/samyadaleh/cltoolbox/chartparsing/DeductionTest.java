@@ -59,10 +59,43 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgShiftreduceEpsilon() {
+    String w = "t0 t1";
+    Cfg cfg = new Cfg();
+    cfg.setStartSymbol("N0");
+    cfg.setTerminals(new String[]{"t0", "t1", "t2"});
+    cfg.setNonterminals(new String[]{"N0"});
+    try {
+      cfg.addProductionRule("N0 -> ε");
+      cfg.addProductionRule("N0 -> t0 t1");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    ParsingSchema schema = CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(
+        cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(N0 (t0 )(t1 ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgEarley() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(Objects.requireNonNull(TestGrammarLibrary.anBnCfg()),
+        .cfgToEarleyRules(TestGrammarLibrary.anBnCfg(),
+            w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgEarleyBottomup() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToEarleyRulesConverter
+        .cfgToEarleyBottomupRules(TestGrammarLibrary.anBnCfg(),
             w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
@@ -155,7 +188,7 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testTagCyk() throws ParseException {
+  @Test public void testTagCyk() {
     String w2 = "a c b";
     ParsingSchema schema = TagToCykRulesConverter
         .tagToCykExtendedRules(TestGrammarLibrary.anCBTag(), w2);
@@ -166,7 +199,7 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testTagCykGeneral() throws ParseException {
+  @Test public void testTagCykGeneral() {
     String w2 = "a c b";
     ParsingSchema schema = TagToCykRulesConverter
         .tagToCykGeneralRules(TestGrammarLibrary.anCBTag(), w2);
@@ -177,7 +210,7 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testTagEarley() throws ParseException {
+  @Test public void testTagEarley() {
     String w2 = "a c b";
     ParsingSchema schema = TagToEarleyRulesConverter
         .tagToEarleyRules(TestGrammarLibrary.anCBTag(), w2);
@@ -191,7 +224,7 @@ public class DeductionTest {
     }
   }
 
-  @Test public void testTagEarleyPrefixValid() throws ParseException {
+  @Test public void testTagEarleyPrefixValid() {
     String w2 = "a c b";
     ParsingSchema schema = TagToEarleyPrefixValidRulesConverter
         .tagToEarleyPrefixValidRules(TestGrammarLibrary.anCBTag(), w2);
