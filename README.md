@@ -108,5 +108,5 @@ A = {β : (T a T*)}
 - prints full traces or only successful traces
 - automatically transforms grammars into more expressive formalisms
 - can convert grammars to fit the algorithm
-- displays derivated trees for CFG Topdown, Shiftreduce, Earley and TAG CYK and Earley, sRCG Earley
+- displays derivated trees for all algorithms
 - for TAG displays item trees on mouseover
