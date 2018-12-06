@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_TOPDOWN_AXIOM;
+
 public class CfgToTopDownRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -35,7 +37,7 @@ public class CfgToTopDownRulesConverter {
 
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new DeductionChartItem(cfg.getStartSymbol(), "0"));
-    axiom.setName("axiom");
+    axiom.setName(DEDUCTION_RULE_CFG_TOPDOWN_AXIOM);
     schema.addAxiom(axiom);
     schema.addGoal(new DeductionChartItem("", String.valueOf(wSplit.length)));
     return schema;

@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_COMPLETENODE;
+
 public class TagEarleyPrefixValidCompleteNode
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
@@ -18,7 +20,7 @@ public class TagEarleyPrefixValidCompleteNode
 
   public TagEarleyPrefixValidCompleteNode(Tag tag) {
     this.tag = tag;
-    this.name = "complete node";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_COMPLETENODE;
     this.antNeeded = 2;
   }
 

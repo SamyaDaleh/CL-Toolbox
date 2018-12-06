@@ -8,6 +8,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_COMPLETE;
+
 /**
  * If two items match the rhs of a rule, get a new item that represents the lhs.
  */
@@ -17,7 +19,7 @@ public class CfgCykComplete extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public CfgCykComplete(CfgProductionRule rule) {
     this.rule = rule;
-    this.name = "complete " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_CYK_COMPLETE + " " + rule.toString();
     this.antNeeded = 2;
   }
 

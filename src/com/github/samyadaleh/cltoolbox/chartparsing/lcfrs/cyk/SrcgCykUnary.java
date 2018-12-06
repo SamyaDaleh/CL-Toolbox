@@ -10,6 +10,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_CYK_COMPLETE_UNARY;
+
 /**
  * Similar to the Unary rule in extended CYK for CFG. If there is a chain rule
  * and an item for the rhs, get an lhs item with the same span.
@@ -20,7 +22,7 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
   private final String[] wSplit;
 
   public SrcgCykUnary(Clause clause, String[] wSplit) {
-    this.name = "unary " + clause.toString();
+    this.name = DEDUCTION_RULE_LCFRS_CYK_COMPLETE_UNARY + " " + clause.toString();
     this.antNeeded = 1;
     this.clause = clause;
     this.wSplit = wSplit;

@@ -20,6 +20,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_CYK_AXIOM;
+
 public class LcfrsToCykRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -43,7 +45,7 @@ public class LcfrsToCykRulesConverter {
       derivedTrees.add(new Tree(treeString.toString()));
       consequence.setTrees(derivedTrees);
       scan.addConsequence(consequence);
-      scan.setName("scan " + clause.toString());
+      scan.setName(DEDUCTION_RULE_LCFRS_CYK_AXIOM + " " + clause.toString());
       schema.addAxiom(scan);
     }
   }

@@ -6,6 +6,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemI
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgCykComplete;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_PCFG_CYK_COMPLETE;
+
 /**
  * Similar to the complete rule for CYK, but used for a PCFG and with weights
  * for astar parsing.
@@ -20,7 +22,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
     super(pRule);
     this.n = n;
     this.outsides = outsides;
-    this.name = "complete " + pRule.toString();
+    this.name = DEDUCTION_RULE_PCFG_CYK_COMPLETE + " " + pRule.toString();
   }
 
   @Override
@@ -76,7 +78,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
     return "x1 + out(" + pRule.getRhs()[0] + ", i, j - i, n - j) : [" + pRule
         .getRhs()[0] + ",i,j], x2 + out(" + pRule.getRhs()[1]
         + ", j, k - j, n - k) : [" + pRule.getRhs()[1] + ", j, k]"
-        + "\n______ \n" + "x1 + x2 + |log(" + String.valueOf(pRule.getP())
+        + "\n______ \n" + "x1 + x2 + |log(" + pRule.getP()
         + ")| + out(" + pRule.getLhs() + ", i, k - i, n - k) : [" + pRule
         .getLhs() + ", i, k]";
   }

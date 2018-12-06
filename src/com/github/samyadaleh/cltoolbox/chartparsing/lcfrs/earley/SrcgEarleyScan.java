@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_SCAN;
+
 /**
  * Whenever the next symbol after the dot is the next terminal in the input, we
  * can scan it.
@@ -23,7 +25,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
    */
   public SrcgEarleyScan(String[] wSplit) {
     this.wSplit = wSplit;
-    this.name = "scan";
+    this.name = DEDUCTION_RULE_LCFRS_EARLEY_SCAN;
     this.antNeeded = 1;
   }
 
@@ -40,7 +42,7 @@ public class SrcgEarleyScan extends AbstractDynamicDeductionRule {
           if (clauseParsed.getLhs().ifSymExists(iInt, jInt)
               && posInt < wSplit.length && clauseParsed.getLhsSymAt(iInt, jInt)
               .equals(wSplit[posInt])) {
-            this.name = "scan " + wSplit[posInt];
+            this.name = DEDUCTION_RULE_LCFRS_EARLEY_SCAN + " " + wSplit[posInt];
             ArrayList<String> newVector = new ArrayList<>();
             for (int k = 0; k * 2 + 5 < itemForm.length; k++) {
               newVector.add(itemForm[2 * k + 4]);

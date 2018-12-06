@@ -18,6 +18,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_PCFG_CYK_AXIOM;
+
 public class PcfgToCykRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -49,7 +51,7 @@ public class PcfgToCykRulesConverter {
               new Tree(new CfgProductionRule(pRule.getLhs(), pRule.getRhs())));
           consequence.setTrees(derivedTrees);
           scan.addConsequence(consequence);
-          scan.setName("scan " + pRule.toString());
+          scan.setName(DEDUCTION_RULE_PCFG_CYK_AXIOM + " " + pRule.toString());
           schema.addAxiom(scan);
         }
       } else {

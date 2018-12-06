@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_AXIOM;
+
 public class LcfrsToEarleyRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -46,7 +48,7 @@ public class LcfrsToEarleyRulesConverter {
       derivedTrees.add(TreeUtils.getTreeOfSrcgClause(clause));
       consequence.setTrees(derivedTrees);
       initialize.addConsequence(consequence);
-      initialize.setName("initialize");
+      initialize.setName(DEDUCTION_RULE_LCFRS_EARLEY_AXIOM);
       schema.addAxiom(initialize);
       schema.addGoal(
           new SrcgEarleyActiveItem(clause.toString(), wsplit.length, 1,

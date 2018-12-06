@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.*;
+
 public class CfgToLrKRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -19,7 +21,7 @@ public class CfgToLrKRulesConverter {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.setName("initialize");
+    axiom.setName(DEDUCTION_RULE_CFG_LRK_AXIOM);
     axiom.addConsequence(new DeductionChartItem("q0", "0"));
     schema.addAxiom(axiom);
     String[] initialState;
@@ -41,7 +43,7 @@ public class CfgToLrKRulesConverter {
     for (Map.Entry<String, String> entry : parseTable.entrySet()) {
       String state = entry.getKey().split(" ")[0];
       String action = entry.getValue().substring(0, 1);
-      if (action.equals("s")) {
+      if (action.equals(DEDUCTION_ACTION_CFG_LRK_SHIFT)) {
         if (statesWithReduces.contains(state)) {
           log.warn("Shift-Reduce conflict for state " + state
               + ", grammar cannot be parsed with LR(" + k + ").");
@@ -49,7 +51,7 @@ public class CfgToLrKRulesConverter {
         }
         statesWithShifts.add(state);
 
-      } else if (action.equals("r")) {
+      } else if (action.equals(DEDUCTION_ACTION_CFG_LRK_REDUCE)) {
         if (statesWithShifts.contains(state)) {
           log.warn("Shift-Reduce conflict for state " + state
               + ", grammar cannot be parsed with LR(" + k + ").");
@@ -153,7 +155,7 @@ public class CfgToLrKRulesConverter {
       addShiftActionToParseTable(states, cfg, k, parseTable, i);
       addReduceActionToParseTable(states, cfg, k, parseTable, i);
       if (contains(states.get(i), finalState)) {
-        parseTable.put(String.valueOf(i) + " $", "acc");
+        parseTable.put(i + " $", DEDUCTION_ACTION_CFG_LRK_ACCEPT);
         schema.addGoal(
             new DeductionChartItem("q0 " + cfg.getStartSymbol() + " q" + i,
                 String.valueOf(wSplit.length)));
@@ -173,7 +175,7 @@ public class CfgToLrKRulesConverter {
         }
         for (int j = 0; j < states.size(); j++) {
           if (equals(gotoState, states.get(j))) {
-            parseTable.put(String.valueOf(i) + " " + nt, String.valueOf(j));
+            parseTable.put(i + " " + nt, String.valueOf(j));
             break;
           }
         }
@@ -188,13 +190,13 @@ public class CfgToLrKRulesConverter {
         for (int j = 0; j < cfg.getProductionRules().size(); j++) {
           if (stateEntry[0].substring(0, stateEntry[0].length() - 2)
               .equals(cfg.getProductionRules().get(j).toString())) {
-            String key = String.valueOf(i) + " $";
+            String key = i + " $";
             if (parseTable.containsKey(key)) {
               throw new IllegalArgumentException(
                   "Second reduce entry for " + key
                       + " generated. Grammar cannot be LR(" + k + ") parsed.");
             }
-            parseTable.put(key, "r" + String.valueOf(j + 1));
+            parseTable.put(key, "r" + (j + 1));
           }
         }
       }
@@ -207,12 +209,12 @@ public class CfgToLrKRulesConverter {
       List<String[]> gotoState = computeGotoStates(states.get(i), t, cfg, k);
       for (int j = 0; j < states.size(); j++) {
         if (equals(gotoState, states.get(j))) {
-          String key = String.valueOf(i) + " " + t;
+          String key = i + " " + t;
           if (parseTable.containsKey(key)) {
             throw new IllegalArgumentException("Second shift entry for " + key
                 + " generated. Grammar cannot be LR(" + k + ") parsed.");
           }
-          parseTable.put(key, "s" + String.valueOf(j));
+          parseTable.put(key, DEDUCTION_ACTION_CFG_LRK_SHIFT + j);
           break;
         }
       }

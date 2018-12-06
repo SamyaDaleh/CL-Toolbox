@@ -3,11 +3,13 @@ package com.github.samyadaleh.cltoolbox.chartparsing.ccg;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CCG_DEDUCTION_FORWARDAPPLICATION;
+
 public class CcgForwardApplication
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public CcgForwardApplication() {
-    this.name = "Forward Application";
+    this.name = DEDUCTION_RULE_CCG_DEDUCTION_FORWARDAPPLICATION;
     this.antNeeded = 2;
   }
 

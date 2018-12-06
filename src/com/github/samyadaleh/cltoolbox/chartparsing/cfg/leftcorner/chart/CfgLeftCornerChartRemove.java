@@ -12,15 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE;
+
 /**
  * If topmost symbol on stacks completed and predicted are the same, remove
  * both.
  */
 public class CfgLeftCornerChartRemove
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public CfgLeftCornerChartRemove() {
-    this.name = "remove";
+    this.name = DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE;
     this.antNeeded = 2;
   }
 
@@ -33,8 +35,10 @@ public class CfgLeftCornerChartRemove
         int j = Integer.parseInt(itemForm2[1]);
         int l2 = Integer.parseInt(itemForm2[2]);
         if (mayDottedRuleSplit[k].substring(1).equals(itemForm2[0])
-          && i + l1 == j && mayDottedRuleSplit[k].length() > 1) {
-          this.name = "remove " + mayDottedRuleSplit[k].substring(1);
+            && i + l1 == j && mayDottedRuleSplit[k].length() > 1) {
+          this.name =
+              DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE + " " + mayDottedRuleSplit[k]
+                  .substring(1);
           if (k == mayDottedRuleSplit.length - 1) {
             handleDotBeforeLastSymbol(itemForm1, mayDottedRuleSplit, k, i, l1,
                 l2);
@@ -52,11 +56,11 @@ public class CfgLeftCornerChartRemove
   private void handleDotBeforeNotLastSymbol(String[] itemForm1,
       String[] mayDottedRuleSplit, int k, int i, int l1, int l2) {
     ChartItemInterface consequence = new DeductionChartItem(
-      ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
-        + mayDottedRuleSplit[k].substring(1) + " •"
-        + ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, k + 1,
-          mayDottedRuleSplit.length),
-      String.valueOf(i), String.valueOf(l1 + l2));
+        ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
+            + mayDottedRuleSplit[k].substring(1) + " •" + ArrayUtils
+            .getSubSequenceAsString(mayDottedRuleSplit, k + 1,
+                mayDottedRuleSplit.length), String.valueOf(i),
+        String.valueOf(l1 + l2));
     List<Tree> derivedTrees =
         ChartParsingUtils.generateDerivatedTrees(antecedences, itemForm1);
     consequence.setTrees(derivedTrees);
@@ -67,16 +71,16 @@ public class CfgLeftCornerChartRemove
   private void handleDotBeforeLastSymbol(String[] itemForm1,
       String[] mayDottedRuleSplit, int k, int i, int l1, int l2) {
     ChartItemInterface consequence = new DeductionChartItem(
-      ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
-        + mayDottedRuleSplit[k].substring(1) + " •",
-      String.valueOf(i), String.valueOf(l1 + l2));
+        ArrayUtils.getSubSequenceAsString(mayDottedRuleSplit, 0, k) + " "
+            + mayDottedRuleSplit[k].substring(1) + " •", String.valueOf(i),
+        String.valueOf(l1 + l2));
     List<Tree> derivedTrees = new ArrayList<>();
     if (Arrays.equals(antecedences.get(0).getItemForm(), itemForm1)) {
       if (antecedences.get(1).getTrees().size() > 0) {
         for (Tree tree1 : antecedences.get(0).getTrees()) {
           for (Tree tree2 : antecedences.get(1).getTrees()) {
             derivedTrees
-              .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+                .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
           }
         }
       } else {
@@ -87,7 +91,7 @@ public class CfgLeftCornerChartRemove
         for (Tree tree1 : antecedences.get(0).getTrees()) {
           for (Tree tree2 : antecedences.get(1).getTrees()) {
             derivedTrees
-              .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
+                .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
           }
         }
       } else {
@@ -101,7 +105,7 @@ public class CfgLeftCornerChartRemove
 
   @Override public String toString() {
     return "[A -> α •X β,i,l_1], [X,j,l_2]" + "\n______ j = i+l_1\n"
-      + "[A -> α X •β,i,l_1+l_2]";
+        + "[A -> α X •β,i,l_1+l_2]";
   }
 
 }

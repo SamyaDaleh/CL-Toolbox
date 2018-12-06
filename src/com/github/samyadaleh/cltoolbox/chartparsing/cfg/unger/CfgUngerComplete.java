@@ -8,6 +8,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_UNGER_COMPLETE;
+
 /**
  * If the top o the stack matches the rhs of a rule, replace it with the lhs.
  */
@@ -18,7 +20,7 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
   public CfgUngerComplete(CfgProductionRule rule) {
     this.rule = rule;
     this.antNeeded = rule.getRhs().length + 1;
-    this.name = "complete " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_UNGER_COMPLETE + " " + rule.toString();
   }
 
   @Override public List<ChartItemInterface> getConsequences() {

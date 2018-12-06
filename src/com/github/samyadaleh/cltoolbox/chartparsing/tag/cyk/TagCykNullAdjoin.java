@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_NULLADJOIN;
+
 /** Goes from bottom into top position without adjoining. */
 public class TagCykNullAdjoin extends AbstractDynamicDeductionRule {
 
@@ -15,7 +17,7 @@ public class TagCykNullAdjoin extends AbstractDynamicDeductionRule {
   /** Constructor needs the grammar to check if adjoins is obligatory. */
   public TagCykNullAdjoin(Tag tag) {
     this.tag = tag;
-    this.name = "null-adjoin";
+    this.name = DEDUCTION_RULE_TAG_NULLADJOIN;
     this.antNeeded = 1;
   }
 

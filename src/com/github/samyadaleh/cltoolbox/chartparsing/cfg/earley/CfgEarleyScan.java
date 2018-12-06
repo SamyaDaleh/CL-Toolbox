@@ -7,15 +7,19 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
-/** The scan rule for topdown removes a terminal if it is the next input
- * symbol. */
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_SCAN;
+
+/**
+ * The scan rule for topdown removes a terminal if it is the next input
+ * symbol.
+ */
 public class CfgEarleyScan extends AbstractDynamicDeductionRule {
 
   private final String[] wsplit;
 
   public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
-    this.name = "scan";
+    this.name = DEDUCTION_RULE_CFG_EARLEY_SCAN;
     this.antNeeded = 1;
   }
 
@@ -28,19 +32,20 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
       int j = Integer.parseInt(itemForm[2]);
       for (int k = 0; k < stackSplit.length; k++) {
         if (stackSplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
-          .equals(stackSplit[k].substring(1))) {
-          this.name = "scan " + wsplit[j];
+            .equals(stackSplit[k].substring(1))) {
+          this.name = DEDUCTION_RULE_CFG_EARLEY_SCAN + " " + wsplit[j];
           StringBuilder newStack = new StringBuilder();
           newStack.append(ArrayUtils.getSubSequenceAsString(stackSplit, 0, k));
           if (k == stackSplit.length - 1) {
             newStack.append(" ").append(wsplit[j]).append(" •");
           } else {
-            newStack.append(" ").append(wsplit[j]).append(" •")
-              .append(ArrayUtils.getSubSequenceAsString(stackSplit, k + 1,
-                stackSplit.length));
+            newStack.append(" ").append(wsplit[j]).append(" •").append(
+                ArrayUtils.getSubSequenceAsString(stackSplit, k + 1,
+                    stackSplit.length));
           }
-          ChartItemInterface consequence = new DeductionChartItem(newStack.toString(),
-            String.valueOf(i), String.valueOf(j + 1));
+          ChartItemInterface consequence =
+              new DeductionChartItem(newStack.toString(), String.valueOf(i),
+                  String.valueOf(j + 1));
           consequence.setTrees(antecedences.get(0).getTrees());
           logItemGeneration(consequence);
           consequences.add(consequence);

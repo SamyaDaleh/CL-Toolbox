@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_PCFG_CYK_COMPLETE;
+
 /**
  * Similar to the complete rule for CYK, but used for a PCFG and with weights
  * for probabilistic CYK parsing.
@@ -25,7 +27,7 @@ public class PcfgCykComplete
 
   public PcfgCykComplete(PcfgProductionRule pRule) {
     this.pRule = pRule;
-    this.name = "complete " + pRule.toString();
+    this.name = DEDUCTION_RULE_PCFG_CYK_COMPLETE + " " + pRule.toString();
     this.antNeeded = 2;
   }
 
@@ -85,8 +87,8 @@ public class PcfgCykComplete
 
   @Override public String toString() {
     return "x1 : [" + pRule.getRhs()[0] + ", i, j], x2 : [" + pRule.getRhs()[1]
-        + ", j, k]" + "\n______ \n" + "x1 + x2 + |log(" + String
-        .valueOf(pRule.getP()) + ")| : [" + pRule.getLhs() + ", i, k]";
+        + ", j, k]" + "\n______ \n" + "x1 + x2 + |log(" + pRule.getP()
+        + ")| : [" + pRule.getLhs() + ", i, k]";
   }
 
   @Override public void clearItems() {

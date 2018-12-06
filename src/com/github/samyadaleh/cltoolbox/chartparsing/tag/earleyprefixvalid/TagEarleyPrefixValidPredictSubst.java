@@ -10,6 +10,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTSUBSTITUTED;
+
 public class TagEarleyPrefixValidPredictSubst
     extends AbstractDynamicDeductionRule {
 
@@ -18,7 +20,7 @@ public class TagEarleyPrefixValidPredictSubst
 
   public TagEarleyPrefixValidPredictSubst(String iniTreeName, Tag tag) {
     this.tag = tag;
-    this.name = "predict substituted";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTSUBSTITUTED;
     this.iniTreeName = iniTreeName;
     this.antNeeded = 1;
   }

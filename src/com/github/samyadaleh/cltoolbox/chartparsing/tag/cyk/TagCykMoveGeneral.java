@@ -9,6 +9,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_MOVE_GENERAL;
+
 /**
  * From "antNeeded" number of sibling nodes moves up to the parent.
  */
@@ -19,7 +21,7 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
   public TagCykMoveGeneral(Tag tag, int antNeeded) {
     this.tag = tag;
     this.antNeeded = antNeeded;
-    this.name = "move-general";
+    this.name = DEDUCTION_RULE_TAG_MOVE_GENERAL;
   }
 
   @Override public List<ChartItemInterface> getConsequences() {

@@ -6,6 +6,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.Abstrac
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_CONVERT;
+
 /**
  * Converts an active item (with a dot) into a passive item that does not care
  * which rule led to its creation.
@@ -14,7 +16,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 public class CfgEarleyPassiveConvert extends AbstractDynamicDeductionRule {
 
   public CfgEarleyPassiveConvert() {
-    this.name = "convert";
+    this.name = DEDUCTION_RULE_CFG_EARLEY_CONVERT;
     this.antNeeded = 1;
   }
 

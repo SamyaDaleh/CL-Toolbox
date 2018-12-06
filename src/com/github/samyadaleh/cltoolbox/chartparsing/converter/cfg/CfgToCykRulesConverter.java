@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.*;
+import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykCompleteGeneral;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykCompleteUnary;
@@ -16,6 +17,9 @@ import org.apache.logging.log4j.Logger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_AXIOM;
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON;
 
 public class CfgToCykRulesConverter {
   private static final Logger log = LogManager.getLogger();
@@ -89,7 +93,7 @@ public class CfgToCykRulesConverter {
         derivedTrees.add(new Tree(rule));
         consequence.setTrees(derivedTrees);
         scan.addConsequence(consequence);
-        scan.setName("scan " + rule.toString());
+        scan.setName(DEDUCTION_RULE_CFG_CYK_AXIOM + " " + rule.toString());
         schema.addAxiom(scan);
       }
     }
@@ -103,18 +107,18 @@ public class CfgToCykRulesConverter {
       StaticDeductionRule scan = new StaticDeductionRule();
       scan.addConsequence(
           new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
-      scan.setName("scan " + wSplit[i]);
+      scan.setName(DEDUCTION_RULE_CFG_CYK_AXIOM + " " + wSplit[i]);
       schema.addAxiom(scan);
       StaticDeductionRule scanEps = new StaticDeductionRule();
       scanEps
           .addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
-      scanEps.setName("scan ε");
+      scanEps.setName(DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON);
       schema.addAxiom(scanEps);
     }
     StaticDeductionRule scanEps = new StaticDeductionRule();
     scanEps.addConsequence(
         new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
-    scanEps.setName("scan ε");
+    scanEps.setName(DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON);
     schema.addAxiom(scanEps);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {

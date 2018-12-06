@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_AXIOM;
+
 public class TagToEarleyRulesConverter {
   /**
    * Returns a parsing schema for Earley parsing of the given input w with tag.
@@ -73,7 +75,7 @@ public class TagToEarleyRulesConverter {
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
         initialize.addConsequence(consequence);
-        initialize.setName("initialize");
+        initialize.setName(DEDUCTION_RULE_TAG_EARLEY_AXIOM);
         schema.addAxiom(initialize);
         schema.addGoal(
             new DeductionChartItem(iniTreeName, "", "ra", "0", "-", "-",

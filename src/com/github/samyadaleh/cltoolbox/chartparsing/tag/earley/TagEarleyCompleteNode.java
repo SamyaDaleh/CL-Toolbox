@@ -5,12 +5,14 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_COMPLETENODE;
+
 /**
  * If you have one item in a node la and another matching in the same node in
  * rb, you can put both together.
  */
 public class TagEarleyCompleteNode
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -20,7 +22,7 @@ public class TagEarleyCompleteNode
    */
   public TagEarleyCompleteNode(Tag tag) {
     this.tag = tag;
-    this.name = "complete node";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_COMPLETENODE;
     this.antNeeded = 2;
   }
 
@@ -41,14 +43,14 @@ public class TagEarleyCompleteNode
     String k = itemForm2[5];
     String l = itemForm2[6];
     String label = tag.getTree(treeName1).getNodeByGornAdress(node1).getLabel();
-    if (treeName1.equals(treeName2) && node1.equals(node2)
-      && tag.isInNonterminals(label)) {
-      if (pos1.equals("la") && pos2.equals("rb") && i1.equals(i2)
-        && adj1.equals("0")) {
+    if (treeName1.equals(treeName2) && node1.equals(node2) && tag
+        .isInNonterminals(label)) {
+      if (pos1.equals("la") && pos2.equals("rb") && i1.equals(i2) && adj1
+          .equals("0")) {
         String f1 = (g.equals("-")) ? j : g;
         String f2 = (h.equals("-")) ? k : h;
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName1, node1, "ra", f, f1, f2, l, "0");
+            new DeductionChartItem(treeName1, node1, "ra", f, f1, f2, l, "0");
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -58,7 +60,7 @@ public class TagEarleyCompleteNode
 
   @Override public String toString() {
     return "[ɣ,p,la,f,g,h,i,0], [ɣ,p,rb,i,j,k,l,adj]" + "\n______ l(ɣ,p) ∈ N\n"
-      + "[ɣ,p,ra,f,g⊕j,h⊕k,l,0]";
+        + "[ɣ,p,ra,f,g⊕j,h⊕k,l,0]";
   }
 
 }

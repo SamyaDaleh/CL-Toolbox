@@ -9,12 +9,14 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_REDUCE;
+
 public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
 
   private final CfgProductionRule rule;
 
   public CfgLeftCornerChartReduce(CfgProductionRule rule) {
-    this.name = "reduce " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_LEFTCORNER_REDUCE + " " + rule.toString();
     this.rule = rule;
     this.antNeeded = 1;
   }
@@ -29,10 +31,10 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
             rule.getLhs() + " -> " + rule.getRhs()[0] + " •" + ArrayUtils
                 .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length),
             i, l);
-          CfgLeftCornerUtils
-              .generateDerivedTrees(rule, antecedences, consequence);
-          logItemGeneration(consequence);
-          consequences.add(consequence);
+        CfgLeftCornerUtils
+            .generateDerivedTrees(rule, antecedences, consequence);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
     return this.consequences;

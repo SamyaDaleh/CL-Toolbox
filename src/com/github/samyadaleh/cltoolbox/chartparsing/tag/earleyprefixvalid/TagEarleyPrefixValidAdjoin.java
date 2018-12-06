@@ -11,14 +11,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TagEarleyPrefixValidAdjoin extends
-    AbstractDynamicDeductionRuleThreeAntecedences {
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_ADJOIN;
+
+public class TagEarleyPrefixValidAdjoin
+    extends AbstractDynamicDeductionRuleThreeAntecedences {
 
   private final Tag tag;
 
   public TagEarleyPrefixValidAdjoin(Tag tag) {
     this.tag = tag;
-    this.name = "adjoin";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_ADJOIN;
     this.antNeeded = 3;
   }
 
@@ -52,7 +54,9 @@ public class TagEarleyPrefixValidAdjoin extends
           new DeductionChartItem(treeName2, node2, "rb", "~", iGamma1, j2, k2,
               l1, "1");
       generateDerivatedTrees(itemForm1, node2, consequence);
-      this.name = "adjoin " + treeName2 + "[" + node2 + "," + treeName1 + "]";
+      this.name =
+          DEDUCTION_RULE_TAG_EARLEY_ADJOIN + " " + treeName2 + "[" + node2 + ","
+              + treeName1 + "]";
       logItemGeneration(consequence);
       consequences.add(consequence);
     }

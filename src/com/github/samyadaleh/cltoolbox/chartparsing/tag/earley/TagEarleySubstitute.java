@@ -10,7 +10,11 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
-/** If a potential initial tree is complete, substitute it if possible. */
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_SUBSTITUTE;
+
+/**
+ * If a potential initial tree is complete, substitute it if possible.
+ */
 public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
 
   private final String outTreeName;
@@ -25,7 +29,9 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
     this.outTreeName = outTreeName;
     this.outNode = outNode;
     this.tag = tag;
-    this.name = "substitute in " + outTreeName + "(" + outNode + ")";
+    this.name =
+        DEDUCTION_RULE_TAG_EARLEY_SUBSTITUTE + " " + outTreeName + "(" + outNode
+            + ")";
     this.antNeeded = 1;
   }
 
@@ -42,23 +48,25 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
       String adj = itemForm[7];
       String iniTreeRootLabel = tag.getTree(treeName).getRoot().getLabel();
       String substNodeLabel =
-        tag.getTree(outTreeName).getNodeByGornAdress(outNode).getLabel();
-      if (tag.getInitialTree(treeName) != null && node.equals("")
-        && f1.equals("-") && f2.equals("-") && adj.equals("0")
-        && pos.equals("ra") && iniTreeRootLabel.equals(substNodeLabel)) {
+          tag.getTree(outTreeName).getNodeByGornAdress(outNode).getLabel();
+      if (tag.getInitialTree(treeName) != null && node.equals("") && f1
+          .equals("-") && f2.equals("-") && adj.equals("0") && pos.equals("ra")
+          && iniTreeRootLabel.equals(substNodeLabel)) {
         ChartItemInterface consequence =
-          new DeductionChartItem(outTreeName, outNode, "rb", i, "-", "-", j, "0");
+            new DeductionChartItem(outTreeName, outNode, "rb", i, "-", "-", j,
+                "0");
         Tree derivedTreeBase = tag.getTree(outTreeName);
         List<Tree> derivedTrees = new ArrayList<>();
         for (Tree tree : antecedences.get(0).getTrees()) {
-          derivedTrees
-            .add(TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
+          derivedTrees.add(
+              TreeUtils.performLeftmostSubstitution(derivedTreeBase, tree));
         }
         // imagine a tree with 1 node where you would substitute into the root
         // ...
         String outNodeName = outNode.length() == 0 ? "ε" : outNode;
-        this.name = "substitute " + outTreeName + "[" + outNodeName + ","
-            + treeName + "]";
+        this.name =
+            "substitute " + outTreeName + "[" + outNodeName + "," + treeName
+                + "]";
         consequence.setTrees(derivedTrees);
         logItemGeneration(consequence);
         consequences.add(consequence);
@@ -69,8 +77,8 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[α,ε,ra,i,-,-,j,0]" + "\n______ " + outTreeName + "(" + outNode
-      + ") a substitution node, α ∈ I, l(" + outTreeName + "," + outNode
-      + ") = l(α,ε)\n" + "[" + outTreeName + "," + outNode + ",rb,i,-,-,j,0]";
+        + ") a substitution node, α ∈ I, l(" + outTreeName + "," + outNode
+        + ") = l(α,ε)\n" + "[" + outTreeName + "," + outNode + ",rb,i,-,-,j,0]";
   }
 
 }

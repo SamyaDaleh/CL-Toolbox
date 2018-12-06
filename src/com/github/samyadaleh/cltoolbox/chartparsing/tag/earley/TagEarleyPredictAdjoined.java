@@ -9,6 +9,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREDICTADJOINED;
+
 /**
  * If a dot is at the foot node of an auxiliary tree, predict that it was
  * adjoined into another tree and move into that tree at the affected node.
@@ -27,7 +29,9 @@ public class TagEarleyPredictAdjoined extends AbstractDynamicDeductionRule {
     this.outTreeName = outTreeName;
     this.outNode = outNode;
     this.tag = tag;
-    this.name = "predict adjoined in " + outTreeName + "(" + outNode + ")";
+    this.name =
+        DEDUCTION_RULE_TAG_EARLEY_PREDICTADJOINED + " " + outTreeName + "("
+            + outNode + ")";
     this.antNeeded = 1;
   }
 
@@ -39,12 +43,13 @@ public class TagEarleyPredictAdjoined extends AbstractDynamicDeductionRule {
       String l = itemForm[6];
       boolean adjoinable = tag.isAdjoinable(treeName, outTreeName, outNode);
       boolean isFootNode = tag.getAuxiliaryTree(treeName) != null && tag
-        .getAuxiliaryTree(treeName).getFoot().getGornAddress().equals(node);
-      if (adjoinable && isFootNode && itemForm[2].equals("lb")
-        && itemForm[7].equals("0") && itemForm[3].equals(l)
-        && itemForm[4].equals("-") && itemForm[5].equals("-")) {
+          .getAuxiliaryTree(treeName).getFoot().getGornAddress().equals(node);
+      if (adjoinable && isFootNode && itemForm[2].equals("lb") && itemForm[7]
+          .equals("0") && itemForm[3].equals(l) && itemForm[4].equals("-")
+          && itemForm[5].equals("-")) {
         ChartItemInterface consequence =
-          new DeductionChartItem(outTreeName, outNode, "lb", l, "-", "-", l, "0");
+            new DeductionChartItem(outTreeName, outNode, "lb", l, "-", "-", l,
+                "0");
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getTree(outTreeName));
         consequence.setTrees(derivedTrees);
@@ -57,8 +62,9 @@ public class TagEarleyPredictAdjoined extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[β,pf,lb,l,-,-,l,0]"
-      + "\n______ pf foot node address in β, β ∈ f_SA(" + outTreeName + ","
-      + outNode + ")\n" + "[" + outTreeName + "," + outNode + ",lb,l,-,-,l,0]";
+        + "\n______ pf foot node address in β, β ∈ f_SA(" + outTreeName + ","
+        + outNode + ")\n" + "[" + outTreeName + "," + outNode
+        + ",lb,l,-,-,l,0]";
   }
 
 }

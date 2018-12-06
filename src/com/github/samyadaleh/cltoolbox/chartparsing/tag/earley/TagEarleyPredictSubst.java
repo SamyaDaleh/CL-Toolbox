@@ -10,6 +10,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREDICTSUBST;
+
 /**
  * If in a node is substitution possible, predict the new tree that can be
  * substituted there.
@@ -26,7 +28,7 @@ public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
   public TagEarleyPredictSubst(String auxTreeName, Tag tag) {
     this.iniTreeName = auxTreeName;
     this.tag = tag;
-    this.name = "predict substitution of " + auxTreeName;
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREDICTSUBST + " " + auxTreeName;
     this.antNeeded = 1;
   }
 

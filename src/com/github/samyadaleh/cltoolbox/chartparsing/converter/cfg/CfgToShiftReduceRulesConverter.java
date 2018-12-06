@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_SHIFTREDUCE_AXIOM;
+
 public class CfgToShiftReduceRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -36,7 +38,7 @@ public class CfgToShiftReduceRulesConverter {
 
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(new DeductionChartItem("", "0"));
-    axiom.setName("axiom");
+    axiom.setName(DEDUCTION_RULE_CFG_SHIFTREDUCE_AXIOM);
     schema.addAxiom(axiom);
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
         String.valueOf(wSplit.length)));

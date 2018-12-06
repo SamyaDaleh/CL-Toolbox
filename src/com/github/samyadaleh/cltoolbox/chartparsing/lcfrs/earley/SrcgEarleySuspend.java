@@ -13,6 +13,8 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_SUSPEND;
+
 /**
  * Whenever we arrive at the end of an argument that is not the last argument,
  * we suspend the processing of this rule and we go back to the item that we
@@ -28,7 +30,7 @@ public class SrcgEarleySuspend
    */
   public SrcgEarleySuspend(String[] variables) {
     this.variables = variables;
-    this.name = "suspend";
+    this.name = DEDUCTION_RULE_LCFRS_EARLEY_SUSPEND;
     this.antNeeded = 2;
   }
 

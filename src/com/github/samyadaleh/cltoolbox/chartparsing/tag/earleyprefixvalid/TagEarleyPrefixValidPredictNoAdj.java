@@ -1,11 +1,13 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTNOADJOIN;
 
 public class TagEarleyPrefixValidPredictNoAdj
     extends AbstractDynamicDeductionRule {
@@ -14,7 +16,7 @@ public class TagEarleyPrefixValidPredictNoAdj
 
   public TagEarleyPrefixValidPredictNoAdj(Tag tag) {
     this.tag = tag;
-    this.name = "predict no adj";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTNOADJOIN;
     this.antNeeded = 1;
   }
 

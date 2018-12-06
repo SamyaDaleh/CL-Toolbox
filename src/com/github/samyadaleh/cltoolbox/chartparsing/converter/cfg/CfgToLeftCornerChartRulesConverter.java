@@ -10,6 +10,9 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.chart.CfgLeft
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM;
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON;
+
 public class CfgToLeftCornerChartRulesConverter {
   /**
    * Converts a cfg to a parsing scheme for LeftCorner parsing, chart version.
@@ -24,17 +27,18 @@ public class CfgToLeftCornerChartRulesConverter {
       StaticDeductionRule axiom = new StaticDeductionRule();
       axiom.addConsequence(
           new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
-      axiom.setName("scan " + wSplit[i]);
+      axiom
+          .setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM + " " + wSplit[i]);
       schema.addAxiom(axiom);
       axiom = new StaticDeductionRule();
       axiom.addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
-      axiom.setName("scan-ε ");
+      axiom.setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON);
       schema.addAxiom(axiom);
     }
     StaticDeductionRule axiom = new StaticDeductionRule();
     axiom.addConsequence(
         new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
-    axiom.setName("scan-ε ");
+    axiom.setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON);
     schema.addAxiom(axiom);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {

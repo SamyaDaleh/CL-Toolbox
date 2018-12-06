@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_MOVE_UNARY;
+
 /** From a single-child node move up to the parent node. */
 public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
 
@@ -18,7 +20,7 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
    */
   public TagCykMoveUnary(Tag tag) {
     this.tag = tag;
-    this.name = "move-unary";
+    this.name = DEDUCTION_RULE_TAG_MOVE_UNARY;
     this.antNeeded = 1;
   }
 

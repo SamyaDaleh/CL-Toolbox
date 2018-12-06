@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_RESUME;
+
 /**
  * Whenever we are left of a variable that is not the first argument of one of
  * the rhs predicates, we resume the rule of the rhs predicate.
@@ -26,7 +28,7 @@ public class SrcgEarleyResume
    */
   public SrcgEarleyResume(String[] variables) {
     this.variables = variables;
-    this.name = "resume";
+    this.name = DEDUCTION_RULE_LCFRS_EARLEY_RESUME;
     this.antNeeded = 2;
   }
 

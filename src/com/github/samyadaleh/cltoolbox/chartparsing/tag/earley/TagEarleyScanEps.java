@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_SCANEPS;
+
 /**
  * If the node's label is epsilon, just move on.
  */
@@ -20,7 +22,7 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
    */
   public TagEarleyScanEps(Tag tag) {
     this.tag = tag;
-    this.name = "scan ε";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_SCANEPS;
     this.antNeeded = 1;
   }
 

@@ -4,12 +4,14 @@ import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.Abstrac
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_MOVE_BINARY;
+
 /** From a two sibling nodes move up to the parent node. */
 public class TagCykMoveBinary
   extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public TagCykMoveBinary() {
-    this.name = "move-binary";
+    this.name = DEDUCTION_RULE_TAG_MOVE_BINARY;
     this.antNeeded = 2;
   }
 

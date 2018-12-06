@@ -1,13 +1,15 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINED;
 
 public class TagEarleyPrefixValidPredictAdjoined
     extends AbstractDynamicDecutionRuleTwoAntecedences {
@@ -16,7 +18,7 @@ public class TagEarleyPrefixValidPredictAdjoined
 
   public TagEarleyPrefixValidPredictAdjoined(Tag tag) {
     this.tag = tag;
-    this.name = "predict adjoined";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINED;
     this.antNeeded = 2;
   }
 
@@ -42,8 +44,8 @@ public class TagEarleyPrefixValidPredictAdjoined
         List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
         String node2name = node2.length() == 0 ? "ε" : node2;
         this.name =
-            "predict adjoined " + treeName2 + "[" + node2name + "," + treeName1
-                + "]";
+            DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINED + " " + treeName2 + "["
+                + node2name + "," + treeName1 + "]";
         consequence.setTrees(derivedTrees);
         logItemGeneration(consequence);
         consequences.add(consequence);

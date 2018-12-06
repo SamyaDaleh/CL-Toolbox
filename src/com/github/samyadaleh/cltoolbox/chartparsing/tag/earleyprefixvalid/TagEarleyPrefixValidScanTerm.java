@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_SCANTERM;
+
 public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
 
   private final String[] wSplit;
@@ -15,7 +17,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
   public TagEarleyPrefixValidScanTerm(String[] wSplit, Tag tag) {
     this.wSplit = wSplit;
     this.tag = tag;
-    this.name = "scan";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_SCANTERM;
     this.antNeeded = 1;
   }
 
@@ -28,7 +30,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
       if (lInt < wSplit.length && itemForm[2].equals("la") && itemForm[8]
           .equals("0") && tag.getTree(treeName).getNodeByGornAdress(node)
           .getLabel().equals(wSplit[lInt])) {
-        this.name = "scan " + wSplit[lInt];
+        this.name = DEDUCTION_RULE_TAG_EARLEY_SCANTERM + " " + wSplit[lInt];
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, node, "ra", itemForm[3],
                 itemForm[4], itemForm[5], itemForm[6], String.valueOf(lInt + 1),

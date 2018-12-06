@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.*;
+
 /**
  * Implementation of a general rule for LR(k) parsing, depends on a deterministic
  * parse table
@@ -53,7 +55,8 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
       } else {
         String halfKey = state.substring(1) + " $";
         String action = parsTable.get(halfKey);
-        if (action != null && action.startsWith("r")) {
+        if (action != null && action
+            .startsWith(DEDUCTION_ACTION_CFG_LRK_REDUCE)) {
           int ruleId = Integer.parseInt(action.substring(1));
           CfgProductionRule rule = rules.get(ruleId - 1);
           for (int l = 0; l < rule.getRhs().length; l++) {
@@ -62,7 +65,7 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
               return consequences;
             }
           }
-          this.name = "reduce " + rule.toString();
+          this.name = DEDUCTION_RULE_CFG_LRK_REDUCE + " " + rule.toString();
           StringBuilder newStack = new StringBuilder(ArrayUtils
               .getSubSequenceAsString(stackSplit, 0,
                   stackSplit.length - rule.getRhs().length * 2));
@@ -72,7 +75,8 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
               rule, newStack);
           generateConsequence(
               new DeductionChartItem(newStack.toString(), itemForm[1]), rule);
-        } else if (action != null && action.equals("acc")) {
+        } else if (action != null && action
+            .equals(DEDUCTION_ACTION_CFG_LRK_ACCEPT)) {
           return consequences;
         } else {
           log.error("Unexpected table entry " + action + " for " + halfKey);
@@ -103,7 +107,6 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
         }
       }
       derivedTrees.add(0, derivedTreeBase);
-      this.name = "reduce " + rule.toString();
       consequence1.setTrees(derivedTrees);
       logItemGeneration(consequence1);
       consequences.add(consequence1);
@@ -124,13 +127,13 @@ public class CfgLrKRule extends AbstractDynamicDeductionRule {
   private void lookUpShiftAction(int i, String[] stackSplit, String state,
       String key) {
     String action = parsTable.get(key);
-    if (action.startsWith("s")) {
+    if (action.startsWith(DEDUCTION_ACTION_CFG_LRK_SHIFT)) {
       ChartItemInterface consequence = new DeductionChartItem(
           ArrayUtils.getSubSequenceAsString(stackSplit, 0, stackSplit.length)
               + " " + wSplit[i] + " q" + action.substring(1),
           String.valueOf(i + 1));
       consequence.setTrees(antecedences.get(0).getTrees());
-      this.name = "shift " + wSplit[i];
+      this.name = DEDUCTION_RULE_CFG_LRK_SHIFT + " " + wSplit[i];
       logItemGeneration(consequence);
       consequences.add(consequence);
     } else {

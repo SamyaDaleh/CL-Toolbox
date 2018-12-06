@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_MOVE_RIGHT;
+
 public class TagEarleyPrefixValidMoveRight
     extends AbstractDynamicDeductionRule {
 
@@ -14,7 +16,7 @@ public class TagEarleyPrefixValidMoveRight
 
   public TagEarleyPrefixValidMoveRight(Tag tag) {
     this.tag = tag;
-    this.name = "move right";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_MOVE_RIGHT;
     this.antNeeded = 1;
   }
 

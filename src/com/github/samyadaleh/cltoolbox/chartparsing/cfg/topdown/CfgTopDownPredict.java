@@ -13,6 +13,8 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_TOPDOWN_PREDICT;
+
 /**
  * If a nonterminal is on top of a stack it can be replaced by any rhs where it
  * is the lhs.
@@ -23,7 +25,7 @@ public class CfgTopDownPredict extends AbstractDynamicDeductionRule {
 
   public CfgTopDownPredict(CfgProductionRule rule) {
     this.rule = rule;
-    this.name = "predict " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_TOPDOWN_PREDICT + " " + rule.toString();
     this.antNeeded = 1;
   }
 

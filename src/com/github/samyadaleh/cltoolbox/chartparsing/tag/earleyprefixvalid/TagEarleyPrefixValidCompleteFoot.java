@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_COMPLETEFOOT;
+
 public class TagEarleyPrefixValidCompleteFoot
     extends AbstractDynamicDeductionRuleThreeAntecedences {
 
@@ -18,7 +20,7 @@ public class TagEarleyPrefixValidCompleteFoot
 
   public TagEarleyPrefixValidCompleteFoot(Tag tag) {
     this.tag = tag;
-    this.name = "complete foot";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_COMPLETEFOOT;
     this.antNeeded = 3;
   }
 

@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_COMPLETE;
+
 /**
  * If the item matches the rhs of a chain rule, get a new item that represents
  * the lhs.
@@ -21,7 +23,7 @@ public class CfgCykCompleteUnary extends AbstractDynamicDeductionRule {
 
   public CfgCykCompleteUnary(CfgProductionRule rule) {
     this.rule = rule;
-    this.name = "complete " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_CYK_COMPLETE + " " + rule.toString();
     this.antNeeded = 1;
   }
 

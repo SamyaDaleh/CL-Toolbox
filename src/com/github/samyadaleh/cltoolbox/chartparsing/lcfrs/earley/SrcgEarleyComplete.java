@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_COMPLETE;
+
 /**
  * Whenever we have a passive B item we can use it to move the dot over the
  * variable of the last argument of B in a parent A-rule that was used to
@@ -20,7 +22,7 @@ public class SrcgEarleyComplete
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public SrcgEarleyComplete() {
-    this.name = "complete";
+    this.name = DEDUCTION_RULE_LCFRS_EARLEY_COMPLETE;
     this.antNeeded = 2;
   }
 
@@ -52,7 +54,8 @@ public class SrcgEarleyComplete
           if (vectorsMatch && itemForm1[itemForm1.length - 2].equals(pos2) && nt
               .equals(nt2)) {
             this.name =
-                "complete " + clause2Parsed.getLhs().getSymAt(iInt2, jInt2);
+                DEDUCTION_RULE_LCFRS_EARLEY_COMPLETE + " " + clause2Parsed
+                    .getLhs().getSymAt(iInt2, jInt2);
             String posB = itemForm1[itemForm1.length - 1];
             int posBInt = Integer.parseInt(posB);
             ArrayList<String> newVector = new ArrayList<>();

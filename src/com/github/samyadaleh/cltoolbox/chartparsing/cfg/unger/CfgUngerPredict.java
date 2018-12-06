@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_UNGER_PREDICT;
+
 /**
  * Predict all possible separations of the rhs of a rule.
  */
@@ -23,7 +25,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
   public CfgUngerPredict(CfgProductionRule rule, Cfg cfg) {
     this.rule = rule;
     this.antNeeded = 1;
-    this.name = "predict " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_UNGER_PREDICT + " " + rule.toString();
     this.cfg = cfg;
   }
 

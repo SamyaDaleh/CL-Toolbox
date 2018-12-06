@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.*;
+
 public class TagToCykRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -98,7 +100,7 @@ public class TagToCykRulesConverter {
         derivedTrees.add(tag.getAuxiliaryTree(auxTree));
         consequence.setTrees(derivedTrees);
         footPredict.addConsequence(consequence);
-        footPredict.setName("foot-predict");
+        footPredict.setName(DEDUCTION_RULE_TAG_CYK_AXIOM_FOOTPREDICT);
         schema.addAxiom(footPredict);
       }
     }
@@ -136,7 +138,7 @@ public class TagToCykRulesConverter {
       derivedTrees.add(tag.getTree(treeName));
       consequence.setTrees(derivedTrees);
       lexScan.addConsequence(consequence);
-      lexScan.setName("lex-scan " + wSplit[i]);
+      lexScan.setName(DEDUCTION_RULE_TAG_CYK_AXIOM_LEXSCAN + " " + wSplit[i]);
       schema.addAxiom(lexScan);
     } else if (p.getLabel().equals("")) {
       StaticDeductionRule epsScan = new StaticDeductionRule();
@@ -147,7 +149,7 @@ public class TagToCykRulesConverter {
       derivedTrees.add(tag.getTree(treeName));
       consequence.setTrees(derivedTrees);
       epsScan.addConsequence(consequence);
-      epsScan.setName("eps-scan");
+      epsScan.setName(DEDUCTION_RULE_TAG_CYK_AXIOM_EPSSCAN);
       schema.addAxiom(epsScan);
     }
   }

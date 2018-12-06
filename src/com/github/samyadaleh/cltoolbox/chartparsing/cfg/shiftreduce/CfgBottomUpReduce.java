@@ -12,6 +12,8 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_SHIFTREDUCE_REDUCE;
+
 /**
  * If the top o the stack matches the rhs of a rule, replace it with the lhs.
  */
@@ -22,7 +24,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
   public CfgBottomUpReduce(CfgProductionRule rule) {
     this.rule = rule;
     this.antNeeded = 1;
-    this.name = "reduce " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_SHIFTREDUCE_REDUCE + " " + rule.toString();
   }
 
   @Override public List<ChartItemInterface> getConsequences() {

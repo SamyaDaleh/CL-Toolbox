@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_CYK_COMPLETE_GENERAL;
+
 /**
  * Similar to the general complete rule in CYK for CFG. If there is a clause and
  * the vectors of all items that represent the rhs match, combine them to a new
@@ -25,7 +27,8 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
   private final int rangesNeeded;
 
   public SrcgCykGeneral(Clause clause, String[] wSplit) {
-    this.name = "complete " + clause.toString();
+    this.name =
+        DEDUCTION_RULE_LCFRS_CYK_COMPLETE_GENERAL + " " + clause.toString();
     this.antNeeded = clause.getRhs().size();
     this.clause = clause;
     this.wSplit = wSplit;
@@ -201,7 +204,7 @@ public class SrcgCykGeneral extends AbstractDynamicDeductionRule {
       List<List<String>> solutionRangesList, String mayV) {
     List<List<String>> solutionRangesListNew = new ArrayList<>();
     boolean firstrange = false;
-    if (solutionRangesList.size() == 0){
+    if (solutionRangesList.size() == 0) {
       firstrange = true;
     }
     for (int m = 0; m < wSplit.length; m++) {

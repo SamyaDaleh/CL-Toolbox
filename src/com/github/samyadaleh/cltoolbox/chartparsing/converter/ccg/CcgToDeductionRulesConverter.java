@@ -6,16 +6,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ccg.*;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
+
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CCG_DEDUCTION_AXIOM;
 
 /**
  * Class that contains the methods to convert CCGs into Parsing Schemas.
  */
 public class CcgToDeductionRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Returns a Parsing Schema for a CCG deductive system.
@@ -34,7 +33,7 @@ public class CcgToDeductionRulesConverter {
               "( " + cat.replace('(', '[').replace(')', ']') + " " + wSplit[i]
                   + ")"));
           axiom.addConsequence(consequence);
-          axiom.setName("axiom");
+          axiom.setName(DEDUCTION_RULE_CCG_DEDUCTION_AXIOM);
           schema.addAxiom(axiom);
         } catch (ParseException e) {
           throw new RuntimeException(e);

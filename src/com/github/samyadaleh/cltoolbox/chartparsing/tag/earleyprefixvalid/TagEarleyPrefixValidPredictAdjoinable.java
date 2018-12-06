@@ -1,13 +1,15 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.tag.earleyprefixvalid;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
-import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINABLE;
 
 public class TagEarleyPrefixValidPredictAdjoinable
     extends AbstractDynamicDeductionRule {
@@ -17,7 +19,7 @@ public class TagEarleyPrefixValidPredictAdjoinable
 
   public TagEarleyPrefixValidPredictAdjoinable(String auxTreeName, Tag tag) {
     this.tag = tag;
-    this.name = "predict adjoinable";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINABLE;
     this.auxTreeName = auxTreeName;
     this.antNeeded = 1;
   }

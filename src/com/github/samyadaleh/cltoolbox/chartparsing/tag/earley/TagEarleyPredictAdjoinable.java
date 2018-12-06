@@ -9,6 +9,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREDICTADJOINABLE;
+
 /**
  * If the dot is at a node where adjunction is possible, predict the auxiliary
  * tree that can be adjoined into that node.
@@ -25,7 +27,7 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
   public TagEarleyPredictAdjoinable(String auxTreeName, Tag tag) {
     this.auxTreeName = auxTreeName;
     this.tag = tag;
-    this.name = "predict adjoinable with " + auxTreeName;
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREDICTADJOINABLE + " " + auxTreeName;
     this.antNeeded = 1;
   }
 
@@ -38,7 +40,7 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
       boolean adjoinable = tag.isAdjoinable(auxTreeName, treeName, node);
       if (adjoinable && itemForm[2].equals("la") && itemForm[7].equals("0")) {
         ChartItemInterface consequence =
-          new DeductionChartItem(auxTreeName, "", "la", l, "-", "-", l, "0");
+            new DeductionChartItem(auxTreeName, "", "la", l, "-", "-", l, "0");
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(tag.getAuxiliaryTree(auxTreeName));
         consequence.setTrees(derivedTrees);
@@ -51,7 +53,7 @@ public class TagEarleyPredictAdjoinable extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[ɣ,p,la,i,j,k,l,0]" + "\n______ " + auxTreeName + " ∈ f_SA(ɣ,p)\n"
-      + "[" + auxTreeName + ",ε,la,l,-,-,l,0]";
+        + "[" + auxTreeName + ",ε,la,l,-,-,l,0]";
   }
 
 }

@@ -14,6 +14,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_PREDICT;
+
 /**
  * Whenever our dot is left of a variable that is the first argument of some rhs
  * predicate B, we predict new B-rules.
@@ -25,7 +27,8 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
 
   public SrcgEarleyPredict(Clause outclause) {
     this.outClause = outclause;
-    this.name = "predict " + outclause.toString();
+    this.name =
+        DEDUCTION_RULE_LCFRS_EARLEY_PREDICT + " " + outclause.toString();
     this.antNeeded = 1;
   }
 
@@ -35,33 +38,34 @@ public class SrcgEarleyPredict extends AbstractDynamicDeductionRule {
       if (itemForm[0].contains("->")) {
         try {
           Clause clauseParsed = new Clause(itemForm[0]);
-        int iInt = Integer.parseInt(itemForm[2]);
-        int jInt = Integer.parseInt(itemForm[3]);
+          int iInt = Integer.parseInt(itemForm[2]);
+          int jInt = Integer.parseInt(itemForm[3]);
           if (clauseParsed.getLhs().ifSymExists(iInt, jInt)) {
-          String mayV = clauseParsed.getLhsSymAt(iInt, jInt);
-          for (Predicate rhsPred : clauseParsed.getRhs()) {
-            if (rhsPred.getSymAt(1, 0).equals(mayV) && rhsPred.getNonterminal()
-                .equals(outClause.getLhs().getNonterminal())) {
-              ChartItemInterface consequence =
-                  new SrcgEarleyActiveItem(outClause.toString(),
-                      Integer.parseInt(itemForm[1]), 1, 0, new RangeVector(
-                      outClause.getLhs().getSymbolsAsPlainArray().length));
-              List<Tree> derivedTrees = new ArrayList<>();
-              Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(outClause);
-              for (Tree tree : antecedences.get(0).getTrees()) {
-                try {
-                  derivedTrees.add(TreeUtils
-                      .performLeftmostSubstitution(tree, derivedTreeBase));
-                } catch (IndexOutOfBoundsException e) {
-                  log.debug(e.getMessage(), e);
+            String mayV = clauseParsed.getLhsSymAt(iInt, jInt);
+            for (Predicate rhsPred : clauseParsed.getRhs()) {
+              if (rhsPred.getSymAt(1, 0).equals(mayV) && rhsPred
+                  .getNonterminal()
+                  .equals(outClause.getLhs().getNonterminal())) {
+                ChartItemInterface consequence =
+                    new SrcgEarleyActiveItem(outClause.toString(),
+                        Integer.parseInt(itemForm[1]), 1, 0, new RangeVector(
+                        outClause.getLhs().getSymbolsAsPlainArray().length));
+                List<Tree> derivedTrees = new ArrayList<>();
+                Tree derivedTreeBase = TreeUtils.getTreeOfSrcgClause(outClause);
+                for (Tree tree : antecedences.get(0).getTrees()) {
+                  try {
+                    derivedTrees.add(TreeUtils
+                        .performLeftmostSubstitution(tree, derivedTreeBase));
+                  } catch (IndexOutOfBoundsException e) {
+                    log.debug(e.getMessage(), e);
+                  }
                 }
+                consequence.setTrees(derivedTrees);
+                logItemGeneration(consequence);
+                consequences.add(consequence);
               }
-              consequence.setTrees(derivedTrees);
-              logItemGeneration(consequence);
-              consequences.add(consequence);
             }
           }
-        }
         } catch (ParseException e) {
           throw new RuntimeException(e);
         }

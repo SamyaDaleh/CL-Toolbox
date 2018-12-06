@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_CYK_COMPLETE_BINARY;
+
 /**
  * Similar to the binary complete rule in CYK for CFG. If there is a clause and
  * the vectors of two items that represent the rhs match, combine them to a new
@@ -22,7 +24,8 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
   private final String[] wSplit;
 
   public SrcgCykBinary(Clause clause, String[] wSplit) {
-    this.name = "complete " + clause.toString();
+    this.name =
+        DEDUCTION_RULE_LCFRS_CYK_COMPLETE_BINARY + " " + clause.toString();
     this.antNeeded = 2;
     this.clause = clause;
     this.wSplit = wSplit;
@@ -47,7 +50,6 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
         consequence.setTrees(derivedTrees);
         consequences.add(consequence);
         logItemGeneration(consequence);
-        this.name = "complete " + clause.toString();
       }
     }
   }

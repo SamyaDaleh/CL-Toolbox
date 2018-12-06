@@ -8,6 +8,8 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_REDUCE;
+
 /**
  * If the top of the completed stack is the left corner of a production rule,
  * pop that symbol, push the rest of the rhs to the stack to be predicted and
@@ -18,7 +20,7 @@ public class CfgLeftCornerReduce extends AbstractDynamicDeductionRule {
   private final CfgProductionRule rule;
 
   public CfgLeftCornerReduce(CfgProductionRule rule) {
-    this.name = "reduce " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_LEFTCORNER_REDUCE + " " + rule.toString();
     this.rule = rule;
     this.antNeeded = 1;
   }
@@ -48,10 +50,10 @@ public class CfgLeftCornerReduce extends AbstractDynamicDeductionRule {
         }
         ChartItemInterface consequence =
             new DeductionChartItem(newCompl, newPred, newLhs);
-          CfgLeftCornerUtils
-              .generateDerivedTrees(rule, antecedences, consequence);
-          logItemGeneration(consequence);
-          consequences.add(consequence);
+        CfgLeftCornerUtils
+            .generateDerivedTrees(rule, antecedences, consequence);
+        logItemGeneration(consequence);
+        consequences.add(consequence);
       }
     }
     return consequences;

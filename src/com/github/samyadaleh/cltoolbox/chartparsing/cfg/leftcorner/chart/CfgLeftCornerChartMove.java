@@ -6,6 +6,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.Abstrac
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_MOVE;
+
 /**
  * If the end of a rhs is encountered, move the topmost nonterminal from the
  * stack of lhs to the stack of completed items.
@@ -13,7 +15,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 public class CfgLeftCornerChartMove extends AbstractDynamicDeductionRule {
 
   public CfgLeftCornerChartMove() {
-    this.name = "move";
+    this.name = DEDUCTION_RULE_CFG_LEFTCORNER_MOVE;
     this.antNeeded = 1;
   }
 

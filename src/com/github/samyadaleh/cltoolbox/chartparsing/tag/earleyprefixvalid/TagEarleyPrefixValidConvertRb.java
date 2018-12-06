@@ -6,11 +6,13 @@ import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.Abstrac
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_CONVERTRB;
+
 public class TagEarleyPrefixValidConvertRb
     extends AbstractDynamicDeductionRule {
 
   public TagEarleyPrefixValidConvertRb() {
-    this.name = "convert rb";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_CONVERTRB;
     this.antNeeded = 1;
   }
 

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_AXIOM;
+
 public class TagToEarleyPrefixValidRulesConverter {
   public static ParsingSchema tagToEarleyPrefixValidRules(Tag tag, String w) {
     String[] wSplit = w.split(" ");
@@ -32,7 +34,7 @@ public class TagToEarleyPrefixValidRulesConverter {
         derivedTrees.add(tag.getInitialTree(iniTreeName));
         consequence.setTrees(derivedTrees);
         initialize.addConsequence(consequence);
-        initialize.setName("initialize");
+        initialize.setName(DEDUCTION_RULE_TAG_EARLEY_AXIOM);
         schema.addAxiom(initialize);
         schema.addGoal(
             new DeductionChartItem(iniTreeName, "", "ra", "0", "0", "-", "-",

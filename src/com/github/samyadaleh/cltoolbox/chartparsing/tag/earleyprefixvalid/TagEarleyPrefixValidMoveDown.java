@@ -7,13 +7,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_MOVE_DOWN;
+
 public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule {
 
   private final Tag tag;
 
   public TagEarleyPrefixValidMoveDown(Tag tag) {
     this.tag = tag;
-    this.name = "move down";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_MOVE_DOWN;
     this.antNeeded = 1;
   }
 

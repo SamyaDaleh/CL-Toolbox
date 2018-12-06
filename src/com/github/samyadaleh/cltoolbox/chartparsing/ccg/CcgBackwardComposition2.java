@@ -3,10 +3,12 @@ package com.github.samyadaleh.cltoolbox.chartparsing.ccg;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CCG_DEDUCTION_BACKWARDCOMPOSITION2;
+
 public class CcgBackwardComposition2
     extends AbstractDynamicDecutionRuleTwoAntecedences {
   public CcgBackwardComposition2() {
-    this.name = "Backward Composition 2";
+    this.name = DEDUCTION_RULE_CCG_DEDUCTION_BACKWARDCOMPOSITION2;
     this.antNeeded = 2;
   }
 

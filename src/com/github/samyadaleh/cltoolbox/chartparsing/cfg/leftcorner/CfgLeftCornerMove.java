@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_MOVE;
+
 /**
  * If the end of a rhs is encountered, move the topmost nonterminal from the
  * stack of lhs to the stack of completed items.
@@ -17,7 +19,7 @@ public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
 
   public CfgLeftCornerMove(String[] nonterminals) {
     this.nonterminals = nonterminals;
-    this.name = "move";
+    this.name = DEDUCTION_RULE_CFG_LEFTCORNER_MOVE;
     this.antNeeded = 1;
   }
 
@@ -39,13 +41,14 @@ public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
             } else {
               newCompl = nt + " " + stackCompl;
             }
-            this.name = "move " + nt;
-            String newPred = ArrayUtils.getSubSequenceAsString(stackPredSplit,
-              1, stackPredSplit.length);
-            String newLhs = ArrayUtils.getSubSequenceAsString(stackLhsSplit, 1,
-              stackLhsSplit.length);
+            this.name = DEDUCTION_RULE_CFG_LEFTCORNER_MOVE + " " + nt;
+            String newPred = ArrayUtils
+                .getSubSequenceAsString(stackPredSplit, 1,
+                    stackPredSplit.length);
+            String newLhs = ArrayUtils
+                .getSubSequenceAsString(stackLhsSplit, 1, stackLhsSplit.length);
             ChartItemInterface consequence =
-              new DeductionChartItem(newCompl, newPred, newLhs);
+                new DeductionChartItem(newCompl, newPred, newLhs);
             consequence.setTrees(antecedences.get(0).getTrees());
             logItemGeneration(consequence);
             consequences.add(consequence);

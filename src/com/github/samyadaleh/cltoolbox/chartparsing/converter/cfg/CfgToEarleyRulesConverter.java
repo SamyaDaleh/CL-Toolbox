@@ -17,6 +17,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_AXIOM;
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_BOTTOMUP_AXIOM;
+
 public class CfgToEarleyRulesConverter {
   /**
    * Converts a cfg to a parsing scheme for Earley parsing. Based n
@@ -52,7 +55,7 @@ public class CfgToEarleyRulesConverter {
           consequence.setTrees(derivedTrees);
           axiom.addConsequence(consequence);
         }
-        axiom.setName("axiom");
+        axiom.setName(DEDUCTION_RULE_CFG_EARLEY_AXIOM);
         schema.addAxiom(axiom);
         if (rule.getRhs()[0].equals("")) {
           schema.addGoal(
@@ -110,7 +113,7 @@ public class CfgToEarleyRulesConverter {
       }
       for (int i = 0; i < wSplit.length; i++) {
         StaticDeductionRule initialize = new StaticDeductionRule();
-        initialize.setName("Initialize");
+        initialize.setName(DEDUCTION_RULE_CFG_EARLEY_BOTTOMUP_AXIOM);
         DeductionChartItem consequence =
             new DeductionChartItem(dottedRule.toString(), String.valueOf(i),
                 String.valueOf(i));

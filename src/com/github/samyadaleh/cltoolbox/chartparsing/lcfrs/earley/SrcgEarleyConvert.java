@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_CONVERT;
+
 /**
  * Whenever we arrive at the end of the last argument, we convert the item into
  * a passive one.
@@ -18,7 +20,7 @@ import java.util.List;
 public class SrcgEarleyConvert extends AbstractDynamicDeductionRule {
 
   public SrcgEarleyConvert() {
-    this.name = "convert";
+    this.name = DEDUCTION_RULE_LCFRS_EARLEY_CONVERT;
     this.antNeeded = 1;
   }
 

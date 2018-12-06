@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_SUBSTITUTE;
+
 public class TagEarleyPrefixValidSubstitute
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
@@ -18,7 +20,7 @@ public class TagEarleyPrefixValidSubstitute
 
   public TagEarleyPrefixValidSubstitute(Tag tag) {
     this.tag = tag;
-    this.name = "substitute";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_SUBSTITUTE;
     this.antNeeded = 2;
   }
 
@@ -45,7 +47,8 @@ public class TagEarleyPrefixValidSubstitute
           ChartParsingUtils.generateDerivatedTrees(antecedences, itemForm1);
       consequence.setTrees(derivedTrees);
       this.name =
-          "substitute " + treeName1 + "[" + node1 + "," + treeName2 + "]";
+          DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_SUBSTITUTE + " " + treeName1
+              + "[" + node1 + "," + treeName2 + "]";
       logItemGeneration(consequence);
       consequences.add(consequence);
     }

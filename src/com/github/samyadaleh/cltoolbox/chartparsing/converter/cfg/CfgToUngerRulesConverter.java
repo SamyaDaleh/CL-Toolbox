@@ -12,6 +12,8 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_UNGER_AXIOM;
+
 public class CfgToUngerRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
@@ -31,7 +33,7 @@ public class CfgToUngerRulesConverter {
     ParsingSchema schema = new ParsingSchema();
 
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.setName("axiom");
+    axiom.setName(DEDUCTION_RULE_CFG_UNGER_AXIOM);
     axiom.addConsequence(new DeductionChartItem("•" + cfg.getStartSymbol(), "0",
         String.valueOf(wSplit.length)));
     schema.addAxiom(axiom);

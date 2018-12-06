@@ -10,6 +10,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
+
 /**
  * If in one item a dot is before a nonterminal and the other item is a rule
  * with that nonterminal as lhs and the dot at the end, move the dot over the
@@ -37,7 +39,7 @@ public class CfgEarleyBottomupComplete
       for (int l = 0; l < stackSplit1.length; l++) {
         if (stackSplit1[l].startsWith("•") && stackSplit1[l].substring(1)
             .equals(stackSplit2[0])) {
-          this.name = "complete " + stackSplit2[0];
+          this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE + " " + stackSplit2[0];
           String newStack;
           if (l == stackSplit1.length - 1) {
             newStack =

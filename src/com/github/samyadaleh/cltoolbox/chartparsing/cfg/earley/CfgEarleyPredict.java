@@ -12,6 +12,8 @@ import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_PREDICT;
+
 /**
  * If the next symbol after the dot is a nonterminal, for a rule with that
  * symbol as lhs predict a new item.
@@ -22,7 +24,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
 
   public CfgEarleyPredict(CfgProductionRule rule) {
     this.rule = rule;
-    this.name = "predict " + rule.toString();
+    this.name = DEDUCTION_RULE_CFG_EARLEY_PREDICT + " " + rule.toString();
     this.antNeeded = 1;
   }
 

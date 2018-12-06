@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.CfgEarley
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_AXIOM;
+
 public class CfgToEarleyPassiveRulesConverter {
   /**
    * Converts a cfg to a parsing scheme for Earley parsing with passive items.
@@ -40,7 +42,7 @@ public class CfgToEarleyPassiveRulesConverter {
               cfg.getStartSymbol() + " -> •" + String.join(" ", rule.getRhs()),
               "0", "0"));
         }
-        axiom.setName("axiom");
+        axiom.setName(DEDUCTION_RULE_CFG_EARLEY_AXIOM);
         schema.addAxiom(axiom);
         if (rule.getRhs()[0].equals("")) {
           schema.addGoal(

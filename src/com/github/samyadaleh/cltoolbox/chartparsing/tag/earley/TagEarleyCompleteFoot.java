@@ -9,12 +9,14 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_COMPLETEFOOT;
+
 /**
  * If there is an auxiliary tree and another tree where the aux tree can adjoin
  * into, fill the foot of the aux tree with the span of the other tree.
  */
 public class TagEarleyCompleteFoot
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   private final Tag tag;
 
@@ -24,7 +26,7 @@ public class TagEarleyCompleteFoot
    */
   public TagEarleyCompleteFoot(Tag tag) {
     this.tag = tag;
-    this.name = "complete foot";
+    this.name = DEDUCTION_RULE_TAG_EARLEY_COMPLETEFOOT;
     this.antNeeded = 2;
   }
 
@@ -45,12 +47,12 @@ public class TagEarleyCompleteFoot
     String adj2 = itemForm2[7];
     boolean adjoinable1 = tag.isAdjoinable(treeName2, treeName1, node1);
     if (i1.equals(i21) && adj1.equals("0") && adj2.equals("0")) {
-      if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb")
-        && i21.equals(i22) && f12.equals("-") && f22.equals("-")
-        && tag.getAuxiliaryTree(treeName2).getFoot().getGornAddress()
+      if (adjoinable1 && pos1.equals("rb") && pos2.equals("lb") && i21
+          .equals(i22) && f12.equals("-") && f22.equals("-") && tag
+          .getAuxiliaryTree(treeName2).getFoot().getGornAddress()
           .equals(node2)) {
         ChartItemInterface consequence =
-          new DeductionChartItem(treeName2, node2, "rb", i1, i1, l, l, "0");
+            new DeductionChartItem(treeName2, node2, "rb", i1, i1, l, l, "0");
         List<Tree> derivedTrees;
         if (Arrays.equals(itemForm1, antecedences.get(0).getItemForm())) {
           derivedTrees = antecedences.get(1).getTrees();
@@ -66,8 +68,8 @@ public class TagEarleyCompleteFoot
 
   @Override public String toString() {
     return "[ɣ,p,rb,i,j,k,l,0], [β,pf,lb,i,-,-,i,0]"
-      + "\n______ pf foot node address in β, β ∈ f_SA(ɣ,p)\n"
-      + "[β,pf,rb,i,i,l,l,0]";
+        + "\n______ pf foot node address in β, β ∈ f_SA(ɣ,p)\n"
+        + "[β,pf,rb,i,i,l,l,0]";
   }
 
 }

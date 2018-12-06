@@ -12,6 +12,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE;
+
 /**
  * If topmost symbol on stacks completed and predicted are the same, remove
  * both.
@@ -20,7 +22,7 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
   private static final Logger log = LogManager.getLogger();
 
   public CfgLeftCornerRemove() {
-    this.name = "remove";
+    this.name = DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE;
     this.antNeeded = 1;
   }
 
@@ -31,7 +33,7 @@ public class CfgLeftCornerRemove extends AbstractDynamicDeductionRule {
       String[] stackPredSplit = itemForm[1].split(" ");
       if (itemForm[0].length() > 0 && itemForm[1].length() > 0
           && stackComplSplit[0].equals(stackPredSplit[0])) {
-        this.name = "remove " + stackComplSplit[0];
+        this.name = DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE + " " + stackComplSplit[0];
         String newCompl = ArrayUtils
             .getSubSequenceAsString(stackComplSplit, 1, stackComplSplit.length);
         String newPred = ArrayUtils
