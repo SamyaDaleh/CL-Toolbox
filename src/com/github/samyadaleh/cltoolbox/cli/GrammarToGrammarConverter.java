@@ -12,8 +12,8 @@ import java.text.ParseException;
 public class GrammarToGrammarConverter {
   private static final Logger log = LogManager.getLogger();
 
-  public static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm, boolean please)
-      throws ParseException {
+  public static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm,
+      boolean please) throws ParseException {
     switch (algorithm) {
     case "cfg-topdown":
       return getCfgForTopDown(cfg, please);
@@ -38,9 +38,8 @@ public class GrammarToGrammarConverter {
       if (algorithm.matches("cfg-lr-\\d+")) {
         return cfg;
       }
-      log.info(
+      throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
     }
   }
 
@@ -51,7 +50,7 @@ public class GrammarToGrammarConverter {
   }
 
   public static Pcfg checkAndMayConvertToPcfg(Cfg cfg, String algorithm,
-      boolean please) {
+      boolean please) throws ParseException {
     switch (algorithm) {
     case "pcfg-astar":
     case "pcfg-cyk":
@@ -63,47 +62,43 @@ public class GrammarToGrammarConverter {
               .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
               .getCfgWithoutChainRules());
         } else {
-          log.info(
+          throw new ParseException(
               "CFG must be in Chomsky Normal Form to convert it into a PCFG where "
-                  + " is possible.");
-          return null;
+                  + " is possible.", 1);
         }
       } else {
         return new Pcfg(cfg);
       }
     default:
-      log.info(
+      throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
     }
   }
 
   public static Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm,
-      boolean please) {
+      boolean please) throws ParseException {
     switch (algorithm) {
     case "pcfg-astar":
     case "pcfg-cyk":
       Cfg cfg = new Cfg(pcfg);
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
-          log.info("PCFG can't be converted.");
-          return null;
+          throw new ParseException("PCFG can't be converted.", 1);
         } else {
-          log.info("PCFG must be in Chomsky Normal Form to apply A* parsing.");
-          return null;
+          throw new ParseException(
+              "PCFG must be in Chomsky Normal Form to apply A* parsing.", 1);
         }
       } else {
         return pcfg;
       }
     default:
-      log.info(
+      throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
     }
   }
 
   public static Srcg checkAndMayConvertToSrcg(Srcg srcg, String algorithm,
-      boolean please) {
+      boolean please) throws ParseException {
     switch (algorithm) {
     case "srcg-earley":
       return getSrcgForEarley(srcg, please);
@@ -130,13 +125,13 @@ public class GrammarToGrammarConverter {
   }
 
   public static Srcg checkAndMayConvertToSrcg(Tag tag, String algorithm,
-      boolean please) {
+      boolean please) throws ParseException {
     Srcg srcg = new Srcg(tag);
     return checkAndMayConvertToSrcg(srcg, algorithm, please);
   }
 
-  public static Tag checkAndMayConvertToTag(Tag tag, String algorithm, boolean please)
-      throws ParseException {
+  public static Tag checkAndMayConvertToTag(Tag tag, String algorithm,
+      boolean please) throws ParseException {
     switch (algorithm) {
     case "tag-cyk-extended":
       if (!tag.isBinarized()) {
@@ -161,8 +156,8 @@ public class GrammarToGrammarConverter {
     }
   }
 
-  public static Tag checkAndMayConvertToTag(Cfg cfg, String algorithm, boolean please)
-      throws ParseException {
+  public static Tag checkAndMayConvertToTag(Cfg cfg, String algorithm,
+      boolean please) throws ParseException {
     Tag tag = new Tag(cfg);
     return checkAndMayConvertToTag(tag, algorithm, please);
   }
@@ -173,7 +168,8 @@ public class GrammarToGrammarConverter {
     return checkAndMayConvertToTag(cfg, algorithm, please);
   }
 
-  private static Cfg getCfgForCykExtended(Cfg cfg, boolean please) {
+  private static Cfg getCfgForCykExtended(Cfg cfg, boolean please)
+      throws ParseException {
     if (!cfg.isInCanonicalTwoForm()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
@@ -181,16 +177,16 @@ public class GrammarToGrammarConverter {
             .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
             .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
       } else {
-        System.out.println(
-            "CFG must be in Canonical 2 Form for extended CYK parsing.");
-        return null;
+        throw new ParseException(
+            "CFG must be in Canonical 2 Form for extended CYK parsing.", 1);
       }
     } else {
       return cfg;
     }
   }
 
-  private static Cfg getCfgForCyk(Cfg cfg, boolean please) {
+  private static Cfg getCfgForCyk(Cfg cfg, boolean please)
+      throws ParseException {
     if (!cfg.isInChomskyNormalForm()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
@@ -199,9 +195,8 @@ public class GrammarToGrammarConverter {
             .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
             .getCfgWithoutChainRules();
       } else {
-        System.out
-            .println("CFG must be in Chomsky Normal Form for CYK parsing.");
-        return null;
+        throw new ParseException(
+            "CFG must be in Chomsky Normal Form for CYK parsing.", 1);
       }
     } else {
       return cfg;
@@ -216,25 +211,26 @@ public class GrammarToGrammarConverter {
             .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols();
       } else {
-        log.info(
-            "CFG must not contain empty productions or left recursion for this parsing algorithm.");
-        return null;
+        throw new ParseException(
+            "CFG must not contain empty productions or left recursion for this parsing algorithm.",
+            1);
       }
     } else {
       return cfg;
     }
   }
 
-  private static Cfg getCfgForShiftReduce(Cfg cfg, boolean please) {
+  private static Cfg getCfgForShiftReduce(Cfg cfg, boolean please)
+      throws ParseException {
     if (cfg.hasEpsilonProductions()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
             .getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols();
       } else {
-        log.info(
-            "CFG must not contain empty productions for ShiftReduce parsing.");
-        return null;
+        throw new ParseException(
+            "CFG must not contain empty productions for ShiftReduce parsing.",
+            1);
       }
     } else {
       return cfg;
@@ -249,69 +245,59 @@ public class GrammarToGrammarConverter {
             .getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
       } else {
-        log.info("CFG must not contain left recursion for TopDown parsing.");
-        return null;
+        throw new ParseException(
+            "CFG must not contain left recursion for TopDown parsing.", 1);
       }
     } else {
       return cfg;
     }
   }
 
-  private static Srcg getSrcgForCykExtended(Srcg srcg, boolean please) {
-    try {
-      if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
-        if (please) {
-          return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions()
-              .getSrcgWithoutUselessRules();
-        } else {
-          log.info(
-              "sRCG must be binarized and not contain empty productions to apply extended CYK parsing");
-          return null;
-        }
+  private static Srcg getSrcgForCykExtended(Srcg srcg, boolean please)
+      throws ParseException {
+    if (!srcg.isBinarized() || srcg.hasEpsilonProductions()) {
+      if (please) {
+        return srcg.getBinarizedSrcg().getSrcgWithoutEmptyProductions()
+            .getSrcgWithoutUselessRules();
       } else {
-        return srcg;
+        throw new ParseException(
+            "sRCG must be binarized and not contain empty productions to apply extended CYK parsing",
+            1);
       }
-
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
+    } else {
+      return srcg;
     }
   }
 
-  private static Srcg getSrcgForCykGeneral(Srcg srcg, boolean please) {
-    try {
-      if (srcg.hasEpsilonProductions()) {
-        if (please) {
-          return srcg.getSrcgWithoutEmptyProductions()
-              .getSrcgWithoutUselessRules();
-        } else {
-          log.info(
-              "sRCG must not contain empty productions to apply general CYK parsing");
-          return null;
-        }
+  private static Srcg getSrcgForCykGeneral(Srcg srcg, boolean please)
+      throws ParseException {
+    if (srcg.hasEpsilonProductions()) {
+      if (please) {
+        return srcg.getSrcgWithoutEmptyProductions()
+            .getSrcgWithoutUselessRules();
       } else {
-        return srcg;
+        throw new ParseException(
+            "sRCG must not contain empty productions to apply general CYK parsing",
+            1);
       }
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
+    } else {
+      return srcg;
     }
   }
 
-  private static Srcg getSrcgForEarley(Srcg srcg, boolean please) {
-    try {
-      if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
-        if (please) {
-          return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions()
-              .getSrcgWithoutUselessRules();
-        } else {
-          log.info(
-              "sRCG must be ordered and not contain epsilon productions for this Earley algorithm");
-          return null;
-        }
+  private static Srcg getSrcgForEarley(Srcg srcg, boolean please)
+      throws ParseException {
+    if (!srcg.isOrdered() || srcg.hasEpsilonProductions()) {
+      if (please) {
+        return srcg.getOrderedSrcg().getSrcgWithoutEmptyProductions()
+            .getSrcgWithoutUselessRules();
       } else {
-        return srcg;
+        throw new ParseException(
+            "sRCG must be ordered and not contain epsilon productions for this Earley algorithm",
+            1);
       }
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
+    } else {
+      return srcg;
     }
   }
 }
