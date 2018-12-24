@@ -53,13 +53,13 @@ public class LcfrsToCykRulesConverter {
   public static ParsingSchema srcgToCykExtendedRules(Srcg srcg, String w)
       throws ParseException {
     if (srcg.hasEpsilonProductions()) {
-      log.info(
-          "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
-      return null;
+      throw new ParseException(
+          "sRCG is not allowed to have epsilon productions for this CYK algorithm.",
+          1);
     }
     if (!srcg.isBinarized()) {
-      log.info("sRCG must be binarized for this CYK algorithm.");
-      return null;
+      throw new ParseException("sRCG must be binarized for this CYK algorithm.",
+          1);
     }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -83,9 +83,9 @@ public class LcfrsToCykRulesConverter {
   public static ParsingSchema srcgToCykGeneralRules(Srcg srcg, String w)
       throws ParseException {
     if (srcg.hasEpsilonProductions()) {
-      log.info(
-          "sRCG is not allowed to have epsilon productions for this CYK algorithm.");
-      return null;
+      throw new ParseException(
+          "sRCG is not allowed to have epsilon productions for this CYK algorithm.",
+          1);
     }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

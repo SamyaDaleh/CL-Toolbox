@@ -58,9 +58,9 @@ public class GrammarToDeductionRulesConverter {
         return CfgToLrKRulesConverter
             .cfgToLrKRules(cfg, w, Integer.parseInt(algorithmSplit[2]));
       }
-      log.info(
-          "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
+      throw new ParseException(
+          "I did not understand. Please check the spelling of your parsing algorithm.",
+          1);
     }
   }
 
@@ -68,7 +68,7 @@ public class GrammarToDeductionRulesConverter {
    * Call with appropriate grammar. Better call the convert-to function first.
    */
   public static ParsingSchema convertToSchema(Tag tag, String w,
-      String algorithm) {
+      String algorithm) throws ParseException {
     switch (algorithm) {
     case "tag-cyk-extended":
       return TagToCykRulesConverter.tagToCykExtendedRules(tag, w);
@@ -80,9 +80,9 @@ public class GrammarToDeductionRulesConverter {
       return TagToEarleyPrefixValidRulesConverter
           .tagToEarleyPrefixValidRules(tag, w);
     default:
-      log.info(
-          "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
+      throw new ParseException(
+          "I did not understand. Please check the spelling of your parsing algorithm.",
+          1);
     }
   }
 
@@ -99,9 +99,9 @@ public class GrammarToDeductionRulesConverter {
     case "srcg-cyk-general":
       return LcfrsToCykRulesConverter.srcgToCykGeneralRules(srcg, w);
     default:
-      log.info(
-          "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
+      throw new ParseException(
+          "I did not understand. Please check the spelling of your parsing algorithm.",
+          1);
     }
   }
 
@@ -116,21 +116,19 @@ public class GrammarToDeductionRulesConverter {
     case "pcfg-cyk":
       return PcfgToCykRulesConverter.pcfgToCykRules(pcfg, w);
     default:
-      log.info(
-          "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
+      throw new ParseException(
+          "I did not understand. Please check the spelling of your parsing algorithm.",
+          1);
     }
   }
 
   public static ParsingSchema convertToSchema(Ccg ccg, String w,
-      String algorithm) {
-    switch (algorithm) {
-    case "ccg-deduction":
+      String algorithm) throws ParseException {
+    if ("ccg-deduction".equals(algorithm)) {
       return CcgToDeductionRulesConverter.ccgToDeductionRules(ccg, w);
-    default:
-      log.info(
-          "I did not understand. Please check the spelling of your parsing algorithm.");
-      return null;
     }
+    throw new ParseException(
+        "I did not understand. Please check the spelling of your parsing algorithm.",
+        1);
   }
 }

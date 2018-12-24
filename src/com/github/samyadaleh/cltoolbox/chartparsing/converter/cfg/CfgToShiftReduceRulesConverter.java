@@ -8,23 +8,22 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgBottomUpR
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce.CfgBottomUpShift;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_SHIFTREDUCE_AXIOM;
 
 public class CfgToShiftReduceRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Converts a cfg to a parsing scheme for ShiftReduce parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/shift-reduce.pdf
    */
-  public static ParsingSchema cfgToShiftReduceRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToShiftReduceRules(Cfg cfg, String w)
+      throws ParseException {
     if (cfg.hasEpsilonProductions()) {
-      log.info(
-          "CFG must not contain empty productions for ShiftReduce parsing.");
-      return null;
+      throw new ParseException(
+          "CFG must not contain empty productions for ShiftReduce parsing.", 1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

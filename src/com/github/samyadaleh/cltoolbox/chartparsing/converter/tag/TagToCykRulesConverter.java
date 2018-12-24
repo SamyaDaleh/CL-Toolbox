@@ -8,9 +8,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk.*;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,15 +18,15 @@ import java.util.Set;
 import static com.github.samyadaleh.cltoolbox.common.Constants.*;
 
 public class TagToCykRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Returns a parsing schema for CYK parsing of the given input w with tag.
    */
-  public static ParsingSchema tagToCykExtendedRules(Tag tag, String w) {
+  public static ParsingSchema tagToCykExtendedRules(Tag tag, String w)
+      throws ParseException {
     if (!tag.isBinarized()) {
-      log.info("TAG is not binarized, CYK-Parsing not applicable.");
-      return null;
+      throw new ParseException(
+          "TAG is not binarized, CYK-Parsing not applicable.", 1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

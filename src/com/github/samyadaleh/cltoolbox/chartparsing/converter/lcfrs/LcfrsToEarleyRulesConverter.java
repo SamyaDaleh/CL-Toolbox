@@ -10,26 +10,25 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.RangeVector;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_EARLEY_AXIOM;
 
 public class LcfrsToEarleyRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
-  public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w) {
+  public static ParsingSchema srcgToEarleyRules(Srcg srcg, String w)
+      throws ParseException {
     if (srcg.hasEpsilonProductions()) {
-      log.info(
-          "sRCG is not allowed to have epsilon productions for this Earley algorithm.");
-      return null;
+      throw new ParseException(
+          "sRCG is not allowed to have epsilon productions for this Earley algorithm.",
+          1);
     }
     if (!srcg.isOrdered()) {
-      log.info("sRCG must be ordered for this Earley algorithm.");
-      return null;
+      throw new ParseException(
+          "sRCG must be ordered for this Earley algorithm.", 1);
     }
     String[] wsplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

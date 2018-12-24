@@ -10,6 +10,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.ParseException;
 import java.util.*;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.*;
@@ -17,7 +18,8 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.*;
 public class CfgToLrKRulesConverter {
   private static final Logger log = LogManager.getLogger();
 
-  public static ParsingSchema cfgToLrKRules(Cfg cfg, String w, int k) {
+  public static ParsingSchema cfgToLrKRules(Cfg cfg, String w, int k)
+      throws ParseException {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
     StaticDeductionRule axiom = new StaticDeductionRule();
@@ -45,17 +47,15 @@ public class CfgToLrKRulesConverter {
       String action = entry.getValue().substring(0, 1);
       if (action.equals(DEDUCTION_ACTION_CFG_LRK_SHIFT)) {
         if (statesWithReduces.contains(state)) {
-          log.warn("Shift-Reduce conflict for state " + state
-              + ", grammar cannot be parsed with LR(" + k + ").");
-          return null;
+          throw new ParseException("Shift-Reduce conflict for state " + state
+              + ", grammar cannot be parsed with LR(" + k + ").", 1);
         }
         statesWithShifts.add(state);
 
       } else if (action.equals(DEDUCTION_ACTION_CFG_LRK_REDUCE)) {
         if (statesWithShifts.contains(state)) {
-          log.warn("Shift-Reduce conflict for state " + state
-              + ", grammar cannot be parsed with LR(" + k + ").");
-          return null;
+          throw new ParseException("Shift-Reduce conflict for state " + state
+              + ", grammar cannot be parsed with LR(" + k + ").", 1);
         }
         statesWithReduces.add(state);
       }

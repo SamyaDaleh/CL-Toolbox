@@ -9,25 +9,25 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerPredict;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.unger.CfgUngerScan;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_UNGER_AXIOM;
 
 public class CfgToUngerRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Unger parsing tries out all possible separations, factorial runtime.
    */
-  public static ParsingSchema cfgToUngerRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToUngerRules(Cfg cfg, String w)
+      throws ParseException {
     if (cfg.hasEpsilonProductions()) {
-      log.info("CFG must not contain empty productions for Unger parsing.");
-      return null;
+      throw new ParseException(
+          "CFG must not contain empty productions for Unger parsing.", 1);
     }
     if (cfg.hasDirectLeftRecursion()) {
-      log.info("CFG must not contain left recursion for Unger parsing.");
-      return null;
+      throw new ParseException(
+          "CFG must not contain left recursion for Unger parsing.", 1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

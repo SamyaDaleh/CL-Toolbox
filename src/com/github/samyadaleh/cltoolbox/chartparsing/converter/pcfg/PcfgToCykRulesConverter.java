@@ -11,8 +11,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import java.util.List;
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_PCFG_CYK_AXIOM;
 
 public class PcfgToCykRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Converts a probabilistic CFG to a schema for CYK parsing, which is similar
@@ -30,8 +27,9 @@ public class PcfgToCykRulesConverter {
   public static ParsingSchema pcfgToCykRules(Pcfg pcfg, String w)
       throws ParseException {
     if (!(new Cfg(pcfg)).isInChomskyNormalForm()) {
-      log.info(
-          "PCFG must be in Chomsky Normal Form to apply this kind of cyk parsing.");
+      throw new ParseException(
+          "PCFG must be in Chomsky Normal Form to apply this kind of cyk parsing.",
+          1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

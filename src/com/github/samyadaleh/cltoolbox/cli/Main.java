@@ -195,7 +195,7 @@ public class Main { // NO_UCD (test only)
 
   private static ParsingSchema parseCcgFileAndConvertToSchema(
       BufferedReader grammarReader, String w, String algorithm)
-      throws IOException {
+      throws IOException, ParseException {
     Ccg ccg = CcgParser.parseCcgReader(grammarReader);
     return GrammarToDeductionRulesConverter.convertToSchema(ccg, w, algorithm);
   }

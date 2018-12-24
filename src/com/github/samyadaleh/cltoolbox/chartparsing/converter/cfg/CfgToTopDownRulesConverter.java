@@ -8,22 +8,22 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown.CfgTopDownPredic
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.topdown.CfgTopDownScan;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_TOPDOWN_AXIOM;
 
 public class CfgToTopDownRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Converts a cfg to a parsing scheme for Topdown parsing. Based on
    * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
    */
-  public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToTopDownRules(Cfg cfg, String w)
+      throws ParseException {
     if (cfg.hasLeftRecursion()) {
-      log.info("CFG must not contain left recursion for TopDown parsing.");
-      return null;
+      throw new ParseException(
+          "CFG must not contain left recursion for TopDown parsing.", 1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();

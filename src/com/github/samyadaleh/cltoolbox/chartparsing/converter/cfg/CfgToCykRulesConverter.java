@@ -11,8 +11,6 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON;
 
 public class CfgToCykRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Converts grammar into rules for CYK parsing for CNF.
@@ -30,8 +27,7 @@ public class CfgToCykRulesConverter {
   public static ParsingSchema cfgToCykRules(Cfg cfg, String w)
       throws ParseException {
     if (!cfg.isInChomskyNormalForm()) {
-      log.info("Grammar has to be in Chomsky Normal Form.");
-      return null;
+      throw new ParseException("Grammar has to be in Chomsky Normal Form.", 1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
@@ -57,8 +53,7 @@ public class CfgToCykRulesConverter {
   public static ParsingSchema cfgToCykExtendedRules(Cfg cfg, String w)
       throws ParseException {
     if (!cfg.isInCanonicalTwoForm()) {
-      log.info("Grammar has to be in Canonical Two Form.");
-      return null;
+      throw new ParseException("Grammar has to be in Canonical Two Form.", 1);
     }
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
