@@ -7,6 +7,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,7 +72,19 @@ public class Deduction {
    * to the items until all items were used. Returns true if a goal item was
    * derived.
    */
-  public boolean doParse(ParsingSchema schema, boolean success) {
+  public boolean doParse(ParsingSchema schema, boolean success)
+      throws ParseException {
+    return doParse(schema, success, Integer.MAX_VALUE);
+  }
+
+  /**
+   * Takes a parsing schema, generates items from axiom rules and applies rules
+   * to the items until all items were used. Returns true if a goal item was
+   * derived. maxItemCount can be used to restrict the deduction process and is
+   * intended for services to prevent excessive use.
+   */
+  public boolean doParse(ParsingSchema schema, boolean success,
+      int maxItemCount) throws ParseException {
     successfulTrace = success;
     chart = new ArrayList<>();
     agenda = new ArrayList<>();
@@ -83,6 +96,10 @@ public class Deduction {
       applyAxiomRule(rule);
     }
     while (!agenda.isEmpty()) {
+      if (chart.size() > maxItemCount) {
+        throw new ParseException("Chart size exceeds limit of " + maxItemCount
+            + " items. Deduction process was stopped.", 1);
+      }
       ChartItemInterface item = agenda.get(0);
       agenda.remove(0);
       for (DynamicDeductionRuleInterface rule : schema.getRules()) {
