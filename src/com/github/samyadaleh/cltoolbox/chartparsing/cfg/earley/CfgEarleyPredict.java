@@ -51,14 +51,7 @@ public class CfgEarleyPredict extends AbstractDynamicDeductionRule {
           try {
             Tree derivedTreeBase = new Tree(rule);
             List<Tree> derivedTrees = new ArrayList<>();
-            for (Tree tree : antecedences.get(0).getTrees()) {
-              try {
-                derivedTrees.add(TreeUtils
-                    .performLeftmostSubstitution(tree, derivedTreeBase));
-              } catch (StringIndexOutOfBoundsException e) {
-                log.debug(e.getMessage(), e);
-              }
-            }
+            derivedTrees.add(derivedTreeBase);
             consequence.setTrees(derivedTrees);
             logItemGeneration(consequence);
             consequences.add(consequence);

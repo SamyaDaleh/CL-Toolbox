@@ -488,10 +488,10 @@ public class Tree {
         if (gornAddress.length() > 0
             && gornAddress.charAt(gornAddress.length() - 1) == '3') {
           int i = 1;
-          String newNonterminal = "X" + String.valueOf(i);
+          String newNonterminal = "X" + i;
           i++;
           while (newNonterminals.contains(newNonterminal)) {
-            newNonterminal = "X" + String.valueOf(i);
+            newNonterminal = "X" + i;
             i++;
           }
           Tree newestTree = new Tree();
@@ -573,5 +573,16 @@ public class Tree {
       }
     }
     return true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof Tree){
+      return o.toString().equals(this.toString());
+    }
+    if (o instanceof String) {
+      return o.equals(this.toString());
+    }
+    return false;
   }
 }

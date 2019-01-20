@@ -8,9 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A deduction system that derives consequences from antecendence items and
@@ -344,7 +342,7 @@ public class Deduction {
           if (!deductedFrom.get(oldId).contains(newItemsDeductedFrom)) {
             appliedRule.get(oldId).add(rule.getName());
             deductedFrom.get(oldId).add(newItemsDeductedFrom);
-            chart.get(oldId).getTrees().addAll(newItem.getTrees());
+            addNewTrees(chart.get(oldId).getTrees(),newItem.getTrees());
           }
           break;
         case 'h':
@@ -383,6 +381,21 @@ public class Deduction {
     }
   }
 
+  private void addNewTrees(List<Tree> treesOld, List<Tree> treesNew) {
+    for (Tree tree1 : treesNew) {
+      boolean found = false;
+      for (Tree tree2 : treesOld) {
+        if(tree1.equals(tree2)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        treesOld.add(tree1);
+      }
+    }
+  }
+
   /**
    * Pretty-prints rows of the parsing process by filling up all columns up to a
    * specific length with spaces. Returns the data it prints as string array.
@@ -391,7 +404,7 @@ public class Deduction {
       ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers,
       int column1, int column2, int column3) {
     StringBuilder line = new StringBuilder();
-    line.append(String.valueOf(i + 1));
+    line.append((i + 1));
     for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
       line.append(" ");
     }
@@ -401,7 +414,7 @@ public class Deduction {
     }
     String rulesRep = rulesToString(rules);
     line.append(rulesRep);
-    for (int i1 = 0; i1 < column3 - String.valueOf(rulesRep).length(); i1++) {
+    for (int i1 = 0; i1 < column3 - rulesRep.length(); i1++) {
       line.append(" ");
     }
     String backpointersRep = backpointersToString(backpointers);
@@ -443,7 +456,7 @@ public class Deduction {
       for (int i = 0; i < pointertuple.size(); i++) {
         if (i > 0)
           builder.append(", ");
-        builder.append(String.valueOf(pointertuple.get(i) + 1));
+        builder.append((pointertuple.get(i) + 1));
       }
       builder.append("}");
     }

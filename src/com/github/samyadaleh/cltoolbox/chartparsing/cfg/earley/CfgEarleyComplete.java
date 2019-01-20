@@ -1,9 +1,14 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
 
@@ -13,7 +18,7 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
  * nonterminal.
  */
 public class CfgEarleyComplete
-  extends AbstractDynamicDecutionRuleTwoAntecedences {
+    extends AbstractDynamicDecutionRuleTwoAntecedences {
 
   public CfgEarleyComplete() {
     this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
@@ -32,21 +37,41 @@ public class CfgEarleyComplete
 
     if (j1 == j2 && stack2.endsWith("•")) {
       for (int l = 0; l < stackSplit1.length; l++) {
-        if (stackSplit1[l].startsWith("•") && stackSplit1[l]
-          .substring(1).equals(stackSplit2[0])) {
+        if (stackSplit1[l].startsWith("•") && stackSplit1[l].substring(1)
+            .equals(stackSplit2[0])) {
           this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE + " " + stackSplit2[0];
           String newStack;
           if (l == stackSplit1.length - 1) {
-            newStack = ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l)
-              + " " + stackSplit2[0] + " •";
+            newStack =
+                ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l) + " "
+                    + stackSplit2[0] + " •";
           } else {
-            newStack = ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l)
-              + " " + stackSplit2[0] + " •" + ArrayUtils
-                .getSubSequenceAsString(stackSplit1, l + 1, stackSplit1.length);
+            newStack =
+                ArrayUtils.getSubSequenceAsString(stackSplit1, 0, l) + " "
+                    + stackSplit2[0] + " •" + ArrayUtils
+                    .getSubSequenceAsString(stackSplit1, l + 1,
+                        stackSplit1.length);
           }
           ChartItemInterface consequence =
-            new DeductionChartItem(newStack, String.valueOf(i1), String.valueOf(k2));
-          consequence.setTrees(antecedences.get(0).getTrees());
+              new DeductionChartItem(newStack, String.valueOf(i1),
+                  String.valueOf(k2));
+          List<Tree> derivedTrees = new ArrayList<>();
+          if (antecedences.get(0).getItemForm() == itemForm1) {
+            for (Tree tree1 : antecedences.get(0).getTrees()) {
+              for (Tree tree2 : antecedences.get(1).getTrees()) {
+                derivedTrees
+                    .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+              }
+            }
+          } else {
+            for (Tree tree2 : antecedences.get(0).getTrees()) {
+              for (Tree tree1 : antecedences.get(1).getTrees()) {
+                derivedTrees
+                    .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+              }
+            }
+          }
+          consequence.setTrees(derivedTrees);
           logItemGeneration(consequence);
           consequences.add(consequence);
           break;
@@ -57,7 +82,7 @@ public class CfgEarleyComplete
 
   @Override public String toString() {
     return "[A -> α •B β,i,j] [B -> ɣ •,j,k]" + "\n______\n"
-      + "[A -> α B •β,i,k]";
+        + "[A -> α B •β,i,k]";
   }
 
 }

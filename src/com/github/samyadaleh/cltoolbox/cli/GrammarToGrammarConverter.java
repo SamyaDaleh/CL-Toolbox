@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import java.text.ParseException;
 
 public class GrammarToGrammarConverter {
-  private static final Logger log = LogManager.getLogger();
 
   public static Cfg checkAndMayConvertToCfg(Cfg cfg, String algorithm,
       boolean please) throws ParseException {
