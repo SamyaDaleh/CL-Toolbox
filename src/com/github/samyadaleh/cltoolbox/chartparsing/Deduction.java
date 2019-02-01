@@ -32,13 +32,13 @@ public class Deduction {
    * other. Contains lists of lists of backpointers. One item can be derived in
    * different ways from different antecedence items.
    */
-  private ArrayList<ArrayList<ArrayList<Integer>>> deductedFrom;
+  private List<List<List<Integer>>> deductedFrom;
 
   /**
    * Indexes correspond to entries of chart and deductedfrom. Collects the names
    * of the rules that were applied to retrieve new items.
    */
-  private ArrayList<ArrayList<String>> appliedRule;
+  private List<List<String>> appliedRule;
   /**
    * When true print only items that lead to a goal.
    */
@@ -184,7 +184,7 @@ public class Deduction {
         if (!usefulItem[i]) {
           continue;
         }
-        ArrayList<Integer> pointers = getPointersAsArray(deductedFrom.get(i));
+        List<Integer> pointers = getPointersAsArray(deductedFrom.get(i));
         for (int pointer : pointers) {
           if (usefulItem[pointer]) {
             continue;
@@ -199,10 +199,10 @@ public class Deduction {
   /**
    * Returns the backpointers in this list of lists as plain list.
    */
-  private static ArrayList<Integer> getPointersAsArray(
-      ArrayList<ArrayList<Integer>> backpointers) {
-    ArrayList<Integer> pointerList = new ArrayList<>();
-    for (ArrayList<Integer> pointerTuple : backpointers) {
+  private static List<Integer> getPointersAsArray(
+      List<List<Integer>> backpointers) {
+    List<Integer> pointerList = new ArrayList<>();
+    for (List<Integer> pointerTuple : backpointers) {
       pointerList.addAll(pointerTuple);
     }
     return pointerList;
@@ -255,7 +255,7 @@ public class Deduction {
       }
       chart.add(item);
       agenda.add(item);
-      deductedFrom.add(new ArrayList<ArrayList<Integer>>() {
+      deductedFrom.add(new ArrayList<List<Integer>>() {
         {
           add(new ArrayList<>());
         }
@@ -337,7 +337,7 @@ public class Deduction {
           if (!deductedFrom.get(oldId).contains(newItemsDeductedFrom)) {
             appliedRule.get(oldId).add(rule.getName());
             deductedFrom.get(oldId).add(newItemsDeductedFrom);
-            addNewTrees(chart.get(oldId).getTrees(),newItem.getTrees());
+            addNewTrees(chart.get(oldId).getTrees(), newItem.getTrees());
           }
           break;
         case 'h':
@@ -380,7 +380,7 @@ public class Deduction {
     for (Tree tree1 : treesNew) {
       boolean found = false;
       for (Tree tree2 : treesOld) {
-        if(tree1.equals(tree2)) {
+        if (tree1.equals(tree2)) {
           found = true;
           break;
         }
@@ -395,9 +395,8 @@ public class Deduction {
    * Pretty-prints rows of the parsing process by filling up all columns up to a
    * specific length with spaces. Returns the data it prints as string array.
    */
-  private static String[] prettyPrint(int i, String item,
-      ArrayList<String> rules, ArrayList<ArrayList<Integer>> backpointers,
-      int column1, int column2, int column3) {
+  private static String[] prettyPrint(int i, String item, List<String> rules,
+      List<List<Integer>> backpointers, int column1, int column2, int column3) {
     StringBuilder line = new StringBuilder();
     line.append((i + 1));
     for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
@@ -423,7 +422,7 @@ public class Deduction {
    * Returns a string representation of a list of rules in a human friendly
    * form.
    */
-  private static String rulesToString(ArrayList<String> rules) {
+  private static String rulesToString(List<String> rules) {
     if (rules.size() == 0)
       return "";
     StringBuilder builder = new StringBuilder();
@@ -439,12 +438,11 @@ public class Deduction {
    * Returns a string representation of a list of lists of backpointers in a
    * human friendly form.
    */
-  private static String backpointersToString(
-      ArrayList<ArrayList<Integer>> backpointers) {
+  private static String backpointersToString(List<List<Integer>> backpointers) {
     if (backpointers.size() == 0)
       return "";
     StringBuilder builder = new StringBuilder();
-    for (ArrayList<Integer> pointertuple : backpointers) {
+    for (List<Integer> pointertuple : backpointers) {
       if (builder.length() > 0)
         builder.append(", ");
       builder.append("{");
@@ -470,11 +468,11 @@ public class Deduction {
     return chart;
   }
 
-  public ArrayList<ArrayList<ArrayList<Integer>>> getDeductedFrom() {
+  public List<List<List<Integer>>> getDeductedFrom() {
     return deductedFrom;
   }
 
-  public ArrayList<ArrayList<String>> getAppliedRule() {
+  public List<List<String>> getAppliedRule() {
     return appliedRule;
   }
 
