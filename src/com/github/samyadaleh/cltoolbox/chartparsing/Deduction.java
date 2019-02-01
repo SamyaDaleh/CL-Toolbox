@@ -26,12 +26,14 @@ public class Deduction {
    * Items waiting to be used for further derivation.
    */
   private List<ChartItemInterface> agenda;
+
   /**
    * List of the same length of chart, elements at same indexes belong to each
    * other. Contains lists of lists of backpointers. One item can be derived in
    * different ways from different antecedence items.
    */
   private ArrayList<ArrayList<ArrayList<Integer>>> deductedFrom;
+
   /**
    * Indexes correspond to entries of chart and deductedfrom. Collects the names
    * of the rules that were applied to retrieve new items.
@@ -41,6 +43,7 @@ public class Deduction {
    * When true print only items that lead to a goal.
    */
   private boolean successfulTrace = false;
+
   /**
    * Markers if items lead to goal
    */
@@ -473,5 +476,17 @@ public class Deduction {
 
   public List<ChartItemInterface> getChart() {
     return chart;
+  }
+
+  public ArrayList<ArrayList<ArrayList<Integer>>> getDeductedFrom() {
+    return deductedFrom;
+  }
+
+  public ArrayList<ArrayList<String>> getAppliedRule() {
+    return appliedRule;
+  }
+
+  public boolean[] getUsefulItem() {
+    return usefulItem;
   }
 }
