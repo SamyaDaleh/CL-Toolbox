@@ -48,6 +48,11 @@ public class Deduction {
    * Markers if items lead to goal
    */
   private boolean[] usefulItem;
+
+  /**
+   * Markers if items are goal items.
+   */
+  private boolean[] goalItem;
   /**
    * Specify if new items shall replace same existing items in the chart. If
    * null, don't replace. If h, replace by items with higher value (like
@@ -109,6 +114,7 @@ public class Deduction {
     }
     boolean goalfound = false;
     usefulItem = new boolean[chart.size()];
+    goalItem = new boolean[chart.size()];
     derivedTrees = new ArrayList<>();
     for (ChartItemInterface goal : schema.getGoals()) {
       if (checkForGoal(goal) >= 0) {
@@ -210,10 +216,10 @@ public class Deduction {
     for (int i = 0; i < chart.size(); i++) {
       if (chart.get(i).equals(goal)) {
         usefulItem[i] = true;
+        goalItem[i] = true;
         List<Tree> trees = chart.get(i).getTrees();
         if (trees != null) {
-          switch (replace) {
-          case 'h':
+          if (replace == 'h' || replace == 'l') {
             if (pGoal == null) {
               pGoal = ((ProbabilisticChartItemInterface) chart.get(i))
                   .getProbability();
@@ -221,27 +227,13 @@ public class Deduction {
             } else {
               Double newP = ((ProbabilisticChartItemInterface) chart.get(i))
                   .getProbability();
-              if (newP > pGoal) {
+              if ((newP > pGoal && replace == 'h') || (newP < pGoal
+                  && replace == 'l')) {
                 pGoal = newP;
                 derivedTrees = trees;
               }
             }
-            break;
-          case 'l':
-            if (pGoal == null) {
-              pGoal = ((ProbabilisticChartItemInterface) chart.get(i))
-                  .getProbability();
-              derivedTrees = trees;
-            } else {
-              Double newP = ((ProbabilisticChartItemInterface) chart.get(i))
-                  .getProbability();
-              if (newP < pGoal) {
-                pGoal = newP;
-                derivedTrees = trees;
-              }
-            }
-            break;
-          default:
+          } else {
             derivedTrees.addAll(trees);
           }
         }
@@ -488,5 +480,9 @@ public class Deduction {
 
   public boolean[] getUsefulItem() {
     return usefulItem;
+  }
+
+  public boolean[] getGoalItem() {
+    return goalItem;
   }
 }
