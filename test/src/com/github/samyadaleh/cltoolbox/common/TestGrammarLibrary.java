@@ -72,6 +72,27 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg diffTreeAmountCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S", "A", "B"});
+    try {
+      cfg.addProductionRule("S -> a b");
+      cfg.addProductionRule("S -> a B");
+      cfg.addProductionRule("S -> b A");
+      cfg.addProductionRule("A -> a");
+      cfg.addProductionRule("A -> a S");
+      cfg.addProductionRule("A -> b A A");
+      cfg.addProductionRule("B -> b");
+      cfg.addProductionRule("B -> b S");
+      cfg.addProductionRule("B -> a B B");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Tag anCBTag() {
     try {
       Tag g = new Tag();

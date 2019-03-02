@@ -19,6 +19,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPre
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
@@ -36,6 +37,10 @@ public class DeductionTest {
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
     assertEquals(13, deduction.getChart().size());
+    assertEquals(13, deduction.getDeductedFrom().size());
+    assertEquals(13, deduction.getAppliedRule().size());
+    assertEquals(13, deduction.getUsefulItem().length);
+    assertEquals(13, deduction.getGoalItem().length);
   }
 
   @Test public void testCfgTopdownEpsilon() throws ParseException {
@@ -183,6 +188,16 @@ public class DeductionTest {
     deduction.printTrace();
     assertEquals("(S (A (C (a )))(X1 (S (A (C (a )))(B (b )))(B (b ))))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Ignore("#203") public void testTreeAmount() throws ParseException {
+    String w = "a a b a b b";
+    ParsingSchema schema = CfgToEarleyRulesConverter.cfgToEarleyRules(
+        TestGrammarLibrary.diffTreeAmountCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(3,
+        deduction.getDerivedTrees().size());
   }
 
   @Test public void testTagCyk() throws ParseException {
