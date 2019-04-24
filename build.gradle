@@ -1,5 +1,3 @@
-def javaHome = System.getenv('JAVA_HOME')
-
 plugins {
     id 'java'
     id 'jacoco'
@@ -27,7 +25,7 @@ repositories {
 
 dependencies {
     compile 'org.apache.logging.log4j:log4j-core:2.11.1'
-    compile files("$javaHome/rt/lib/jfxrt.jar")
+    compile files("${JAVA_HOME}/rt/lib/jfxrt.jar")
     testCompile 'junit:junit:4.12'
 }
 
