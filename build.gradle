@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'de.jansauer.printcoverage' version '2.0.0'
-    id 'org.openjfx.javafxplugin' version '0.0.7'
 }
 
 sourceSets {
