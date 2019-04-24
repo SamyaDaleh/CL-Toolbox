@@ -43,7 +43,7 @@ jar {
     }
 }
 
-apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/0.4.0/javafx.plugin"
+apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/0.1.0/javafx.plugin"
 
 javafx {
     mainClass 'com.github.samyadaleh.cltoolbox.cli.Main'
