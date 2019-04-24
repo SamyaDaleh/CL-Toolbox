@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'de.jansauer.printcoverage' version '2.0.0'
-    id 'javafx-gradle-plugin'
+    id 'javafx-gradle-plugin' version '8.8.2'
 }
 
 sourceSets {
