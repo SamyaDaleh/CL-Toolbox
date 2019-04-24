@@ -43,7 +43,8 @@ jar {
     }
 }
 
-jfx {
-    mainClass = 'com.github.samyadaleh.cltoolbox.cli.Main'
-    vendor = 'Samya Daleh'
+apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/8.1.1/javafx.plugin"
+
+javafx {
+    mainClass 'com.github.samyadaleh.cltoolbox.cli.Main'
 }
