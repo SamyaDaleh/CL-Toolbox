@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'de.jansauer.printcoverage' version '2.0.0'
+    id 'javafx-gradle-plugin'
 }
 
 sourceSets {
@@ -40,4 +41,9 @@ jar {
         include 'log4j2.xml'
         into('WEB-INF/classes')
     }
+}
+
+jfx {
+    mainClass = 'com.github.samyadaleh.cltoolbox.cli.Main'
+    vendor = 'Samya Daleh'
 }
