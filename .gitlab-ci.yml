@@ -3,7 +3,7 @@ image: docker:stable
 stages:
  - build
 
-build_and_unit_test_backend:
+build_and_unit_test:
   stage: build
   image: gradle:jdk8
   script:
