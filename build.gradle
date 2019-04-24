@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     compile 'org.apache.logging.log4j:log4j-core:2.11.1'
-    compile files("${System.properties['JAVA_HOME']}/rt/lib/jfxrt.jar")
+    compile files("${System.properties['JAVA_HOME']}/jre/lib/ext/jfxrt.jar")
     testCompile 'junit:junit:4.12'
 }
 
