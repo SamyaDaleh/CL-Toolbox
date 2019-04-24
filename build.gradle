@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'de.jansauer.printcoverage' version '2.0.0'
+    id 'jar'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+    test {
+        java {
+            srcDirs = ["test/src"]
+        }
+    }
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.logging.log4j:log4j-core:2.11.1'
+    testCompile 'junit:junit:4.12'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+    }
+}
+
+jar {
+    archiveFileName 'CL-Toolbox.jar'
+    from('src') {
+        include 'log4j2.xml'
+        into('WEB-INF/classes')
+    }
+}

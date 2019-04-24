@@ -1,0 +1,15 @@
+image: docker:stable
+
+stages:
+ - build
+ - deploy
+
+build_and_unit_test_backend:
+  stage: build
+  image: gradle:jdk8
+  script:
+    - gradle build printCoverage
+  coverage: '/^Coverage:\s(\d+\.\d+%)/'
+  artifacts:
+    paths:
+      - build/libs/CL-Toolbox.jar
