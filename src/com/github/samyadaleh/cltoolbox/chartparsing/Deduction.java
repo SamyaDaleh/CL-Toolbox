@@ -71,6 +71,11 @@ public class Deduction {
    * best one, store probability or weight here.
    */
   private Double pGoal;
+  /**
+   * Rules might get reapplied if trees of subsequent items change. Make it
+   * global, so I don't have to pass them 10 steps down.
+   */
+  private Set<DynamicDeductionRuleInterface> deductionRules;
   private static final Logger log = LogManager.getLogger();
 
   /**
@@ -96,6 +101,7 @@ public class Deduction {
     agenda = new ArrayList<>();
     deductedFrom = new ArrayList<>();
     appliedRule = new ArrayList<>();
+    deductionRules = schema.getRules();
     if (schema == null)
       return false;
     for (StaticDeductionRule rule : schema.getAxioms()) {
@@ -108,8 +114,8 @@ public class Deduction {
       }
       ChartItemInterface item = agenda.get(0);
       agenda.remove(0);
-      for (DynamicDeductionRuleInterface rule : schema.getRules()) {
-        applyRule(item, rule);
+      for (DynamicDeductionRuleInterface rule : deductionRules) {
+        applyRule(rule, item);
       }
     }
     boolean goalfound = false;
@@ -274,8 +280,8 @@ public class Deduction {
    * and adds new consequence items to chart and agenda if all antecedences were
    * found.
    */
-  private void applyRule(ChartItemInterface item,
-      DynamicDeductionRuleInterface rule) {
+  private void applyRule(DynamicDeductionRuleInterface rule,
+      ChartItemInterface item) {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() < itemsNeeded) {
       return;
@@ -285,12 +291,17 @@ public class Deduction {
     startList.get(0).add(item);
     for (List<ChartItemInterface> tryAntecedences : antecedenceListGenerator(
         startList, 0, itemsNeeded - 1)) {
-      rule.clearItems();
-      rule.setAntecedences(tryAntecedences);
-      List<ChartItemInterface> newItems = rule.getConsequences();
-      if (newItems.size() > 0) {
-        processNewItems(newItems, rule);
-      }
+      applyRule(rule, tryAntecedences);
+    }
+  }
+
+  private void applyRule(DynamicDeductionRuleInterface rule,
+      List<ChartItemInterface> antecedences) {
+    rule.clearItems();
+    rule.setAntecedences(antecedences);
+    List<ChartItemInterface> newItems = rule.getConsequences();
+    if (newItems.size() > 0) {
+      processNewItems(newItems, rule);
     }
   }
 
@@ -332,13 +343,14 @@ public class Deduction {
     for (ChartItemInterface newItem : newItems) {
       if (chart.contains(newItem)) {
         int oldId = chart.indexOf(newItem);
+        List<Tree> oldTrees = new LinkedList<>(chart.get(oldId).getTrees());
         switch (replace) {
         case '-':
           if (!deductedFrom.get(oldId).contains(newItemsDeductedFrom)) {
             appliedRule.get(oldId).add(rule.getName());
             deductedFrom.get(oldId).add(newItemsDeductedFrom);
-            addNewTrees(chart.get(oldId).getTrees(), newItem.getTrees());
           }
+          addNewTrees(chart.get(oldId).getTrees(), newItem.getTrees());
           break;
         case 'h':
           Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
@@ -365,6 +377,10 @@ public class Deduction {
         default:
           log.info("Unknown replace parameter " + replace + ", doing nothing.");
         }
+        List<Tree> newTrees = chart.get(oldId).getTrees();
+        if (!equals(oldTrees, newTrees)) {
+          triggerTreeUpdate(oldId);
+        }
       } else {
         chart.add(newItem);
         agenda.add(newItem);
@@ -372,6 +388,45 @@ public class Deduction {
         appliedRule.get(appliedRule.size() - 1).add(rule.getName());
         deductedFrom.add(new ArrayList<>());
         deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
+      }
+    }
+  }
+
+  private void triggerTreeUpdate(int oldId) {
+    for (int i = 0; i < deductedFrom.size(); i++) {
+      List<List<Integer>> line = deductedFrom.get(i);
+      for (int j = 0; j < line.size(); j++) {
+        List<Integer> backPointerSet = line.get(j);
+        for (int backPointer : backPointerSet) {
+          if (oldId == backPointer) {
+            List<ChartItemInterface> backPointerItems = new ArrayList<>();
+            for (int bPointer : backPointerSet) {
+              backPointerItems.add(chart.get(bPointer));
+            }
+            String usedRule = appliedRule.get(i).get(j);
+            applyRule(usedRule, backPointerItems);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Returns true if both lists contain the exact same trees.
+   */
+  private boolean equals(List<Tree> oldTrees, List<Tree> newTrees) {
+    Set<Tree> oldSet = new HashSet<>(oldTrees);
+    Set<Tree> newSet = new HashSet<>(newTrees);
+    return oldSet.equals(newSet);
+  }
+
+  private void applyRule(String usedRule,
+      List<ChartItemInterface> backPointerItems) {
+    String ruleName = usedRule.split(" ")[0];
+    for (DynamicDeductionRuleInterface rule : deductionRules) {
+      String checkRuleName = rule.getName().split(" ")[0];
+      if (ruleName.equals(checkRuleName)) {
+        applyRule(rule, backPointerItems);
       }
     }
   }

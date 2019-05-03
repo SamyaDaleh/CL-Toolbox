@@ -1,13 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Objects;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg.CcgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRulesConverter;
@@ -17,12 +9,16 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Objects;
+
+import static org.junit.Assert.*;
 
 public class DeductionTest {
 
@@ -190,11 +186,16 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Ignore("#203") public void testTreeAmount() throws ParseException {
+  @Test public void testTreeAmount() throws ParseException {
     String w = "a a b a b b";
-    ParsingSchema schema = CfgToEarleyRulesConverter.cfgToEarleyRules(
+    ParsingSchema schema = CfgToTopDownRulesConverter.cfgToTopDownRules(
         TestGrammarLibrary.diffTreeAmountCfg(), w);
     Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(3,
+        deduction.getDerivedTrees().size());
+    schema = CfgToEarleyRulesConverter.cfgToEarleyRules(
+        TestGrammarLibrary.diffTreeAmountCfg(), w);
     assertTrue(deduction.doParse(schema, false));
     assertEquals(3,
         deduction.getDerivedTrees().size());
