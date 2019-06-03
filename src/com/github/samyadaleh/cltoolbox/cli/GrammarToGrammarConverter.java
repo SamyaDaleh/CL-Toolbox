@@ -4,8 +4,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 
@@ -22,17 +20,15 @@ public class GrammarToGrammarConverter {
     case "cfg-earley-bottomup":
     case "cfg-earley-passive":
     case "cfg-leftcorner-chart":
+    case "cfg-cyk-general":
       return cfg;
     case "cfg-leftcorner":
+    case "cfg-unger":
       return getCfgForLeftCorner(cfg, please);
     case "cfg-cyk":
       return getCfgForCyk(cfg, please);
     case "cfg-cyk-extended":
       return getCfgForCykExtended(cfg, please);
-    case "cfg-cyk-general":
-      return cfg;
-    case "cfg-unger":
-      return getCfgForLeftCorner(cfg, please);
     default:
       if (algorithm.matches("cfg-lr-\\d+")) {
         return cfg;
@@ -144,9 +140,7 @@ public class GrammarToGrammarConverter {
         return tag;
       }
     case "tag-cyk-general":
-      return tag;
     case "tag-earley":
-      return tag;
     case "tag-earley-prefixvalid":
       return tag;
     default:

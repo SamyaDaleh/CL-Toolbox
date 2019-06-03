@@ -210,11 +210,7 @@ public class Main { // NO_UCD (test only)
     String[] algorithmSplit = algorithm.split("-");
     switch (algorithmSplit[0]) {
     case "cfg":
-      throw new IllegalArgumentException(
-          "I can't parse with a less expressive formalism.");
     case "pcfg":
-      throw new IllegalArgumentException(
-          "I can't parse with a less expressive formalism.");
     case "tag":
       throw new IllegalArgumentException(
           "I can't parse with a less expressive formalism.");

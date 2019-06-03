@@ -1,7 +1,5 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 
-import java.text.ParseException;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg.CcgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
@@ -17,17 +15,23 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import java.text.ParseException;
 
 public class GrammarToDeductionRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
   public static ParsingSchema convertToSchema(Cfg cfg, String w,
       String algorithm) throws ParseException {
+    String[] wSplit = w.split(" ");
+    for (String token : wSplit) {
+      if (!cfg.terminalsContain(token)) {
+        throw new ParseException("Token " + token
+            + " from input is not a terminal in the grammar.", 0);
+      }
+    }
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToTopDownRulesConverter.cfgToTopDownRules(cfg, w);
@@ -69,6 +73,13 @@ public class GrammarToDeductionRulesConverter {
    */
   public static ParsingSchema convertToSchema(Tag tag, String w,
       String algorithm) throws ParseException {
+    String[] wSplit = w.split(" ");
+    for (String token : wSplit) {
+      if (!tag.terminalsContain(token)) {
+        throw new ParseException("Token " + token
+            + " from input is not a terminal in the grammar.", 0);
+      }
+    }
     switch (algorithm) {
     case "tag-cyk-extended":
       return TagToCykRulesConverter.tagToCykExtendedRules(tag, w);
@@ -91,6 +102,13 @@ public class GrammarToDeductionRulesConverter {
    */
   public static ParsingSchema convertToSchema(Srcg srcg, String w,
       String algorithm) throws ParseException {
+    String[] wSplit = w.split(" ");
+    for (String token : wSplit) {
+      if (!srcg.terminalsContain(token)) {
+        throw new ParseException("Token " + token
+            + " from input is not a terminal in the grammar.", 0);
+      }
+    }
     switch (algorithm) {
     case "srcg-earley":
       return LcfrsToEarleyRulesConverter.srcgToEarleyRules(srcg, w);
@@ -110,6 +128,13 @@ public class GrammarToDeductionRulesConverter {
    */
   public static ParsingSchema convertToSchema(Pcfg pcfg, String w,
       String algorithm) throws ParseException {
+    String[] wSplit = w.split(" ");
+    for (String token : wSplit) {
+      if (!pcfg.terminalsContain(token)) {
+        throw new ParseException("Token " + token
+            + " from input is not a terminal in the grammar.", 0);
+      }
+    }
     switch (algorithm) {
     case "pcfg-astar":
       return PcfgToAstarRulesConverter.pcfgToAstarRules(pcfg, w);
@@ -124,6 +149,13 @@ public class GrammarToDeductionRulesConverter {
 
   public static ParsingSchema convertToSchema(Ccg ccg, String w,
       String algorithm) throws ParseException {
+    String[] wSplit = w.split(" ");
+    for (String token : wSplit) {
+      if (!ccg.getLexicon().containsKey(token)) {
+        throw new ParseException("Token " + token
+            + " from input is not a terminal in the grammar.", 0);
+      }
+    }
     if ("ccg-deduction".equals(algorithm)) {
       return CcgToDeductionRulesConverter.ccgToDeductionRules(ccg, w);
     }
