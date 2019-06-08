@@ -1702,7 +1702,10 @@ Kallmeyer, Laura: A* Parsing (Parsing). Düsseldorf, Wintersemester 16/17. URL
 
 ### CFG: Removing left recursion
 
-Left Recursion. Wikipedia, 2017. URL [https://en.wikipedia.org/wiki/Left_recursion#Removing_all_left_recursion](https://en.wikipedia.org/wiki/Left_recursion#Removing_all_left_recursion) – last checked 2018-05-28 
+Moore, Robert C. (2000): Removing left recursion from context-free grammars. 
+In: Proceedings of the 1st North American chapter of the Association for 
+Computational Linguistics conference. Association for Computational Linguistics, 
+p. 249–255. URL [https://www.aclweb.org/anthology/A00-2033](https://www.aclweb.org/anthology/A00-2033) - last checked 2019-06-03
 
 ### CFG: Removing useless symbols, Removing epsilon productions, removing unary productions, replacing terminals, removing chain rules
 
