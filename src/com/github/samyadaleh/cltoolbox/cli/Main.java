@@ -14,7 +14,6 @@ import com.github.samyadaleh.cltoolbox.common.parser.*;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.gui.DisplayTree;
-import com.github.samyadaleh.cltoolbox.gui.JfxWindowHolder;
 import com.github.samyadaleh.cltoolbox.gui.ParsingTraceTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +32,6 @@ public class Main { // NO_UCD (test only)
 
   private static boolean success = false;
   private static boolean please = false;
-  private static boolean javafx = false;
   private static Cfg cfg;
   private static Tag tag = null;
   private static Srcg srcg;
@@ -61,7 +59,6 @@ public class Main { // NO_UCD (test only)
       algorithm = "tag-cyk-extended";
     }
     handleOptionalParameters(args);
-    JfxWindowHolder jwh = new JfxWindowHolder();
     ParsingSchema schema;
     try {
       Reader reader = new FileReader(grammarFile);
@@ -78,46 +75,24 @@ public class Main { // NO_UCD (test only)
         deduction.setReplace('l');
       }
       log.info(deduction.doParse(schema, success));
-      if (displayParsingTraceTable(jwh, deduction))
+      if (displayParsingTraceTable(deduction))
         return;
       if (schema != null) {
-        drawDerivedTree(deduction, javafx, jwh);
+        drawDerivedTree(deduction);
       }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
   }
 
-  private static boolean displayParsingTraceTable(JfxWindowHolder jwh,
-      Deduction deduction) {
+  private static boolean displayParsingTraceTable( Deduction deduction) {
     String[][] data = deduction.printTrace();
     if (tag != null) {
-      if (javafx) {
-        jwh.setRowData(data);
-        jwh.setTag(tag);
-        try {
-          jwh.showParsingTraceTableFx();
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-          return true;
-        }
-      } else {
-        new ParsingTraceTable(data,
-            new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
-      }
+      new ParsingTraceTable(data,
+          new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
     } else {
-      if (javafx) {
-        jwh.setRowData(data);
-        try {
-          jwh.showParsingTraceTableFx();
-        } catch (Exception e) {
-          log.error(e.getMessage(), e);
-          return true;
-        }
-      } else {
-        new ParsingTraceTable(data,
-            new String[] {"Id", "Item", "Rules", "Backpointers"}, null);
-      }
+      new ParsingTraceTable(data,
+          new String[] {"Id", "Item", "Rules", "Backpointers"}, null);
     }
     return false;
   }
@@ -160,15 +135,11 @@ public class Main { // NO_UCD (test only)
   private static void handleOptionalParameters(String[] args) {
     success = false;
     please = false;
-    javafx = false;
     for (int i = 3; i < args.length; i++) {
       if (args[i].equals("--success")) {
         success = true;
       } else if (args[i].equals("--please")) {
         please = true;
-      }
-      if (args[i].equals("--javafx")) {
-        javafx = true;
       }
     }
   }
@@ -359,16 +330,10 @@ public class Main { // NO_UCD (test only)
     }
   }
 
-  private static void drawDerivedTree(Deduction deduction, boolean javafx,
-      JfxWindowHolder jwc) throws Exception {
+  private static void drawDerivedTree(Deduction deduction) throws Exception {
     List<Tree> derivedTrees = deduction.getDerivedTrees();
     for (Tree derivedTree : derivedTrees) {
-      if (javafx) {
-        jwc.setArgs(new String[] {derivedTree.toString()});
-        jwc.showDisplayTreeFx();
-      } else {
-        new DisplayTree(new String[] {derivedTree.toString()});
-      }
+      new DisplayTree(new String[] {derivedTree.toString()});
     }
   }
 
@@ -389,8 +354,7 @@ public class Main { // NO_UCD (test only)
         "Optional parameters can be: \n   --success : prints a trace only of items "
             + "that lead to a goal item."
             + "\n   --please : if a grammar doesn't fit an "
-            + "algorithm, ask me to convert it. No promises."
-            + "\n   --javafx : display graphics with javafx instead of awt.");
+            + "algorithm, ask me to convert it. No promises.");
     log.info(
         "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg "
             + "\"a a b b\" cfg-topdown --success");

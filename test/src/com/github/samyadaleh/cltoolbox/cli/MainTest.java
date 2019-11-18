@@ -73,6 +73,5 @@ import java.util.Collection;
 
   private void callWithGrammar(String grammarfile, String w) {
     Main.main(new String[] {grammarfile, w, algorithm, "--please"});
-    Main.main(new String[] {grammarfile, w, algorithm, "--javafx"});
   }
 }
