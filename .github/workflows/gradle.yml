@@ -21,5 +21,5 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v1
       with:
-        name: CL-Toolbox.jar
+        name: CL-Toolbox
         path: build/libs/CL-Toolbox.jar

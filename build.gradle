@@ -43,3 +43,19 @@ jar {
         into('WEB-INF/classes')
     }
 }
+
+mainClassName = "com.github.samyadaleh.cltoolbox.cli.Main"
+
+jar {
+    archiveName 'CL-Toolbox-standalone.jar'
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    from('src') {
+        include 'log4j2.xml'
+        into('WEB-INF/classes')
+    }
+}
