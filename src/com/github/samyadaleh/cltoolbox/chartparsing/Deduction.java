@@ -115,7 +115,7 @@ public class Deduction {
       ChartItemInterface item = agenda.get(0);
       agenda.remove(0);
       for (DynamicDeductionRuleInterface rule : deductionRules) {
-        applyRule(rule, item, null);
+        applyRule(rule, item, new ArrayList<>());
       }
     }
     boolean goalfound = false;
@@ -281,7 +281,7 @@ public class Deduction {
    * found.
    */
   private void applyRule(DynamicDeductionRuleInterface rule,
-      ChartItemInterface item, ChartItemInterface triggerItem) {
+      ChartItemInterface item, List<ChartItemInterface> triggerItems) {
     int itemsNeeded = rule.getAntecedencesNeeded();
     if (chart.size() < itemsNeeded) {
       return;
@@ -291,17 +291,17 @@ public class Deduction {
     startList.get(0).add(item);
     for (List<ChartItemInterface> tryAntecedences : antecedenceListGenerator(
         startList, 0, itemsNeeded - 1)) {
-      applyRule(rule, tryAntecedences, triggerItem);
+      applyRule(rule, tryAntecedences, triggerItems);
     }
   }
 
   private void applyRule(DynamicDeductionRuleInterface rule,
-      List<ChartItemInterface> antecedences, ChartItemInterface triggerItem) {
+      List<ChartItemInterface> antecedences, List<ChartItemInterface> triggerItems) {
     rule.clearItems();
     rule.setAntecedences(antecedences);
     List<ChartItemInterface> newItems = rule.getConsequences();
     if (newItems.size() > 0) {
-      processNewItems(newItems, rule, triggerItem);
+      processNewItems(newItems, rule, triggerItems);
     }
   }
 
@@ -334,18 +334,22 @@ public class Deduction {
    * Adds new items to chart and agenda if they are not in the chart yet.
    */
   private void processNewItems(List<ChartItemInterface> newItems,
-      DynamicDeductionRuleInterface rule, ChartItemInterface triggerItem) {
+      DynamicDeductionRuleInterface rule, List<ChartItemInterface> triggerItems) {
     ArrayList<Integer> newItemsDeductedFrom = new ArrayList<>();
     for (ChartItemInterface itemToCheck : rule.getAntecedences()) {
       newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
     }
     Collections.sort(newItemsDeductedFrom);
-    if (newItems.contains(triggerItem)) {
-      log.info("Stopped tree update, because " + triggerItem
-          + " triggered an update on itself.");
+    if (triggerItems.containsAll(newItems)) {
+      log.info("Stopped tree update, because all items triggered an update on "
+          + "theirselves.");
       return;
     }
     for (ChartItemInterface newItem : newItems) {
+      if (triggerItems.contains(newItem)) {
+        log.info("Stopped tree update, because all items triggered an update on "
+            + "theirselves.");
+      }
       if (chart.contains(newItem)) {
         int oldId = chart.indexOf(newItem);
         List<Tree> oldTrees = new LinkedList<>(chart.get(oldId).getTrees());
@@ -384,11 +388,10 @@ public class Deduction {
         }
         List<Tree> newTrees = chart.get(oldId).getTrees();
         if (!equals(oldTrees, newTrees)) {
-          if (triggerItem == null) {
-            triggerTreeUpdate(oldId, newItem);
-          } else {
-            triggerTreeUpdate(oldId, triggerItem);
-          }
+          ArrayList<ChartItemInterface> newTriggerItems =
+              new ArrayList<>(triggerItems);
+          newTriggerItems.add(newItem);
+          triggerTreeUpdate(oldId, newTriggerItems);
         }
       } else {
         chart.add(newItem);
@@ -401,7 +404,8 @@ public class Deduction {
     }
   }
 
-  private void triggerTreeUpdate(int oldId, ChartItemInterface triggerItem) {
+  private void triggerTreeUpdate(int oldId,
+      List<ChartItemInterface> triggerItems) {
     for (int i = 0; i < deductedFrom.size(); i++) {
       List<List<Integer>> line = deductedFrom.get(i);
       for (int j = 0; j < line.size(); j++) {
@@ -413,7 +417,7 @@ public class Deduction {
               backPointerItems.add(chart.get(bPointer));
             }
             String usedRule = appliedRule.get(i).get(j);
-            applyRule(usedRule, backPointerItems, triggerItem);
+            applyRule(usedRule, backPointerItems, triggerItems);
           }
         }
       }
@@ -431,12 +435,12 @@ public class Deduction {
 
   private void applyRule(String usedRule,
       List<ChartItemInterface> backPointerItems,
-      ChartItemInterface triggerItem) {
+      List<ChartItemInterface> triggerItems) {
     String ruleName = usedRule.split(" ")[0];
     for (DynamicDeductionRuleInterface rule : deductionRules) {
       String checkRuleName = rule.getName().split(" ")[0];
       if (ruleName.equals(checkRuleName)) {
-        applyRule(rule, backPointerItems, triggerItem);
+        applyRule(rule, backPointerItems, triggerItems);
       }
     }
   }
