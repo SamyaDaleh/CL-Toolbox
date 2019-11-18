@@ -30,13 +30,12 @@ Download the standalone-jar from /releases and that's it. The jar already contai
 
 Or if you want to tinker with the code, for me it worked like this:
 - use your favorite IDE to clone/checkout the project
-- add the dependencies to your classpath/build path
+- add the dependencies to your classpath/build path, preferable with the build.gradle file
 - run the JUnit tests in test.src to verify that everything is working. You should see some success messages and parsing outputs.
 
 ### Dependencies
 
-* apache/logging-log4j2 at runtime
-* junit-team/junit4 for development
+See build.gradle.
 
 ## Usage
 

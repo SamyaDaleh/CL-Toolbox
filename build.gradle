@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'de.jansauer.printcoverage' version '2.0.0'
+    id 'maven-publish'
 }
 
 sourceSets {
@@ -40,5 +41,23 @@ jar {
     from('src') {
         include 'log4j2.xml'
         into('WEB-INF/classes')
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/samyadaleh/CL-Toolbox")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
     }
 }
