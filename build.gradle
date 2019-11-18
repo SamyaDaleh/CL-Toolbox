@@ -44,12 +44,10 @@ jar {
     }
 }
 
-mainClassName = "com.github.samyadaleh.cltoolbox.cli.Main"
-
 jar {
     archiveName 'CL-Toolbox-standalone.jar'
     manifest {
-        attributes "Main-Class": "$mainClassName"
+        attributes "Main-Class": "com.github.samyadaleh.cltoolbox.cli.Main"
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
