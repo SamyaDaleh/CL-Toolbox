@@ -4,13 +4,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import com.github.samyadaleh.cltoolbox.gui.DisplayTree;
 
 public class DisplayTreeTest {
-  @Test public void testDisplayTree() throws ParseException {
+  @Ignore public void testDisplayTree() throws ParseException {
     Tree tree = new Tree("(T_NA (B (T a ε) ) (B_OA T*))");
     new DisplayTree(new String[] {tree.toString()});
     
@@ -20,7 +21,7 @@ public class DisplayTreeTest {
     assertTrue(true);
   }
 
-  @Test public void testDisplayTreeWithCrossingEdges() throws ParseException {
+  @Ignore public void testDisplayTreeWithCrossingEdges() throws ParseException {
     Tree tree = new Tree("(S (Comp (dat<0> ))(VP (NP (Jan<1> ))(VP (NP (Piet<2> ))(VP (NP (de-kinderen<3> ))(V (zwemmen<6> )))(V (helpen<5> )))(V (zag<4> ))))");
     new DisplayTree(new String[] {tree.toString()});
     assertTrue(true);

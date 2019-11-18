@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.text.ParseException;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
@@ -13,7 +14,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 
 public class ParsingTraceTableTest {
 
-  @Test public void testParsingTraceTable() throws ParseException {
+  @Ignore public void testParsingTraceTable() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema =
         TagToEarleyRulesConverter.tagToEarleyRules(anCBTag(), w2);
