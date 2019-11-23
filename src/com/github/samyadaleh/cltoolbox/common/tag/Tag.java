@@ -34,7 +34,7 @@ public class Tag extends AbstractNTSGrammar {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       String treeString =
           "(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")";
-      this.addInitialTree("α" + String.valueOf(i), treeString);
+      this.addInitialTree("α" + i, treeString);
       i++;
     }
   }
@@ -49,10 +49,12 @@ public class Tag extends AbstractNTSGrammar {
    */
   public void addInitialTree(String name, String tree) throws ParseException {
     this.initialTrees.put(name, new Tree(tree));
-    for (Vertex p : getInitialTree(name).getVertexes()) {
-      if (isInTerminals(p.getLabel()) && getInitialTree(name).hasChildren(p)) {
-        throw new ParseException(
-            "Terminal nodes are not allowed to have children", 0);
+    if (this.getTerminals() != null) {
+      for (Vertex p : getInitialTree(name).getVertexes()) {
+        if (isInTerminals(p.getLabel()) && getInitialTree(name).hasChildren(p)) {
+          throw new ParseException(
+              "Terminal nodes are not allowed to have children", 0);
+        }
       }
     }
   }
