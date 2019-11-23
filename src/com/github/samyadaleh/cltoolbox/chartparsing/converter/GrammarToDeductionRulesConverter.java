@@ -25,15 +25,7 @@ public class GrammarToDeductionRulesConverter {
    */
   public static ParsingSchema convertToSchema(Cfg cfg, String w,
       String algorithm) throws ParseException {
-    String[] wSplit = w.split(" ");
-  //  if (wSplit.length > 1 || !"".equals(wSplit[0])) {
-      for (String token : wSplit) {
-        if (!cfg.terminalsContain(token)) {
-          throw new ParseException("Token " + token
-              + " from input is not a terminal in the grammar.", 0);
-        }
-      }
-  //  }
+    validateInputSymbols(cfg, w);
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToTopDownRulesConverter.cfgToTopDownRules(cfg, w);
@@ -70,18 +62,25 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
+  private static void validateInputSymbols(Cfg cfg, String w)
+      throws ParseException {
+    String[] wSplit = w.split(" ");
+    if (wSplit.length > 1 || !"".equals(wSplit[0])) {
+      for (String token : wSplit) {
+        if (!cfg.terminalsContain(token)) {
+          throw new ParseException("Token " + token
+              + " from input is not a terminal in the grammar.", 0);
+        }
+      }
+    }
+  }
+
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
   public static ParsingSchema convertToSchema(Tag tag, String w,
       String algorithm) throws ParseException {
-    String[] wSplit = w.split(" ");
-    for (String token : wSplit) {
-      if (!tag.terminalsContain(token)) {
-        throw new ParseException("Token " + token
-            + " from input is not a terminal in the grammar.", 0);
-      }
-    }
+    validateInputSymbols(tag, w);
     switch (algorithm) {
     case "tag-cyk-extended":
       return TagToCykRulesConverter.tagToCykExtendedRules(tag, w);
@@ -99,18 +98,25 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
+  private static void validateInputSymbols(Tag tag, String w)
+      throws ParseException {
+    String[] wSplit = w.split(" ");
+    if (wSplit.length > 1 || !"".equals(wSplit[0])) {
+      for (String token : wSplit) {
+        if (!tag.terminalsContain(token)) {
+          throw new ParseException("Token " + token
+              + " from input is not a terminal in the grammar.", 0);
+        }
+      }
+    }
+  }
+
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
   public static ParsingSchema convertToSchema(Srcg srcg, String w,
       String algorithm) throws ParseException {
-    String[] wSplit = w.split(" ");
-    for (String token : wSplit) {
-      if (!srcg.terminalsContain(token)) {
-        throw new ParseException("Token " + token
-            + " from input is not a terminal in the grammar.", 0);
-      }
-    }
+    validateInputSymbols(srcg, w);
     switch (algorithm) {
     case "srcg-earley":
       return LcfrsToEarleyRulesConverter.srcgToEarleyRules(srcg, w);
@@ -125,18 +131,25 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
+  private static void validateInputSymbols(Srcg srcg, String w)
+      throws ParseException {
+    String[] wSplit = w.split(" ");
+    if (wSplit.length > 1 || !"".equals(wSplit[0])) {
+      for (String token : wSplit) {
+        if (!srcg.terminalsContain(token)) {
+          throw new ParseException("Token " + token
+              + " from input is not a terminal in the grammar.", 0);
+        }
+      }
+    }
+  }
+
   /**
    * Call with appropriate grammar. Better call the convert-to function first.
    */
   public static ParsingSchema convertToSchema(Pcfg pcfg, String w,
       String algorithm) throws ParseException {
-    String[] wSplit = w.split(" ");
-    for (String token : wSplit) {
-      if (!pcfg.terminalsContain(token)) {
-        throw new ParseException("Token " + token
-            + " from input is not a terminal in the grammar.", 0);
-      }
-    }
+    validateInputSymbols(pcfg, w);
     switch (algorithm) {
     case "pcfg-astar":
       return PcfgToAstarRulesConverter.pcfgToAstarRules(pcfg, w);
@@ -149,20 +162,40 @@ public class GrammarToDeductionRulesConverter {
     }
   }
 
-  public static ParsingSchema convertToSchema(Ccg ccg, String w,
-      String algorithm) throws ParseException {
+  private static void validateInputSymbols(Pcfg pcfg, String w)
+      throws ParseException {
     String[] wSplit = w.split(" ");
-    for (String token : wSplit) {
-      if (!ccg.getLexicon().containsKey(token)) {
-        throw new ParseException("Token " + token
-            + " from input is not a terminal in the grammar.", 0);
+    if (wSplit.length > 1 || !"".equals(wSplit[0])) {
+      for (String token : wSplit) {
+        if (!pcfg.terminalsContain(token)) {
+          throw new ParseException("Token " + token
+              + " from input is not a terminal in the grammar.", 0);
+        }
       }
     }
+  }
+
+  public static ParsingSchema convertToSchema(Ccg ccg, String w,
+      String algorithm) throws ParseException {
+    validateInputSymbols(ccg, w);
     if ("ccg-deduction".equals(algorithm)) {
       return CcgToDeductionRulesConverter.ccgToDeductionRules(ccg, w);
     }
     throw new ParseException(
         "I did not understand. Please check the spelling of your parsing algorithm.",
         1);
+  }
+
+  private static void validateInputSymbols(Ccg ccg, String w)
+      throws ParseException {
+    String[] wSplit = w.split(" ");
+    if (wSplit.length > 1 || !"".equals(wSplit[0])) {
+      for (String token : wSplit) {
+        if (!ccg.getLexicon().containsKey(token)) {
+          throw new ParseException("Token " + token
+              + " from input is not a terminal in the grammar.", 0);
+        }
+      }
+    }
   }
 }
