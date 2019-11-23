@@ -38,7 +38,6 @@ public class CollectTreeSymbolsTag extends CollectSymbols {
   }
 
   @Override protected void handleClosingBracket() throws ParseException {
-
     if (category.get(0).equals("I")) {
       tag.addInitialTree(lhs, rhs.toString());
     } else {

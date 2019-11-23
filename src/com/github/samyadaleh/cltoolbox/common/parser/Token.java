@@ -19,4 +19,8 @@ public class Token {
   public int getLineNumber() {
     return lineNumber;
   }
+
+  @Override public String toString() {
+    return this.token;
+  }
 }

@@ -7,6 +7,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
 import java.io.BufferedReader;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,13 +32,19 @@ public class InnerTagGrammarParser extends InnerGrammarParser {
   }
 
   @Override protected void handleCategoryLength3() throws ParseException {
-    CollectSetContentsTag collectSetContents =
-        (CollectSetContentsTag) new CollectSetContentsTag(tag, category, lhs,
-            rhs, symbols, token).invoke();
-    category = collectSetContents.getCategory();
-    lhs = collectSetContents.getLhs();
-    rhs = collectSetContents.getRhs();
-    symbols = collectSetContents.getSymbols();
+    if (("A".equals(category.get(0)) || "I".equals(category.get(0))) && "}"
+        .equals(token.toString())) {
+      category = new ArrayList<>();
+      lhs = null;
+    } else {
+      CollectSetContentsTag collectSetContents =
+          (CollectSetContentsTag) new CollectSetContentsTag(tag, category, lhs,
+              rhs, symbols, token).invoke();
+      category = collectSetContents.getCategory();
+      lhs = collectSetContents.getLhs();
+      rhs = collectSetContents.getRhs();
+      symbols = collectSetContents.getSymbols();
+    }
   }
 
   @Override protected void handleCategoryLength2() throws ParseException {
