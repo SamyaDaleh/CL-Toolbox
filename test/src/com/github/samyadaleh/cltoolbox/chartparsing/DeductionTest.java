@@ -9,15 +9,19 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.cli.Main;
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Objects;
 
+import static com.github.samyadaleh.cltoolbox.cli.Main.parseGrammarReaderAndConvertToParsingSchema;
 import static org.junit.Assert.*;
 
 public class DeductionTest {
@@ -184,6 +188,16 @@ public class DeductionTest {
     deduction.printTrace();
     assertEquals("(S (A (C (a )))(X1 (S (A (C (a )))(B (b )))(B (b ))))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testEmptyInput() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToCykRulesConverter.cfgToCykGeneralRules(
+        Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
+    Deduction deduction = new Deduction();
+    assertFalse(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals(1, deduction.getChart().size());
   }
 
   @Test public void testTreeAmount() throws ParseException {
@@ -382,5 +396,4 @@ public class DeductionTest {
         "(S (NP (Trip ))(S\\NP ([S\\NP]/NP ([S\\NP]/[S\\NP] (certainly ))([S\\NP]/NP (likes )))(NP (merengue ))))",
         deduction.getDerivedTrees().get(0).toString());
   }
-
 }

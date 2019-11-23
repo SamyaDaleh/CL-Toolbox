@@ -26,12 +26,14 @@ public class GrammarToDeductionRulesConverter {
   public static ParsingSchema convertToSchema(Cfg cfg, String w,
       String algorithm) throws ParseException {
     String[] wSplit = w.split(" ");
-    for (String token : wSplit) {
-      if (!cfg.terminalsContain(token)) {
-        throw new ParseException("Token " + token
-            + " from input is not a terminal in the grammar.", 0);
+  //  if (wSplit.length > 1 || !"".equals(wSplit[0])) {
+      for (String token : wSplit) {
+        if (!cfg.terminalsContain(token)) {
+          throw new ParseException("Token " + token
+              + " from input is not a terminal in the grammar.", 0);
+        }
       }
-    }
+  //  }
     switch (algorithm) {
     case "cfg-topdown":
       return CfgToTopDownRulesConverter.cfgToTopDownRules(cfg, w);

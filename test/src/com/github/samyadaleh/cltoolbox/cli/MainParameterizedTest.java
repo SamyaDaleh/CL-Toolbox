@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized.Parameters;
 import java.util.Arrays;
 import java.util.Collection;
 
-@RunWith(Parameterized.class) public class MainTest {
+@RunWith(Parameterized.class) public class MainParameterizedTest {
 
   private final String algorithm;
 
@@ -24,18 +24,8 @@ import java.util.Collection;
             {"srcg-cyk-general"}, {"srcg-earley"}});
   }
 
-  public MainTest(String algorithm) {
+  public MainParameterizedTest(String algorithm) {
     this.algorithm = algorithm;
-  }
-
-  @Test public void testEmptyCall() {
-    try {
-      Main.main(new String[] {});
-      Main.main(new String[] {".\\resources\\grammars\\anbn.cfg", "a a b b",
-          "itssupposedtobenothing"});
-    } catch (IllegalArgumentException e) {
-      System.out.println(e.getMessage());
-    }
   }
 
   @Test public void testCfgCalls() {

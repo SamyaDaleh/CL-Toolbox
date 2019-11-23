@@ -97,24 +97,30 @@ public class CfgToCykRulesConverter {
   public static ParsingSchema cfgToCykGeneralRules(Cfg cfg, String w) {
     String[] wSplit = w.split(" ");
     ParsingSchema schema = new ParsingSchema();
-
-    for (int i = 0; i < wSplit.length; i++) {
-      StaticDeductionRule scan = new StaticDeductionRule();
-      scan.addConsequence(
-          new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
-      scan.setName(DEDUCTION_RULE_CFG_CYK_AXIOM + " " + wSplit[i]);
-      schema.addAxiom(scan);
+    if (!"".equals(wSplit[0])) {
+      for (int i = 0; i < wSplit.length; i++) {
+        StaticDeductionRule scan = new StaticDeductionRule();
+        scan.addConsequence(
+            new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
+        scan.setName(DEDUCTION_RULE_CFG_CYK_AXIOM + " " + wSplit[i]);
+        schema.addAxiom(scan);
+        StaticDeductionRule scanEps = new StaticDeductionRule();
+        scanEps
+            .addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
+        scanEps.setName(DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON);
+        schema.addAxiom(scanEps);
+      }
       StaticDeductionRule scanEps = new StaticDeductionRule();
-      scanEps
-          .addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
+      scanEps.addConsequence(
+          new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
+      scanEps.setName(DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON);
+      schema.addAxiom(scanEps);
+    } else {
+      StaticDeductionRule scanEps = new StaticDeductionRule();
+      scanEps.addConsequence(new DeductionChartItem("", "0", "0"));
       scanEps.setName(DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON);
       schema.addAxiom(scanEps);
     }
-    StaticDeductionRule scanEps = new StaticDeductionRule();
-    scanEps.addConsequence(
-        new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
-    scanEps.setName(DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON);
-    schema.addAxiom(scanEps);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       DynamicDeductionRuleInterface complete = new CfgCykCompleteGeneral(rule);
