@@ -35,6 +35,9 @@ public class TokenReader {
           tokens = ArrayUtils.tokenize(line, specialChars);
           lineNumber++;
         }
+        if (tokens.size() == 0) {
+          return null;
+        }
         String token = tokens.get(0);
         tokens.remove(0);
         return new Token(token, lineNumber);

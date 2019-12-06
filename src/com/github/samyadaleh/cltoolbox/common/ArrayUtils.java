@@ -138,8 +138,9 @@ public class ArrayUtils {
   public static List<String> tokenize(String tree, Character[] specialSymbols) {
     List<String> tokens = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < tree.length(); i++) {
-      if (tree.charAt(i) == ' ') {
+    String treeTrim = tree.trim();
+    for (int i = 0; i < treeTrim.length(); i++) {
+      if (treeTrim.charAt(i) == ' ') {
         if (builder.length() > 0) {
           tokens.add(builder.toString());
           builder = new StringBuilder();
@@ -147,14 +148,14 @@ public class ArrayUtils {
       } else {
         int finalI = i;
         if (Stream.of(specialSymbols).anyMatch(
-            s -> tree.substring(finalI).startsWith(String.valueOf(s)))) {
+            s -> treeTrim.substring(finalI).startsWith(String.valueOf(s)))) {
           if (builder.length() > 0) {
             tokens.add(builder.toString());
             builder = new StringBuilder();
           }
-          tokens.add(String.valueOf(tree.charAt(i)));
+          tokens.add(String.valueOf(treeTrim.charAt(i)));
         } else {
-          builder.append(String.valueOf(tree.charAt(i)));
+          builder.append(treeTrim.charAt(i));
         }
       }
     }
