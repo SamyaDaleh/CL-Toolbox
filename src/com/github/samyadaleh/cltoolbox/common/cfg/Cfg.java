@@ -59,8 +59,9 @@ public class Cfg extends AbstractCfg {
       if (rule.getLhs().equals(this.getStartSymbol()) && rule.getRhs()[0]
           .equals("")) {
         for (CfgProductionRule rule2 : this.productionRules) {
-          if (rule2.getRhs()[0].equals(this.getStartSymbol()) || rule2
-              .getRhs()[1].equals(this.getStartSymbol())) {
+          if (rule2.getRhs().length == 2 && (
+              rule2.getRhs()[0].equals(this.getStartSymbol()) || rule2
+                  .getRhs()[1].equals(this.getStartSymbol()))) {
             return false;
           }
         }
