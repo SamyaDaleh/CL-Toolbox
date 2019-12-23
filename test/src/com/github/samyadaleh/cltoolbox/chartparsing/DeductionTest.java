@@ -9,19 +9,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
-import com.github.samyadaleh.cltoolbox.cli.Main;
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.Objects;
 
-import static com.github.samyadaleh.cltoolbox.cli.Main.parseGrammarReaderAndConvertToParsingSchema;
 import static org.junit.Assert.*;
 
 public class DeductionTest {
@@ -41,6 +37,12 @@ public class DeductionTest {
     assertEquals(13, deduction.getAppliedRule().size());
     assertEquals(13, deduction.getUsefulItem().length);
     assertEquals(13, deduction.getGoalItem().length);
+    boolean[] usefulItems =
+        new boolean[] {true, true, false, true, false, false, true, false, true,
+            false, false, true, true};
+    for (int i = 0; i < usefulItems.length; i++) {
+      assertEquals(usefulItems[i], deduction.getUsefulItem()[i]);
+    }
   }
 
   @Test public void testCfgTopdownEpsilon() throws ParseException {

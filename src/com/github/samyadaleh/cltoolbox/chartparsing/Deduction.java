@@ -127,6 +127,7 @@ public class Deduction {
         goalfound = true;
       }
     }
+    markUsefulItems();
     return goalfound;
   }
 
@@ -136,7 +137,6 @@ public class Deduction {
    * chart data as string array with columns: Id, Item, Rules, Backpointers.
    */
   public String[][] printTrace() {
-    markUsefulItems();
     ArrayList<String[]> chartData = new ArrayList<>();
     int iMaxWidth = 0;
     int chartMaxWidth = 0;
@@ -180,9 +180,6 @@ public class Deduction {
   }
 
   private void markUsefulItems() {
-    if (!successfulTrace) {
-      return;
-    }
     boolean changed = true;
     while (changed) {
       changed = false;
