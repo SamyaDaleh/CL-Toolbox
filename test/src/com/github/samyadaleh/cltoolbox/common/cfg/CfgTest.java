@@ -126,6 +126,13 @@ public class CfgTest {
     assertNull(
         Objects.requireNonNull(TestGrammarLibrary.noUsefulNonterminalCfg())
       .getCfgWithoutNonGeneratingSymbols());
+
+    after = Objects
+        .requireNonNull(TestGrammarLibrary.nonGeneratingSymbolsEpsilonCfg())
+        .getCfgWithoutNonGeneratingSymbols();
+    assertEquals(
+        "G = <N, T, S, P>\n" + "N = {A, B, S}\n" + "T = {a, b, c}\n" + "S = S\n"
+            + "P = {S -> A B, A -> ε, B -> ε}\n", after.toString());
   }
 
   @Test public void testCreateCfgFromPcfg() {

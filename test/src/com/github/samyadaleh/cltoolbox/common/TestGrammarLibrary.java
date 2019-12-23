@@ -286,6 +286,21 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg nonGeneratingSymbolsEpsilonCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setStartSymbol("S");
+    cfg.setNonterminals(new String[] {"S", "A", "B"});
+    cfg.setTerminals(new String[] {"a", "b", "c"});
+    try {
+      cfg.addProductionRule("S -> A B");
+      cfg.addProductionRule("A -> ");
+      cfg.addProductionRule("B -> ε");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Pcfg banPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setTerminals(new String[] {"a", "b"});

@@ -31,7 +31,7 @@ public class UselessSymbols {
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       boolean notGeneratingSeen = false;
       for (String symbol : rule.getRhs()) {
-        if (!generating.contains(symbol)) {
+        if (!generating.contains(symbol) && !"".equals(symbol)) {
           notGeneratingSeen = true;
           break;
         }
@@ -48,6 +48,7 @@ public class UselessSymbols {
   private static void getGeneratingSymbols(ArrayList<String> generating,
     Cfg cfgOld) {
     boolean changed = true;
+    addEpsilonProductions(generating, cfgOld);
     while (changed) {
       changed = false;
       for (CfgProductionRule rule : cfgOld.getProductionRules()) {
@@ -62,6 +63,15 @@ public class UselessSymbols {
           changed = true;
           generating.add(rule.getLhs());
         }
+      }
+    }
+  }
+
+  private static void addEpsilonProductions(ArrayList<String> generating,
+      Cfg cfgOld) {
+    for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+      if ("".equals(rule.getRhs()[0])) {
+        generating.add(rule.getLhs());
       }
     }
   }
