@@ -37,12 +37,19 @@ public class DeductionTest {
     assertEquals(13, deduction.getAppliedRule().size());
     assertEquals(13, deduction.getUsefulItem().length);
     assertEquals(13, deduction.getGoalItem().length);
-    boolean[] usefulItems =
-        new boolean[] {true, true, false, true, false, false, true, false, true,
-            false, false, true, true};
-    for (int i = 0; i < usefulItems.length; i++) {
-      assertEquals(usefulItems[i], deduction.getUsefulItem()[i]);
-    }
+    assertTrue(deduction.getUsefulItem()[0]);
+    assertFalse(deduction.getUsefulItem()[1]);
+    assertTrue(deduction.getUsefulItem()[2]);
+    assertFalse(deduction.getUsefulItem()[3]);
+    assertTrue(deduction.getUsefulItem()[4]);
+    assertTrue(deduction.getUsefulItem()[5]);
+    assertFalse(deduction.getUsefulItem()[6]);
+    assertTrue(deduction.getUsefulItem()[7]);
+    assertFalse(deduction.getUsefulItem()[8]);
+    assertTrue(deduction.getUsefulItem()[9]);
+    assertFalse(deduction.getUsefulItem()[10]);
+    assertFalse(deduction.getUsefulItem()[11]);
+    assertTrue(deduction.getUsefulItem()[12]);
   }
 
   @Test public void testCfgTopdownEpsilon() throws ParseException {
