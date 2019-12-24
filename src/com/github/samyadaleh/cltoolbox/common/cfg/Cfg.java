@@ -85,7 +85,7 @@ public class Cfg extends AbstractCfg {
       return false;
     }
     for (CfgProductionRule rule : this.productionRules) {
-      if (rule.getRhs().length == 1) {
+      if (rule.getRhs().length == 1 && !"".equals(rule.getRhs()[0])) {
         if (!terminalsContain(rule.getRhs()[0])) {
           return false;
         }

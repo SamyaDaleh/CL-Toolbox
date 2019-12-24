@@ -403,6 +403,17 @@ public class TestGrammarLibrary {
     return pcfg;
   }
 
+  public static Pcfg testCnfPcfg() {
+    Pcfg pcfg = new Pcfg();
+    pcfg.setTerminals(new String[] {"t0", "t1"});
+    pcfg.setNonterminals(new String[] {"S1", "N0", "Y1", "Y2"});
+    pcfg.setProductionRules(
+        new String[][] {{"S1", "", "0.5"}, {"S1", "Y1 Y2", "0.5"}, {"N0", "Y1 Y2", "1.0"},
+            {"Y1", "t0", "1.0"}, {"Y2", "t1", "1.0"}});
+    pcfg.setStartSymbol("S1");
+    return pcfg;
+  }
+
   public static Tag anCBTag() {
     try {
       Tag g = new Tag();
