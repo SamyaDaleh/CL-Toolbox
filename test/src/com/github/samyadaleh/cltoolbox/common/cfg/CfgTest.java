@@ -1,21 +1,19 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.text.ParseException;
 import java.util.Objects;
 
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
-import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
+
+import static org.junit.Assert.*;
 
 public class CfgTest {
 
   @Test public void testBinarization() {
-    assertTrue(!Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).isBinarized());
+    assertFalse(
+        Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).isBinarized());
     Cfg cfgbin = Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).getBinarizedCfg();
     assertTrue(cfgbin.isBinarized());
   }
@@ -23,7 +21,7 @@ public class CfgTest {
   @Test public void testRemoveEpsilon() {
     assertTrue(Objects.requireNonNull(TestGrammarLibrary.epsCfg()).hasEpsilonProductions());
     Cfg epsfree = Objects.requireNonNull(TestGrammarLibrary.epsCfg()).getCfgWithoutEmptyProductions();
-    assertTrue(!epsfree.hasEpsilonProductions());
+    assertFalse(epsfree.hasEpsilonProductions());
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, A, B, C, S1}\n" + "T = {a, b}\n"
         + "S = S1\n"

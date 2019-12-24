@@ -368,6 +368,18 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgUngerGoalTrees() throws ParseException {
+    String w = "t0 t1";
+    ParsingSchema schema = CfgToUngerRulesConverter.cfgToUngerRules(
+        Objects.requireNonNull(TestGrammarLibrary.ungerWrongGoalTreesCfg()), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(N1 (t0 )(t1 ))",
+        deduction.getDerivedTrees().get(0).toString());
+    assertEquals(1, deduction.getDerivedTrees().size());
+  }
+
   @Test public void testCfgCykGeneral() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToCykRulesConverter

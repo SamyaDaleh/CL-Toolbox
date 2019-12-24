@@ -4,6 +4,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -50,11 +51,30 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
               .generateDerivedTrees(derivedTrees, derivedTreesNew, rule);
         }
         if (rule.getRhs().length == 1) {
-          ChartItemInterface consequence =
-              new DeductionChartItem("•" + rule.getRhs()[0], from, to);
-          consequence.setTrees(derivedTreesNew);
-          logItemGeneration(consequence);
-          consequences.add(consequence);
+          if ("".equals(rule.getRhs()[0])) {
+            if (fromInt == toInt) {
+              ChartItemInterface consequence =
+                  new DeductionChartItem("•" + rule.getRhs()[0], from, to);
+              consequence.setTrees(derivedTreesNew);
+              logItemGeneration(consequence);
+              consequences.add(consequence);
+            }
+          } else if (ArrayUtils
+              .contains(cfg.getTerminals(), rule.getRhs()[0])) {
+            if (fromInt + 1 == toInt) {
+              ChartItemInterface consequence =
+                  new DeductionChartItem("•" + rule.getRhs()[0], from, to);
+              consequence.setTrees(derivedTreesNew);
+              logItemGeneration(consequence);
+              consequences.add(consequence);
+            }
+          } else {
+            ChartItemInterface consequence =
+                new DeductionChartItem("•" + rule.getRhs()[0], from, to);
+            consequence.setTrees(derivedTreesNew);
+            logItemGeneration(consequence);
+            consequences.add(consequence);
+          }
         } else {
           generateAllPossibleConsequences(from, to, fromInt, toInt,
               derivedTreesNew);

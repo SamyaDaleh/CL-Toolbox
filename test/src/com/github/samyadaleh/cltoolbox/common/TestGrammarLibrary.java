@@ -93,67 +93,6 @@ public class TestGrammarLibrary {
     }
   }
 
-  public static Tag anCBTag() {
-    try {
-      Tag g = new Tag();
-      g.setNonterminals(new String[] {"S", "T"});
-      g.setTerminals(new String[] {"a", "b", "c"});
-      g.setStartSymbol("S");
-      g.addInitialTree("α1", "(S T b)");
-      g.addInitialTree("α2", "(T c)");
-      g.addAuxiliaryTree("β", "(T a T*)");
-      return g;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static Tag binarizeTag() {
-    try {
-      Tag g = new Tag();
-      g.setNonterminals(new String[] {"S"});
-      g.setTerminals(new String[] {"a", "b", "c", "d"});
-      g.setStartSymbol("S");
-      g.addInitialTree("α", "(S ε)");
-      g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
-      return g;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static Tag convertToLcfrsTag() {
-    try {
-      Tag g = new Tag();
-      g.setNonterminals(new String[] {"S", "A", "D"});
-      g.setTerminals(new String[] {"a", "b", "c", "d"});
-      g.setStartSymbol("S");
-      g.addInitialTree("α", "(S a (A b c) D)");
-      g.addInitialTree("γ", "(D d)");
-      g.addAuxiliaryTree("β", "(A a A* a)");
-      return g;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static Srcg anBnSrcg() {
-    Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[] {"S", "A"});
-    srcg.setTerminals(new String[] {"a", "b"});
-    srcg.setVariables(new String[] {"X1", "X2"});
-    srcg.setStartSymbol("S");
-    try {
-      srcg.addClause("S (X1 X2) -> A(X1, X2)");
-      srcg.addClause("A (a X1, b X2) -> A(X1, X2)");
-      srcg.addClause("A (a,b) -> ε");
-
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-    return srcg;
-  }
-
   public static Cfg longRhsCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
@@ -301,17 +240,6 @@ public class TestGrammarLibrary {
     }
   }
 
-  public static Pcfg banPcfg() {
-    Pcfg pcfg = new Pcfg();
-    pcfg.setTerminals(new String[] {"a", "b"});
-    pcfg.setNonterminals(new String[] {"S", "A", "B"});
-    pcfg.setProductionRules(
-        new String[][] {{"S", "A B", "1"}, {"A", "b", "0.7"}, {"A", "a", "0.3"},
-            {"B", "B B", "0.6"}, {"B", "a", "0.4"}});
-    pcfg.setStartSymbol("S");
-    return pcfg;
-  }
-
   public static Cfg anbnCnfCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});
@@ -347,6 +275,79 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg anbnCnfProbCfg() {
+    Cfg cfgeps = new Cfg();
+    cfgeps.setTerminals(new String[] {"a", "b"});
+    cfgeps.setNonterminals(new String[] {"S", "X1", "Y1", "Y2"});
+    try {
+      cfgeps.addProductionRule("Y1 -> a");
+      cfgeps.addProductionRule("S -> Y1 X1");
+      cfgeps.addProductionRule("Y2 -> b");
+      cfgeps.addProductionRule("X1 -> S Y2");
+      cfgeps.addProductionRule("S -> Y1 Y2");
+      cfgeps.setStartSymbol("S");
+      return cfgeps;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Cfg noUsefulNonterminalCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b"});
+    cfg.setNonterminals(new String[] {"S"});
+    try {
+      cfg.addProductionRule("S -> a S b");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Cfg leftCornerBreak() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(
+        new String[] {"a", "b", "c", "d", "e", "f", "g", "h", "i"});
+    cfg.setNonterminals(
+        new String[] {"S", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+            "K", "L"});
+    try {
+      cfg.addProductionRule("S -> A B C");
+      cfg.addProductionRule("A -> D E F");
+      cfg.addProductionRule("D -> a");
+      cfg.addProductionRule("E -> b");
+      cfg.addProductionRule("F -> c");
+      cfg.addProductionRule("B -> G H I");
+      cfg.addProductionRule("G -> d");
+      cfg.addProductionRule("H -> e");
+      cfg.addProductionRule("I -> f");
+      cfg.addProductionRule("C -> J K L");
+      cfg.addProductionRule("J -> g");
+      cfg.addProductionRule("K -> h");
+      cfg.addProductionRule("L -> i");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Cfg ungerWrongGoalTreesCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"t0", "t1"});
+    cfg.setNonterminals(new String[] {"N1"});
+    try {
+      cfg.addProductionRule("N1 -> t0");
+      cfg.addProductionRule("N1 -> t0 t1");
+      cfg.addProductionRule("N1 -> ε");
+      cfg.setStartSymbol("N1");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});
@@ -361,6 +362,78 @@ public class TestGrammarLibrary {
             {"N", "bike", "0.1"}, {"N", "house", "0.1"}, {"A", "ugly", "0.25"},
             {"A", "green", "0.25"}});
     return pcfg;
+  }
+
+  public static Pcfg banPcfg() {
+    Pcfg pcfg = new Pcfg();
+    pcfg.setTerminals(new String[] {"a", "b"});
+    pcfg.setNonterminals(new String[] {"S", "A", "B"});
+    pcfg.setProductionRules(
+        new String[][] {{"S", "A B", "1"}, {"A", "b", "0.7"}, {"A", "a", "0.3"},
+            {"B", "B B", "0.6"}, {"B", "a", "0.4"}});
+    pcfg.setStartSymbol("S");
+    return pcfg;
+  }
+
+  public static Tag anCBTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"S", "T"});
+      g.setTerminals(new String[] {"a", "b", "c"});
+      g.setStartSymbol("S");
+      g.addInitialTree("α1", "(S T b)");
+      g.addInitialTree("α2", "(T c)");
+      g.addAuxiliaryTree("β", "(T a T*)");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Tag binarizeTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"S"});
+      g.setTerminals(new String[] {"a", "b", "c", "d"});
+      g.setStartSymbol("S");
+      g.addInitialTree("α", "(S ε)");
+      g.addAuxiliaryTree("β", "(S_NA a (S b S* c) d)");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Tag convertToLcfrsTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"S", "A", "D"});
+      g.setTerminals(new String[] {"a", "b", "c", "d"});
+      g.setStartSymbol("S");
+      g.addInitialTree("α", "(S a (A b c) D)");
+      g.addInitialTree("γ", "(D d)");
+      g.addAuxiliaryTree("β", "(A a A* a)");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Srcg anBnSrcg() {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[] {"S", "A"});
+    srcg.setTerminals(new String[] {"a", "b"});
+    srcg.setVariables(new String[] {"X1", "X2"});
+    srcg.setStartSymbol("S");
+    try {
+      srcg.addClause("S (X1 X2) -> A(X1, X2)");
+      srcg.addClause("A (a X1, b X2) -> A(X1, X2)");
+      srcg.addClause("A (a,b) -> ε");
+
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    return srcg;
   }
 
   public static Srcg longStringsSrcg() {
@@ -396,23 +469,6 @@ public class TestGrammarLibrary {
       throw new RuntimeException(e);
     }
     return srcg1;
-  }
-
-  public static Cfg anbnCnfProbCfg() {
-    Cfg cfgeps = new Cfg();
-    cfgeps.setTerminals(new String[] {"a", "b"});
-    cfgeps.setNonterminals(new String[] {"S", "X1", "Y1", "Y2"});
-    try {
-      cfgeps.addProductionRule("Y1 -> a");
-      cfgeps.addProductionRule("S -> Y1 X1");
-      cfgeps.addProductionRule("Y2 -> b");
-      cfgeps.addProductionRule("X1 -> S Y2");
-      cfgeps.addProductionRule("S -> Y1 Y2");
-      cfgeps.setStartSymbol("S");
-      return cfgeps;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public static Srcg unorderedSrcg() {
@@ -526,53 +582,6 @@ public class TestGrammarLibrary {
     return srcg;
   }
 
-  public static Cfg noUsefulNonterminalCfg() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b"});
-    cfg.setNonterminals(new String[] {"S"});
-    try {
-      cfg.addProductionRule("S -> a S b");
-      cfg.setStartSymbol("S");
-      return cfg;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static Cfg leftCornerBreak() {
-    Cfg cfg = new Cfg();
-    cfg.setTerminals(
-        new String[] {"a", "b", "c", "d", "e", "f", "g", "h", "i"});
-    cfg.setNonterminals(
-        new String[] {"S", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-            "K", "L"});
-    try {
-      cfg.addProductionRule("S -> A B C");
-      cfg.addProductionRule("A -> D E F");
-      cfg.addProductionRule("D -> a");
-      cfg.addProductionRule("E -> b");
-      cfg.addProductionRule("F -> c");
-      cfg.addProductionRule("B -> G H I");
-      cfg.addProductionRule("G -> d");
-      cfg.addProductionRule("H -> e");
-      cfg.addProductionRule("I -> f");
-      cfg.addProductionRule("C -> J K L");
-      cfg.addProductionRule("J -> g");
-      cfg.addProductionRule("K -> h");
-      cfg.addProductionRule("L -> i");
-      cfg.setStartSymbol("S");
-      return cfg;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public static Ccg dedCcg() throws IOException {
-    String ccgString = "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
-        + "certainly\t(S\\NP)/(S\\NP)\n";
-    return new Ccg(new BufferedReader(new StringReader(ccgString)));
-  }
-
   public static Srcg anbmcndmSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B"});
@@ -589,5 +598,11 @@ public class TestGrammarLibrary {
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static Ccg dedCcg() throws IOException {
+    String ccgString = "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
+        + "certainly\t(S\\NP)/(S\\NP)\n";
+    return new Ccg(new BufferedReader(new StringReader(ccgString)));
   }
 }
