@@ -123,6 +123,19 @@ public class CfgToEarleyRulesConverter {
         initialize.addConsequence(consequence);
         schema.addAxiom(initialize);
       }
+      if("".equals(rule.getRhs()[0])) {
+        StaticDeductionRule initialize = new StaticDeductionRule();
+        initialize.setName(DEDUCTION_RULE_CFG_EARLEY_BOTTOMUP_AXIOM);
+        DeductionChartItem consequence =
+            new DeductionChartItem(dottedRule.toString(),
+                String.valueOf(wSplit.length), String.valueOf(wSplit.length));
+        List<Tree> derivedTrees = new ArrayList<>();
+        derivedTrees.add(new Tree(rule));
+        consequence.setTrees(derivedTrees);
+        initialize.addConsequence(consequence);
+        schema.addAxiom(initialize);
+
+      }
     }
     return schema;
   }

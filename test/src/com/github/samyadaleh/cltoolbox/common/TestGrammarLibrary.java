@@ -27,6 +27,20 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg earleyBottomUpMissingAxiomsCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"t0", "t1"});
+    cfg.setNonterminals(new String[] {"N0"});
+    try {
+      cfg.addProductionRule("N0 -> ε");
+      cfg.addProductionRule("N0 -> t0 N0 t1 N0 N0");
+      cfg.setStartSymbol("N0");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Cfg anBnEpsilonCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b"});

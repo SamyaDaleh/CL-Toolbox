@@ -116,6 +116,18 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgEarleyBottomupMissingInitialize()
+      throws ParseException {
+    String w = "t0 t1";
+    ParsingSchema schema = CfgToEarleyRulesConverter.cfgToEarleyBottomupRules(
+        TestGrammarLibrary.earleyBottomUpMissingAxiomsCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(N0 (t0 )(N0 (ε ))(t1 )(N0 (ε ))(N0 (ε )))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgEarleyEpsilon() throws ParseException {
     String w = "t0 t1";
     Cfg cfg = new Cfg();
