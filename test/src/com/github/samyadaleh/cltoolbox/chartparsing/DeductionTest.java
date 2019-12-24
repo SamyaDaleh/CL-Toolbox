@@ -43,7 +43,6 @@ public class DeductionTest {
     assertTrue(deduction.getUsefulItem()[3] || deduction.getUsefulItem()[4]);
     assertTrue(deduction.getUsefulItem()[5] || deduction.getUsefulItem()[6]);
     assertTrue(deduction.getUsefulItem()[7] || deduction.getUsefulItem()[8]);
-    assertFalse(deduction.getUsefulItem()[11]);
     assertTrue(deduction.getUsefulItem()[12]);
   }
 
