@@ -41,8 +41,7 @@ public class DeductionTest {
     // depending on where the test runs one or the other prediction is performed first.
     assertTrue(deduction.getUsefulItem()[1] || deduction.getUsefulItem()[2]);
     assertTrue(deduction.getUsefulItem()[3] || deduction.getUsefulItem()[4]);
-    assertTrue(deduction.getUsefulItem()[5]);
-    assertFalse(deduction.getUsefulItem()[6]);
+    assertTrue(deduction.getUsefulItem()[5] | deduction.getUsefulItem()[6]);
     assertTrue(deduction.getUsefulItem()[7]);
     assertFalse(deduction.getUsefulItem()[8]);
     assertTrue(deduction.getUsefulItem()[9]);
