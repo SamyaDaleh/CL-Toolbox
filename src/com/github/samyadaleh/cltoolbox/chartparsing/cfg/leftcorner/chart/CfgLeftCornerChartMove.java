@@ -24,8 +24,9 @@ public class CfgLeftCornerChartMove extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       if (itemForm[0].length() > 0
         && itemForm[0].charAt(itemForm[0].length() - 1) == '•') {
+        int posSpace = itemForm[0].indexOf(" ");
         ChartItemInterface consequence = new DeductionChartItem(
-          itemForm[0].substring(0, 1), itemForm[1], itemForm[2]);
+          itemForm[0].substring(0, posSpace), itemForm[1], itemForm[2]);
         consequence.setTrees(antecedences.get(0).getTrees());
         logItemGeneration(consequence);
         consequences.add(consequence);
