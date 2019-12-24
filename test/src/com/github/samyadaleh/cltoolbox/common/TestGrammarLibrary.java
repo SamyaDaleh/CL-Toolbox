@@ -210,6 +210,20 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg earleyPassiveCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"t0", "t1"});
+    cfg.setNonterminals(new String[] {"N1"});
+    try {
+      cfg.addProductionRule("N1 -> t0 t1");
+      cfg.addProductionRule("N1 -> t0");
+      cfg.setStartSymbol("N1");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Cfg nonReachableSymbolsCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a"});
