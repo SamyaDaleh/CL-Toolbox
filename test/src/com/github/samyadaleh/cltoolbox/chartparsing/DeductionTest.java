@@ -133,6 +133,17 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgLeftCornerScan() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToLeftCornerChartRulesConverter
+        .cfgToLeftCornerChartRules(TestGrammarLibrary.leftCornerChartScanCfg(),
+            w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals("(N0 (ε ))", deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgEarleyBottomupMissingInitialize()
       throws ParseException {
     String w = "t0 t1";

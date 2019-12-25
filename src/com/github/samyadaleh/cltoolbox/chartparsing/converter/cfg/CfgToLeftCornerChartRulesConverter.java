@@ -23,23 +23,33 @@ public class CfgToLeftCornerChartRulesConverter {
     ParsingSchema schema = new ParsingSchema();
     String[] wSplit = w.split(" ");
 
-    for (int i = 0; i < wSplit.length; i++) {
+    if (!"".equals(wSplit[0])) {
+      for (int i = 0; i < wSplit.length; i++) {
+        StaticDeductionRule axiom = new StaticDeductionRule();
+        axiom.addConsequence(
+            new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
+        axiom.setName(
+            DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM + " " + wSplit[i]);
+        schema.addAxiom(axiom);
+        axiom = new StaticDeductionRule();
+        axiom
+            .addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
+        axiom.setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON);
+        schema.addAxiom(axiom);
+      }
+    }
+    if (!"".equals(wSplit[0])) {
       StaticDeductionRule axiom = new StaticDeductionRule();
       axiom.addConsequence(
-          new DeductionChartItem(wSplit[i], String.valueOf(i), "1"));
-      axiom
-          .setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM + " " + wSplit[i]);
+          new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
+      axiom.setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON);
       schema.addAxiom(axiom);
-      axiom = new StaticDeductionRule();
-      axiom.addConsequence(new DeductionChartItem("", String.valueOf(i), "0"));
+    } else {
+      StaticDeductionRule axiom = new StaticDeductionRule();
+      axiom.addConsequence(new DeductionChartItem("", "0", "0"));
       axiom.setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON);
       schema.addAxiom(axiom);
     }
-    StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(
-        new DeductionChartItem("", String.valueOf(wSplit.length), "0"));
-    axiom.setName(DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON);
-    schema.addAxiom(axiom);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       DynamicDeductionRuleInterface reduce = new CfgLeftCornerChartReduce(rule);
@@ -52,8 +62,12 @@ public class CfgToLeftCornerChartRulesConverter {
     DynamicDeductionRuleInterface move = new CfgLeftCornerChartMove();
     schema.addRule(move);
 
-    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-        String.valueOf(wSplit.length)));
+    if (!"".equals(wSplit[0])) {
+      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
+          String.valueOf(wSplit.length)));
+    } else {
+      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0", "0"));
+    }
     return schema;
   }
 }
