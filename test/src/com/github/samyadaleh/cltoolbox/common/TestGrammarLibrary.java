@@ -447,6 +447,39 @@ public class TestGrammarLibrary {
     return pcfg;
   }
 
+  public static Pcfg uglyProbabilitiesPcfg() {
+    Pcfg pcfg = new Pcfg();
+    pcfg.setTerminals(new String[] {"t0", "t1"});
+    pcfg.setNonterminals(new String[] {"S1", "N0", "Y1", "Y2", "X1", "X2"});
+    pcfg.setProductionRules(new String[][] {{"S1", "", "0.09090909090909091"},
+        {"S1", "Y1 X1", "0.09090909090909091"},
+        {"S1", "Y2 X2", "0.09090909090909091"},
+        {"S1", "Y1 N0", "0.09090909090909091"},
+        {"S1", "Y1 N0", "0.09090909090909091"},
+        {"S1", "Y2 N0", "0.09090909090909091"},
+        {"S1", "Y2 N0", "0.09090909090909091"},
+        {"S1", "t0", "0.09090909090909091"},
+        {"S1", "t0", "0.09090909090909091"},
+        {"S1", "t1", "0.09090909090909091"},
+        {"S1", "t1", "0.09090909090909091"},
+        {"N0", "Y1 X1", "0.1"},
+        {"N0", "Y2 X2", "0.1"},
+        {"N0", "Y1 N0", "0.1"},
+        {"N0", "Y1 N0", "0.1"},
+        {"N0", "Y2 N0", "0.1"},
+        {"N0", "Y2 N0", "0.1"},
+        {"N0", "t0", "0.1"},
+        {"N0", "t1", "0.1"},
+        {"N0", "t1", "0.1"},
+        {"X1", "N0 N0", "1.0"},
+        {"X2", "N0 N0", "1.0"},
+        {"Y1", "t0", "1.0"},
+        {"Y2", "t1", "1.0"}});
+    pcfg.setStartSymbol("S1");
+    return pcfg;
+  }
+
+
   public static Tag anCBTag() {
     try {
       Tag g = new Tag();

@@ -384,6 +384,25 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testPcfgAstarProbabilityDisplay() throws ParseException {
+    String w = "t0";
+    ParsingSchema schema = PcfgToAstarRulesConverter
+        .pcfgToAstarRules(TestGrammarLibrary.uglyProbabilitiesPcfg(), w);
+    Deduction deduction = new Deduction();
+    deduction.setReplace('l');
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    for (int i = 0; i < deduction.getAppliedRule().size(); i++) {
+      String rule = deduction.getAppliedRule().get(i).get(0);
+      assertTrue(rule.equals("scan 0.09 : S1 -> t0") || rule
+          .equals("scan 0.1 : N0 -> t0") || rule.equals("scan 1.0 : Y1 -> t0"));
+      String item = deduction.getChart().get(i).toString();
+      assertTrue(item.equals("2.4 + 0.0 : [S1,0,1]") || item
+          .equals("2.3 + ∞ : [N0,0,1]") || item
+          .equals("0.0 + ∞ : [Y1,0,1]"));
+    }
+  }
+
   @Test public void testPcfgCyk() throws ParseException {
     String w = "red nice ugly car";
     ParsingSchema schema = PcfgToCykRulesConverter

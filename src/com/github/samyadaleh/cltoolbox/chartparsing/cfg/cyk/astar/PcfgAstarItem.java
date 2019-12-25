@@ -20,8 +20,16 @@ public class PcfgAstarItem extends AbstractChartItem implements ProbabilisticCha
   }
 
   @Override public String toString() {
-    return String.valueOf(ruleW) + " + " + String.valueOf(outW) + " : "
-      + ArrayUtils.toString(this.itemForm);
+    String ruleWeight = String.valueOf(Math.round(ruleW * 100.0) / 100.0);
+    String outWeight = String.valueOf(Math.round(outW * 100.0) / 100.0);
+    if (outW == Double.MAX_VALUE) {
+      outWeight = "∞";
+    }
+    if (ruleW == Double.MAX_VALUE) {
+      ruleWeight = "∞";
+    }
+    return ruleWeight + " + " + outWeight + " : " + ArrayUtils
+        .toString(this.itemForm);
   }
 
   @Override public Double getProbability() {
