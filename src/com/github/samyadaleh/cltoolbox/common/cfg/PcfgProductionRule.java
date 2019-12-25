@@ -65,10 +65,11 @@ public class PcfgProductionRule {
   }
 
   @Override public String toString() {
+    double roundedP = Math.round(p * 100.0) / 100.0;
     if (rhs[0].equals("")) {
-      return String.valueOf(p) + " : " + lhs + " -> ε";
+      return roundedP + " : " + lhs + " -> ε";
     } else {
-      return String.valueOf(p) + " : " + lhs + " -> " + String.join(" ", rhs);
+      return roundedP + " : " + lhs + " -> " + String.join(" ", rhs);
     }
   }
 }

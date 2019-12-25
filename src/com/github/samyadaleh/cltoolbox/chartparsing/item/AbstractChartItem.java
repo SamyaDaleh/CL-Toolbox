@@ -29,8 +29,7 @@ public abstract class AbstractChartItem implements ChartItemInterface {
     int i = 2;
     for (String item : this.itemForm) {
       for (char chara : item.toCharArray()) {
-        int value = (int) chara;
-        hashCode += value * i;
+        hashCode += (int) chara * i;
         i += 2;
       }
     }
