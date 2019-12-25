@@ -376,6 +376,25 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg ungerCompleteCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"t0", "t1"});
+    cfg.setNonterminals(new String[] {"S2", "N0", "S1"});
+    try {
+      cfg.addProductionRule("N0 -> t0 N0");
+      cfg.addProductionRule("N0 -> t1 N0");
+      cfg.addProductionRule("N0 -> t0");
+      cfg.addProductionRule("N0 -> t1");
+      cfg.addProductionRule("S1 -> N0");
+      cfg.addProductionRule("S2 -> S1");
+      cfg.addProductionRule("S2 -> ε");
+      cfg.setStartSymbol("S2");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Cfg leftCornerChartScanCfg() {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"t0", "t1"});

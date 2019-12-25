@@ -420,6 +420,19 @@ public class DeductionTest {
     assertEquals(1, deduction.getDerivedTrees().size());
   }
 
+  @Test public void testCfgUngerComplete() throws ParseException {
+    String w = "t1";
+    ParsingSchema schema = CfgToUngerRulesConverter.cfgToUngerRules(
+        Objects.requireNonNull(TestGrammarLibrary.ungerCompleteCfg()), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    deduction.printTrace();
+    assertEquals(1, deduction.getDerivedTrees().size());
+    assertEquals("(S2 (S1 (N0 (t1 ))))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+
   @Test public void testCfgCykGeneral() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToCykRulesConverter

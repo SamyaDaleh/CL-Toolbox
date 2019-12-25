@@ -30,6 +30,10 @@ public class CfgUngerComplete extends AbstractDynamicDeductionRule {
           continue;
         }
         String prevIjPlusOne = mayLhsItem.getItemForm()[1];
+        String lhs = mayLhsItem.getItemForm()[0].substring(1);
+        if (!lhs.equals(rule.getLhs())) {
+          continue;
+        }
         for (int i = 0; i < antNeeded - 1; i++) {
           boolean found = false;
           for (ChartItemInterface mayRhsItem : antecedences) {
