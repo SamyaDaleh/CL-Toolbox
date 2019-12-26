@@ -70,7 +70,7 @@ public class UselessSymbols {
   private static void addEpsilonProductions(ArrayList<String> generating,
       Cfg cfgOld) {
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-      if ("".equals(rule.getRhs()[0])) {
+      if (rule.getRhs().length == 0 || "".equals(rule.getRhs()[0])) {
         generating.add(rule.getLhs());
       }
     }
