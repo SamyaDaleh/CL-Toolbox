@@ -32,6 +32,7 @@ public class Main { // NO_UCD (test only)
 
   private static boolean success = false;
   private static boolean please = false;
+  private static boolean latex = false;
   private static Cfg cfg;
   private static Tag tag = null;
   private static Srcg srcg;
@@ -85,8 +86,13 @@ public class Main { // NO_UCD (test only)
     }
   }
 
-  private static boolean displayParsingTraceTable( Deduction deduction) {
-    String[][] data = deduction.printTrace();
+  private static boolean displayParsingTraceTable(Deduction deduction) {
+    String[][] data = deduction.getTraceTable();
+    if (latex) {
+      deduction.printTraceLatex(data);
+    } else {
+      deduction.printTrace(data);
+    }
     if (tag != null) {
       new ParsingTraceTable(data,
           new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
@@ -135,11 +141,18 @@ public class Main { // NO_UCD (test only)
   private static void handleOptionalParameters(String[] args) {
     success = false;
     please = false;
+    latex = false;
     for (int i = 3; i < args.length; i++) {
-      if (args[i].equals("--success")) {
+      switch (args[i]) {
+      case "--success":
         success = true;
-      } else if (args[i].equals("--please")) {
+        break;
+      case "--please":
         please = true;
+        break;
+      case "--latex":
+        latex = true;
+        break;
       }
     }
   }
@@ -354,7 +367,8 @@ public class Main { // NO_UCD (test only)
         "Optional parameters can be: \n   --success : prints a trace only of items "
             + "that lead to a goal item."
             + "\n   --please : if a grammar doesn't fit an "
-            + "algorithm, ask me to convert it. No promises.");
+            + "algorithm, ask me to convert it. No promises."
+            + "\n   --latex : print the trace in tex format.");
     log.info(
         "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg "
             + "\"a a b b\" cfg-topdown --success");

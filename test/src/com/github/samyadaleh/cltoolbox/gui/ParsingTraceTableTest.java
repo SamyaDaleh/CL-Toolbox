@@ -20,7 +20,8 @@ public class ParsingTraceTableTest {
         TagToEarleyRulesConverter.tagToEarleyRules(anCBTag(), w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
-    String[][] data = deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     new ParsingTraceTable(data,
         new String[] {"Id", "Item", "Rules", "Backpointers"}, anCBTag());
     assertTrue(true);

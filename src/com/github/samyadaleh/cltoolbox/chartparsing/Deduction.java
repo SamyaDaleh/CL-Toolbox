@@ -132,19 +132,16 @@ public class Deduction {
   }
 
   /**
-   * Prints the trace to the command line. If only the useful items shall be
-   * retrieved, it checks all items if they lead to a goal. Returns the printed
-   * chart data as string array with columns: Id, Item, Rules, Backpointers.
+   * Prints the trace to the command line.
    */
-  public String[][] printTrace() {
-    ArrayList<String[]> chartData = new ArrayList<>();
+  public void printTrace(String[][] trace) {
     int iMaxWidth = 0;
     int chartMaxWidth = 0;
     int appliedRuleMaxWidth = 0;
-    for (int i = 0; i < chart.size(); i++) {
-      int iWidth = String.valueOf(i).length();
-      int chartWidth = chart.get(i).toString().length();
-      int appliedRuleWidth = rulesToString(appliedRule.get(i)).length();
+    for (String[] line : trace) {
+      int iWidth = line[0].length();
+      int chartWidth = line[1].length();
+      int appliedRuleWidth = line[2].length();
       if (iWidth > iMaxWidth) {
         iMaxWidth = iWidth;
       }
@@ -155,27 +152,56 @@ public class Deduction {
         appliedRuleMaxWidth = appliedRuleWidth;
       }
     }
+    for (String[] line : trace) {
+      prettyPrintLine(line, iMaxWidth + 3, chartMaxWidth + 3,
+          appliedRuleMaxWidth + 3);
+    }
+  }
+
+  /**
+   * Prints the trace to the command line in a tex format.
+   */
+  public void printTraceLatex(String[][] trace) {
+    log.info("\\begin{tabular}{l l l l}");
+    log.info("Id & Item & Rules & BackPointers \\\\");
+    log.info("\\hline");
+    for (String[] line : trace) {
+      String id = line[0];
+      String item = line[1].replace("$", "\\$").replace("•", "\\textbullet{}")
+          .replace("ε", "$\\epsilon$").replace("->", "$\\rightarrow$");
+      String rules =
+          line[2].replace("ε", "$\\epsilon$").replace("->", "$\\rightarrow$");
+      String backPointers = line[3].replace("{", "\\{").replace("}", "\\}");
+      log.info(
+          id + " & " + item + " & " + rules + " & " + backPointers + " \\\\");
+    }
+    log.info("\\end{tabular}");
+  }
+
+  /**
+   * Returns the printed chart data as string array with columns: Id, Item,
+   * Rules, Backpointers.
+   */
+  public String[][] getTraceTable() {
+    ArrayList<String[]> chartData = new ArrayList<>();
     if (successfulTrace) {
       for (int i = 0; i < chart.size(); i++) {
         if (!usefulItem[i]) {
           continue;
         }
         String[] line =
-            prettyPrint(i, chart.get(i).toString(), appliedRule.get(i),
-                deductedFrom.get(i), iMaxWidth + 3, chartMaxWidth + 3,
-                appliedRuleMaxWidth + 3);
+            getLineData(i, chart.get(i).toString(), appliedRule.get(i),
+                deductedFrom.get(i));
         chartData.add(line);
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
         String[] line =
-            prettyPrint(i, chart.get(i).toString(), appliedRule.get(i),
-                deductedFrom.get(i), iMaxWidth + 3, chartMaxWidth + 3,
-                appliedRuleMaxWidth + 3);
+            getLineData(i, chart.get(i).toString(), appliedRule.get(i),
+                deductedFrom.get(i));
         chartData.add(line);
       }
     }
-
     return chartData.toArray(new String[chartData.size()][]);
   }
 
@@ -459,27 +485,37 @@ public class Deduction {
 
   /**
    * Pretty-prints rows of the parsing process by filling up all columns up to a
-   * specific length with spaces. Returns the data it prints as string array.
+   * specific length with spaces..
    */
-  private static String[] prettyPrint(int i, String item, List<String> rules,
-      List<List<Integer>> backpointers, int column1, int column2, int column3) {
+  private static void prettyPrintLine(String[] chartLine, int column1,
+      int column2, int column3) {
     StringBuilder line = new StringBuilder();
+    int i = Integer.parseInt(chartLine[0]);
     line.append((i + 1));
     for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
       line.append(" ");
     }
+    String item = chartLine[1];
     line.append(item);
     for (int i1 = 0; i1 < column2 - String.valueOf(item).length(); i1++) {
       line.append(" ");
     }
-    String rulesRep = rulesToString(rules);
+    String rulesRep = chartLine[2];
     line.append(rulesRep);
     for (int i1 = 0; i1 < column3 - rulesRep.length(); i1++) {
       line.append(" ");
     }
-    String backpointersRep = backpointersToString(backpointers);
-    line.append(backpointersRep);
+    line.append(chartLine[3]);
     log.info(line.toString());
+  }
+
+  /**
+   * Returns the data as string array.
+   */
+  private static String[] getLineData(int i, String item, List<String> rules,
+      List<List<Integer>> backpointers) {
+    String rulesRep = rulesToString(rules);
+    String backpointersRep = backpointersToString(backpointers);
     return new String[] {String.valueOf(i + 1), item, rulesRep,
         backpointersRep};
   }

@@ -29,7 +29,8 @@ public class DeductionTest {
             w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
     assertEquals(13, deduction.getChart().size());
@@ -52,7 +53,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.anBnEpsilonCfg()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(S (ε ))(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -63,7 +65,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -84,7 +87,8 @@ public class DeductionTest {
         CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N0 (t0 )(t1 ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -95,7 +99,8 @@ public class DeductionTest {
         .cfgToEarleyRules(TestGrammarLibrary.anBnCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -106,7 +111,8 @@ public class DeductionTest {
         .cfgToEarleyBottomupRules(TestGrammarLibrary.anBnCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -117,7 +123,8 @@ public class DeductionTest {
         .cfgToEarleyPassiveRules(TestGrammarLibrary.earleyPassiveCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N1 (t0 )(t1 ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -128,7 +135,8 @@ public class DeductionTest {
         .cfgToLeftCornerChartRules(TestGrammarLibrary.earleyPassiveCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N1 (t0 )(t1 ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -140,7 +148,8 @@ public class DeductionTest {
             w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N0 (ε ))", deduction.getDerivedTrees().get(0).toString());
   }
 
@@ -151,7 +160,8 @@ public class DeductionTest {
         TestGrammarLibrary.earleyBottomUpMissingAxiomsCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N0 (t0 )(N0 (ε ))(t1 )(N0 (ε ))(N0 (ε )))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -175,7 +185,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -186,7 +197,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.leftCornerBreak()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals(
         "(S (A (D (a ))(E (b ))(F (c )))(B (G (d ))(H (e ))(I (f )))(C (J (g ))(K (h ))(L (i ))))",
         deduction.getDerivedTrees().get(0).toString());
@@ -198,7 +210,8 @@ public class DeductionTest {
         .cfgToLeftCornerChartRules(TestGrammarLibrary.wwRCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (b )(S (c ))(b ))(a ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -209,7 +222,8 @@ public class DeductionTest {
         .cfgToLeftCornerChartRules(TestGrammarLibrary.leftCornerBreak(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals(
         "(S (A (D (a ))(E (b ))(F (c )))(B (G (d ))(H (e ))(I (f )))(C (J (g ))(K (h ))(L (i ))))",
         deduction.getDerivedTrees().get(0).toString());
@@ -222,7 +236,8 @@ public class DeductionTest {
             w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (A (a ))(X1 (S (A (a ))(B (b )))(B (b ))))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -233,7 +248,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.anbnC2fCfg()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (A (C (a )))(X1 (S (A (C (a )))(B (b )))(B (b ))))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -244,7 +260,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
     Deduction deduction = new Deduction();
     assertFalse(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals(1, deduction.getChart().size());
   }
 
@@ -269,7 +286,8 @@ public class DeductionTest {
         .tagToCykExtendedRules(TestGrammarLibrary.anCBTag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (T (a )(T (c )))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -280,7 +298,8 @@ public class DeductionTest {
         .tagToCykGeneralRules(TestGrammarLibrary.anCBTag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (T (a )(T (c )))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -293,7 +312,8 @@ public class DeductionTest {
     try {
       assertTrue(deduction.doParse(schema, false));
     } finally {
-      deduction.printTrace();
+      String[][] data = deduction.getTraceTable();
+      deduction.printTrace(data);
       assertEquals("(S (T (a )(T (c )))(b ))",
           deduction.getDerivedTrees().get(0).toString());
     }
@@ -307,7 +327,8 @@ public class DeductionTest {
     try {
       assertTrue(deduction.doParse(schema, false));
     } finally {
-      deduction.printTrace();
+      String[][] data = deduction.getTraceTable();
+      deduction.printTrace(data);
       assertEquals("(S (T (a )(T (c )))(b ))",
           deduction.getDerivedTrees().get(0).toString());
     }
@@ -319,7 +340,8 @@ public class DeductionTest {
         .srcgToCykExtendedRules(TestGrammarLibrary.anBnSrcg(), w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (A (a<0> )(A (a<1> )(b<3> ))(b<2> )))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -330,7 +352,8 @@ public class DeductionTest {
         .srcgToCykExtendedRules(TestGrammarLibrary.longStringsSrcg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals(
         "(S (A (A (a<0> )(a<4> )(a<8> ))(C (a<1> )(c<5> )(c<9> )))(B (B (b<3> )(b<6> ))(B (b<2> )(b<7> ))))",
         deduction.getDerivedTrees().get(0).toString());
@@ -342,7 +365,8 @@ public class DeductionTest {
         .srcgToCykGeneralRules(TestGrammarLibrary.longStringsSrcg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertTrue(
         "(S (A (A (a<0> )(a<4> )(a<8> ))(C (a<1> )(c<5> )(c<9> )))(B (B (b<2> )(b<6> ))(B (b<3> )(b<7> ))))"
             .equals(deduction.getDerivedTrees().get(0).toString())
@@ -356,7 +380,8 @@ public class DeductionTest {
         new Srcg(Objects.requireNonNull(TestGrammarLibrary.anBnCfg())), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a<0> )(S (a<1> )(b<2> ))(b<3> ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -367,7 +392,8 @@ public class DeductionTest {
         .srcgToEarleyRules(TestGrammarLibrary.anBnSrcg(), w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (A (A (a<1> )(b<2> ))(a<0> )(b<3> )))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -379,7 +405,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N (A (red ))(N (A (nice ))(N (A (ugly ))(N (car )))))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -391,7 +418,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     for (int i = 0; i < deduction.getAppliedRule().size(); i++) {
       String rule = deduction.getAppliedRule().get(i).get(0);
       assertTrue(rule.equals("scan 0.09 : S1 -> t0") || rule
@@ -410,7 +438,8 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N (A (red ))(N (A (nice ))(N (A (ugly ))(N (car )))))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -422,7 +451,8 @@ public class DeductionTest {
             w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -433,7 +463,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.ungerWrongGoalTreesCfg()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(N1 (t0 )(t1 ))",
         deduction.getDerivedTrees().get(0).toString());
     assertEquals(1, deduction.getDerivedTrees().size());
@@ -445,7 +476,8 @@ public class DeductionTest {
         Objects.requireNonNull(TestGrammarLibrary.ungerCompleteCfg()), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals(1, deduction.getDerivedTrees().size());
     assertEquals("(S2 (S1 (N0 (t1 ))))",
         deduction.getDerivedTrees().get(0).toString());
@@ -458,7 +490,8 @@ public class DeductionTest {
         .cfgToCykGeneralRules(TestGrammarLibrary.anBnCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    deduction.printTrace();
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
   }

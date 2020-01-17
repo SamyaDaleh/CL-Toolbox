@@ -4,3 +4,6 @@
 /out/
 /.idea/
 /report/
+/releases/
+cltoolbox.log*
+/CL-Toolbox.iml

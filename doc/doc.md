@@ -94,8 +94,8 @@ informed that the grammar is not appropriate. If --please is set, the grammar
 is converted to Chomsky Normal Form before further steps are performed. See 
 section GrammarToGrammarConverter in chapter Program Workflow for more details.
 If --please is set and the grammar already fits the algorithm, it is not 
-altered. The last parameter --javafx is only for cosmetic use and displays the 
-table with JavaFX rather than with AWT.
+altered. The last parameter --latex prints the deduction table in a text format
+instead of the space formatted one.
 
 ### Grammar formats
 
