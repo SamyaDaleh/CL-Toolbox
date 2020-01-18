@@ -334,6 +334,21 @@ public class DeductionTest {
     }
   }
 
+  @Test public void testTagEarleyPrefixValidNPE() throws ParseException {
+    String w2 = "";
+    ParsingSchema schema = TagToEarleyPrefixValidRulesConverter
+        .tagToEarleyPrefixValidRules(
+            TestGrammarLibrary.EarleyPrefixValidNPETag(), w2);
+    Deduction deduction = new Deduction();
+    try {
+      assertTrue(deduction.doParse(schema, false));
+    } finally {
+      String[][] data = deduction.getTraceTable();
+      deduction.printTrace(data);
+      assertEquals("(N0 (ε ))", deduction.getDerivedTrees().get(0).toString());
+    }
+  }
+
   @Test public void testSrcgCykUnary() throws ParseException {
     String w3 = "a a b b";
     ParsingSchema schema = LcfrsToCykRulesConverter

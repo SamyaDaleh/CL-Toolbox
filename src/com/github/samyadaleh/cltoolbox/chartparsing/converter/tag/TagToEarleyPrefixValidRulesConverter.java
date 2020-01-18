@@ -36,9 +36,15 @@ public class TagToEarleyPrefixValidRulesConverter {
         initialize.addConsequence(consequence);
         initialize.setName(DEDUCTION_RULE_TAG_EARLEY_AXIOM);
         schema.addAxiom(initialize);
-        schema.addGoal(
-            new DeductionChartItem(iniTreeName, "", "ra", "0", "0", "-", "-",
-                String.valueOf(wSplit.length), "0"));
+        if ("".equals(w)) {
+          schema.addGoal(
+              new DeductionChartItem(iniTreeName, "", "ra", "0", "0", "-", "-",
+                  "0", "0"));
+        } else {
+          schema.addGoal(
+              new DeductionChartItem(iniTreeName, "", "ra", "0", "0", "-", "-",
+                  String.valueOf(wSplit.length), "0"));
+        }
       }
 
       DynamicDeductionRuleInterface predictSubst =
