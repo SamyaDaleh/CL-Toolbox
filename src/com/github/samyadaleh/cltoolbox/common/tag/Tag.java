@@ -32,9 +32,14 @@ public class Tag extends AbstractNTSGrammar {
     this.setStartSymbol(cfg.getStartSymbol());
     int i = 1;
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      String treeString =
-          "(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")";
-      this.addInitialTree("α" + i, treeString);
+      if (rule.getRhs().length == 0 || "".equals(rule.getRhs()[0])) {
+        String treeString = "(" + rule.getLhs() + " ε)";
+        this.addInitialTree("α" + i, treeString);
+      } else {
+        String treeString =
+            "(" + rule.getLhs() + " " + String.join(" ", rule.getRhs()) + ")";
+        this.addInitialTree("α" + i, treeString);
+      }
       i++;
     }
   }
