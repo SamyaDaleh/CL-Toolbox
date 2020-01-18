@@ -18,6 +18,5 @@ public class GrammarToGrammarConverterTest {
             + "N2 -> N0}");
     Cfg cfg = CfgParser.parseCfgReader(reader);
     GrammarToGrammarConverter.checkAndMayConvertToCfg(cfg, "cfg-cyk", false);
-
   }
 }

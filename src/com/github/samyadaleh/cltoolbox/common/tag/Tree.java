@@ -117,7 +117,12 @@ public class Tree {
           "Expecting label of root of subtree, found " + tokens[i]
               + " instead.", 0);
     }
-    Vertex vertex = new Vertex(tokens[i]);
+    Vertex vertex;
+    if ("ε".equals(tokens[i])) {
+      vertex = new Vertex("");
+    } else {
+      vertex = new Vertex(tokens[i]);
+    }
     if (this.root == null) {
       this.root = vertex;
       vertex.setGornaddress("");

@@ -22,7 +22,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
   }
 
   @Override public List<ChartItemInterface> getConsequences() {
-    if (antecedences.size() == antNeeded) {
+    if (antecedences.size() == antNeeded && !"".equals(wSplit[0])) {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
