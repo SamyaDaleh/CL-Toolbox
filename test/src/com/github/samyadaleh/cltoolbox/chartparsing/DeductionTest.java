@@ -317,7 +317,6 @@ public class DeductionTest {
         .tagToCykGeneralRules(TestGrammarLibrary.anCBTag(), w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertEquals(12, deduction.getMaxAgendaSize());
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     assertEquals("(S (T (a )(T (c )))(b ))",
