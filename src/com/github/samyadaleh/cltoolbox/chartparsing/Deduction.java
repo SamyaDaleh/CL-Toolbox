@@ -76,6 +76,10 @@ public class Deduction {
    * global, so I don't have to pass them 10 steps down.
    */
   private Set<DynamicDeductionRuleInterface> deductionRules;
+  /**
+   * The highest amount of items the agenda contains at one point.
+   */
+  private int maxAgendaSize = 0;
   private static final Logger log = LogManager.getLogger();
 
   /**
@@ -102,12 +106,16 @@ public class Deduction {
     deductedFrom = new ArrayList<>();
     appliedRule = new ArrayList<>();
     deductionRules = schema.getRules();
+    maxAgendaSize = 0;
     if (schema == null)
       return false;
     for (StaticDeductionRule rule : schema.getAxioms()) {
       applyAxiomRule(rule);
     }
     while (!agenda.isEmpty()) {
+      if (agenda.size() > maxAgendaSize) {
+        maxAgendaSize = agenda.size();
+      }
       if (chart.size() > maxItemCount) {
         throw new ParseException("Chart size exceeds limit of " + maxItemCount
             + " items. Deduction process was stopped.", 1);
@@ -584,5 +592,13 @@ public class Deduction {
 
   public boolean[] getGoalItem() {
     return goalItem;
+  }
+
+  public int getMaxAgendaSize() {
+    return maxAgendaSize;
+  }
+
+  public void setMaxAgendaSize(int maxAgendaSize) {
+    this.maxAgendaSize = maxAgendaSize;
   }
 }
