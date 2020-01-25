@@ -498,9 +498,8 @@ public class Deduction {
   private static void prettyPrintLine(String[] chartLine, int column1,
       int column2, int column3) {
     StringBuilder line = new StringBuilder();
-    int i = Integer.parseInt(chartLine[0]);
-    line.append((i + 1));
-    for (int i1 = 0; i1 < column1 - String.valueOf(i + 1).length(); i1++) {
+    line.append(chartLine[0]);
+    for (int i1 = 0; i1 < column1 - chartLine[0].length(); i1++) {
       line.append(" ");
     }
     String item = chartLine[1];
