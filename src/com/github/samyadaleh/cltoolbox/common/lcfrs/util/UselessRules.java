@@ -112,17 +112,25 @@ public class UselessRules {
     for (Clause clause : srcg.getClauses()) {
       Predicate lhsPred = clause.getLhs();
       if (uselessNonterminals.contains(lhsPred.getNonterminal())) {
-        break;
+        continue;
       }
+      boolean continueFlag = false;
       for (Predicate rhsPred : clause.getRhs()) {
         if (uselessNonterminals.contains(rhsPred.getNonterminal())) {
+          continueFlag = true;
           break;
         }
+      }
+      if (continueFlag) {
+        continue;
       }
       newSrcg.addClause(clause);
       // variables and terminals. What's not declared a variable must be a
       // terminal.
       for (String symbol : lhsPred.getSymbolsAsPlainArray()) {
+        if ("".equals(symbol)) {
+          continue;
+        }
         if (!usedVariables.contains(symbol)) {
           if (ArrayUtils.contains(srcg.getVariables(), symbol)) {
             usedVariables.add(symbol);

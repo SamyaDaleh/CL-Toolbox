@@ -44,10 +44,10 @@ public class Srcg extends AbstractNTSGrammar {
             lhs.append(" ").append(rhsSym);
           } else {
             i++;
-            String newVar = "X" + String.valueOf(i);
+            String newVar = "X" + i;
             while (cfg.nonterminalsContain(newVar)) {
               i++;
-              newVar = "X" + String.valueOf(i);
+              newVar = "X" + i;
             }
             if (!newVariables.contains(newVar)) {
               newVariables.add(newVar);
@@ -326,7 +326,7 @@ public class Srcg extends AbstractNTSGrammar {
     return UselessRules.getSrcgWithoutUselessRules(this);
   }
 
-  private class HandleSubstitutionNode {
+  private static class HandleSubstitutionNode {
     private Tag tag;
     private List<String> newVariables;
     private String treeName;
@@ -395,7 +395,7 @@ public class Srcg extends AbstractNTSGrammar {
     }
   }
 
-  private class HandleFirstHalfOfAdjunctionNode {
+  private static class HandleFirstHalfOfAdjunctionNode {
     private Tag tag;
     private List<String> newVariables;
     private String treeName;
@@ -479,7 +479,7 @@ public class Srcg extends AbstractNTSGrammar {
     }
   }
 
-  private class GenerateNewVar {
+  private static class GenerateNewVar {
     private Tag tag;
     private List<String> newVariables;
     private int i;
