@@ -142,7 +142,6 @@ public class DeductionTest {
         .cfgToLeftCornerChartRules(TestGrammarLibrary.earleyPassiveCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertEquals(5, deduction.getMaxAgendaSize());
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     assertEquals("(N1 (t0 )(t1 ))",
