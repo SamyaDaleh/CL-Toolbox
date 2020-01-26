@@ -14,9 +14,11 @@ import org.apache.logging.log4j.Logger;
 public class EmptyProductions {
   private static final Logger log = LogManager.getLogger();
 
-  /** Returns true if there is at least one clause that contains the empty
+  /**
+   * Returns true if there is at least one clause that contains the empty
    * string in one of its lhs arguments, except if it is the start symbol in
-   * which case it must not occur on any rhs. */
+   * which case it must not occur on any rhs.
+   */
   public static boolean hasEpsilonProductions(Srcg srcg) {
     for (Clause clause : srcg.getClauses()) {
       for (String[] argument : clause.getLhs().getSymbols()) {
@@ -39,10 +41,12 @@ public class EmptyProductions {
     return false;
   }
 
-  /** Return an equivalent sRCG without epsilon as any lhs argument. */
+  /**
+   * Return an equivalent sRCG without epsilon as any lhs argument.
+   */
   public static Srcg getSrcgWithoutEmptyProductions(Srcg oldSrcg)
-    throws ParseException {
-    ArrayList<String[]> epsilonCandidates = getEpsilonCandidates(oldSrcg);
+      throws ParseException {
+    List<String[]> epsilonCandidates = getEpsilonCandidates(oldSrcg);
     Srcg newSrcg = new Srcg();
     newSrcg.setVariables(oldSrcg.getVariables());
     newSrcg.setTerminals(oldSrcg.getTerminals());
@@ -52,14 +56,14 @@ public class EmptyProductions {
     addNewStartSymbolAndHandleEmptyWord(oldSrcg, epsilonCandidates, newSrcg,
         newNts);
     for (Clause clause : oldSrcg.getClauses()) {
-      for (ArrayList<String[]> combination : getCombinationsForRhs(
-        epsilonCandidates, clause)) {
+      for (List<String[]> combination : getCombinationsForRhs(epsilonCandidates,
+          clause)) {
         Clause newClause = getClauseForEpsilonCombination(clause, combination);
         Predicate oldLhs = newClause.getLhs();
         String jotaLhs = getJotaForPredicate(oldLhs);
         if (jotaLhs.contains("1")) {
           Predicate newLhs =
-            getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
+              getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
           newClause.setLhs(newLhs);
           newSrcg.addClause(newClause);
         }
@@ -71,7 +75,7 @@ public class EmptyProductions {
       String jotaLhs = getJotaForPredicate(newClause.getLhs());
       if (jotaLhs.contains("1")) {
         Predicate newLhs =
-          getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
+            getPredicateWithoutEmptyArguments(jotaLhs, newClause.getLhs());
         newClause.setLhs(newLhs);
         newSrcg.addClause(newClause);
       }
@@ -80,8 +84,8 @@ public class EmptyProductions {
     return newSrcg;
   }
 
-  private static void keepNonEmptyNonterminals(
-      ArrayList<String[]> epsilonCandidates, ArrayList<String> newNts) {
+  private static void keepNonEmptyNonterminals(List<String[]> epsilonCandidates,
+      ArrayList<String> newNts) {
     for (String[] candidate : epsilonCandidates) {
       if (candidate[1].contains("1")) {
         newNts.add(candidate[0] + "^" + candidate[1]);
@@ -90,11 +94,11 @@ public class EmptyProductions {
   }
 
   private static void addNewStartSymbolAndHandleEmptyWord(Srcg oldSrcg,
-      ArrayList<String[]> epsilonCandidates, Srcg newSrcg,
-      ArrayList<String> newNts) throws ParseException {
+      List<String[]> epsilonCandidates, Srcg newSrcg, ArrayList<String> newNts)
+      throws ParseException {
     for (String[] candidate : epsilonCandidates) {
       if (candidate[0].equals(oldSrcg.getStartSymbol())
-        && candidate[1].length() == 1) {
+          && candidate[1].length() == 1) {
         StringBuilder newS = new StringBuilder("S'");
         while (oldSrcg.nonterminalsContain(newS.toString())) {
           newS.append('\'');
@@ -107,9 +111,10 @@ public class EmptyProductions {
           newSrcg.addClause(newS + "(ε) -> ε");
         } else {
           createVariableIfNoneExists(newSrcg);
-          newSrcg.addClause(newS + "(" + newSrcg.getVariables()[0] + ") -> "
-            + oldSrcg.getStartSymbol() + "^1" + "(" + newSrcg.getVariables()[0]
-            + ")");
+          newSrcg.addClause(
+              newS + "(" + newSrcg.getVariables()[0] + ") -> " + oldSrcg
+                  .getStartSymbol() + "^1" + "(" + newSrcg.getVariables()[0]
+                  + ")");
         }
       }
     }
@@ -135,7 +140,7 @@ public class EmptyProductions {
       Predicate oldRhs = newClause.getRhs().get(i);
       StringBuilder newRhsPred = new StringBuilder();
       newRhsPred.append(combinationWorkingCopy.get(i)[0]).append('^')
-        .append(combinationWorkingCopy.get(i)[1]).append('(');
+          .append(combinationWorkingCopy.get(i)[1]).append('(');
       String jota = combinationWorkingCopy.get(i)[1];
       boolean oneEncountered = false;
       for (int j = 0; j < jota.length(); j++) {
@@ -167,10 +172,10 @@ public class EmptyProductions {
   }
 
   private static Predicate getPredicateWithoutEmptyArguments(String jotaLhs,
-    Predicate oldLhs) throws ParseException {
+      Predicate oldLhs) throws ParseException {
     StringBuilder newLhsPred = new StringBuilder();
     newLhsPred.append(oldLhs.getNonterminal()).append('^').append(jotaLhs)
-      .append('(');
+        .append('(');
     boolean argAdded = false;
     for (int i = 0; i < oldLhs.getDim(); i++) {
       if (Objects.equals(oldLhs.getArgumentByIndex(i + 1)[0], "")) {
@@ -192,7 +197,7 @@ public class EmptyProductions {
   }
 
   private static Predicate removeVariableFromPredicate(String epsilonVariable,
-    Predicate oldLhs) throws ParseException {
+      Predicate oldLhs) throws ParseException {
     StringBuilder newLhsPred = new StringBuilder();
     int[] indices = oldLhs.find(epsilonVariable);
     newLhsPred.append(oldLhs.getNonterminal()).append('(');
@@ -225,21 +230,23 @@ public class EmptyProductions {
     return jotaLhs.toString();
   }
 
-  /** Take a list of epsilonCandidates and a clause, returns a list of
+  /**
+   * Take a list of epsilonCandidates and a clause, returns a list of
    * combinations of candidates for the rhs of the clause. Let's say there is a
    * clause like S -> A B C. A has 2 possibilities of containing epsilon, B has
    * 3, C has 0. Returns 6 lists considering all combinations which contain an
-   * empty placeholder for C. */
-  @SuppressWarnings({"serial", "unchecked"}) private static
-    ArrayList<ArrayList<String[]>> getCombinationsForRhs(
-      ArrayList<String[]> epsilonCandidates, Clause clause) {
-    ArrayList<ArrayList<String[]>> combinations = new ArrayList<>();
+   * empty placeholder for C.
+   */
+  @SuppressWarnings({"serial"})
+  private static List<List<String[]>> getCombinationsForRhs(
+      List<String[]> epsilonCandidates, Clause clause) {
+    List<List<String[]>> combinations = new ArrayList<>();
     for (int i = 0; i < clause.getRhs().size(); i++) {
       if (i == 0) {
         boolean somethingAppended = false;
         for (String[] candidate : epsilonCandidates) {
           if (candidate[0].equals(clause.getRhs().get(i).getNonterminal())
-            && candidate[1].length() == clause.getRhs().get(i).getDim()) {
+              && candidate[1].length() == clause.getRhs().get(i).getDim()) {
             somethingAppended = true;
             combinations.add(new ArrayList<String[]>() {
               {
@@ -257,18 +264,18 @@ public class EmptyProductions {
         }
       } else {
         boolean somethingAppended = false;
-        ArrayList<ArrayList<String[]>> newCombinations = new ArrayList<>();
+        List<List<String[]>> newCombinations = new ArrayList<>();
         for (String[] candidate : epsilonCandidates) {
           if (candidate[0].equals(clause.getRhs().get(i).getNonterminal())) {
             somethingAppended = true;
-            for (ArrayList<String[]> combination : combinations) {
-              newCombinations.add((ArrayList<String[]>) combination.clone());
+            for (List<String[]> combination : combinations) {
+              newCombinations.add(new ArrayList<>(combination));
               newCombinations.get(newCombinations.size() - 1).add(candidate);
             }
           }
         }
         if (!somethingAppended) {
-          for (ArrayList<String[]> combination : combinations) {
+          for (List<String[]> combination : combinations) {
             combination.add(new String[] {});
           }
         } else {
@@ -279,12 +286,14 @@ public class EmptyProductions {
     return combinations;
   }
 
-  /** Returns a list of nonterminals whose predicates can have arguments. The
+  /**
+   * Returns a list of nonterminals whose predicates can have arguments. The
    * list consists of arrays of length 2. The first entry contains the
    * respective nonterminal. The second entry contains a vector (String) of 0
    * and 1 that specifies which arguments can become empty. 1 means it is not
-   * empty, 0 it can become empty. */
-  private static ArrayList<String[]> getEpsilonCandidates(Srcg srcg) {
+   * empty, 0 it can become empty.
+   */
+  static List<String[]> getEpsilonCandidates(Srcg srcg) {
     ArrayList<String[]> epsilonCandidates = getDirectEpsilonCandidates(srcg);
     boolean changed = true;
     while (changed) {
@@ -293,12 +302,13 @@ public class EmptyProductions {
         for (int i = 0; i < epsilonCandidates.size(); i++) {
           String[] candidate = epsilonCandidates.get(i);
           Predicate clauseLhs = clause.getLhs();
-          String[] newCandidate = getEpsilonCandidateForLhsWithoutCandidate(
-            clause, candidate, clauseLhs, srcg);
+          String[] newCandidate =
+              getEpsilonCandidateForLhsWithoutCandidate(clause, candidate,
+                  clauseLhs, srcg);
           boolean found = false;
           for (String[] oldCandidate : epsilonCandidates) {
-            if (oldCandidate[0].equals(newCandidate[0])
-              && oldCandidate[1].equals(newCandidate[1])) {
+            if (oldCandidate[0].equals(newCandidate[0]) && oldCandidate[1]
+                .equals(newCandidate[1])) {
               found = true;
               break;
             }
@@ -314,7 +324,7 @@ public class EmptyProductions {
   }
 
   private static String[] getEpsilonCandidateForLhsWithoutCandidate(
-    Clause clause, String[] candidate, Predicate clauseLhs, Srcg srcg) {
+      Clause clause, String[] candidate, Predicate clauseLhs, Srcg srcg) {
     ArrayList<String> lhsVector = new ArrayList<>();
     for (int j = 0; j < clauseLhs.getDim(); j++) {
       String[] argument = clauseLhs.getArgumentByIndex(j + 1);
@@ -333,8 +343,8 @@ public class EmptyProductions {
               continue;
             }
             if (rhsPred.getNonterminal().equals(candidate[0])
-              && candidate[1].length() == rhsPred.getDim()
-              && candidate[1].charAt(indices[0] - 1) == '0') {
+                && candidate[1].length() == rhsPred.getDim()
+                && candidate[1].charAt(indices[0] - 1) == '0') {
               log.debug("Doing nothing with predicate " + rhsPred.toString());
             } else {
               newArgument.append(element);
@@ -360,9 +370,8 @@ public class EmptyProductions {
     for (Clause clause : srcg.getClauses()) {
       if (clause.getRhs().isEmpty()) {
         String jota = getJotaForPredicate(clause.getLhs());
-
         String[] newPair =
-          new String[] {clause.getLhs().getNonterminal(), jota};
+            new String[] {clause.getLhs().getNonterminal(), jota};
         boolean found = false;
         for (String[] oldPair : epsilonCandidates) {
           if (oldPair[0].equals(newPair[0])) {

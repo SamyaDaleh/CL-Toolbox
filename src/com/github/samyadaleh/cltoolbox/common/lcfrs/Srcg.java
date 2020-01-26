@@ -309,6 +309,7 @@ public class Srcg extends AbstractNTSGrammar {
 
   /**
    * Return an equivalent sRCG without epsilon as any lhs argument.
+   * Nongenerating symbols should be removed first.
    */
   public Srcg getSrcgWithoutEmptyProductions() throws ParseException {
     return EmptyProductions.getSrcgWithoutEmptyProductions(this);
