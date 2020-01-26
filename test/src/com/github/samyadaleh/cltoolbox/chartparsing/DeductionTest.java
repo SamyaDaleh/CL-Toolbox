@@ -12,9 +12,11 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRul
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Objects;
 
@@ -423,6 +425,24 @@ public class DeductionTest {
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     assertEquals("(S (a<0> )(S (a<1> )(b<2> ))(b<3> ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testSrcgCykExtended() throws ParseException {
+    StringReader reader = new StringReader(
+        "N = {S'}\n" + "T = {}\n" + "V = {}\n" + "P = {S'(ε) -> ε}\n"
+            + "S = S'");
+    Srcg srcg = SrcgParser.parseSrcgReader(reader);
+    String w = "";
+    assert srcg != null;
+    ParsingSchema schema =
+        LcfrsToCykRulesConverter.srcgToCykExtendedRules(srcg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(1, deduction.getMaxAgendaSize());
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals("(S' (ε<0> ))",
         deduction.getDerivedTrees().get(0).toString());
   }
 

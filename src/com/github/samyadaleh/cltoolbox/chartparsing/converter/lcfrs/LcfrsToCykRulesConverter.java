@@ -13,8 +13,6 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import java.util.List;
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_CYK_AXIOM;
 
 public class LcfrsToCykRulesConverter {
-  private static final Logger log = LogManager.getLogger();
 
   private static void addSrcgCykScanRules(String[] wsplit, ParsingSchema schema,
       Clause clause) throws ParseException {
@@ -36,8 +33,12 @@ public class LcfrsToCykRulesConverter {
       for (int i = 0; i * 2 < ranges.size(); i++) {
         String[] arg = clause.getLhs().getArgumentByIndex(i + 1);
         for (int j = 0; j < arg.length; j++) {
-          treeString.append(clause.getLhs().getSymAt(i + 1, j)).append('<')
-              .append(ranges.get(2 * i) + j).append("> ");
+          if (arg[j].length() == 0) {
+            treeString.append("ε");
+          } else {
+            treeString.append(clause.getLhs().getSymAt(i + 1, j));
+          }
+          treeString.append('<').append(ranges.get(2 * i) + j).append("> ");
         }
       }
       treeString.append(")");
@@ -76,7 +77,11 @@ public class LcfrsToCykRulesConverter {
         schema.addRule(unary);
       }
     }
-    schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
+    if (w.length() == 0) {
+      schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, 0));
+    } else {
+      schema.addGoal(new SrcgCykItem(srcg.getStartSymbol(), 0, wsplit.length));
+    }
     return schema;
   }
 
@@ -114,6 +119,12 @@ public class LcfrsToCykRulesConverter {
       String[] wSplit) {
     ArrayList<List<Integer>> ranges = new ArrayList<>();
     ArrayList<Integer> tryOutRange = new ArrayList<>();
+    if (wSplit.length == 1 && "".equals(wSplit[0])) {
+      tryOutRange.add(0);
+      tryOutRange.add(0);
+      ranges.add(tryOutRange);
+      return ranges;
+    }
     tryOutRange.add(0);
     tryOutRange.add(1);
 
