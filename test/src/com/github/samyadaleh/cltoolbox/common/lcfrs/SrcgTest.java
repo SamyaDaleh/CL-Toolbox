@@ -1,8 +1,5 @@
 package com.github.samyadaleh.cltoolbox.common.lcfrs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.text.ParseException;
 import java.util.Objects;
 
@@ -14,10 +11,12 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
 
+import static org.junit.Assert.*;
+
 public class SrcgTest {
 
   @Test public void testOrder() {
-    assertTrue(!TestGrammarLibrary.anbnUnorderedEpsSrcg().isOrdered());
+    assertFalse(TestGrammarLibrary.anbnUnorderedEpsSrcg().isOrdered());
   }
 
   @Test public void testEmptyProductions() {
@@ -45,7 +44,7 @@ public class SrcgTest {
   }
 
   @Test public void testSrcgOrdering() throws ParseException {
-    assertTrue(!TestGrammarLibrary.unorderedSrcg().isOrdered());
+    assertFalse(TestGrammarLibrary.unorderedSrcg().isOrdered());
     Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrderedSrcg();
     assertTrue(srcgOrd.isOrdered());
     assertEquals(
@@ -81,7 +80,7 @@ public class SrcgTest {
     Srcg srcgWithoutEmptyProductions =
         TestGrammarLibrary.withEmptyProductionsSrcg()
             .getSrcgWithoutEmptyProductions();
-    assertTrue(!srcgWithoutEmptyProductions.hasEpsilonProductions());
+    assertFalse(srcgWithoutEmptyProductions.hasEpsilonProductions());
     assertEquals("G = <N, T, V, P, S>\n" + "N = {A^10, A^01, A^11, S^1, S'}\n"
         + "T = {a, b}\n" + "V = {X, Y}\n"
         + "P = {S'(X) -> S^1(X), S^1(X) -> A^10(X), S^1(Y) -> A^01(Y), "
@@ -90,7 +89,7 @@ public class SrcgTest {
   }
 
   @Test public void testSrcgBinarize() throws ParseException {
-    assertTrue(!TestGrammarLibrary.testBinarizationSrcg().isBinarized());
+    assertFalse(TestGrammarLibrary.testBinarizationSrcg().isBinarized());
     Srcg binarizedSrcg =
         TestGrammarLibrary.testBinarizationSrcg().getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
@@ -104,7 +103,7 @@ public class SrcgTest {
   }
 
   @Test public void testSrcgOptimalBinarize() throws ParseException {
-    assertTrue(!TestGrammarLibrary.testOptimalBinarizationSrcg().isBinarized());
+    assertFalse(TestGrammarLibrary.testOptimalBinarizationSrcg().isBinarized());
     Srcg binarizedSrcg =
         TestGrammarLibrary.testOptimalBinarizationSrcg().getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
@@ -116,8 +115,8 @@ public class SrcgTest {
   }
 
   @Test public void testSrcgOptimostBinarize() throws ParseException {
-    assertTrue(
-        !TestGrammarLibrary.testOptimostBinarizationSrcg().isBinarized());
+    assertFalse(
+        TestGrammarLibrary.testOptimostBinarizationSrcg().isBinarized());
     Srcg binarizedSrcg =
         TestGrammarLibrary.testOptimostBinarizationSrcg().getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
