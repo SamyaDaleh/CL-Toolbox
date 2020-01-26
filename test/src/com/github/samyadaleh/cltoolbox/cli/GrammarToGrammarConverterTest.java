@@ -34,7 +34,7 @@ public class GrammarToGrammarConverterTest {
     srcg = GrammarToGrammarConverter
         .checkAndMayConvertToSrcg(srcg, "srcg-cyk-extended", true);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {N1^1, S'}\n" + "T = {t0, t1}\n"
-        + "V = {Z1}\n" + "P = {S'(Z1) -> N1^1(Z1), N1^1(t0 t1) -> ε}\n"
-        + "S = S'\n", srcg.toString());
+        + "V = {Z1}\n" + "P = {S'(Z1) -> N1^1(Z1), S'(ε) -> ε, "
+        + "N1^1(t0 t1) -> ε}\n" + "S = S'\n", srcg.toString());
   }
 }
