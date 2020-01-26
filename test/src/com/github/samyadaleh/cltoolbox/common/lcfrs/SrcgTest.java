@@ -153,10 +153,10 @@ public class SrcgTest {
   @Test public void testRemoveUselessRules() {
     Srcg srcg = TestGrammarLibrary.testSrcgWUselessRules();
     Srcg srcg2 = srcg.getSrcgWithoutUselessRules();
-    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A}\n" + "T = {a, b}\n"
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A}\n" + "T = {a}\n"
         + "V = {X, Y, Z, U, V, W}\n"
-        + "P = {S(X Y Z U V W) -> A(X,U), A(a X,a Y) -> A(X,Y), "
-        + "A(b X,b Y) -> B(X,Y), A(a,a) -> ε}\n" + "S = S\n", srcg2.toString());
+        + "P = {S(X Y Z U V W) -> A(X,U), A(a X,a Y) -> A(X,Y), A(a,a) -> ε}\n"
+        + "S = S\n", srcg2.toString());
   }
 
   @Test public void testConvertTagToLcfrs() {
