@@ -47,14 +47,8 @@ public class SrcgParser {
     if (srcg.getNonterminals() == null) {
       errors.add(new ParseException("No nonterminals declared in grammar.", 0));
     }
-    if (srcg.getTerminals() == null) {
-      errors.add(new ParseException("No terminals declared in grammar.", 0));
-    }
     if (srcg.getStartSymbol() == null) {
       errors.add(new ParseException("No start symbol declared in grammar.", 0));
-    }
-    if (srcg.getVariables() == null) {
-      errors.add(new ParseException("No variables declared in grammar.", 0));
     }
     if (srcg.getClauses() == null) {
       errors.add(new ParseException("No clauses declared in grammar.", 0));

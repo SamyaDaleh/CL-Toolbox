@@ -106,11 +106,24 @@ public class EmptyProductions {
         if (candidate[1].equals("0")) {
           newSrcg.addClause(newS + "(ε) -> ε");
         } else {
-          newSrcg.addClause(newS + "(" + oldSrcg.getVariables()[0] + ") -> "
-            + oldSrcg.getStartSymbol() + "^1" + "(" + oldSrcg.getVariables()[0]
+          createVariableIfNoneExists(newSrcg);
+          newSrcg.addClause(newS + "(" + newSrcg.getVariables()[0] + ") -> "
+            + oldSrcg.getStartSymbol() + "^1" + "(" + newSrcg.getVariables()[0]
             + ")");
         }
       }
+    }
+  }
+
+  private static void createVariableIfNoneExists(Srcg newSrcg) {
+    if (newSrcg.getVariables().length == 0) {
+      int i = 1;
+      String newV = "Z" + i;
+      while (newSrcg.terminalsContain(newV)) {
+        i++;
+        newV = "Z" + i;
+      }
+      newSrcg.setVariables(new String[] {newV});
     }
   }
 

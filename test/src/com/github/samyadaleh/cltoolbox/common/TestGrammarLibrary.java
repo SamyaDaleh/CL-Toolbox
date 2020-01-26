@@ -625,6 +625,21 @@ public class TestGrammarLibrary {
     return srcg;
   }
 
+  public static Cfg emptyWordCfg() {
+    Cfg srcg = new Cfg();
+    srcg.setNonterminals(new String[] {"N0", "N1"});
+    srcg.setTerminals(new String[] {"t0", "t1"});
+    try {
+      srcg.addProductionRule("N0 -> ε");
+      srcg.addProductionRule("N0 -> t0 t1");
+      srcg.addProductionRule("N1 -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    srcg.setStartSymbol("N0");
+    return srcg;
+  }
+
   public static Srcg testBinarizationSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C"});

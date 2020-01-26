@@ -88,6 +88,18 @@ public class SrcgTest {
         + "S = S'\n", srcgWithoutEmptyProductions.toString());
   }
 
+  @Test public void testSrcgRemoveEmptyProductionsEmptyWord()
+      throws ParseException {
+    Srcg srcg = new Srcg(TestGrammarLibrary.emptyWordCfg());
+    assertTrue(srcg.hasEpsilonProductions());
+    Srcg srcgWithoutEmptyProductions = srcg.getSrcgWithoutEmptyProductions();
+    assertFalse(srcgWithoutEmptyProductions.hasEpsilonProductions());
+    assertEquals("G = <N, T, V, P, S>\n" + "N = {N0^1, S'}\n" + "T = {t0, t1}\n"
+        + "V = {Z1}\n"
+        + "P = {S'(ε) -> ε, S'(Z1) -> N0^1(Z1), N0^1(t0 t1) -> ε}\n"
+        + "S = S'\n", srcgWithoutEmptyProductions.toString());
+  }
+
   @Test public void testSrcgBinarize() throws ParseException {
     assertFalse(TestGrammarLibrary.testBinarizationSrcg().isBinarized());
     Srcg binarizedSrcg =
