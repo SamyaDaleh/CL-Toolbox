@@ -662,24 +662,30 @@ public class DeductionTest {
 
   @Test public void testLatexComputationGraphCfgEarley() {
     String[][] data = new String[][] {
-        {"1", "[C,2,1]",  "scan C -> c", "{}"},
-        {"2", "[B,1,1]", "scan B -> b", "{}"},
-        {"3", "[A,0,1]", "scan A -> a", "{}"},
-        {"4", "[X,1,2]", "complete X -> B C",  "{1, 2}"},
-        {"5", "[S,0,3]", "complete S -> A X", "{3, 4}"}
+        {"1", "[S -> •A X,0,0]", "axiom", "{}"},
+        {"2", "[A -> •a,0,0]", "predict A -> a", "{1}"},
+        {"3", "[A -> a •,0,1]", "scan a", "{2}"},
+        {"4", "[S -> A •X,0,1]", "complete A", "{1, 3}"},
+        {"5", "[X -> •B C,1,1]", "predict X -> B C", "{4}"},
+        {"6", "[B -> •b,1,1]", "predict B -> b", "{5}"},
+        {"7", "[B -> b •,1,2]", "scan b", "{6}"},
+        {"8", "[X -> B •C,1,2]", "complete B", "{5, 7}"},
+        {"9", "[C -> •c,2,2]", "predict C -> c", "{8}"},
+        {"10", "[C -> c •,2,3]", "scan c", "{9}"},
+        {"11", "[X -> B C •,1,3]", "complete C", "{8, 10}"},
+        {"12", "[S -> A X •,0,3]", "complete X", "{4, 11}"}
     };
     String expectedGraph =
         "\\begin{dependency}\n" + "   \\begin{deptext}[column sep=1em]\n"
             + "      0 \\& a \\& 1 \\& b \\& 2 \\& c \\& 3 \\\\\n"
             + "   \\end{deptext}\n"
             + "   \\depedge[edge height=3ex]{1}{1}{1, 2}\n"
-            + "   \\depedge{1}{3}{3, 4}\n"
+            + "   \\depedge{1}{3}{3, 4}\n" + "   \\depedge{1}{7}{12}\n"
             + "   \\depedge[edge height=3ex]{3}{3}{5, 6}\n"
-            + "   \\depedge{3}{5}{7, 8}\n"
+            + "   \\depedge{3}{5}{7, 8}\n" + "   \\depedge{3}{7}{11}\n"
             + "   \\depedge[edge height=3ex]{5}{5}{9}\n"
-            + "   \\depedge{5}{7}{10}\n" + "   \\depedge{3}{7}{11}\n"
-            + "   \\depedge{1}{7}{12}\n" + "\\end{dependency}";
-    String graph = Deduction.printLatexGraph(data, "cfg-cyk", "a b c");
+            + "   \\depedge{5}{7}{10}\n" + "\\end{dependency}";
+    String graph = Deduction.printLatexGraph(data, "cfg-earley", "a b c");
     assertEquals(expectedGraph, graph);
   }
 }

@@ -595,26 +595,29 @@ public class Deduction {
       generateCfgShiftReduceComputationGraph(data, graphData);
       break;
     case "cfg-cyk":
+      generateCfgCykComputationGraph(data, graphData);
+      break;
+    case "cfg-earley":
       for (String[] datum : data) {
         String itemForm = datum[1];
         int comma1Pos = itemForm.indexOf(",");
-        int comma2Pos = itemForm.indexOf(",", comma1Pos+1);
-        String indexStart = itemForm.substring(comma1Pos + 1, comma2Pos);
-        String indexLength = itemForm.substring(comma2Pos+1, itemForm.length()-1);
-        String lowGraphIndex = String.valueOf(Integer.parseInt(indexStart)*2+1);
-        if (!graphData.containsKey(lowGraphIndex)) {
-          graphData.put(lowGraphIndex, new HashMap<>());
+        int comma2Pos = itemForm.indexOf(",", comma1Pos + 1);
+        String index1 = itemForm.substring(comma1Pos + 1, comma2Pos);
+        String index2 =
+            itemForm.substring(comma2Pos + 1, itemForm.length() - 1);
+        String graphIndex1 = String.valueOf(Integer.parseInt(index1) * 2 + 1);
+        String graphIndex2 = String.valueOf(Integer.parseInt(index2) * 2 + 1);
+        if (!graphData.containsKey(graphIndex1)) {
+          graphData.put(graphIndex1, new HashMap<>());
         }
-        Map<String, StringBuilder> subGraphData = graphData.get(lowGraphIndex);
-        String highGraphIndex = String.valueOf(
-            (Integer.parseInt(indexStart) + Integer.parseInt(indexLength))*2+1);
-        if (!subGraphData.containsKey(highGraphIndex)) {
-          subGraphData.put(highGraphIndex, new StringBuilder());
+        Map<String, StringBuilder> subGraphData = graphData.get(graphIndex1);
+        if (!subGraphData.containsKey(graphIndex2)) {
+          subGraphData.put(graphIndex2, new StringBuilder());
         }
-        if (subGraphData.get(highGraphIndex).length() > 0) {
-          subGraphData.get(highGraphIndex).append(", ");
+        if (subGraphData.get(graphIndex2).length() > 0) {
+          subGraphData.get(graphIndex2).append(", ");
         }
-        subGraphData.get(highGraphIndex).append(datum[0]);
+        subGraphData.get(graphIndex2).append(datum[0]);
       }
       break;
     default:
@@ -637,6 +640,31 @@ public class Deduction {
     }
     graph.append("\\end{dependency}");
     return graph.toString();
+  }
+
+  private static void generateCfgCykComputationGraph(String[][] data,
+      Map<String, Map<String, StringBuilder>> graphData) {
+    for (String[] datum : data) {
+      String itemForm = datum[1];
+      int comma1Pos = itemForm.indexOf(",");
+      int comma2Pos = itemForm.indexOf(",", comma1Pos+1);
+      String indexStart = itemForm.substring(comma1Pos + 1, comma2Pos);
+      String indexLength = itemForm.substring(comma2Pos+1, itemForm.length()-1);
+      String lowGraphIndex = String.valueOf(Integer.parseInt(indexStart)*2+1);
+      if (!graphData.containsKey(lowGraphIndex)) {
+        graphData.put(lowGraphIndex, new HashMap<>());
+      }
+      Map<String, StringBuilder> subGraphData = graphData.get(lowGraphIndex);
+      String highGraphIndex = String.valueOf(
+          (Integer.parseInt(indexStart) + Integer.parseInt(indexLength))*2+1);
+      if (!subGraphData.containsKey(highGraphIndex)) {
+        subGraphData.put(highGraphIndex, new StringBuilder());
+      }
+      if (subGraphData.get(highGraphIndex).length() > 0) {
+        subGraphData.get(highGraphIndex).append(", ");
+      }
+      subGraphData.get(highGraphIndex).append(datum[0]);
+    }
   }
 
   private static void generateCfgShiftReduceComputationGraph(String[][] data,
