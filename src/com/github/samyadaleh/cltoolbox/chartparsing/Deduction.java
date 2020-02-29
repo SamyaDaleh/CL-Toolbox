@@ -595,10 +595,10 @@ public class Deduction {
       generateCfgShiftReduceComputationGraph(data, graphData);
       break;
     case "cfg-cyk":
+    case "cfg-leftcorner-chart":
       generateCfgCykComputationGraph(data, graphData);
       break;
     case "cfg-earley":
-    case "cfg-leftcorner-chart":
       generateCfgEarleyComputationGraph(data, graphData);
       break;
     default:
