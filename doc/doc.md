@@ -77,7 +77,7 @@ how they work.
 * srcg-cyk-extended
 * srcg-earley
 
-Additionally three flags can be added to the call. --success instead of 
+Additionally some optional flags can be added to the call. --success instead of 
 printing the full trace it prints only items that lead to a goal item. If the 
 parsing fails because the input sequence is not in the language of the grammar 
 no steps are displayed. If steps are displayed they keep their original 
@@ -95,7 +95,8 @@ is converted to Chomsky Normal Form before further steps are performed. See
 section GrammarToGrammarConverter in chapter Program Workflow for more details.
 If --please is set and the grammar already fits the algorithm, it is not 
 altered. The last parameter --latex prints the deduction table in a text format
-instead of the space formatted one.
+instead of the space formatted one. --latex-graph prints the graph of 
+computations in a format for tikz-dependency for some algorithms.
 
 ### Grammar formats
 

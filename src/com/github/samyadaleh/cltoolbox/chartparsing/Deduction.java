@@ -565,6 +565,124 @@ public class Deduction {
     return builder.toString();
   }
 
+  /**
+   * Prints the graph of computations in a format so that it can be rendered by
+   * the latex package tikz-dependency. Visualizes the workings of the
+   * algorithms.
+   */
+  public static String printLatexGraph(String[][] data, String algorithm,
+      String w) {
+    StringBuilder graph = new StringBuilder();
+    graph.append("\\begin{dependency}\n"
+        + "   \\begin{deptext}[column sep=1em]\n"
+        + "      ");
+    int wLength = 0;
+    graph.append("0");
+    if (!w.equals("")) {
+      String[] wSplit = w.split(" ");
+      wLength = wSplit.length;
+      for (int i = 0; i < wSplit.length; i++) {
+        graph.append(" \\& ").append(wSplit[i]).append(" \\& ").append(i + 1);
+      }
+    }
+    graph.append(" \\\\\n").append("   \\end{deptext}\n");
+    Map<String, Map<String,StringBuilder>> graphData = new HashMap<>();
+    switch (algorithm) {
+    case "cfg-topdown":
+      generateCfgTopDownComputationGraph(data, wLength, graphData);
+      break;
+    case "cfg-shiftreduce":
+      generateCfgShiftReduceComputationGraph(data, graphData);
+      break;
+    case "cfg-cyk":
+      for (String[] datum : data) {
+        String itemForm = datum[1];
+        int comma1Pos = itemForm.indexOf(",");
+        int comma2Pos = itemForm.indexOf(",", comma1Pos+1);
+        String indexStart = itemForm.substring(comma1Pos + 1, comma2Pos);
+        String indexLength = itemForm.substring(comma2Pos+1, itemForm.length()-1);
+        String lowGraphIndex = String.valueOf(Integer.parseInt(indexStart)*2+1);
+        if (!graphData.containsKey(lowGraphIndex)) {
+          graphData.put(lowGraphIndex, new HashMap<>());
+        }
+        Map<String, StringBuilder> subGraphData = graphData.get(lowGraphIndex);
+        String highGraphIndex = String.valueOf(
+            (Integer.parseInt(indexStart) + Integer.parseInt(indexLength))*2+1);
+        if (!subGraphData.containsKey(highGraphIndex)) {
+          subGraphData.put(highGraphIndex, new StringBuilder());
+        }
+        if (subGraphData.get(highGraphIndex).length() > 0) {
+          subGraphData.get(highGraphIndex).append(", ");
+        }
+        subGraphData.get(highGraphIndex).append(datum[0]);
+      }
+      break;
+    default:
+      log.info("I don't know how to generate computation graphs for algorithm "
+          + algorithm + ".");
+      return null;
+    }
+    for (Map.Entry<String, Map<String, StringBuilder>> entryA : graphData
+        .entrySet()) {
+      for (Map.Entry<String, StringBuilder> entryB : entryA.getValue()
+          .entrySet()) {
+        graph.append("   \\depedge");
+        if (entryA.getKey().equals(entryB.getKey())) {
+          graph.append("[edge height=3ex]");
+        }
+        graph.append("{").append(entryA.getKey()).append("}{")
+            .append(entryB.getKey()).append("}{")
+            .append(entryB.getValue().toString()).append("}\n");
+      }
+    }
+    graph.append("\\end{dependency}");
+    return graph.toString();
+  }
+
+  private static void generateCfgShiftReduceComputationGraph(String[][] data,
+      Map<String, Map<String, StringBuilder>> graphData) {
+    String minGraphIndex = "1";
+    for (String[] datum : data) {
+      String itemForm = datum[1];
+      int commaPos = itemForm.indexOf(",");
+      String index = itemForm.substring(commaPos + 1, itemForm.length() - 1);
+      String graphIndex = String.valueOf(Integer.parseInt(index) * 2 + 1);
+      if (!graphData.containsKey(minGraphIndex)) {
+        graphData.put(minGraphIndex, new HashMap<>());
+      }
+      Map<String, StringBuilder> subGraphData = graphData.get(minGraphIndex);
+      if (!subGraphData.containsKey(graphIndex)) {
+        subGraphData.put(graphIndex, new StringBuilder());
+      }
+      if (subGraphData.get(graphIndex).length() > 0) {
+        subGraphData.get(graphIndex).append(", ");
+      }
+      subGraphData.get(graphIndex).append(datum[0]);
+    }
+  }
+
+  static void generateCfgTopDownComputationGraph(String[][] data,
+      int wLength, Map<String, Map<String, StringBuilder>> graphData) {
+    String graphMaxIndex = String.valueOf(wLength * 2 + 1);
+    for (String[] datum : data) {
+      String itemForm = datum[1];
+      int commaPos = itemForm.indexOf(",");
+      String index = itemForm.substring(commaPos + 1, itemForm.length() - 1);
+      String graphIndex = String.valueOf(Integer.parseInt(index) * 2 + 1);
+      if (!graphData.containsKey(graphIndex)) {
+        graphData.put(graphIndex, new HashMap<>());
+      }
+      Map<String, StringBuilder> subGraphData = graphData.get(graphIndex);
+      if (!subGraphData.containsKey(graphMaxIndex)) {
+        subGraphData.put(graphMaxIndex, new StringBuilder());
+      }
+      if (subGraphData.get(graphMaxIndex).length() > 0) {
+        subGraphData.get(graphMaxIndex).append(", ");
+      }
+      subGraphData.get(graphMaxIndex).append(datum[0]);
+    }
+  }
+
   public void setReplace(char replace) {
     this.replace = replace;
   }

@@ -13,6 +13,7 @@ import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -286,18 +287,16 @@ public class DeductionTest {
 
   @Test public void testTreeAmount() throws ParseException {
     String w = "a a b a b b";
-    ParsingSchema schema = CfgToTopDownRulesConverter.cfgToTopDownRules(
-        TestGrammarLibrary.diffTreeAmountCfg(), w);
+    ParsingSchema schema = CfgToTopDownRulesConverter
+        .cfgToTopDownRules(TestGrammarLibrary.diffTreeAmountCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertEquals(3,
-        deduction.getDerivedTrees().size());
-    schema = CfgToEarleyRulesConverter.cfgToEarleyRules(
-        TestGrammarLibrary.diffTreeAmountCfg(), w);
+    assertEquals(3, deduction.getDerivedTrees().size());
+    schema = CfgToEarleyRulesConverter
+        .cfgToEarleyRules(TestGrammarLibrary.diffTreeAmountCfg(), w);
     assertTrue(deduction.doParse(schema, false));
     assertEquals(8, deduction.getMaxAgendaSize());
-    assertEquals(3,
-        deduction.getDerivedTrees().size());
+    assertEquals(3, deduction.getDerivedTrees().size());
   }
 
   @Test public void testTagCyk() throws ParseException {
@@ -442,8 +441,7 @@ public class DeductionTest {
     assertEquals(1, deduction.getMaxAgendaSize());
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
-    assertEquals("(S' (ε<0> ))",
-        deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S' (ε<0> ))", deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testSrcgEarley() throws ParseException {
@@ -456,6 +454,20 @@ public class DeductionTest {
     deduction.printTrace(data);
     assertEquals("(S (A (A (a<1> )(b<2> ))(a<0> )(b<3> )))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Ignore("for those ArrayIndexOutOfBoundsException Fix")
+  public void testSrcgUselessSymbols() throws ParseException {
+    String w3 = "t0 t1";
+    ParsingSchema schema = LcfrsToCykRulesConverter
+        .srcgToCykExtendedRules(TestGrammarLibrary.uselessSymbolsSrcg(), w3);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals("(S (A (A (a<1> )(b<2> ))(a<0> )(b<3> )))",
+        deduction.getDerivedTrees().get(0).toString());
+
   }
 
   @Test public void testPcfgAstar() throws ParseException {
@@ -488,8 +500,7 @@ public class DeductionTest {
           .equals("scan 0.1 : N0 -> t0") || rule.equals("scan 1.0 : Y1 -> t0"));
       String item = deduction.getChart().get(i).toString();
       assertTrue(item.equals("2.4 + 0.0 : [S1,0,1]") || item
-          .equals("2.3 + ∞ : [N0,0,1]") || item
-          .equals("0.0 + ∞ : [Y1,0,1]"));
+          .equals("2.3 + ∞ : [N0,0,1]") || item.equals("0.0 + ∞ : [Y1,0,1]"));
     }
   }
 
@@ -549,7 +560,6 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-
   @Test public void testCfgCykGeneral() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToCykRulesConverter
@@ -589,5 +599,87 @@ public class DeductionTest {
     assertEquals(
         "(S (NP (Trip ))(S\\NP ([S\\NP]/NP ([S\\NP]/[S\\NP] (certainly ))([S\\NP]/NP (likes )))(NP (merengue ))))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testLatexComputationGraphCfgTopdown() {
+    String[][] data = new String[][] {{"1", "[S,0]", "axiom", "{}"},
+        {"2", "[A X,0]", "predict S $\rightarrow$ A X", "{1}"},
+        {"3", "[a X,0]", "predict A -> a", "{2}"},
+        {"4", "[X,1]", "scan a", "{3}"},
+        {"5", "[B C,1]", "predict X -> B C", "{4}"},
+        {"6", "[b C,1]", "predict B -> b", "{5}"},
+        {"7", "[C,2]", "scan b", "{6}"},
+        {"8", "[c,2]", "predict C -> c", "{7}"},
+        {"9", "[ε,3]", "scan c", "{8}"}};
+    String expectedGraph =
+        "\\begin{dependency}\n" + "   \\begin{deptext}[column sep=1em]\n"
+            + "      0 \\& a \\& 1 \\& b \\& 2 \\& c \\& 3 \\\\\n"
+            + "   \\end{deptext}\n" + "   \\depedge{1}{7}{1, 2, 3}\n"
+            + "   \\depedge{3}{7}{4, 5, 6}\n" + "   \\depedge{5}{7}{7, 8}\n"
+            + "   \\depedge[edge height=3ex]{7}{7}{9}\n" + "\\end{dependency}";
+    String graph = Deduction.printLatexGraph(data, "cfg-topdown", "a b c");
+    assertEquals(expectedGraph, graph);
+  }
+
+  @Test public void testLatexComputationGraphCfgShiftreduce() {
+    String[][] data = new String[][] {{"1", "[ε,0]", "axiom", "{}"},
+        {"2", "[a,1]", "shift a", "{1}"},
+        {"4", "[A,1]", "reduce A -> a", "{2}"},
+        {"7", "[A b,2]", "shift b", "{4}"},
+        {"11", "[A B,2]", "reduce B -> b", "{7}"},
+        {"14", "[A B c,3]", "shift c", "{11}"},
+        {"16", "[A B C,3]", "reduce C -> c", "{14}"},
+        {"17", "[A X,3]", "reduce X -> B C", "{16}"},
+        {"18", "[S,3]", "reduce S -> A X", "{17}"}};
+    String expectedGraph =
+        "\\begin{dependency}\n" + "   \\begin{deptext}[column sep=1em]\n"
+            + "      0 \\& a \\& 1 \\& b \\& 2 \\& c \\& 3 \\\\\n"
+            + "   \\end{deptext}\n" + "   \\depedge[edge height=3ex]{1}{1}{1}\n"
+            + "   \\depedge{1}{3}{2, 4}\n" + "   \\depedge{1}{5}{7, 11}\n"
+            + "   \\depedge{1}{7}{14, 16, 17, 18}\n" + "\\end{dependency}";
+    String graph = Deduction.printLatexGraph(data, "cfg-shiftreduce", "a b c");
+    assertEquals(expectedGraph, graph);
+  }
+
+  @Test public void testLatexComputationGraphCfgCyk() {
+    String[][] data = new String[][] {
+        {"1", "[C,2,1]",  "scan C -> c", "{}"},
+        {"2", "[B,1,1]", "scan B -> b", "{}"},
+        {"3", "[A,0,1]", "scan A -> a", "{}"},
+        {"4", "[X,1,2]", "complete X -> B C",  "{1, 2}"},
+        {"5", "[S,0,3]", "complete S -> A X", "{3, 4}"}
+    };
+    String expectedGraph =
+        "\\begin{dependency}\n" + "   \\begin{deptext}[column sep=1em]\n"
+            + "      0 \\& a \\& 1 \\& b \\& 2 \\& c \\& 3 \\\\\n"
+            + "   \\end{deptext}\n" + "   \\depedge{1}{3}{3}\n"
+            + "   \\depedge{1}{7}{5}\n" + "   \\depedge{3}{5}{2}\n"
+            + "   \\depedge{3}{7}{4}\n" + "   \\depedge{5}{7}{1}\n"
+            + "\\end{dependency}";
+    String graph = Deduction.printLatexGraph(data, "cfg-cyk", "a b c");
+    assertEquals(expectedGraph, graph);
+  }
+
+  @Test public void testLatexComputationGraphCfgEarley() {
+    String[][] data = new String[][] {
+        {"1", "[C,2,1]",  "scan C -> c", "{}"},
+        {"2", "[B,1,1]", "scan B -> b", "{}"},
+        {"3", "[A,0,1]", "scan A -> a", "{}"},
+        {"4", "[X,1,2]", "complete X -> B C",  "{1, 2}"},
+        {"5", "[S,0,3]", "complete S -> A X", "{3, 4}"}
+    };
+    String expectedGraph =
+        "\\begin{dependency}\n" + "   \\begin{deptext}[column sep=1em]\n"
+            + "      0 \\& a \\& 1 \\& b \\& 2 \\& c \\& 3 \\\\\n"
+            + "   \\end{deptext}\n"
+            + "   \\depedge[edge height=3ex]{1}{1}{1, 2}\n"
+            + "   \\depedge{1}{3}{3, 4}\n"
+            + "   \\depedge[edge height=3ex]{3}{3}{5, 6}\n"
+            + "   \\depedge{3}{5}{7, 8}\n"
+            + "   \\depedge[edge height=3ex]{5}{5}{9}\n"
+            + "   \\depedge{5}{7}{10}\n" + "   \\depedge{3}{7}{11}\n"
+            + "   \\depedge{1}{7}{12}\n" + "\\end{dependency}";
+    String graph = Deduction.printLatexGraph(data, "cfg-cyk", "a b c");
+    assertEquals(expectedGraph, graph);
   }
 }

@@ -33,6 +33,7 @@ public class Main { // NO_UCD (test only)
   private static boolean success = false;
   private static boolean please = false;
   private static boolean latex = false;
+  private static boolean latexGraph = false;
   private static Cfg cfg;
   private static Tag tag = null;
   private static Srcg srcg;
@@ -76,7 +77,7 @@ public class Main { // NO_UCD (test only)
         deduction.setReplace('l');
       }
       log.info(deduction.doParse(schema, success));
-      if (displayParsingTraceTable(deduction))
+      if (displayParsingTraceTable(deduction, algorithm, w))
         return;
       if (schema != null) {
         drawDerivedTree(deduction);
@@ -86,12 +87,19 @@ public class Main { // NO_UCD (test only)
     }
   }
 
-  private static boolean displayParsingTraceTable(Deduction deduction) {
+  private static boolean displayParsingTraceTable(Deduction deduction,
+      String algorithm, String w) {
     String[][] data = deduction.getTraceTable();
     if (latex) {
       deduction.printTraceLatex(data);
     } else {
       deduction.printTrace(data);
+    }
+    if (latexGraph) {
+      String graph = Deduction.printLatexGraph(data, algorithm, w);
+      if (graph != null) {
+        log.info(graph);
+      }
     }
     if (tag != null) {
       new ParsingTraceTable(data,
@@ -142,6 +150,7 @@ public class Main { // NO_UCD (test only)
     success = false;
     please = false;
     latex = false;
+    latexGraph = false;
     for (int i = 3; i < args.length; i++) {
       switch (args[i]) {
       case "--success":
@@ -152,6 +161,9 @@ public class Main { // NO_UCD (test only)
         break;
       case "--latex":
         latex = true;
+        break;
+      case "--latex-graph":
+        latexGraph = true;
         break;
       }
     }
@@ -368,7 +380,9 @@ public class Main { // NO_UCD (test only)
             + "that lead to a goal item."
             + "\n   --please : if a grammar doesn't fit an "
             + "algorithm, ask me to convert it. No promises."
-            + "\n   --latex : print the trace in tex format.");
+            + "\n   --latex : print the trace in tex format."
+            + "\n   --latex-graph : print the graph of computations in a "
+            + "format for latex tikz-dependency.");
     log.info(
         "example: java -jar CL-Toolbox.jar ..\\resources\\grammars\\anbn.cfg "
             + "\"a a b b\" cfg-topdown --success");
