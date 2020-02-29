@@ -598,27 +598,8 @@ public class Deduction {
       generateCfgCykComputationGraph(data, graphData);
       break;
     case "cfg-earley":
-      for (String[] datum : data) {
-        String itemForm = datum[1];
-        int comma1Pos = itemForm.indexOf(",");
-        int comma2Pos = itemForm.indexOf(",", comma1Pos + 1);
-        String index1 = itemForm.substring(comma1Pos + 1, comma2Pos);
-        String index2 =
-            itemForm.substring(comma2Pos + 1, itemForm.length() - 1);
-        String graphIndex1 = String.valueOf(Integer.parseInt(index1) * 2 + 1);
-        String graphIndex2 = String.valueOf(Integer.parseInt(index2) * 2 + 1);
-        if (!graphData.containsKey(graphIndex1)) {
-          graphData.put(graphIndex1, new HashMap<>());
-        }
-        Map<String, StringBuilder> subGraphData = graphData.get(graphIndex1);
-        if (!subGraphData.containsKey(graphIndex2)) {
-          subGraphData.put(graphIndex2, new StringBuilder());
-        }
-        if (subGraphData.get(graphIndex2).length() > 0) {
-          subGraphData.get(graphIndex2).append(", ");
-        }
-        subGraphData.get(graphIndex2).append(datum[0]);
-      }
+    case "cfg-leftcorner-chart":
+      generateCfgEarleyComputationGraph(data, graphData);
       break;
     default:
       log.info("I don't know how to generate computation graphs for algorithm "
@@ -640,6 +621,31 @@ public class Deduction {
     }
     graph.append("\\end{dependency}");
     return graph.toString();
+  }
+
+  private static void generateCfgEarleyComputationGraph(String[][] data,
+      Map<String, Map<String, StringBuilder>> graphData) {
+    for (String[] datum : data) {
+      String itemForm = datum[1];
+      int comma1Pos = itemForm.indexOf(",");
+      int comma2Pos = itemForm.indexOf(",", comma1Pos + 1);
+      String index1 = itemForm.substring(comma1Pos + 1, comma2Pos);
+      String index2 =
+          itemForm.substring(comma2Pos + 1, itemForm.length() - 1);
+      String graphIndex1 = String.valueOf(Integer.parseInt(index1) * 2 + 1);
+      String graphIndex2 = String.valueOf(Integer.parseInt(index2) * 2 + 1);
+      if (!graphData.containsKey(graphIndex1)) {
+        graphData.put(graphIndex1, new HashMap<>());
+      }
+      Map<String, StringBuilder> subGraphData = graphData.get(graphIndex1);
+      if (!subGraphData.containsKey(graphIndex2)) {
+        subGraphData.put(graphIndex2, new StringBuilder());
+      }
+      if (subGraphData.get(graphIndex2).length() > 0) {
+        subGraphData.get(graphIndex2).append(", ");
+      }
+      subGraphData.get(graphIndex2).append(datum[0]);
+    }
   }
 
   private static void generateCfgCykComputationGraph(String[][] data,
