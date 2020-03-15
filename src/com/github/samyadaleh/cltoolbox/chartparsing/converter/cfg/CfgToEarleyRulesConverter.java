@@ -80,6 +80,7 @@ public class CfgToEarleyRulesConverter {
   public static ParsingSchema cfgToEarleyBottomupRules(Cfg cfg, String w)
       throws ParseException {
     String[] wSplit = w.split(" ");
+    int wLength = "".equals(w) ? 0 : wSplit.length;
     ParsingSchema schema = new ParsingSchema();
 
     DynamicDeductionRuleInterface scan = new CfgEarleyScan(wSplit);
@@ -93,11 +94,11 @@ public class CfgToEarleyRulesConverter {
         if (rule.getRhs()[0].equals("")) {
           schema.addGoal(
               new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
-                  String.valueOf(wSplit.length)));
+                  String.valueOf(wLength)));
         } else {
           schema.addGoal(new DeductionChartItem(
               cfg.getStartSymbol() + " -> " + String.join(" ", rule.getRhs())
-                  + " •", "0", String.valueOf(wSplit.length)));
+                  + " •", "0", String.valueOf(wLength)));
         }
       }
       StringBuilder dottedRule =
@@ -111,7 +112,7 @@ public class CfgToEarleyRulesConverter {
         }
         dottedRule.append(rhsSym);
       }
-      for (int i = 0; i < wSplit.length; i++) {
+      for (int i = 0; i < wLength; i++) {
         StaticDeductionRule initialize = new StaticDeductionRule();
         initialize.setName(DEDUCTION_RULE_CFG_EARLEY_BOTTOMUP_AXIOM);
         DeductionChartItem consequence =
@@ -128,7 +129,7 @@ public class CfgToEarleyRulesConverter {
         initialize.setName(DEDUCTION_RULE_CFG_EARLEY_BOTTOMUP_AXIOM);
         DeductionChartItem consequence =
             new DeductionChartItem(dottedRule.toString(),
-                String.valueOf(wSplit.length), String.valueOf(wSplit.length));
+                String.valueOf(wLength), String.valueOf(wLength));
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(new Tree(rule));
         consequence.setTrees(derivedTrees);

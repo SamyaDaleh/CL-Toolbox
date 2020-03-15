@@ -409,6 +409,20 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg earleyBottomUpProblemCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"t0", "t1"});
+    cfg.setNonterminals(new String[] {"N0"});
+    try {
+      cfg.addProductionRule("N0 -> ε");
+      cfg.addProductionRule("N0 -> t0 t1");
+      cfg.setStartSymbol("N0");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});

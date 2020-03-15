@@ -16,11 +16,13 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 public class CfgEarleyScan extends AbstractDynamicDeductionRule {
 
   private final String[] wsplit;
+  private int wLength;
 
   public CfgEarleyScan(String[] wsplit) {
     this.wsplit = wsplit;
     this.name = DEDUCTION_RULE_CFG_EARLEY_SCAN;
     this.antNeeded = 1;
+    this.wLength = wsplit[0].equals("") ? 0 : wsplit.length;
   }
 
   @Override public List<ChartItemInterface> getConsequences() {
@@ -31,7 +33,7 @@ public class CfgEarleyScan extends AbstractDynamicDeductionRule {
       int i = Integer.parseInt(itemForm[1]);
       int j = Integer.parseInt(itemForm[2]);
       for (int k = 0; k < stackSplit.length; k++) {
-        if (stackSplit[k].startsWith("•") && j < wsplit.length && wsplit[j]
+        if (stackSplit[k].startsWith("•") && j < wLength && wsplit[j]
             .equals(stackSplit[k].substring(1))) {
           this.name = DEDUCTION_RULE_CFG_EARLEY_SCAN + " " + wsplit[j];
           StringBuilder newStack = new StringBuilder();
