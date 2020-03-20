@@ -411,6 +411,14 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testSrcgVectorMatchFail() throws ParseException {
+    String w = "t0 t1 t0 t1 t0 t1 t0";
+    ParsingSchema schema = LcfrsToCykRulesConverter
+        .srcgToCykExtendedRules(TestGrammarLibrary.vectorMatchFailSrcg(), w);
+    Deduction deduction = new Deduction();
+    assertFalse(deduction.doParse(schema, false));
+  }
+
   @Test public void testSrcgCykGeneral() throws ParseException {
     String w = "a a b b a c b b a c";
     ParsingSchema schema = LcfrsToCykRulesConverter

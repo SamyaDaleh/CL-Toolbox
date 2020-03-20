@@ -81,6 +81,9 @@ public class SrcgCykUnary extends AbstractDynamicDeductionRule {
       i = 1;
       for (; i * 2 < vectorRanges.size(); i++) {
         prevNum = Integer.parseInt(vectorRanges.get(i * 2 - 1));
+        if (prevNum >= wSplit.length) {
+          return true;
+        }
         if (vectorRanges.get(i * 2).equals("?")) {
           vectorRanges.set(i * 2, String.valueOf(prevNum));
           vectorRanges.set(i * 2 + 1, String.valueOf(prevNum + 1));

@@ -439,6 +439,21 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg emptyWordCfg() {
+    Cfg srcg = new Cfg();
+    srcg.setNonterminals(new String[] {"N0", "N1"});
+    srcg.setTerminals(new String[] {"t0", "t1"});
+    try {
+      srcg.addProductionRule("N0 -> ε");
+      srcg.addProductionRule("N0 -> t0 t1");
+      srcg.addProductionRule("N1 -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    srcg.setStartSymbol("N0");
+    return srcg;
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});
@@ -655,21 +670,6 @@ public class TestGrammarLibrary {
     return srcg;
   }
 
-  public static Cfg emptyWordCfg() {
-    Cfg srcg = new Cfg();
-    srcg.setNonterminals(new String[] {"N0", "N1"});
-    srcg.setTerminals(new String[] {"t0", "t1"});
-    try {
-      srcg.addProductionRule("N0 -> ε");
-      srcg.addProductionRule("N0 -> t0 t1");
-      srcg.addProductionRule("N1 -> ε");
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-    srcg.setStartSymbol("N0");
-    return srcg;
-  }
-
   public static Srcg testBinarizationSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A", "B", "C"});
@@ -783,6 +783,28 @@ public class TestGrammarLibrary {
       srcg.addClause("N1^1(t1 t0) -> ε");
       srcg.addClause("N1^1(X1) -> N0^1(X1)");
       srcg.setStartSymbol("S'");
+      return srcg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static Srcg vectorMatchFailSrcg() {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[] {"N0^1", "N01^1", "N11^1", "S'"});
+    srcg.setTerminals(new String[] {"t0", "t1"});
+    srcg.setVariables(new String[] {"X1", "X2", "X3"});
+    srcg.setStartSymbol("S'");
+    try {
+      srcg.addClause("S'(ε) -> ε");
+      srcg.addClause("S'(X1) -> N0^1(X1)");
+      srcg.addClause("N0^1(t1 t0) -> ε");
+      srcg.addClause("N0^1(t1 t0 X1) -> N0^1(X1)");
+      srcg.addClause("N0^1(t0 X1 t1) -> N01^1(X1)");
+      srcg.addClause("N0^1(t0 X1 t1 X3) -> N0^1(X3) N01^1(X1)");
+      srcg.addClause("N01^1(X1) -> N0^1(X1)");
+      srcg.addClause("N01^1(X2) -> N0^1(X2)");
+      srcg.addClause("N01^1(X1 X2) -> N0^1(X1) N0^1(X2)");
       return srcg;
     } catch (ParseException e) {
       throw new RuntimeException(e);

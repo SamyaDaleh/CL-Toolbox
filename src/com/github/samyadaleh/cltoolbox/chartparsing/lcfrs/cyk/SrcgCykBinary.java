@@ -69,6 +69,7 @@ public class SrcgCykBinary extends AbstractDynamicDecutionRuleTwoAntecedences {
         vectorRanges.set(i * 2 + 1, String.valueOf(prevnum));
         if (prevnum == 0 || !wSplit[prevnum - 1].equals(argument[i])) {
           looksGood = false;
+          break;
         }
         prevnum--;
       }
