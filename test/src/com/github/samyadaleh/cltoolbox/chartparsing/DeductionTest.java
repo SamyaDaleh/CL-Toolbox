@@ -336,6 +336,19 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testTagCykGeneralTooManyTrees() throws ParseException {
+    String w2 = "t0 t1";
+    ParsingSchema schema = TagToCykRulesConverter
+        .tagToCykGeneralRules(TestGrammarLibrary.tooManyTreesTag(), w2);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(1, deduction.getDerivedTrees().size());
+    assertEquals("(N0 (t0 )(t1 ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testTagEarley() throws ParseException {
     String w2 = "a c b";
     ParsingSchema schema = TagToEarleyRulesConverter

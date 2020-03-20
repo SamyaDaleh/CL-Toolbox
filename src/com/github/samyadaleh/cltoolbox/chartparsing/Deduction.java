@@ -722,7 +722,8 @@ public class Deduction {
   }
 
   public List<Tree> getDerivedTrees() {
-    return this.derivedTrees;
+    Set<Tree> treeSet = new HashSet<>(this.derivedTrees);
+    return new ArrayList<>(treeSet);
   }
 
   public List<ChartItemInterface> getChart() {

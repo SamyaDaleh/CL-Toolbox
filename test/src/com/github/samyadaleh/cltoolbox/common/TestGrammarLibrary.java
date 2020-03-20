@@ -584,6 +584,20 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Tag tooManyTreesTag() {
+    try {
+      Tag g = new Tag();
+      g.setNonterminals(new String[] {"N0"});
+      g.setTerminals(new String[] {"t0", "t1"});
+      g.setStartSymbol("N0");
+      g.addInitialTree("α1", "(N0 (t0 )(t1 ))");
+      g.addInitialTree("α2", "(N0 )");
+      return g;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Srcg anBnSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"S", "A"});

@@ -162,6 +162,9 @@ public class Tree {
   }
 
   @Override public String toString() {
+    if (this.root == null) {
+      return "()";
+    }
     return "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
         + (this.root.equals(foot) ? "*" : "") + (
         isInOA(this.root.getGornAddress()) ? "_OA" : "") + (
@@ -367,18 +370,16 @@ public class Tree {
     for (int i = 0; i < vertexes.size(); i++) {
       if (vertexes.get(i).getGornAddress().equals(gorn)) {
         substNode = vertexes.get(i);
+        boolean firstLoop = true;
         for (Vertex p : initialTree.vertexes) {
           newTree.vertexes.add(p.copy());
           newTree.vertexes.get(newTree.vertexes.size() - 1)
               .setGornaddress(gorn + p.getGornAddress());
+            markRootOrFootNode(newTree);
         }
       } else {
         newTree.vertexes.add(vertexes.get(i).copy());
-      }
-      if (vertexes.get(i).getGornAddress().equals("")) {
-        newTree.root = newTree.vertexes.get(newTree.vertexes.size() - 1);
-      } else if (vertexes.get(i).equals(this.foot)) {
-        newTree.foot = newTree.vertexes.get(newTree.vertexes.size() - 1);
+        markRootOrFootNode(newTree);
       }
     }
     for (Edge edge : this.edges) {
@@ -403,6 +404,16 @@ public class Tree {
       newTree.edges.add(new Edge(newFrom, newTo));
     }
     return newTree;
+  }
+
+  private void markRootOrFootNode(Tree newTree) {
+    if (newTree.vertexes.get(newTree.vertexes.size() - 1).getGornAddress()
+        .equals("")) {
+      newTree.root = newTree.vertexes.get(newTree.vertexes.size() - 1);
+    } else if (newTree.vertexes.get(newTree.vertexes.size() - 1)
+        .equals(this.foot)) {
+      newTree.foot = newTree.vertexes.get(newTree.vertexes.size() - 1);
+    }
   }
 
   /**
@@ -589,5 +600,10 @@ public class Tree {
       return o.equals(this.toString());
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.toString().hashCode();
   }
 }
