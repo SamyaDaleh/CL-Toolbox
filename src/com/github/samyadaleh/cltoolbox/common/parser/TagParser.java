@@ -54,6 +54,10 @@ public class TagParser {
       errors.add(
           new ParseException("No initial trees rules declared in grammar.", 0));
     }
+    if (!tag.nonterminalsContain(tag.getStartSymbol())) {
+      errors.add(new ParseException(
+          "The start symbol is not one of the nonterminals.", 0));
+    }
   }
 
   private static void checkAuxiliaryTrees(Tag tag) {

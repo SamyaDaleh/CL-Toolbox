@@ -53,6 +53,10 @@ public class SrcgParser {
     if (srcg.getClauses() == null) {
       errors.add(new ParseException("No clauses declared in grammar.", 0));
     }
+    if (!srcg.nonterminalsContain(srcg.getStartSymbol())) {
+      errors.add(new ParseException(
+          "The start symbol is not one of the nonterminals.", 0));
+    }
   }
 
   private static void checkPredicateFormat(Srcg srcg, Clause clause,
