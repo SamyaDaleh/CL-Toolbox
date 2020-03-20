@@ -423,6 +423,22 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg exceptionOnBinarizeCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"t0", "t1", "t2"});
+    cfg.setNonterminals(new String[] {"N0", "N2", "N1"});
+    try {
+      cfg.addProductionRule("N0 -> ε");
+      cfg.addProductionRule("N0 -> t1");
+      cfg.addProductionRule("N0 -> t0 N0");
+      cfg.addProductionRule("N2 -> N0");
+      cfg.setStartSymbol("N2");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});

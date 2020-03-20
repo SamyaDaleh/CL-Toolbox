@@ -43,10 +43,10 @@ public class Binarization {
       default:
         CfgProductionRule ruleRest = rule;
         while (ruleRest.getRhs().length > 2) {
-          String newN = "X" + String.valueOf(i);
+          String newN = "X" + i;
           while (cfg.nonterminalsContain(newN) || cfg.terminalsContain(newN)) {
             i++;
-            newN = "X" + String.valueOf(i);
+            newN = "X" + i;
           }
           newNt.add(newN);
           String newRhs = ruleRest.getRhs()[0] + " " + newN;
