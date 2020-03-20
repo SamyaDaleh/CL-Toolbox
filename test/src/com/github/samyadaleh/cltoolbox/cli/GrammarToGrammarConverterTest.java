@@ -37,4 +37,21 @@ public class GrammarToGrammarConverterTest {
         + "V = {Z1}\n" + "P = {S'(Z1) -> N1^1(Z1), S'(ε) -> ε, "
         + "N1^1(t0 t1) -> ε}\n" + "S = S'\n", srcg.toString());
   }
+
+  @Test public void testCfgShiftReduceConversion() throws ParseException {
+    StringReader reader = new StringReader(
+        "G = <N, T, S, P>\n" + "N = {N0, N1}\n" + "T = {t0, t1}\n" + "S = N1\n"
+            + "P = {N1 -> ε, N1 -> t1 t0, N0 -> ε, N0 -> t1 t0 N0 N1 t0, "
+            + "N0 -> ε, N0 -> ε, N1 -> N0, N0 -> t0 N1 N0 t1 N0}\n");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    cfg = GrammarToGrammarConverter
+        .checkAndMayConvertToCfg(cfg, "cfg-shiftreduce", true);
+    assertEquals("G = <N, T, S, P>\n" + "N = {S1, N1, N0}\n" + "T = {t0, t1}\n"
+            + "S = S1\n" + "P = {N1 -> t1 t0, N0 -> t1 t0 N0 N1 t0, N1 -> N0, "
+            + "N0 -> t0 N1 N0 t1 N0, N0 -> t1 t0 N0 t0, N0 -> t0 N0 t1 N0, "
+            + "S1 -> N1, S1 -> ε, N0 -> t1 t0 N1 t0, N0 -> t0 N1 t1 N0, "
+            + "N0 -> t0 N1 N0 t1, N0 -> t1 t0 t0, N0 -> t0 t1 N0, N0 -> t0 N0 t1, "
+            + "N0 -> t0 N1 t1, N0 -> t0 N1 t1, N0 -> t0 t1, N0 -> t0 t1}\n",
+        cfg.toString());
+  }
 }

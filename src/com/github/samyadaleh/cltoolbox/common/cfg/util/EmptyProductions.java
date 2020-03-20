@@ -65,9 +65,10 @@ public class EmptyProductions {
    * start symbol as lhs.
    */
   private static boolean ifEmptyProductionShouldBeRemoved(Cfg cfg, int i) {
-    return cfg.getProductionRules().get(i).getRhs().length == 1
-      && cfg.getProductionRules().get(i).getRhs()[0].equals("")
-      && !cfg.getProductionRules().get(i).getLhs().equals(cfg.getStartSymbol());
+    return (cfg.getProductionRules().get(i).getRhs().length == 1 && cfg
+        .getProductionRules().get(i).getRhs()[0].equals("")
+        || cfg.getProductionRules().get(i).getRhs().length == 0) && !cfg
+        .getProductionRules().get(i).getLhs().equals(cfg.getStartSymbol());
   }
 
   /**
