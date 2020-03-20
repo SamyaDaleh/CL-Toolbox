@@ -490,20 +490,6 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Ignore("for those ArrayIndexOutOfBoundsException Fix")
-  public void testSrcgUselessSymbols() throws ParseException {
-    String w3 = "t0 t1";
-    ParsingSchema schema = LcfrsToCykRulesConverter
-        .srcgToCykExtendedRules(TestGrammarLibrary.uselessSymbolsSrcg(), w3);
-    Deduction deduction = new Deduction();
-    assertTrue(deduction.doParse(schema, false));
-    String[][] data = deduction.getTraceTable();
-    deduction.printTrace(data);
-    assertEquals("(S (A (A (a<1> )(b<2> ))(a<0> )(b<3> )))",
-        deduction.getDerivedTrees().get(0).toString());
-
-  }
-
   @Test public void testPcfgAstar() throws ParseException {
     String w = "red nice ugly car";
     ParsingSchema schema = PcfgToAstarRulesConverter

@@ -779,30 +779,6 @@ public class TestGrammarLibrary {
     }
   }
 
-  public static Srcg uselessSymbolsSrcg() {
-    Srcg srcg = new Srcg();
-    srcg.setNonterminals(new String[] {"N0^1", "N1^1", "N11^1", "S'"});
-    srcg.setTerminals(new String[] {"t0", "t1"});
-    srcg.setVariables(new String[] {"X1", "X2", "X3"});
-    try {
-      srcg.addClause("S'(ε) -> ε");
-      srcg.addClause("S'(X1) -> N1^1(X1)");
-      srcg.addClause("N1^1(t0 X2) -> N11(X2)");
-      srcg.addClause("N1^1(t0 X1 X2) -> N1^1(X1) N11^1(X2)");
-      srcg.addClause("N11^1(X3) -> N1(X3)");
-      srcg.addClause("N11^1(X2) -> N1^1(X2)");
-      srcg.addClause("N11^1(X3) -> N1(X3)");
-      srcg.addClause("N11^1(X2 X3) -> N1^1(X2) N1^1(X3)");
-      srcg.addClause("N0^1(t1) -> ε");
-      srcg.addClause("N1^1(t1 t0) -> ε");
-      srcg.addClause("N1^1(X1) -> N0^1(X1)");
-      srcg.setStartSymbol("S'");
-      return srcg;
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   public static Srcg vectorMatchFailSrcg() {
     Srcg srcg = new Srcg();
     srcg.setNonterminals(new String[] {"N0^1", "N01^1", "N11^1", "S'"});

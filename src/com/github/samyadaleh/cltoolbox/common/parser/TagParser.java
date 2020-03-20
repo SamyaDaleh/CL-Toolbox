@@ -25,7 +25,7 @@ public class TagParser {
     Tag tag = new Tag(in);
     checkForGrammarProblems(tag);
     if (GrammarParserUtils.printErrors(errors))
-      return null;
+      throw (ParseException) errors.get(0);
     return tag;
 
   }

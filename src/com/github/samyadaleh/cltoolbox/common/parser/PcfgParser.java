@@ -23,7 +23,7 @@ public class PcfgParser {
     Pcfg pcfg = new Pcfg(in);
     checkForGrammarProblems(pcfg);
     if (GrammarParserUtils.printErrors(errors))
-      return null;
+      throw (ParseException) errors.get(0);
     return pcfg;
   }
 

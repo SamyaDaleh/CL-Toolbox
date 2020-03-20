@@ -24,7 +24,7 @@ public class SrcgParser {
     Srcg srcg = new Srcg(in);
     checkForGrammarProblems(srcg);
     if (GrammarParserUtils.printErrors(errors))
-      return null;
+      throw (ParseException) errors.get(0);
     return srcg;
   }
 
