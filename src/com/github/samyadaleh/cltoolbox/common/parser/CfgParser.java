@@ -64,5 +64,9 @@ public class CfgParser {
       errors.add(
           new ParseException("No production rules declared in grammar.", 0));
     }
+    if (!cfg.nonterminalsContain(cfg.getStartSymbol())) {
+      errors.add(new ParseException(
+          "The start symbol is not one of the nonterminals.", 0));
+    }
   }
 }

@@ -18,4 +18,11 @@ public class CfgParserTest {
     Cfg cfg = CfgParser.parseCfgReader(reader);
     assertEquals("N2", cfg.getStartSymbol());
   }
+
+  @Test(expected = ParseException.class) public void testParseCfgLowercaseStartSymbol() throws ParseException {
+    StringReader reader = new StringReader(
+        "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = s\n"
+            + "P = {S -> a S b, S -> a b}\n\n");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+  }
 }
