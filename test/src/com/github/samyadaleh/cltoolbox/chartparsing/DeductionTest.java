@@ -13,7 +13,6 @@ import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -467,7 +466,6 @@ public class DeductionTest {
             + "S = S'");
     Srcg srcg = SrcgParser.parseSrcgReader(reader);
     String w = "";
-    assert srcg != null;
     ParsingSchema schema =
         LcfrsToCykRulesConverter.srcgToCykExtendedRules(srcg, w);
     Deduction deduction = new Deduction();
