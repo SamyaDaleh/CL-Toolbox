@@ -591,6 +591,19 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgCykGeneralEmptyWord() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToCykRulesConverter
+        .cfgToCykGeneralRules(TestGrammarLibrary.emptyWordCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(2, deduction.getMaxAgendaSize());
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals("(N0 (ε ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgLr() throws ParseException {
     String w = "the apple";
     ParsingSchema schema =

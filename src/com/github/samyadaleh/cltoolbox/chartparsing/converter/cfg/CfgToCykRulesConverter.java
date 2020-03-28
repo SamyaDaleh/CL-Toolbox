@@ -126,8 +126,12 @@ public class CfgToCykRulesConverter {
       DynamicDeductionRuleInterface complete = new CfgCykCompleteGeneral(rule);
       schema.addRule(complete);
     }
-    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-        String.valueOf(wSplit.length)));
+    if (w.length() == 0) {
+      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0", "0"));
+    } else {
+      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
+          String.valueOf(wSplit.length)));
+    }
     return schema;
   }
 }
