@@ -15,7 +15,6 @@ import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 import java.io.BufferedReader;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -76,10 +75,8 @@ public class Srcg extends AbstractNTSGrammar {
     addStartSymbolAndMayGenerateStartClauses(tag, newVariables);
     List<Vertex> adjunctionVertexStack = new ArrayList<>();
     List<List<StringBuilder>> adjunctionPredicateStack = new ArrayList<>();
-    for (Iterator<String> iterator = tag.getTreeNames().iterator(); iterator
-        .hasNext(); ) {
+    for (String treeName : tag.getTreeNames()) {
       int i = 1;
-      String treeName = iterator.next();
       Tree tree = tag.getTree(treeName);
       List<StringBuilder> clauseStrings = new ArrayList<>();
       clauseStrings.add(new StringBuilder());
@@ -249,13 +246,19 @@ public class Srcg extends AbstractNTSGrammar {
 
   @Override public String toString() {
     StringBuilder repr = new StringBuilder();
-    repr.append("G = <N, T, V, P, S>\n");
-    repr.append("N = {").append(String.join(", ", getNonterminals()))
-        .append("}\n");
-    repr.append("T = {").append(String.join(", ", getTerminals()))
-        .append("}\n");
-    repr.append("V = {").append(String.join(", ", variables)).append("}\n");
-    repr.append("P = {");
+    repr.append("G = <N, T, V, P, S>\n").append("N = {");
+    if(getNonterminals() != null) {
+      repr.append(String.join(", ", getNonterminals()));
+    }
+    repr.append("}\n").append("T = {");
+    if (getTerminals() != null) {
+      repr.append(String.join(", ", getTerminals()));
+    }
+    repr.append("}\n").append("V = {");
+    if (variables != null) {
+      repr.append(String.join(", ", variables));
+    }
+    repr.append("}\n").append("P = {");
     for (int i = 0; i < clauses.size(); i++) {
       if (i > 0) {
         repr.append(", ");
