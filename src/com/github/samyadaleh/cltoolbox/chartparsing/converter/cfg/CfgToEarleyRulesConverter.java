@@ -28,7 +28,8 @@ public class CfgToEarleyRulesConverter {
   public static ParsingSchema cfgToEarleyRules(Cfg cfg, String w)
       throws ParseException {
     String[] wSplit = w.split(" ");
-    ParsingSchema schema = new ParsingSchema();
+    int wLength = (w.length() == 0)? 0 : wSplit.length;
+        ParsingSchema schema = new ParsingSchema();
 
     DynamicDeductionRuleInterface scan = new CfgEarleyScan(wSplit);
     schema.addRule(scan);
@@ -57,14 +58,14 @@ public class CfgToEarleyRulesConverter {
         }
         axiom.setName(DEDUCTION_RULE_CFG_EARLEY_AXIOM);
         schema.addAxiom(axiom);
-        if (rule.getRhs()[0].equals("")) {
+        if (rule.getRhs()[0].equals("") || rule.getRhs().length == 0) {
           schema.addGoal(
               new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
-                  String.valueOf(wSplit.length)));
+                  String.valueOf(wLength)));
         } else {
           schema.addGoal(new DeductionChartItem(
               cfg.getStartSymbol() + " -> " + String.join(" ", rule.getRhs())
-                  + " •", "0", String.valueOf(wSplit.length)));
+                  + " •", "0", String.valueOf(wLength)));
         }
       }
 

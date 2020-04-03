@@ -204,6 +204,16 @@ public class DeductionTest {
     assertEquals(2, deduction.getMaxAgendaSize());
   }
 
+  @Test public void testCfgEarleyEpsilonNothingElse() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToEarleyRulesConverter
+        .cfgToEarleyRules(TestGrammarLibrary.emptyWordNothingElseCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals("(S (S (S (ε ))(S (ε )))(S (S (ε ))(S (ε ))))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgLeftcorner() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToLeftCornerRulesConverter.cfgToLeftCornerRules(

@@ -454,6 +454,20 @@ public class TestGrammarLibrary {
     return srcg;
   }
 
+  public static Cfg emptyWordNothingElseCfg() {
+    Cfg srcg = new Cfg();
+    srcg.setNonterminals(new String[] {"S"});
+    srcg.setTerminals(new String[] {});
+    try {
+      srcg.addProductionRule("S -> ε");
+      srcg.addProductionRule("S -> S S");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    srcg.setStartSymbol("S");
+    return srcg;
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});
