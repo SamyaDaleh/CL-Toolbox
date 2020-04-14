@@ -90,10 +90,10 @@ public class EmptyProductions {
       }
       if (nt.equals(cfgOld.getStartSymbol())) {
         int i = 1;
-        String newStart = "S" + String.valueOf(i);
+        String newStart = "S" + i;
         while (newNt.contains(newStart) || cfgOld.terminalsContain(newStart)) {
           i++;
-          newStart = "S" + String.valueOf(i);
+          newStart = "S" + i;
         }
         cfg.getProductionRules().add(new CfgProductionRule(
           new String[] {newStart, cfgOld.getStartSymbol()}));
@@ -112,13 +112,26 @@ public class EmptyProductions {
     while (changed) {
       changed = false;
       for (CfgProductionRule rule : cfg.getProductionRules()) {
-        if (rule.getRhs().length == 1 && rule.getRhs()[0].equals("")
-          && !eliminateable.contains(rule.getLhs())) {
+        if (allRhsSymbolsAreEliminateable(rule.getRhs(), eliminateable)
+            && !eliminateable.contains(rule.getLhs())) {
           eliminateable.add(rule.getLhs());
           changed = true;
         }
       }
     }
     return eliminateable;
+  }
+
+  private static boolean allRhsSymbolsAreEliminateable(String[] rhs,
+      ArrayList<String> eliminateable) {
+    if (rhs.length == 0 || "".equals(rhs[0])) {
+      return true;
+    }
+    for (String rh : rhs) {
+      if (!eliminateable.contains(rh)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

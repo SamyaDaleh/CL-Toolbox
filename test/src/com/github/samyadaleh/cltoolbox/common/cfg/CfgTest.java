@@ -1,8 +1,10 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
+import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Objects;
 
+import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
@@ -138,5 +140,18 @@ public class CfgTest {
     assertEquals("G = <N, T, S, P>\n" + "N = {S, A, B}\n" + "T = {a, b}\n"
       + "S = S\n" + "P = {S -> A B, A -> b, A -> a, B -> B B, B -> a}\n",
       cfg.toString());
+  }
+
+  @Test public void testHasGeneratingSymbols() throws ParseException {
+    StringReader reader = new StringReader(
+        "N = {N0, N1, N2, N3, N4, N5, N6, N7}\n"
+            + "T = {t0, t1, t2, t3, t4, t5}\n" + "S = N0\n"
+            + "P = {N2 -> ε, N0 -> N1 t0 t1 N2, N1 -> N2, N0 -> N1}");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    assertEquals("G = <N, T, S, P>\n" + "N = {S1, N0}\n"
+            + "T = {t0, t1, t2, t3, t4, t5}\n" + "S = S1\n"
+            + "P = {N0 -> t0 t1, S1 -> N0, S1 -> ε}\n",
+        cfg.getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+            .toString());
   }
 }
