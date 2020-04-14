@@ -13,6 +13,7 @@ import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -210,8 +211,10 @@ public class DeductionTest {
         .cfgToEarleyRules(TestGrammarLibrary.emptyWordNothingElseCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertEquals("(S (S (S (ε ))(S (ε )))(S (S (ε ))(S (ε ))))",
-        deduction.getDerivedTrees().get(0).toString());
+    assertEquals(7,
+        deduction.getDerivedTrees().size());
+    Tree tree = new Tree("(S (S (S (ε ))(S (ε )))(S (S (ε ))(S (ε ))))");
+    assertTrue(deduction.getDerivedTrees().contains(tree));
   }
 
   @Test public void testCfgLeftcorner() throws ParseException {
