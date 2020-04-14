@@ -440,32 +440,32 @@ public class TestGrammarLibrary {
   }
 
   public static Cfg emptyWordCfg() {
-    Cfg srcg = new Cfg();
-    srcg.setNonterminals(new String[] {"N0", "N1"});
-    srcg.setTerminals(new String[] {"t0", "t1"});
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"N0", "N1"});
+    cfg.setTerminals(new String[] {"t0", "t1"});
     try {
-      srcg.addProductionRule("N0 -> ε");
-      srcg.addProductionRule("N0 -> t0 t1");
-      srcg.addProductionRule("N1 -> ε");
+      cfg.addProductionRule("N0 -> ε");
+      cfg.addProductionRule("N0 -> t0 t1");
+      cfg.addProductionRule("N1 -> ε");
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
-    srcg.setStartSymbol("N0");
-    return srcg;
+    cfg.setStartSymbol("N0");
+    return cfg;
   }
 
   public static Cfg emptyWordNothingElseCfg() {
-    Cfg srcg = new Cfg();
-    srcg.setNonterminals(new String[] {"S"});
-    srcg.setTerminals(new String[] {});
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.setTerminals(new String[] {});
     try {
-      srcg.addProductionRule("S -> ε");
-      srcg.addProductionRule("S -> S S");
+      cfg.addProductionRule("S -> ε");
+      cfg.addProductionRule("S -> S S");
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
-    srcg.setStartSymbol("S");
-    return srcg;
+    cfg.setStartSymbol("S");
+    return cfg;
   }
 
   public static Pcfg niceUglyCarPcfg() {
