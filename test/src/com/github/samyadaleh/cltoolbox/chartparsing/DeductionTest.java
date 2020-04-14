@@ -211,8 +211,6 @@ public class DeductionTest {
         .cfgToEarleyRules(TestGrammarLibrary.emptyWordNothingElseCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertEquals(7,
-        deduction.getDerivedTrees().size());
     Tree tree = new Tree("(S (S (S (ε ))(S (ε )))(S (S (ε ))(S (ε ))))");
     assertTrue(deduction.getDerivedTrees().contains(tree));
   }
