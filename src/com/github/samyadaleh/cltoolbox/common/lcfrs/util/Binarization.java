@@ -17,13 +17,12 @@ public class Binarization {
 
   /** Returns true if each rhs contains at most two predicates. */
   public static boolean isBinarized(Srcg srcg) {
-    boolean binarized = true;
     for (Clause clause : srcg.getClauses()) {
       if (clause.getRhs().size() > 2) {
-        binarized = false;
+        return false;
       }
     }
-    return binarized;
+    return true;
   }
 
   /**
@@ -37,6 +36,8 @@ public class Binarization {
     newSrcg.setVariables(oldSrcg.getVariables());
     ArrayList<String> newNonterminals = new ArrayList<>();
     Collections.addAll(newNonterminals, oldSrcg.getNonterminals());
+    newSrcg.setNonterminals(
+        newNonterminals.toArray(new String[0]));
     for (Clause clause : oldSrcg.getClauses()) {
       if (clause.getRhs().size() <= 2) {
         newSrcg.addClause(clause);
@@ -58,11 +59,13 @@ public class Binarization {
               .getRhs().get(entry).getNonterminal());
           }
           String newNt =
-            getNewNonterminal(oldSrcg, nonterminaltoDeriveFrom.toString());
+            getNewNonterminal(newSrcg, nonterminaltoDeriveFrom.toString());
           newNonterminals.add(newNt);
+          newSrcg.setNonterminals(
+              newNonterminals.toArray(new String[0]));
           Clause clauseCandidate =
             getReducedClause(clausesToBeFurtherReduced.get(0), k, newNt,
-              clause.getLhs(), oldSrcg);
+                clausesToBeFurtherReduced.get(0).getLhs(), oldSrcg);
           if (clauseCandidate.getRhs().size() <= 2) {
             r.add(clauseCandidate);
           } else {
@@ -87,18 +90,16 @@ public class Binarization {
         }
       }
     }
-    newSrcg.setNonterminals(
-      newNonterminals.toArray(new String[0]));
     return newSrcg;
   }
 
   private static String getNewNonterminal(Srcg oldSrcg, String nonterminal) {
     String newNt;
     int i = 1;
-    newNt = nonterminal + String.valueOf(i);
+    newNt = nonterminal + i;
     i++;
     while (oldSrcg.nonterminalsContain(newNt)) {
-      newNt = nonterminal + String.valueOf(i);
+      newNt = nonterminal + i;
       i++;
     }
     return newNt;
@@ -224,7 +225,7 @@ public class Binarization {
   private static Clause getReducedClause(Clause clause, Integer[] j,
     String newNt, Predicate predicate, Srcg srcg) throws ParseException {
     StringBuilder newClause =
-      new StringBuilder(String.valueOf(predicate) + " ->");
+      new StringBuilder(predicate + " ->");
     List<Predicate> rhsPredToReduceBy = new ArrayList<>();
     for (int entry : j) {
       newClause.append(' ').append(clause.getRhs().get(entry).toString());

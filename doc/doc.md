@@ -502,7 +502,7 @@ the please flag is set without checking if it's needed or not.
 
 ##### SRCG Binarization
 
-The binarizaion of a simple range concatenation grammar follows an optimized 
+The binarization of a simple range concatenation grammar follows an optimized 
 approach. Similar to the binarization of a context free grammar for each clause
 with more than 2 left hand side predicates a new predicate with a new 
 nonterminal is introduced and replacing all but one predicate. However, which 
