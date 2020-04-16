@@ -113,11 +113,22 @@ public class Predicate {
   }
 
   /**
-   * Returns from argument i the js symbol. According to the definition the
+   * Returns from argument i the jth symbol. According to the definition the
    * indices for i start at 1.
    */
   public String getSymAt(int i, int j) {
     return this.symbols[i - 1][j];
+  }
+
+  /**
+   * Returns true if from argument i the jth symbol exists. According to the
+   * definition the indices for i start at 1.
+   */
+  public boolean hasSymAt(int i, int j) {
+    if (this.symbols.length >= i) {
+      return symbols[i - 1].length > j;
+    }
+    return false;
   }
 
   /**

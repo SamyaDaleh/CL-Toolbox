@@ -815,6 +815,26 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Srcg earleyGetSymAtFailSrcg() {
+    Srcg srcg = new Srcg();
+    srcg.setNonterminals(new String[] {"N0^[1]^1", "S'"});
+    srcg.setTerminals(new String[] {"t0", "t1"});
+    srcg.setVariables(new String[] {"X1", "X2"});
+    srcg.setStartSymbol("S'");
+    try {
+      srcg.addClause("S'(ε) -> ε");
+      srcg.addClause("S'(X1) -> N0^[1]^1(X1)");
+      srcg.addClause("N0^[1]^1(t0) -> ε");
+      srcg.addClause("N0^[1]^1(t0 t1) -> ε");
+      srcg.addClause("N0^[1]^1(t0 X1 t1) -> N0^[1]^1(X1)");
+      srcg.addClause("N0^[1]^1(t0 X2 t1) -> N0^[1]^1(X2)");
+      srcg.addClause("N0^[1]^1(t0 X1 X2 t1) -> N0^[1]^1(X1) N0^[1]^1(X2)");
+      return srcg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Ccg dedCcg() throws IOException {
     String ccgString = "Trip\tNP\n" + "merengue\tNP\n" + "likes\t(S\\NP)/NP\n"
         + "certainly\t(S\\NP)/(S\\NP)\n";

@@ -538,6 +538,20 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testSrcgEarleyGetSymAtFail() throws ParseException {
+    String w3 = "t0 t0 t0 t1";
+    ParsingSchema schema = LcfrsToEarleyRulesConverter
+        .srcgToEarleyRules(TestGrammarLibrary.earleyGetSymAtFailSrcg(), w3);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(
+        "(S' (N0^[1]^1 (N0^[1]^1 (N0^[1]^1 (t0<2> )(t1<3> ))(t0<1> )(t1 ))(t0<0> )(t1 )))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+
   @Test public void testPcfgAstar() throws ParseException {
     String w = "red nice ugly car";
     ParsingSchema schema = PcfgToAstarRulesConverter

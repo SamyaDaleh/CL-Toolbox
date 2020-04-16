@@ -52,7 +52,7 @@ public class SrcgEarleyComplete
           }
           String nt2 = rhsPred.getNonterminal();
           if (vectorsMatch && itemForm1[itemForm1.length - 2].equals(pos2) && nt
-              .equals(nt2)) {
+              .equals(nt2) && clause2Parsed.getLhs().hasSymAt(iInt2, jInt2)) {
             this.name =
                 DEDUCTION_RULE_LCFRS_EARLEY_COMPLETE + " " + clause2Parsed
                     .getLhs().getSymAt(iInt2, jInt2);
