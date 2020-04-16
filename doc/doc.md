@@ -62,6 +62,8 @@ how they work.
 * cfg-cyk-extended
 * cfg-cyk-general
 * cfg-earley
+* cfg-earley-bottomup
+* cfg-earley-passive
 * cfg-leftcorner
 * cfg-leftcorner-chart
 * cfg-topdown

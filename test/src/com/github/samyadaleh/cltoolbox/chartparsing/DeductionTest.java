@@ -152,6 +152,19 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgEarleyPassiveEmptyWord() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToEarleyPassiveRulesConverter
+        .cfgToEarleyPassiveRules(TestGrammarLibrary.emptyWordNothingElseCfg(),
+            w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals("(S (ε ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgLeftCornerChartGoalItems() throws ParseException {
     String w = "t0 t1";
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter

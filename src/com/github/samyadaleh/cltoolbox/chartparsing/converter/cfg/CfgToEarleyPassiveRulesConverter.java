@@ -56,16 +56,14 @@ public class CfgToEarleyPassiveRulesConverter {
         axiom.addConsequence(consequence);
         axiom.setName(DEDUCTION_RULE_CFG_EARLEY_AXIOM);
         schema.addAxiom(axiom);
-        if (rule.getRhs()[0].equals("")) {
-          schema.addGoal(
-              new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
-                  String.valueOf(wSplit.length)));
-        } else {
-          schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-              String.valueOf(wSplit.length)));
-        }
       }
 
+      if (w.length() == 0) {
+        schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0", "0"));
+      } else {
+        schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
+            String.valueOf(wSplit.length)));
+      }
       DynamicDeductionRuleInterface predict = new CfgEarleyPredict(rule);
       schema.addRule(predict);
     }
