@@ -4,6 +4,11 @@ import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.Abstrac
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
 
@@ -42,7 +47,23 @@ public class CfgEarleyPassiveComplete
           }
           ChartItemInterface consequence =
               new DeductionChartItem(newStack, itemForm1[1], itemForm2[2]);
-          consequence.setTrees(antecedences.get(0).getTrees());
+          List<Tree> derivedTrees = new ArrayList<>();
+          if (antecedences.get(0).getItemForm() == itemForm1) {
+            for (Tree tree1 : antecedences.get(0).getTrees()) {
+              for (Tree tree2 : antecedences.get(1).getTrees()) {
+                derivedTrees
+                    .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+              }
+            }
+          } else {
+            for (Tree tree2 : antecedences.get(0).getTrees()) {
+              for (Tree tree1 : antecedences.get(1).getTrees()) {
+                derivedTrees
+                    .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
+              }
+            }
+          }
+          consequence.setTrees(derivedTrees);
           logItemGeneration(consequence);
           consequences.add(consequence);
           break;

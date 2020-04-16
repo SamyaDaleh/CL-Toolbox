@@ -161,6 +161,7 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
+    assertEquals(2, deduction.getDerivedTrees().size());
     assertEquals("(S (ε ))",
         deduction.getDerivedTrees().get(0).toString());
   }
