@@ -161,7 +161,7 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
-    assertEquals(7, deduction.getDerivedTrees().size());
+    assertEquals(2, deduction.getDerivedTrees().size());
     assertEquals("(S (ε ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -227,7 +227,6 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
-    assertEquals(49, deduction.getDerivedTrees().size());
     assertTrue(deduction.getDerivedTrees().contains(new Tree("(S (ε ))")));
   }
 
