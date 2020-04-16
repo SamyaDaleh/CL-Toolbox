@@ -161,7 +161,7 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
-    assertEquals(2, deduction.getDerivedTrees().size());
+    assertEquals(7, deduction.getDerivedTrees().size());
     assertEquals("(S (ε ))",
         deduction.getDerivedTrees().get(0).toString());
   }
@@ -215,6 +215,20 @@ public class DeductionTest {
     deduction.printTrace(data);
     assertEquals("(N0 (t0 )(N0 (ε ))(t1 )(N0 (ε ))(N0 (ε )))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgEarleyBottomupEmptyWord()
+      throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToEarleyRulesConverter
+        .cfgToEarleyBottomupRules(TestGrammarLibrary.emptyWordNothingElseCfg(),
+            w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(49, deduction.getDerivedTrees().size());
+    assertTrue(deduction.getDerivedTrees().contains(new Tree("(S (ε ))")));
   }
 
   @Test public void testCfgEarleyEpsilon() throws ParseException {

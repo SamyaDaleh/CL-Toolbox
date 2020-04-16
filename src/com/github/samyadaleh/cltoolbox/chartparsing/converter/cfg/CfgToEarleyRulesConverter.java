@@ -125,7 +125,7 @@ public class CfgToEarleyRulesConverter {
         initialize.addConsequence(consequence);
         schema.addAxiom(initialize);
       }
-      if("".equals(rule.getRhs()[0])) {
+      if("".equals(rule.getRhs()[0]) || wLength == 0) {
         StaticDeductionRule initialize = new StaticDeductionRule();
         initialize.setName(DEDUCTION_RULE_CFG_EARLEY_BOTTOMUP_AXIOM);
         DeductionChartItem consequence =
@@ -136,7 +136,6 @@ public class CfgToEarleyRulesConverter {
         consequence.setTrees(derivedTrees);
         initialize.addConsequence(consequence);
         schema.addAxiom(initialize);
-
       }
     }
     return schema;
