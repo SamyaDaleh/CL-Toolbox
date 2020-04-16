@@ -164,6 +164,18 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgLeftCornerChartEmptyWord() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToLeftCornerChartRulesConverter
+        .cfgToLeftCornerChartRules(TestGrammarLibrary.emptyWordNothingElseCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(2, deduction.getDerivedTrees().size());
+    assertEquals("(S (ε ))", deduction.getDerivedTrees().get(0).toString());
+  }
+
   @Test public void testCfgLeftCornerScan() throws ParseException {
     String w = "";
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter

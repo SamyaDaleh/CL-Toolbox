@@ -90,8 +90,12 @@ public class CfgLeftCornerChartRemove
       if (antecedences.get(0).getTrees().size() > 0) {
         for (Tree tree1 : antecedences.get(0).getTrees()) {
           for (Tree tree2 : antecedences.get(1).getTrees()) {
-            derivedTrees
-                .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
+            try {
+              derivedTrees
+                  .add(TreeUtils.performLeftmostSubstitution(tree2, tree1));
+            } catch(StringIndexOutOfBoundsException e){
+              log.debug(e.getMessage(), e);
+            }
           }
         }
       } else {
