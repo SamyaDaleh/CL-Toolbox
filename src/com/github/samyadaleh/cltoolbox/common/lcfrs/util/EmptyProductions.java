@@ -333,11 +333,10 @@ public class EmptyProductions {
     for (int j = 0; j < clauseLhs.getDim(); j++) {
       String[] argument = clauseLhs.getArgumentByIndex(j + 1);
       StringBuilder newArgument = new StringBuilder();
-      for (int k = 0; k < argument.length; k++) {
+      for (String element : argument) {
         if (newArgument.length() > 0) {
           newArgument.append(' ');
         }
-        String element = argument[k];
         if (srcg.terminalsContain(element)) {
           newArgument.append(element);
         } else {
