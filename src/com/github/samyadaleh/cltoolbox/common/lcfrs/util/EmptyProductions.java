@@ -42,7 +42,8 @@ public class EmptyProductions {
   }
 
   /**
-   * Return an equivalent sRCG without epsilon as any lhs argument.
+   * Return an equivalent sRCG without epsilon as any lhs argument except the
+   * start symbol if it does not occur in any rhs.
    */
   public static Srcg getSrcgWithoutEmptyProductions(Srcg oldSrcg)
       throws ParseException {
@@ -293,12 +294,15 @@ public class EmptyProductions {
    * and 1 that specifies which arguments can become empty. 1 means it is not
    * empty, 0 it can become empty.
    */
-  static List<String[]> getEpsilonCandidates(Srcg srcg) {
+  private static List<String[]> getEpsilonCandidates(Srcg srcg) {
     ArrayList<String[]> epsilonCandidates = getDirectEpsilonCandidates(srcg);
     boolean changed = true;
     while (changed) {
       changed = false;
       for (Clause clause : srcg.getClauses()) {
+        if (clause.getRhs().size() == 0) {
+          continue;
+        }
         for (int i = 0; i < epsilonCandidates.size(); i++) {
           String[] candidate = epsilonCandidates.get(i);
           Predicate clauseLhs = clause.getLhs();
@@ -330,7 +334,7 @@ public class EmptyProductions {
       String[] argument = clauseLhs.getArgumentByIndex(j + 1);
       StringBuilder newArgument = new StringBuilder();
       for (int k = 0; k < argument.length; k++) {
-        if (k > 0) {
+        if (newArgument.length() > 0) {
           newArgument.append(' ');
         }
         String element = argument[k];
@@ -349,6 +353,7 @@ public class EmptyProductions {
             } else {
               newArgument.append(element);
             }
+            break;
           }
         }
       }
