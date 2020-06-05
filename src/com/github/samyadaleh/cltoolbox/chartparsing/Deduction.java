@@ -373,13 +373,13 @@ public class Deduction {
     Collections.sort(newItemsDeductedFrom);
     if (triggerItems.containsAll(newItems)) {
       log.info("Stopped tree update, because all items triggered an update on "
-          + "theirselves.");
+          + "themselves.");
       return;
     }
     for (ChartItemInterface newItem : newItems) {
       if (triggerItems.contains(newItem)) {
         log.info("Stopped tree update, because all items triggered an update on "
-            + "theirselves.");
+            + "themselves.");
       }
       if (chart.contains(newItem)) {
         int oldId = chart.indexOf(newItem);
