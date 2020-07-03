@@ -80,6 +80,14 @@ public class Deduction {
    * The highest amount of items the agenda contains at one point.
    */
   private int maxAgendaSize = 0;
+  /**
+   * Count how many tree updates were initially triggered.
+   */
+  private int treeUpdatesRoot = 0;
+  /**
+   * Count how many overall tree updates were triggered.
+   */
+  private int treeUpdatesAllLevels = 0;
   private static final Logger log = LogManager.getLogger();
 
   /**
@@ -107,6 +115,8 @@ public class Deduction {
     appliedRule = new ArrayList<>();
     deductionRules = schema.getRules();
     maxAgendaSize = 0;
+    treeUpdatesRoot = 0;
+    treeUpdatesAllLevels = 0;
     if (schema == null)
       return false;
     for (StaticDeductionRule rule : schema.getAxioms()) {
@@ -421,6 +431,10 @@ public class Deduction {
         if (!equals(oldTrees, newTrees)) {
           ArrayList<ChartItemInterface> newTriggerItems =
               new ArrayList<>(triggerItems);
+          if (triggerItems.size() == 0) {
+            treeUpdatesRoot++;
+          }
+          treeUpdatesAllLevels++;
           newTriggerItems.add(newItem);
           triggerTreeUpdate(oldId, newTriggerItems);
         }
@@ -752,5 +766,21 @@ public class Deduction {
 
   public void setMaxAgendaSize(int maxAgendaSize) {
     this.maxAgendaSize = maxAgendaSize;
+  }
+
+  public int getTreeUpdatesRoot() {
+    return treeUpdatesRoot;
+  }
+
+  public void setTreeUpdatesRoot(int treeUpdatesRoot) {
+    this.treeUpdatesRoot = treeUpdatesRoot;
+  }
+
+  public int getTreeUpdatesAllLevels() {
+    return treeUpdatesAllLevels;
+  }
+
+  public void setTreeUpdatesAllLevels(int treeUpdatesAllLevels) {
+    this.treeUpdatesAllLevels = treeUpdatesAllLevels;
   }
 }
