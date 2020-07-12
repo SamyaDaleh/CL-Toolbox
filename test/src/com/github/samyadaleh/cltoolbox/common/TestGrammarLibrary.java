@@ -468,6 +468,20 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg highlyRecursiveCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.setTerminals(new String[] {});
+    try {
+      cfg.addProductionRule("S -> a");
+      cfg.addProductionRule("S -> S S");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});

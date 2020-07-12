@@ -14,6 +14,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -75,6 +76,21 @@ public class DeductionTest {
     deduction.printTrace(data);
     assertEquals("(S (a )(S (a )(b ))(b ))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Ignore("#258") public void testCfgShiftreduceRecursiveTrees() throws ParseException {
+    String w = "a a a";
+    ParsingSchema schema = CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(
+        Objects.requireNonNull(TestGrammarLibrary.highlyRecursiveCfg()), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(2, deduction.getDerivedTrees().size());
+    assertEquals("(S (S (S (a ))(S (a )))(S (a )))",
+        deduction.getDerivedTrees().get(0).toString());
+    assertEquals("(S (S (a ))(S (S (a ))(S (a ))))",
+        deduction.getDerivedTrees().get(1).toString());
   }
 
   @Test public void testCfgShiftreduceEpsilon() throws ParseException {
