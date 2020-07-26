@@ -51,10 +51,10 @@ public class LeftRecursion {
         return null;
       }
       int i = 1;
-      String newNt = nt + String.valueOf(i);
+      String newNt = nt + i;
       i++;
       while (newNts.contains(newNt) || cfg.terminalsContain(newNt)) {
-        newNt = nt + String.valueOf(i);
+        newNt = nt + i;
         i++;
       }
       newNts.add(newNt);
@@ -67,9 +67,9 @@ public class LeftRecursion {
   private static void removeDirectLeftRecursion(Cfg cfg,
     ArrayList<String> newNts, String nt) throws ParseException {
     int l = 1;
-    String newNt = nt + String.valueOf(l);
+    String newNt = nt + l;
     while (newNts.contains(newNt) || cfg.terminalsContain(newNt)) {
-      newNt = nt + String.valueOf(l);
+      newNt = nt + l;
       l++;
     }
     newNts.add(newNt);
