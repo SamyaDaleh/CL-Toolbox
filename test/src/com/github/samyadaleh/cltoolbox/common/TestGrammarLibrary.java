@@ -439,6 +439,23 @@ public class TestGrammarLibrary {
     }
   }
 
+  public static Cfg leftFactorCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a", "b", "c", "d", "e"});
+    cfg.setNonterminals(new String[] {"A", "S"});
+    try {
+      cfg.addProductionRule("A -> a b c");
+      cfg.addProductionRule("S -> a b c d");
+      cfg.addProductionRule("S -> a b c e");
+      cfg.addProductionRule("S -> a b d");
+      cfg.addProductionRule("S -> a");
+      cfg.setStartSymbol("S");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Cfg emptyWordCfg() {
     Cfg cfg = new Cfg();
     cfg.setNonterminals(new String[] {"N0", "N1"});

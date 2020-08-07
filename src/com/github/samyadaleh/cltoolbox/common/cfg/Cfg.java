@@ -241,4 +241,8 @@ public class Cfg extends AbstractCfg {
     return UselessSymbols.hasGeneratingSymbols(this);
   }
 
+  public Cfg getLeftFactoredCfg() {
+    return Factoring.getLeftFactoredCfg(this);
+  }
+
 }
