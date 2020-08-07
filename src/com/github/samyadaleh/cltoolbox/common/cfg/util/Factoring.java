@@ -20,7 +20,10 @@ public class Factoring {
     Cfg cfgNew = new Cfg();
     cfgNew.setStartSymbol(cfgOld.getStartSymbol());
     try {
-      List<CfgProductionRule> newProductionRules = cfgOld.getProductionRules();
+      List<CfgProductionRule> newProductionRules = new ArrayList<>();
+      for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+        newProductionRules.add(new CfgProductionRule(rule.toString()));
+      }
       cfgNew.setTerminals(cfgOld.getTerminals());
       List<String> newNonterminals =
           new ArrayList<>(Arrays.asList(cfgOld.getNonterminals()));
@@ -66,7 +69,7 @@ public class Factoring {
           .equals(longestPrefix)) {
         productionRules.remove(j);
         String rhsRest = ArrayUtils
-            .getSubSequenceAsString(rule.getRhs(), longestPrefix.length(),
+            .getSubSequenceAsString(rule.getRhs(), prefLength,
                 rule.getRhs().length);
         productionRules.add(new CfgProductionRule(newNt + " -> " + rhsRest));
       }
