@@ -65,4 +65,20 @@ public class CfgProductionRule {
       return lhs + " -> " + String.join(" ", rhs);
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof CfgProductionRule){
+      return o.toString().equals(this.toString());
+    }
+    if (o instanceof String) {
+      return o.equals(this.toString());
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.toString().hashCode();
+  }
 }

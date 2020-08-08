@@ -20,10 +20,12 @@ public class Factoring {
     Cfg cfgNew = new Cfg();
     cfgNew.setStartSymbol(cfgOld.getStartSymbol());
     try {
-      List<CfgProductionRule> newProductionRules = new ArrayList<>();
+      Set<CfgProductionRule> newProductionRulesSet = new LinkedHashSet<>();
       for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-        newProductionRules.add(new CfgProductionRule(rule.toString()));
+        newProductionRulesSet.add(new CfgProductionRule(rule.toString()));
       }
+      List<CfgProductionRule> newProductionRules =
+          new ArrayList<>(newProductionRulesSet);
       cfgNew.setTerminals(cfgOld.getTerminals());
       List<String> newNonterminals =
           new ArrayList<>(Arrays.asList(cfgOld.getNonterminals()));
