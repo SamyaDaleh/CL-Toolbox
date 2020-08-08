@@ -88,7 +88,7 @@ public class Factoring {
         continue;
       }
       String[] rhs = rule.getRhs();
-      for (int i = 1; i < rhs.length; i++) {
+      for (int i = 1; i <= rhs.length; i++) {
         String prefix = ArrayUtils.getSubSequenceAsString(rhs, 0, i);
         if (prefixes.containsKey(prefix)) {
           prefixes.put(prefix, prefixes.get(prefix) + 1);

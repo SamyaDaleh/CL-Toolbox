@@ -27,7 +27,6 @@ public class CfgParserTest {
     Cfg cfg = CfgParser.parseCfgReader(reader);
   }
 
-
   @Test public void testParseCfgAndLeftFactor() throws ParseException {
     StringReader reader = new StringReader(
         "N = {S1, N0, X1, X2, X3, X4, X5, Y1, Y2}\n" + "T = {t0, t1, t2}\n"
@@ -38,5 +37,15 @@ public class CfgParserTest {
         + "N = {S1, N0, X1, X2, X3, X4, X5, Y1, Y2, N1, N2}\n"
         + "T = {t0, t1, t2}\n" + "S = S1\n"
         + "P = {S1 -> ε, S1 -> t1, S1 -> Y2 N0, S1 -> t0, S1 -> t2, N0 -> t1, N0 -> Y2 N0, N0 -> t0, N0 -> t2, X1 -> Y2 X2, X2 -> N0 N0, X3 -> N0 N0, X4 -> Y2 N0, X5 -> Y2 N0, Y1 -> t2, Y2 -> t0, N1 -> Y2, N1 -> N0, N1 -> X5, N1 -> X4, N1 -> X3, N1 -> X1, S1 -> Y1 N1, N2 -> Y2, N2 -> N0, N2 -> X5, N2 -> X4, N2 -> X3, N2 -> X1, N0 -> Y1 N2}\n", cfg.getLeftFactoredCfg().toString());
+  }
+
+  @Test public void testParseCfgAndLeftFactor2() throws ParseException {
+    StringReader reader = new StringReader(
+        "N = {S, A, B}\n" + "T = {a, b}\n" + "S = S\n"
+            + "P = {S -> a B | b A, A -> a S | b A A | a, B -> b S | a B B | b}");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    assertEquals("G = <N, T, S, P>\n" + "N = {S, A, B, N1, N2}\n"
+        + "T = {a, b}\n" + "S = S\n"
+        + "P = {S -> a B, S -> b A, A -> b A A, B -> a B B, N1 -> ε, N1 -> S, A -> a N1, N2 -> ε, N2 -> S, B -> b N2}\n", cfg.getLeftFactoredCfg().toString());
   }
 }
