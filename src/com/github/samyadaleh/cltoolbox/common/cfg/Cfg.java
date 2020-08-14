@@ -2,11 +2,12 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
 import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerCfgGrammarParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Representation of a context-free grammar consisting of nonterminals,
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class Cfg extends AbstractCfg {
   private final List<CfgProductionRule> productionRules = new ArrayList<>();
+  private static final Logger log = LogManager.getLogger();
 
   public Cfg() {
     super();
@@ -245,4 +247,28 @@ public class Cfg extends AbstractCfg {
     return Factoring.getLeftFactoredCfg(this);
   }
 
+  public Cfg getCfgWithoutDuplicates() {
+    Cfg cfg = new Cfg();
+    cfg.setStartSymbol(this.getStartSymbol());
+    Set<CfgProductionRule> newProductionRulesSet = new LinkedHashSet<>();
+    try {
+      for (CfgProductionRule rule : this.getProductionRules()) {
+        newProductionRulesSet.add(new CfgProductionRule(rule.toString()));
+      }
+      List<CfgProductionRule> newProductionRules =
+          new ArrayList<>(newProductionRulesSet);
+      for (CfgProductionRule rule : newProductionRules) {
+        cfg.addProductionRule(rule.toString());
+      }
+    } catch (ParseException e) {
+      log.debug("Should never happen", e);
+    }
+    Set<String> setTerminals =
+        new LinkedHashSet<>(Arrays.asList(this.getTerminals()));
+    cfg.setTerminals(setTerminals.toArray(new String[0]));
+    Set<String> setNonterminals =
+        new LinkedHashSet<>(Arrays.asList(this.getNonterminals()));
+    cfg.setNonterminals(setNonterminals.toArray(new String[0]));
+    return cfg;
+  }
 }
