@@ -32,7 +32,7 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
                 .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length),
             i, l);
         CfgLeftCornerUtils
-            .generateDerivedTrees(rule, antecedences, consequence);
+            .generateDerivedChartTrees(rule, antecedences, consequence);
         logItemGeneration(consequence);
         consequences.add(consequence);
       }

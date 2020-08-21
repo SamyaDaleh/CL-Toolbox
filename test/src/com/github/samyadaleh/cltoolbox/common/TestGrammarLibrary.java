@@ -499,6 +499,23 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg leftCornerChartExceptionCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"N0", "N1"});
+    cfg.setTerminals(new String[] {"t0", "t1"});
+    try {
+      cfg.addProductionRule("N0 -> t1 N0");
+      cfg.addProductionRule("N0 -> ε");
+      cfg.addProductionRule("N0 -> N1 N1");
+      cfg.addProductionRule("N1 -> t0 N0 N0");
+      cfg.addProductionRule("N1 -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("N0");
+    return cfg;
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});

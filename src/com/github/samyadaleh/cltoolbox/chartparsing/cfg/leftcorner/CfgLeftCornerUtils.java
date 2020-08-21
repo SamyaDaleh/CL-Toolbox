@@ -11,6 +11,30 @@ import java.util.List;
 
 public class CfgLeftCornerUtils {
 
+  public static void generateDerivedChartTrees(CfgProductionRule rule,
+      List<ChartItemInterface> antecedences, ChartItemInterface consequence) {
+    try {
+      List<Tree> antDerivedTrees = antecedences.get(0).getTrees();
+      List<Tree> derivedTrees = new ArrayList<>();
+      if (antDerivedTrees.size() > 0 && antDerivedTrees
+          .get(antDerivedTrees.size() - 1).getRoot().getLabel()
+          .equals(rule.getRhs()[0])) {
+        for (int j = 0; j < antecedences.get(0).getTrees().size(); j++) {
+          Tree derivedTreeBase = new Tree(rule);
+          derivedTreeBase = TreeUtils
+              .performLeftmostSubstitution(derivedTreeBase,
+                  antecedences.get(0).getTrees().get(j));
+          derivedTrees.add(derivedTreeBase);
+        }
+      } else {
+        derivedTrees.add(new Tree(rule));
+      }
+      consequence.setTrees(derivedTrees);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static void generateDerivedTrees(CfgProductionRule rule,
       List<ChartItemInterface> antecedences, ChartItemInterface consequence) {
     Tree derivedTreeBase;
