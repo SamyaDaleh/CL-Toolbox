@@ -26,19 +26,18 @@ public class CfgToLrKRulesConverter {
     axiom.setName(DEDUCTION_RULE_CFG_LRK_AXIOM);
     axiom.addConsequence(new DeductionChartItem("q0", "0"));
     schema.addAxiom(axiom);
-    String[] initialState;
-    if (k > 0) {
-      initialState =
-          new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol(),
-              "$"};
-    } else {
-      initialState =
-          new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol()};
-    }
+    String[] initialState = computeInitialState(cfg, k);
     List<List<String[]>> states = computeStates(cfg, initialState, k);
     printStates(states);
     Map<String, String> parseTable =
-        computeParseTable(states, initialState, wSplit, schema, cfg, k);
+        computeParseTable(states, initialState, wSplit.length, schema, cfg, k);
+    for (Map.Entry<String, String> entry : parseTable.entrySet()) {
+      if (entry.getValue().split(", ").length > 1) {
+        throw new ParseException(
+            "Shift-Reduce conflict for state " + entry.getKey()
+                + ", grammar cannot be parsed with LR(" + k + ").", 1);
+      }
+    }
     printParseTable(parseTable, states.size());
     List<String> statesWithShifts = new ArrayList<>();
     List<String> statesWithReduces = new ArrayList<>();
@@ -70,6 +69,19 @@ public class CfgToLrKRulesConverter {
       }
     }
     return schema;
+  }
+
+  public static String[] computeInitialState(Cfg cfg, int k) {
+    String[] initialState;
+    if (k > 0) {
+      initialState =
+          new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol(),
+              "$"};
+    } else {
+      initialState =
+          new String[] {cfg.getStartSymbol() + "' -> •" + cfg.getStartSymbol()};
+    }
+    return initialState;
   }
 
   private static void printStates(List<List<String[]>> states) {
@@ -145,8 +157,8 @@ public class CfgToLrKRulesConverter {
     log.debug(line.toString());
   }
 
-  private static Map<String, String> computeParseTable(
-      List<List<String[]>> states, String[] initialState, String[] wSplit,
+  public static Map<String, String> computeParseTable(
+      List<List<String[]>> states, String[] initialState, int wSplitLength,
       ParsingSchema schema, Cfg cfg, int k) {
     Map<String, String> parseTable = new HashMap<>();
     String[] finalState = initialState.clone();
@@ -158,7 +170,7 @@ public class CfgToLrKRulesConverter {
         parseTable.put(i + " $", DEDUCTION_ACTION_CFG_LRK_ACCEPT);
         schema.addGoal(
             new DeductionChartItem("q0 " + cfg.getStartSymbol() + " q" + i,
-                String.valueOf(wSplit.length)));
+                String.valueOf(wSplitLength)));
       }
     }
     addGotoActionToParseTable(states, cfg, k, parseTable);
@@ -192,9 +204,7 @@ public class CfgToLrKRulesConverter {
               .equals(cfg.getProductionRules().get(j).toString())) {
             String key = i + " $";
             if (parseTable.containsKey(key)) {
-              throw new IllegalArgumentException(
-                  "Second reduce entry for " + key
-                      + " generated. Grammar cannot be LR(" + k + ") parsed.");
+              parseTable.put(key,parseTable.get(key) + ", " + "r" + (j + 1));
             }
             parseTable.put(key, "r" + (j + 1));
           }
@@ -211,8 +221,9 @@ public class CfgToLrKRulesConverter {
         if (equals(gotoState, states.get(j))) {
           String key = i + " " + t;
           if (parseTable.containsKey(key)) {
-            throw new IllegalArgumentException("Second shift entry for " + key
-                + " generated. Grammar cannot be LR(" + k + ") parsed.");
+            parseTable.put(key,
+                parseTable.get(key) + ", " + DEDUCTION_ACTION_CFG_LRK_SHIFT
+                    + j);
           }
           parseTable.put(key, DEDUCTION_ACTION_CFG_LRK_SHIFT + j);
           break;
@@ -243,7 +254,7 @@ public class CfgToLrKRulesConverter {
     return false;
   }
 
-  private static List<List<String[]>> computeStates(Cfg cfg,
+  public static List<List<String[]>> computeStates(Cfg cfg,
       String[] initialState, int k) {
     List<List<String[]>> states = new ArrayList<>();
     List<String[]> initialClosure = new ArrayList<>();
