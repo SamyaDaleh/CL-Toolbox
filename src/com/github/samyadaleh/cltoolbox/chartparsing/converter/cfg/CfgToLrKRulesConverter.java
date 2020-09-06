@@ -205,8 +205,9 @@ public class CfgToLrKRulesConverter {
             String key = i + " $";
             if (parseTable.containsKey(key)) {
               parseTable.put(key,parseTable.get(key) + ", " + "r" + (j + 1));
+            } else {
+              parseTable.put(key, "r" + (j + 1));
             }
-            parseTable.put(key, "r" + (j + 1));
           }
         }
       }
