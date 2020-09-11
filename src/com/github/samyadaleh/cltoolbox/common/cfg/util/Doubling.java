@@ -27,7 +27,8 @@ public class Doubling {
     Cfg cfg = cfgOld.getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
     List<CfgProductionRule> newRules =
         new ArrayList<>(cfg.getProductionRules());
-    List<String> newNonterminals = Arrays.asList(cfg.getNonterminals());
+    List<String> newNonterminals =
+        new ArrayList<>(Arrays.asList(cfg.getNonterminals()));
 
     for (int i = 0; i < newRules.size(); i++) {
       CfgProductionRule rule = newRules.get(i);
@@ -57,6 +58,7 @@ public class Doubling {
             if (newNt == null) {
               newNt = introduceNewNonterminal(newNonterminals, lc);
               duplicateRules(newRules, lc, newNt);
+              newNonterminals.add(newNt);
             }
             replaceInnerNonterminal(newRules, newNt, j, rule2, k);
           }

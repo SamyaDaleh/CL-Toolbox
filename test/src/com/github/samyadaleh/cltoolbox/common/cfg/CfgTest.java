@@ -161,8 +161,8 @@ public class CfgTest {
             + "P = {S -> A | B U, A -> a A | a, B -> b B | b, U -> a U a | a a}");
     Cfg cfg = CfgParser.parseCfgReader(reader);
     assertEquals(
-        "G = <N, T, S, P>\n" + "N = {S, A, B, U, Y1, Y2}\n" + "T = {a, b}\n"
-            + "S = S\n"
+        "G = <N, T, S, P>\n" + "N = {S, A, B, U, Y1, Y2, A', B', Y1'}\n"
+            + "T = {a, b}\n" + "S = S\n"
             + "P = {S -> A, S -> B U, Y1 -> a, A -> Y1 A', A -> a, Y2 -> b, "
             + "B -> Y2 B', B -> b, U -> Y1 U Y1', U -> Y1 Y1', A' -> Y1 A', "
             + "A' -> a, B' -> Y2 B', B' -> b, Y1' -> a}\n",
