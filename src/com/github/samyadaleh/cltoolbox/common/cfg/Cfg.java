@@ -271,4 +271,13 @@ public class Cfg extends AbstractCfg {
     cfg.setNonterminals(setNonterminals.toArray(new String[0]));
     return cfg;
   }
+
+  /**
+   * Returns a Cfg where no nonterminal appears both as lc and in other places
+   * by doubling respective nonterminals and their rules.
+   * Separates terminals from nonterminals beforehand.
+   */
+  public Cfg getCfgWithDoubledRules() throws ParseException {
+    return Doubling.doubleSymbols(this);
+  }
 }
