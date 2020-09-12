@@ -168,4 +168,17 @@ public class CfgTest {
             + "A' -> a, B' -> Y2 B', B' -> b, Y1' -> a}\n",
         cfg.getCfgWithDoubledRules().toString());
   }
+
+  @Test public void testLeftFactoring() throws ParseException {
+    StringReader reader = new StringReader(
+        "G = <N, T, S, P>\n" + "N = {N0, S1}\n" + "T = {t0, t1, t2}\n"
+            + "S = S1\n"
+            + "P = {N0 -> t2 N0 N0, N0 -> t0 t2 t2, N0 -> t2 N0, N0 -> t0 N0, N0 -> t0 N0 t1, N0 -> t2, N0 -> t0, N0 -> t0 t1, S1 -> N0, S1 -> ε}\n");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    assertEquals(
+        "G = <N, T, S, P>\n" + "N = {N0, S1, N1, N2, N3, N4}\n"
+            + "T = {t0, t1, t2}\n" + "S = S1\n"
+            + "P = {S1 -> N0, S1 -> ε, N1 -> ε, N1 -> N0, N2 -> t1, N2 -> ε, N3 -> N0 N2, N3 -> t1, N3 -> ε, N3 -> t2 t2, N0 -> t0 N3, N4 -> N0 N1, N4 -> ε, N0 -> t2 N4}\n",
+        cfg.getLeftFactoredCfg().toString());
+  }
 }

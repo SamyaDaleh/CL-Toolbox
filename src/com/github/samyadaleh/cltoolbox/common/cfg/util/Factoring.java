@@ -56,7 +56,7 @@ public class Factoring {
   private static void replacePrefix(String lhs,
       List<CfgProductionRule> productionRules, List<String> nonterminals,
       String longestPrefix) throws ParseException {
-    int prefLength =  (longestPrefix.length() + 1) / 2;
+    int prefLength = longestPrefix.split(" ").length;
     int i = 1;
     String newNt = "N" + i;
     while (nonterminals.contains(newNt)) {
@@ -70,6 +70,7 @@ public class Factoring {
           && ArrayUtils.getSubSequenceAsString(rule.getRhs(), 0, prefLength)
           .equals(longestPrefix)) {
         productionRules.remove(j);
+        j++;
         String rhsRest = ArrayUtils
             .getSubSequenceAsString(rule.getRhs(), prefLength,
                 rule.getRhs().length);
