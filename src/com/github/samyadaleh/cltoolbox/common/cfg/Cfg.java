@@ -280,4 +280,22 @@ public class Cfg extends AbstractCfg {
   public Cfg getCfgWithDoubledRules() throws ParseException {
     return Doubling.doubleSymbols(this);
   }
+
+  /**
+   * Returns true if all rules are of the format T*N?
+   */
+  public boolean isRightLinear() {
+    for (CfgProductionRule rule : productionRules) {
+      boolean nSawn = false;
+      for (String rhsSym : rule.getRhs()) {
+        if(nonterminalsContain(rhsSym)){
+          if (nSawn) {
+            return false;
+          }
+          nSawn = true;
+        }
+      }
+    }
+    return true;
+  }
 }
