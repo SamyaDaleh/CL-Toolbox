@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.util.*;
+import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerCfgGrammarParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +38,24 @@ public class Cfg extends AbstractCfg {
 
   public Cfg(BufferedReader in) throws ParseException {
     new InnerCfgGrammarParser(this, in).invoke();
+  }
+
+  public Cfg(NondeterministicFiniteAutomaton nfa) {
+    setTerminals(nfa.getTerminals());
+    setStartSymbol(nfa.getInitialState());
+    setNonterminals(nfa.getStates());
+    for (Map.Entry<String[], String[]> entry : nfa.getTransitionFunction()
+        .entrySet()) {
+      for (String transitionState : entry.getValue()) {
+        try {
+          productionRules.add(new CfgProductionRule(
+              entry.getKey()[0] + " -> " + entry.getKey()[1] + " "
+                  + transitionState));
+        } catch (ParseException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
   }
 
   public List<CfgProductionRule> getProductionRules() {
@@ -288,14 +307,18 @@ public class Cfg extends AbstractCfg {
     for (CfgProductionRule rule : productionRules) {
       boolean nSawn = false;
       for (String rhsSym : rule.getRhs()) {
-        if(nonterminalsContain(rhsSym)){
-          if (nSawn) {
-            return false;
-          }
+        if (nSawn) {
+          return false;
+        }
+        if (nonterminalsContain(rhsSym)) {
           nSawn = true;
         }
       }
     }
     return true;
+  }
+
+  public Cfg getCfgWithReversedProductionRules() {
+    return ReverseProductionRules.getCfgWithReversedProductionRules(this);
   }
 }

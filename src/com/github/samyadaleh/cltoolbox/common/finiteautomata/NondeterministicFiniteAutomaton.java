@@ -2,6 +2,8 @@ package com.github.samyadaleh.cltoolbox.common.finiteautomata;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
+import com.github.samyadaleh.cltoolbox.common.finiteautomata.util.ReverseLanguage;
+import com.github.samyadaleh.cltoolbox.common.finiteautomata.util.UnifyFinalStates;
 
 import java.text.ParseException;
 import java.util.*;
@@ -11,11 +13,18 @@ import java.util.*;
  * 2011 p. 85.
  */
 public class NondeterministicFiniteAutomaton {
+
   private String[] states;
   private String[] terminals;
   private String initialState;
   private String[] finalStates;
   private Map<String[], String[]> transitionFunction;
+
+  /**
+   * CTOR for programmatic construction.
+   */
+  public NondeterministicFiniteAutomaton() {
+  }
 
   /**
    * Creates a finite automata from a rightlinear cfg.
@@ -25,9 +34,17 @@ public class NondeterministicFiniteAutomaton {
       Map<String[], List<String>> newTransitionFunction = new HashMap<>();
       terminals = cfg.getTerminals();
       initialState = cfg.getStartSymbol();
-      List<String> newStates = Arrays.asList(cfg.getNonterminals());
-      newStates.add("ε");
-      finalStates = new String[]{"ε"};
+      List<String> newStates =
+          new ArrayList<>(Arrays.asList(cfg.getNonterminals()));
+      int i = 0;
+      String newFinalState = "q_" + i;
+      while (cfg.terminalsContain(newFinalState) || cfg
+          .nonterminalsContain(newFinalState)) {
+        i++;
+        newFinalState = "q_" + i;
+      }
+      newStates.add(newFinalState);
+      finalStates = new String[] {newFinalState};
       for (CfgProductionRule rule : cfg.getProductionRules()) {
         String[] rhs = rule.getRhs();
         String lastState = rule.getLhs();
@@ -36,11 +53,11 @@ public class NondeterministicFiniteAutomaton {
           if (!newTransitionFunction.containsKey(key)) {
             newTransitionFunction.put(key, new ArrayList<>());
           }
-          newTransitionFunction.get(key).add("ε");
+          newTransitionFunction.get(key).add(newFinalState);
           continue;
         }
-        for (int i = 0; i < rhs.length; i++) {
-          String rhsSym = rhs[i];
+        for (int j = 0; j < rhs.length; j++) {
+          String rhsSym = rhs[j];
           if (cfg.nonterminalsContain(rhsSym)) {
             String[] key = new String[] {lastState, "ε"};
             if (!newTransitionFunction.containsKey(key)) {
@@ -53,10 +70,10 @@ public class NondeterministicFiniteAutomaton {
             if (!newTransitionFunction.containsKey(key)) {
               newTransitionFunction.put(key, new ArrayList<>());
             }
-            if (i == rhs.length - 1) {
-              newTransitionFunction.get(key).add("ε");
+            if (j == rhs.length - 1) {
+              newTransitionFunction.get(key).add(newFinalState);
             } else {
-              String nextRhsSym = rhs[i + 1];
+              String nextRhsSym = rhs[j + 1];
               if (cfg.nonterminalsContain(nextRhsSym)) {
                 newTransitionFunction.get(key).add(nextRhsSym);
                 break;
@@ -115,5 +132,72 @@ public class NondeterministicFiniteAutomaton {
 
   public Map<String[], String[]> getTransitionFunction() {
     return transitionFunction;
+  }
+
+  public void setStates(String[] states) {
+    this.states = states;
+  }
+
+  public void setTerminals(String[] terminals) {
+    this.terminals = terminals;
+  }
+
+  public void setInitialState(String initialState) {
+    this.initialState = initialState;
+  }
+
+  public void setFinalStates(String[] finalStates) {
+    this.finalStates = finalStates;
+  }
+
+  public void setTransitionFunction(
+      Map<String[], String[]> transitionFunction) {
+    this.transitionFunction = transitionFunction;
+  }
+
+  public NondeterministicFiniteAutomaton getReversedLanguageAutomaton() {
+    return ReverseLanguage.getReversedLanguageAutomaton(this);
+  }
+
+  public NondeterministicFiniteAutomaton getNfaWithSingleFinalState() {
+    return UnifyFinalStates.getNfaWithSingleFinalState(this);
+  }
+
+  @Override public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("A = <Q, Σ, δ, q0, F>\n");
+
+    builder.append("Q = {");
+    if (this.getStates() != null) {
+      builder.append(String.join(", ", this.getStates()));
+    }
+    builder.append("}\n").append("Σ = {");
+    if (this.getTerminals() != null) {
+      builder.append(String.join(", ", this.getTerminals()));
+    }
+    builder.append("}\n").append("δ = {");
+    appendTransitionFunctionRepresentation(builder);
+    builder.append("}\n").append("q0 = ").append(this.getInitialState())
+        .append("\n");
+    builder.append("F = {");
+    if (this.getTerminals() != null) {
+      builder.append(String.join(", ", this.getFinalStates()));
+    }
+    builder.append("}\n");
+    return builder.toString();
+  }
+
+  private void appendTransitionFunctionRepresentation(StringBuilder builder) {
+    boolean notFirst = false;
+    for (Map.Entry<String[], String[]> entry : getTransitionFunction()
+        .entrySet()) {
+      if (notFirst) {
+        builder.append(", ");
+      }
+      notFirst = true;
+      builder.append("δ(").append(entry.getKey()[0]).append(", ")
+          .append(entry.getKey()[1]).append(") = {")
+          .append(String.join(", ", entry.getValue())).append("}");
+    }
   }
 }

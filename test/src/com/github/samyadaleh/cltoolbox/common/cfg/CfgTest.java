@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Objects;
 
+import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import org.junit.Test;
 
@@ -180,5 +181,20 @@ public class CfgTest {
             + "T = {t0, t1, t2}\n" + "S = S1\n"
             + "P = {S1 -> N0, S1 -> ε, N1 -> ε, N1 -> N0, N2 -> t1, N2 -> ε, N3 -> N0 N2, N3 -> t1, N3 -> ε, N3 -> t2 t2, N0 -> t0 N3, N4 -> N0 N1, N4 -> ε, N0 -> t2 N4}\n",
         cfg.getLeftFactoredCfg().toString());
+  }
+
+  @Test public void testLeftToRightLinearGrammar() throws ParseException {
+    StringReader reader = new StringReader(
+        "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
+            + "P = {S -> a S | a, S -> b S | b}\n");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    assertTrue(cfg.isRightLinear());
+    NondeterministicFiniteAutomaton nfa = new NondeterministicFiniteAutomaton(cfg);
+    NondeterministicFiniteAutomaton nfaRev = nfa.getReversedLanguageAutomaton();
+    Cfg cfgRev = new Cfg(nfaRev);
+    Cfg cfgLeftLinear = cfgRev.getCfgWithReversedProductionRules();
+    assertFalse(cfgLeftLinear.isRightLinear());
+    assertEquals("G = <N, T, S, P>\n" + "N = {S, q_0}\n" + "T = {a, b}\n"
+        + "S = q_0\n" + "P = {S -> S a, S -> S b, q_0 -> S a, q_0 -> S b}\n", cfgLeftLinear.toString());
   }
 }
