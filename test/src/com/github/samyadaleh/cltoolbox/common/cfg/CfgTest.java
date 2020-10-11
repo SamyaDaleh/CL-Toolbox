@@ -195,6 +195,7 @@ public class CfgTest {
     Cfg cfgLeftLinear = cfgRev.getCfgWithReversedProductionRules();
     assertFalse(cfgLeftLinear.isRightLinear());
     assertEquals("G = <N, T, S, P>\n" + "N = {S, q_0}\n" + "T = {a, b}\n"
-        + "S = q_0\n" + "P = {S -> S a, S -> S b, q_0 -> S a, q_0 -> S b}\n", cfgLeftLinear.toString());
+        + "S = q_0\n"
+        + "P = {S -> S a, S -> S b, q_0 -> S a, q_0 -> S b, S -> ε}\n", cfgLeftLinear.toString());
   }
 }

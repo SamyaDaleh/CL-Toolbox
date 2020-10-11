@@ -56,6 +56,13 @@ public class Cfg extends AbstractCfg {
         }
       }
     }
+    for (String finalState : nfa.getFinalStates()) {
+      try {
+        productionRules.add(new CfgProductionRule(finalState + " -> ε"));
+      } catch (ParseException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
   public List<CfgProductionRule> getProductionRules() {
