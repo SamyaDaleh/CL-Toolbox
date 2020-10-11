@@ -40,6 +40,9 @@ public class AbstractNTSGrammar {
 
   /** Returns true if there is at least one rule with an empty right side. */
   public boolean nonterminalsContain(String mayNt) {
+    if (nonterminals == null) {
+      return false;
+    }
     for (String nt : nonterminals) {
       if (nt.equals(mayNt))
         return true;

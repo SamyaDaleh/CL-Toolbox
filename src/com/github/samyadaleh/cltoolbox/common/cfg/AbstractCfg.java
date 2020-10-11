@@ -25,4 +25,5 @@ public abstract class AbstractCfg extends AbstractNTSGrammar {
   }
 
   protected abstract void appendRuleRepresentation(StringBuilder builder);
+
 }
