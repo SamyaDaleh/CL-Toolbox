@@ -23,10 +23,10 @@ public class UnifyFinalStates {
     nfaNew.setTerminals(nfa.getTerminals());
     nfaNew.setInitialState(nfa.getInitialState());
     int i = 0;
-    String newFinalState = "q_" + i;
+    String newFinalState = "q" + i;
     while (ArrayUtils.contains(nfa.getStates(), newFinalState)) {
       i++;
-      newFinalState = "q_" + i;
+      newFinalState = "q" + i;
     }
     nfaNew.setFinalStates(new String[] {newFinalState});
     List<String> newStates = Arrays.asList(nfa.getStates());

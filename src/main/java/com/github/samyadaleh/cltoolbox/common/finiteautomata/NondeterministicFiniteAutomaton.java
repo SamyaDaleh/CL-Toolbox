@@ -37,11 +37,11 @@ public class NondeterministicFiniteAutomaton {
       List<String> newStates =
           new ArrayList<>(Arrays.asList(cfg.getNonterminals()));
       int i = 0;
-      String newFinalState = "q_" + i;
+      String newFinalState = "q" + i;
       while (cfg.terminalsContain(newFinalState) || cfg
           .nonterminalsContain(newFinalState)) {
         i++;
-        newFinalState = "q_" + i;
+        newFinalState = "q" + i;
       }
       newStates.add(newFinalState);
       finalStates = new String[] {newFinalState};
@@ -102,10 +102,10 @@ public class NondeterministicFiniteAutomaton {
 
   private String getNewState(List<String> newStates) {
     int i = 0;
-    String stateCandidate = "q_" + i;
+    String stateCandidate = "q" + i;
     while (newStates.contains(stateCandidate)) {
       i++;
-      stateCandidate = "q_" + i;
+      stateCandidate = "q" + i;
     }
     return stateCandidate;
   }

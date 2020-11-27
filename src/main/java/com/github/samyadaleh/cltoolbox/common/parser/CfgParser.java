@@ -68,5 +68,17 @@ public class CfgParser {
       errors.add(new ParseException(
           "The start symbol is not one of the nonterminals.", 0));
     }
+    for (String nt : cfg.getNonterminals()) {
+      if (nt.contains("_")) {
+        errors.add(new ParseException(
+            "Grammar must not contain _ in any nonterminal.", 0));
+      }
+    }
+    for (String t : cfg.getNonterminals()) {
+      if (t.contains("_")) {
+        errors.add(new ParseException(
+            "Grammar must not contain _ in any terminal.", 0));
+      }
+    }
   }
 }

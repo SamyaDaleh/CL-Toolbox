@@ -48,4 +48,13 @@ public class CfgParserTest {
         + "T = {a, b}\n" + "S = S\n"
         + "P = {S -> a B, S -> b A, A -> b A A, B -> a B B, N1 -> ε, N1 -> S, A -> a N1, N2 -> ε, N2 -> S, B -> b N2}\n", cfg.getLeftFactoredCfg().toString());
   }
+
+  @Test(expected = ParseException.class)
+  public void testParseCfgWithSpecialCharacters() throws ParseException {
+    StringReader reader = new StringReader(
+        "G = <N, T, S, P>\n" + "N = {S, q_0}\n" + "T = {a, b}\n" + "S = q_0\n"
+            + "P = {S -> S a, S -> S b, q_0 -> S a, q_0 -> S b, S -> ε}");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+
+  }
 }
