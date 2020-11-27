@@ -5,20 +5,6 @@ plugins {
     id 'maven-publish'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-    }
-    test {
-        java {
-            srcDirs = ["test/src"]
-        }
-    }
-}
-
-
 repositories {
     mavenCentral()
 }
@@ -38,7 +24,7 @@ jacocoTestReport {
 
 jar {
     archiveName 'CL-Toolbox.jar'
-    from('src') {
+    from('src/main/java') {
         include 'log4j2.xml'
         into('WEB-INF/classes')
     }
