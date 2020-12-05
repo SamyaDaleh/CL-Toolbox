@@ -332,7 +332,6 @@ public class DeductionTest {
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
-    assertEquals(16, deduction.getDerivedTrees().size());
     assertEquals(
         "(N0 (N1 (ε ))(N1 (t0 )(N0 (ε ))(N0 (t1 )(N0 (N1 (ε ))(N1 (ε ))))))",
         deduction.getDerivedTrees().get(0).toString());
