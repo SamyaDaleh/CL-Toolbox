@@ -27,10 +27,18 @@ public class CfgLeftCornerChartReduce extends AbstractDynamicDeductionRule {
       String i = itemForm[1];
       String l = itemForm[2];
       if (itemForm[0].equals(rule.getRhs()[0])) {
-        ChartItemInterface consequence = new DeductionChartItem(
-            rule.getLhs() + " -> " + rule.getRhs()[0] + " •" + ArrayUtils
-                .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length),
-            i, l);
+        ChartItemInterface consequence;
+        if ("".equals(rule.getRhs()[0])) {
+          consequence = new DeductionChartItem(
+              rule.getLhs() + " -> •" + ArrayUtils
+                  .getSubSequenceAsString(rule.getRhs(), 1,
+                      rule.getRhs().length), i, l);
+        } else {
+          consequence = new DeductionChartItem(
+              rule.getLhs() + " -> " + rule.getRhs()[0] + " •" + ArrayUtils
+                  .getSubSequenceAsString(rule.getRhs(), 1,
+                      rule.getRhs().length), i, l);
+        }
         CfgLeftCornerUtils
             .generateDerivedChartTrees(rule, antecedences, consequence);
         logItemGeneration(consequence);
