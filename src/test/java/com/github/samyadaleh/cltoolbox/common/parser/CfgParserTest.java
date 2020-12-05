@@ -54,7 +54,14 @@ public class CfgParserTest {
     StringReader reader = new StringReader(
         "G = <N, T, S, P>\n" + "N = {S, q_0}\n" + "T = {a, b}\n" + "S = q_0\n"
             + "P = {S -> S a, S -> S b, q_0 -> S a, q_0 -> S b, S -> ε}");
-    Cfg cfg = CfgParser.parseCfgReader(reader);
+    CfgParser.parseCfgReader(reader);
+  }
 
+  @Test(expected = ParseException.class)
+  public void testParseCfgWithMalFormedGrammar() throws ParseException {
+    StringReader reader = new StringReader(
+        "G = <N, T, S, P>\n" + "N = {N0, N1\n" + "T = {t0, t1}\n" + "S = N1\n"
+            + "P = {N1 -> t0 t1}");
+    CfgParser.parseCfgReader(reader);
   }
 }

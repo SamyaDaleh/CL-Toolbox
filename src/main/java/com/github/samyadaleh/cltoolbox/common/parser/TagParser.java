@@ -31,6 +31,21 @@ public class TagParser {
   }
 
   private static void checkForGrammarProblems(Tag tag) {
+    if (tag.getNonterminals() == null) {
+      errors.add(new ParseException(
+          "Nonterminals are null, check grammar format.", 0));
+      return;
+    }
+    if (tag.getTerminals() == null) {
+      errors.add(new ParseException(
+          "Terminals are null, check grammar format.", 0));
+      return;
+    }
+    if (tag.getTreeNames()== null) {
+      errors.add(new ParseException(
+          "No trees defined, check grammar format.", 0));
+      return;
+    }
     for (String nt : tag.getNonterminals()) {
       for (String t : tag.getTerminals()) {
         if (t.equals(nt)) {

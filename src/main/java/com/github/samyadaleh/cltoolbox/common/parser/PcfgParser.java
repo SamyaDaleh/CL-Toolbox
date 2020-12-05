@@ -28,6 +28,21 @@ public class PcfgParser {
   }
 
   private static void checkForGrammarProblems(Pcfg pcfg) {
+    if (pcfg.getNonterminals() == null) {
+      errors.add(new ParseException(
+          "Nonterminals are null, check grammar format.", 0));
+      return;
+    }
+    if (pcfg.getTerminals() == null) {
+      errors.add(new ParseException(
+          "Terminals are null, check grammar format.", 0));
+      return;
+    }
+    if (pcfg.getProductionRules() == null) {
+      errors.add(new ParseException(
+          "Production rules are null, check grammar format.", 0));
+      return;
+    }
     for (String nt : pcfg.getNonterminals()) {
       for (String t : pcfg.getTerminals()) {
         if (t.equals(nt)) {

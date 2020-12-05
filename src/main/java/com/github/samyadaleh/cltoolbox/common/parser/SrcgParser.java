@@ -29,6 +29,26 @@ public class SrcgParser {
   }
 
   private static void checkForGrammarProblems(Srcg srcg) {
+    if (srcg.getNonterminals() == null) {
+      errors.add(new ParseException(
+          "Nonterminals are null, check grammar format.", 0));
+      return;
+    }
+    if (srcg.getTerminals() == null) {
+      errors.add(new ParseException(
+          "Terminals are null, check grammar format.", 0));
+      return;
+    }
+    if (srcg.getVariables() == null) {
+      errors.add(new ParseException(
+          "Variables are null, check grammar format.", 0));
+      return;
+    }
+    if (srcg.getClauses() == null) {
+      errors.add(new ParseException(
+          "Clauses are null, check grammar format.", 0));
+      return;
+    }
     for (String nt : srcg.getVariables()) {
       for (String t : srcg.getTerminals()) {
         if (t.equals(nt)) {

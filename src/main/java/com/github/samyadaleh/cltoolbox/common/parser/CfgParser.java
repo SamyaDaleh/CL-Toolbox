@@ -29,6 +29,21 @@ public class CfgParser {
   }
 
   private static void checkForGrammarProblems(Cfg cfg) {
+    if (cfg.getNonterminals() == null) {
+      errors.add(new ParseException(
+          "Nonterminals are null, check grammar format.", 0));
+      return;
+    }
+    if (cfg.getTerminals() == null) {
+      errors.add(new ParseException(
+          "Terminals are null, check grammar format.", 0));
+      return;
+    }
+    if (cfg.getProductionRules() == null) {
+      errors.add(new ParseException(
+          "Production rules are null, check grammar format.", 0));
+      return;
+    }
     for (String nt : cfg.getNonterminals()) {
       for (String t : cfg.getTerminals()) {
         if (t.equals(nt)) {
