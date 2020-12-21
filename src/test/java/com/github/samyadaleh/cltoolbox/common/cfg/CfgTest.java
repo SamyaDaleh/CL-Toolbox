@@ -185,8 +185,8 @@ public class CfgTest {
 
   @Test public void testLeftToRightLinearGrammar() throws ParseException {
     StringReader reader = new StringReader(
-        "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
-            + "P = {S -> a S | a, S -> b S | b}\n");
+        "N = {S, A, B}\n" + "T = {a, b, c}\n" + "S = S\n"
+            + "P = {S -> a b S | c A, A -> b B, B -> c b B | ε}\n\n");
     Cfg cfg = CfgParser.parseCfgReader(reader);
     assertTrue(cfg.isRightLinear());
     NondeterministicFiniteAutomaton nfa = new NondeterministicFiniteAutomaton(cfg);
@@ -194,6 +194,15 @@ public class CfgTest {
     Cfg cfgRev = new Cfg(nfaRev);
     Cfg cfgLeftLinear = cfgRev.getCfgWithReversedProductionRules();
     assertFalse(cfgLeftLinear.isRightLinear());
+    System.out.println(cfgLeftLinear);
     // comparison with string represemtation fails, because it looks different in every run.
+    assertTrue(cfgLeftLinear.toString().contains("A -> S c"));
+    assertTrue(cfgLeftLinear.toString().contains("q2 -> B c"));
+    assertTrue(cfgLeftLinear.toString().contains("B -> A b"));
+    assertTrue(cfgLeftLinear.toString().contains("B -> q2 b"));
+    assertTrue(cfgLeftLinear.toString().contains("q0 -> B"));
+    assertTrue(cfgLeftLinear.toString().contains("q1 -> S a"));
+    assertTrue(cfgLeftLinear.toString().contains("S -> q1 b"));
+    assertTrue(cfgLeftLinear.toString().contains("S -> ε"));
   }
 }

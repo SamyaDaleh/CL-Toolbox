@@ -30,11 +30,15 @@ public class ReverseProductionRules {
 
   private static String reverseRhs(CfgProductionRule rule) {
     String ruleString = rule.toString();
-    String[] ruleSplit = ruleString.split("->");
+    String[] ruleSplit = ruleString.split(" -> ");
     String rhsString = ruleSplit[1];
     StringBuilder reversedRhs = new StringBuilder();
-    for (int i = rhsString.length() - 1; i >= 0; i--) {
-      reversedRhs.append(rhsString.charAt(i));
+    String[] rhsSplit = rhsString.split(" ");
+    for (int i = rhsSplit.length - 1; i >= 0; i--) {
+      if (i < rhsSplit.length - 1) {
+        reversedRhs.append(" ");
+      }
+      reversedRhs.append(rhsSplit[i]);
     }
     return reversedRhs.toString();
   }
