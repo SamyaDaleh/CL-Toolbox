@@ -25,7 +25,6 @@ public class TagParserTest {
             + "I = {α1 : (N0 (ε )), α3 : (N0 (t0 )(N0 )), α5 : (N0 (t1 ))}\n"
             + "A = {}\n" + "S = N0");
     Tag tag = TagParser.parseTagReader(reader);
-    assert tag != null;
     assertEquals("N0", tag.getStartSymbol());
   }
 

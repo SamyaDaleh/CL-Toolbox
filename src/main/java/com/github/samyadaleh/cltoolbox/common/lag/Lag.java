@@ -8,15 +8,10 @@ import java.util.Map;
 
 public class Lag {
 
-  //private String[] wordSurfaces;
-  //private String[] categorySegments;
   private LagWord[] lexicon;
-  // categorialOperations
-  // rulePackages
-  Map<String, LagRule> lagRules;
-  LagState[] initialStates;
-
-  LagState[] finalStates;
+  private Map<String, LagRule> lagRules;
+  private LagState[] initialStates;
+  private LagState[] finalStates;
 
   public Lag(BufferedReader in) throws ParseException {
     new InnerLagGrammarParser(this, in).invoke();

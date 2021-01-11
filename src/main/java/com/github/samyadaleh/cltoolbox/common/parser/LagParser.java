@@ -18,7 +18,7 @@ public class LagParser {
   /**
    * Hand CFG reader to parse from, can come from string or multiline file.
    */
-  public static Lag parseCfgReader(Reader reader)
+  public static Lag parseLagReader(Reader reader)
       throws ParseException {
     errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
