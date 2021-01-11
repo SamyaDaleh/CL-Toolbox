@@ -1643,7 +1643,9 @@ How to add a new parsing algorithm to the Toolbox:
 1. You might need to create a grammar parser first if you use a new formalism. 
 For this you need to make up your mind about grammar format and internal data 
 structure. The data structure shall closely resemble the definition and use its
-vocabulary.
+vocabulary. Use the other grammar parsers as an example and check if you can 
+reuse code for them for instance the TokenReader that returns the raw grammar 
+defintion token-wise.
 2. Create deduction rule classes (without axioms):
     1. Create a new package for the algorithm at a reasonable position within 
     `chartparsing` to keep the Toolbox well-structured.

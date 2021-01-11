@@ -1,0 +1,8 @@
+G = <W, C, LX, CO, RP, ST_S, ST_F>
+LX = {[a (b c)], [b (b)], [c(c)]}
+ST_S = {({r1, r2} (b c))}
+RP = {
+r1 : [(X) (b c)] -> [{r1, r2} (b X c)],
+r2 : [(b X c) (b)] -> [{r2, r3} (X c)],
+r3 : [(c X) (c)] -> [{r3} (X)] }
+ST_F = {[r3]}
