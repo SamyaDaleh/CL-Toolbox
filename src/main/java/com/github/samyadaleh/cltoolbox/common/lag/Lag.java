@@ -4,12 +4,16 @@ import com.github.samyadaleh.cltoolbox.common.parser.inner.InnerLagGrammarParser
 
 import java.io.BufferedReader;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Left Associative Grammar representation
+ */
 public class Lag {
 
   private LagWord[] lexicon;
-  private Map<String, LagRule> lagRules;
+  private Map<String, LagRule> lagRules = new HashMap<>();
   private LagState[] initialStates;
   private LagState[] finalStates;
 
@@ -47,5 +51,9 @@ public class Lag {
 
   public void setLexicon(LagWord[] lexicon) {
     this.lexicon = lexicon;
+  }
+
+  public void addRule(String key, LagRule lagRule) {
+    this.lagRules.put(key, lagRule);
   }
 }

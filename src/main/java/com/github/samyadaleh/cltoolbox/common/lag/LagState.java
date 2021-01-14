@@ -1,5 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.lag;
 
+import java.util.List;
+
 public class LagState {
 
   private String[] rulePackage;

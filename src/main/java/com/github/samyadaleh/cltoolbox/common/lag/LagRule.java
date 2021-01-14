@@ -5,6 +5,12 @@ public class LagRule {
   private String[] cat2;
   private LagState state;
 
+  public LagRule(String[] cat1, String[] cat2, LagState state) {
+    this.cat1 = cat1;
+    this.cat2 = cat2;
+    this.state = state;
+  }
+
   public String[] getCat1() {
     return cat1;
   }

@@ -19,7 +19,7 @@ public class LagParserTest {
             + "r2 : [(b X c) (b)] -> [{r2, r3} (X c)],\n"
             + "r3 : [(c X) (c)] -> [{r3} (X)] }\n" + "ST_F = {({r3} ε)}\n");
     Lag lag = LagParser.parseLagReader(reader);
-    assertEquals("r3", lag.getFinalStates()[0].getCategory()[0]);
+    assertEquals("r3", lag.getFinalStates()[0].getRulePackage()[0]);
   }
 
 }
