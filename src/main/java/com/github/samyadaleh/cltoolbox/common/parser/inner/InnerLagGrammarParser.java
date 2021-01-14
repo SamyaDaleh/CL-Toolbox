@@ -127,8 +127,13 @@ public class InnerLagGrammarParser extends InnerGrammarParser {
             }
           } else if (category.size() == 7) {
             // rhs is complete
+            if(wordCategories.size() != 1){
+              throw new ParseException(
+                  "Wrong number of word categories in rhs of rule " + category
+                      .get(3) + ", must be exactly 1.", token.getLineNumber());
+            }
             LagState lagState = new LagState(rulePackage.toArray(new String[0]),
-                wordCategory.toArray(new String[0]));
+                wordCategories.get(0));
             LagRule lagRule = new LagRule(cat1, cat2, lagState);
             lag.addRule(category.get(3), lagRule);
             category.remove(category.size() - 1);

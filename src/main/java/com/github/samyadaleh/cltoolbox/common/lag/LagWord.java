@@ -24,4 +24,16 @@ public class LagWord {
   public void setCategory(String[] category) {
     this.category = category;
   }
+
+  @Override public String toString() {
+    StringBuilder repr = new StringBuilder();
+    repr.append("[").append(wordSurface).append(" ");
+    if (category.length == 0) {
+      repr.append("ε");
+    } else {
+      repr.append("(").append(String.join(" ", category)).append(")");
+    }
+    repr.append("]");
+    return repr.toString();
+  }
 }

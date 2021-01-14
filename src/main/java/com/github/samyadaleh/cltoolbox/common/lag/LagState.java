@@ -34,7 +34,7 @@ public class LagState {
     if (category.length == 0) {
       repr.append("ε");
     } else {
-      repr.append("(").append(String.join(", ", category)).append(")");
+      repr.append("(").append(String.join(" ", category)).append(")");
     }
     repr.append("]");
     return repr.toString();

@@ -34,4 +34,10 @@ public class LagRule {
   public void setState(LagState state) {
     this.state = state;
   }
+
+  @Override public String toString() {
+    String repr = "[(" + String.join(" ", cat1) + ") (" + String.join(" ", cat2)
+        + ")] -> " + state;
+    return repr;
+  }
 }
