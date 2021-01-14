@@ -66,15 +66,16 @@ public class InnerLagGrammarParser extends InnerGrammarParser {
     case "ST_F":
       if ("{".equals(tokenString) || "(".equals(tokenString)) {
         category.add(tokenString);
-      } else if ("}".equals(tokenString)) {
-        category.remove(category.size() - 1);
       } else if (")".equals(tokenString)) {
         category.remove(category.size() - 1);
-        if (category.size() == 3) {
-          states.add(new LagState(rulePackage.toArray(new String[0]),
-              wordCategory.toArray(new String[0])));
-          rulePackage = new ArrayList<>();
-        }
+        states.add(new LagState(rulePackage.toArray(new String[0]),
+            wordCategory.toArray(new String[0])));
+        rulePackage = new ArrayList<>();
+        wordCategory = new ArrayList<>();
+      } else if ("}".equals(tokenString)) {
+        category.remove(category.size() - 1);
+      }else if ("]".equals(tokenString)) {
+        category.remove(category.size() - 1);
       } else {
         if (category.size() == 5) {
           String lastCategory = category.get(category.size() - 1);
@@ -87,8 +88,11 @@ public class InnerLagGrammarParser extends InnerGrammarParser {
                 "Something seems to be wrong with the brackets.",
                 token.getLineNumber());
           }
-        } else if (category.size() == 4 && "ε".equals(tokenString)) {
-          // do nothing
+        } else if (category.size() == 4 && "ε".equals(tokenString)){
+          states.add(new LagState(rulePackage.toArray(new String[0]),
+              wordCategory.toArray(new String[0])));
+          rulePackage = new ArrayList<>();
+          wordCategory = new ArrayList<>();
         } else {
           throw new ParseException(
               "Something seems to be wrong with the brackets.",
