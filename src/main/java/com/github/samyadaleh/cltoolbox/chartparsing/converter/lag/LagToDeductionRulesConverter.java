@@ -8,7 +8,6 @@ import com.github.samyadaleh.cltoolbox.common.lag.Lag;
 import com.github.samyadaleh.cltoolbox.common.lag.LagRule;
 import com.github.samyadaleh.cltoolbox.common.lag.LagState;
 import com.github.samyadaleh.cltoolbox.common.lag.LagWord;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -31,22 +30,16 @@ public class LagToDeductionRulesConverter {
     ParsingSchema schema = new ParsingSchema();
     List<List<String[]>> initialCategories = new ArrayList<>();
     for (String letter : wSplit) {
-      List<LagWord> lxWordLookupResult = new ArrayList<>();
+      List<String[]> lxWordLookupResult = new ArrayList<>();
       for (LagWord lagWord : lag.getLexicon()) {
         if (letter.equals(lagWord.getWordSurface())) {
-          lxWordLookupResult.add(lagWord);
+          lxWordLookupResult.add(lagWord.getCategory());
         }
       }
       if (lxWordLookupResult.size() == 0) {
         throw new ParseException("No lexicon entry for symbol " + letter, 0);
       }
-      if (lxWordLookupResult.size() > 1) {
-        // TODO if there are several: implement later :)
-        throw new NotImplementedException();
-      }
-      List<String[]> newCategories = new ArrayList<>();
-      newCategories.add(lxWordLookupResult.get(0).getCategory());
-      initialCategories.add(newCategories);
+      initialCategories.add(lxWordLookupResult);
     }
     List<String[][]> initialCategoriesSwapped =
         swapInitialCategories(initialCategories);
@@ -78,11 +71,35 @@ public class LagToDeductionRulesConverter {
     return schema;
   }
 
-  private static List<String[][]> swapInitialCategories(
+  static List<String[][]> swapInitialCategories(
       List<List<String[]>> initialCategories) {
-    // TODO implement
-    //  I get a list where each entry corresponds to one word and contains a list of its possible categories
-    //  turn to a List where each entry contains a list of categories for all words
-    return null;
+    List<List<String[]>> swappedCategoriesList = new ArrayList<>();
+    for (String[] category : initialCategories.get(0)){
+      List<String[]> categoryList = new ArrayList<>();
+      categoryList.add(category);
+      swappedCategoriesList.add(categoryList);
+    }
+    for (int i = 1; i < initialCategories.size(); i++) {
+      if (initialCategories.get(i).size() == 1) {
+        for(List<String[]> swappedCategories : swappedCategoriesList) {
+          swappedCategories.add(initialCategories.get(i).get(0));
+        }
+      } else {
+        List<List<String[]>> newSwappedCategoriesList = new ArrayList<>();
+        for (List<String[]> swappedCategories : swappedCategoriesList) {
+          for (String[] appendCategories : initialCategories.get(i)) {
+            newSwappedCategoriesList.add(new ArrayList<>(swappedCategories));
+            newSwappedCategoriesList.get(newSwappedCategoriesList.size() - 1)
+                .add(appendCategories);
+          }
+        }
+        swappedCategoriesList = newSwappedCategoriesList;
+      }
+    }
+    List<String[][]> swappedCategories = new ArrayList<>();
+    for (List<String[]> someList : swappedCategoriesList) {
+      swappedCategories.add(someList.toArray(new String[0][]));
+    }
+    return swappedCategories;
   }
 }
