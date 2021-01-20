@@ -16,7 +16,7 @@ public class LagChartItem extends AbstractChartItem
    * CTOR generates itemForm for display from the passed variables beside
    * storing them.
    */
-  LagChartItem(String[][] categories, String[] rulePackage) {
+  public LagChartItem(String[][] categories, String[] rulePackage) {
     this.categories = categories;
     this.rulePackage = rulePackage;
     StringBuilder categorieRepr = new StringBuilder();

@@ -1,9 +1,12 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.lag;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.lag.LagChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lag.LagRule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,10 +20,90 @@ public class LagRuleApplication extends AbstractDynamicDeductionRule {
     super();
     this.name = ruleName;
     this.rule = lagRule;
+    this.antNeeded = 1;
   }
 
   @Override public List<ChartItemInterface> getConsequences() {
-    // TODO implement
-    return null;
+    if (antecedences.size() != antNeeded) {
+      return consequences;
+    }
+    LagChartItem currentAntecendence = (LagChartItem) antecedences;
+    if (!ArrayUtils.contains(currentAntecendence.getRulePackage(), name)) {
+      return consequences;
+    }
+    if (!ArrayUtils
+        .match(currentAntecendence.getCategories()[1], rule.getCat2())) {
+      return consequences;
+    }
+    String[] firstAntCat = currentAntecendence.getCategories()[0];
+    String[] firstRuleCat = rule.getCat1();
+    List<String> collectX = new ArrayList<>();
+    boolean collectXStatus = false;
+    int xFoundAt = -1;
+    for (int i = 0; i < firstAntCat.length; i++) {
+      if (collectXStatus) {
+        collectX.add(firstAntCat[i]);
+        continue;
+      }
+      if ("X".equals(firstRuleCat[i])) {
+        collectXStatus = true;
+        collectX.add(firstAntCat[i]);
+        xFoundAt = i;
+      } else {
+        if (!firstAntCat[i].equals(firstRuleCat[i])) {
+          return consequences;
+        }
+      }
+    }
+    for (int i = 0;
+         i < collectX.size() && i < firstAntCat.length - xFoundAt; i++) {
+      if (!firstAntCat[firstAntCat.length - i]
+          .equals(firstRuleCat[firstRuleCat.length - i])) {
+        return consequences;
+      }
+      collectX.remove(collectX.size() - 1);
+    }
+    String[] newItemCategoryHead = replaceX(rule.getState().getCategory(),
+        collectX.toArray(new String[0]));
+    String[][] newCategories = getUpdatedCategories(newItemCategoryHead,
+        currentAntecendence.getCategories());
+    consequences
+        .add(new LagChartItem(newCategories, rule.getState().getRulePackage()));
+    return consequences;
+  }
+
+  /**
+   * Category contains an entry 'X' somewhere. Replace its content by collectX
+   * and return the new array.
+   */
+  String[] replaceX(String[] category, String[] collectX) {
+    int xPos = -1;
+    for (int i = 0; i < category.length; i++) {
+      if ("X".equals(category[i])) {
+        xPos = i;
+        break;
+      }
+    }
+    String[] beforeX = ArrayUtils.getSubSequenceAsArray(category, 0, xPos);
+    String[] afterX =
+        ArrayUtils.getSubSequenceAsArray(category, xPos + 1, category.length);
+    String[] newArray = new String[collectX.length + category.length - 1];
+    System.arraycopy(beforeX, 0, newArray, 0, beforeX.length);
+    System.arraycopy(collectX, 0, newArray, beforeX.length, collectX.length);
+    System.arraycopy(afterX, 0, newArray, beforeX.length + collectX.length,
+        afterX.length);
+    return newArray;
+  }
+
+  /**
+   * Return a new array where newItemCategoryHead is the first entry and
+   * categories is appended to it.
+   */
+  private String[][] getUpdatedCategories(String[] newItemCategoryHead,
+      String[][] categories) {
+    String[][] updatedCategories = new String[categories.length + 1][];
+    updatedCategories[0] = newItemCategoryHead;
+    System.arraycopy(categories, 0, updatedCategories, 1, categories.length);
+    return updatedCategories;
   }
 }
