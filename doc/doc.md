@@ -1644,8 +1644,40 @@ How to add a new parsing algorithm to the Toolbox:
 For this you need to make up your mind about grammar format and internal data 
 structure. The data structure shall closely resemble the definition and use its
 vocabulary. Use the other grammar parsers as an example and check if you can 
-reuse code for them for instance the TokenReader that returns the raw grammar 
+reuse code for them for instance the `TokenReader` that returns the raw grammar 
 defintion token-wise.
+    1. If you have a grammar formalism where elements are defined as Symbol = 
+    {some definition} it is recommended to use the existing parsing structure.
+    If not, you might at least reuse the `TokenReader`, that takes a reader and
+    an array of special characters as input and returns char sequences between
+    spaces as well as special characters as tokens.
+    2. Create a general Grammar Parser that passes the reader to the grammar's
+    constructor and checks the resulting grammar object for errors.
+    3. Let the new grammar object in the constructor path both the reader and
+    a reference to itself to a new Inner Grammar Parser class constructur,
+    which is invoked to fill the grammar object with the data from the reader.
+    4. Let the dedicated Inner Grammar Parser extend the existing 
+    `InnerGrammarParser` class, which takes care of requesting the 
+    `TokenReader` and calling one of the handling methods depending on the 
+    number of categories. The categories roughly keep track of the situation in
+    the parsing process. For instance take a definition of production rules for
+    CFG: `P = {S -> a}`. At the beginning of a line, the list of categories is
+    empty and method `handleCategoryLength0()` is invoked. Generally you want 
+    to add the string of the token to the category list, if it is one of your 
+    valid definition elements. So in a later moment you will always know that
+    you are currently busy parsing production rules. The next token will be `=`
+    which is handled in `handleCategoryLength1()` and should be added to the 
+    category list as well etc.
+    5. Overwrite all methods for handling categories of different length as 
+    appropriate. Remember to remove entries from the category list, for 
+    instance remove an opening bracket when you encountered a closing bracket,
+    so you know you are in a different parsing situation with different 
+    expectations.
+    6. Remember to add a unit test for your new grammar parser to make sure
+    everything works as intended.
+    7. Please overwrite `toString()` for all new grammar classes, which greatly
+    helps when debugging. The string representation should be the same as the
+    format accepted by the grammar parser for consistency and convenience.
 2. Create deduction rule classes (without axioms):
     1. Create a new package for the algorithm at a reasonable position within 
     `chartparsing` to keep the Toolbox well-structured.
@@ -1679,6 +1711,10 @@ defintion token-wise.
         `ChartItemInterface`. `DeductionChartItem` is an alrounder for symbolic
         parsing and `PcfgCykItem` is currently the only implementation of 
         `ProbabilisticChartItemInterface` for probabilistic parsing.
+        If the parsing process needs information in a different way as 
+        `itemForm` provides, feel free to create a new implementation with the 
+        data structure you need. Just convert them to a proper string 
+        representation in `itemForm`. 
 2. In the respective `ToDeductionRulesConverter` create a method that takes 
 your grammar formalism and the input string as input and returns a 
 `ParsingSchema` object. Create `DynamicDeductionRule` objects and add them as 
