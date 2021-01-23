@@ -30,6 +30,9 @@ public class LagChartItem extends AbstractChartItem
         notFirst = true;
         categorieRepr.append(cat);
       }
+      if (categorieRepr.charAt(categorieRepr.length()-1) == '(') {
+        categorieRepr.append("ε");
+      }
       categorieRepr.append(")");
     }
     String rpRepr = "{" + String.join(", ", rulePackage) + "}";
