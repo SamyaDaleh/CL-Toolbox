@@ -12,8 +12,8 @@ work together.
 
 ## Folder Structure
 
-As state of the art the folder `src` contains the source code of the 
-application while `test` contains the JUnit tests that ensure everything works 
+As per Gradle convention the folder `src/main` contains the source code of the 
+application while `src/test` contains the JUnit tests that ensure everything works 
 correctly. In folder `releases` the exported, runable jar is located which is 
 replaced sometimes as well as the wrapper scripts explained in the next 
 section. Finally the folder `resources` contains some example grammars that can
@@ -46,8 +46,8 @@ called like this:
 ```
 java -Dfile.encoding="UTF-8" -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
 ```
-To reduce the typing to a minimum the user can instead use the CL-Toolbox.bat 
-(Windows) or the CL-Toolbox.sh (*nix) scripts. They can be requested similar to
+To reduce the typing to a minimum the user can instead use the `CL-Toolbox.bat`
+(Windows) or the `CL-Toolbox.sh` (*nix) scripts. They can be requested similar to
 the jar with the same parameters and they pass on the request to the jar along 
 with the encoding. Hence the call above is equivalent to the following:
 ```
@@ -57,34 +57,35 @@ Currently this only works if the user is located in the same folder as the jar
 and the script. The following is a list of the currently supported parsing 
 algorithms. See later sections on details about what each one of them means and
 how they work.
-* ccg-deduction
-* cfg-cyk
-* cfg-cyk-extended
-* cfg-cyk-general
-* cfg-earley
-* cfg-earley-bottomup
-* cfg-earley-passive
-* cfg-leftcorner
-* cfg-leftcorner-chart
-* cfg-topdown
-* cfg-shiftreduce
-* cfg-lr-k     (with k >=0)
-* cfg-unger
-* pcfg-astar
-* tag-cyk
-* tag-cyk-general
-* tag-earley
-* tag-earley-prefixvalid
-* srcg-cyk
-* srcg-cyk-extended
-* srcg-earley
+* `ccg-deduction`
+* `cfg-cyk`
+* `cfg-cyk-extended`
+* `cfg-cyk-general`
+* `cfg-earley`
+* `cfg-earley-bottomup`
+* `cfg-earley-passive`
+* `cfg-leftcorner`
+* `cfg-leftcorner-chart`
+* `cfg-topdown`
+* `cfg-shiftreduce`
+* `cfg-lr-k`     (with k >=0)
+* `cfg-unger`
+* `lag-deduction`
+* `pcfg-astar`
+* `tag-cyk`
+* `tag-cyk-general`
+* `tag-earley`
+* `tag-earley-prefixvalid`
+* `srcg-cyk`
+* `srcg-cyk-extended`
+* `srcg-earley`
 
-Additionally some optional flags can be added to the call. --success instead of 
+Additionally some optional flags can be added to the call. `--success` instead of 
 printing the full trace it prints only items that lead to a goal item. If the 
 parsing fails because the input sequence is not in the language of the grammar 
 no steps are displayed. If steps are displayed they keep their original 
 numbering, leaving gaps in the sequence of indices where items are left out. 
-The second parameter is --please. When set and a grammar is not obviously not 
+The second parameter is `--please`. When set and a grammar is not obviously not 
 fitting for an algorithm, it is converted. Obvious conversions are performed 
 regardless if the flag is set or not. That means for instance if a grammar is a
 CFG and the algorithm is for TAG, the grammar is trivially converted, no matter
@@ -92,18 +93,19 @@ if the flag is set or not. If the grammar is CFG and the algorithm is for CFG
 the grammar still may not be appropriate. The CYK algorithm works only for 
 grammars in Chomsky Normal Form. If the grammar is not in Chomsky Normal Form 
 but shall be parsed with cfg-cyk, if the flag is not set the user will be 
-informed that the grammar is not appropriate. If --please is set, the grammar 
+informed that the grammar is not appropriate. If `--please` is set, the grammar 
 is converted to Chomsky Normal Form before further steps are performed. See 
 section GrammarToGrammarConverter in chapter Program Workflow for more details.
-If --please is set and the grammar already fits the algorithm, it is not 
-altered. The last parameter --latex prints the deduction table in a text format
-instead of the space formatted one. --latex-graph prints the graph of 
-computations in a format for tikz-dependency for some algorithms.
+If `--please` is set and the grammar already fits the algorithm, it is not 
+altered. The last parameter `--latex` prints the deduction table in a text format
+instead of the space formatted one. `--latex-graph` prints the graph of 
+computations in a format for tikz-dependency for some algorithms, including:
+`cfg-topdown`, `cfg-shiftreduce`, `cfg-earley`, `cfg-cyk` and `cfg-leftcorner`.
 
 ### Grammar formats
 
 This section covers the different grammar formats that can be read from files. 
-Different examples are located in directory resources/grammars. They all are 
+Different examples are located in directory `resources/grammars`. They all are 
 plain text files where the file extension indicates the grammar type. Every 
 grammar format is close to the respective formal definition. Ever component of 
 the grammar tuple is defined. They are allowed to include the defintion of the 
@@ -132,7 +134,7 @@ merengue	NP
 likes	(S\NP)/NP
 certainly	(S\NP)/(S\NP)
 ```
-The / specifies that the other category has to be found to the right, \ that it
+The `/` specifies that the other category has to be found to the right, `\` that it
 expects it to the left. In this example ``likes`` demands a NP to the right and
 afterwards another NP to the left to form a sentence. No other elements of the
 grammar are specified. The algorithm expects ``S`` as start symbol and therefore
@@ -153,11 +155,11 @@ P = {S -> a S b, S -> a b}
 ```
 Nonterminals, terminals, start symbol and production rules can be defined in 
 any order. Every line consists of a symbol indicating the type of the 
-component: N - nonterminals, T - terminals, S - start symbol and P - production
+component: `N` - nonterminals, `T` - terminals, `S` - start symbol and `P` - production
 rules. Each production rule must consist of a single nonterminal on the left 
-hand side followed by "->". The tokens of the right hand side must be separated
+hand side followed by `->`. The tokens of the right hand side must be separated
 by spaces, other spaces are optional. An empty string on the right hand side 
-can be either represented as ε or by writing nothing. In the Cfg object 
+can be either represented as `ε` or by writing nothing. In the Cfg object 
 terminals and nonterminals are represented as lists for better access despite 
 they are sets according to the definition. This holds for all grammar formats 
 where the definitions prescribe sets of anything. A CfgProductionRule is 
@@ -166,12 +168,42 @@ side is an array of strings. For CFG these special characters are defined:
 `-`, `>`, `{`, `}`, `,`, `|`, `=`. The test after the grammar parsing checks if
 the following properties hold, however this does not mean that there is no way 
 the grammar could break even after this point:
-* all categories N, T, S and P have been specified
+* all categories `N`, `T`, `S` and `P` have been specified
 * no symbol is declared as both terminal and nonterminal
 * each LHS symbol is declared as nonterminal
 * each RHS symbol is declared either as terminal or nonterminal
 The pipe symbol can be used to separate different RHS sides from each other 
 that belong to the same LHS.
+
+#### LAG
+
+A left-associative grammar is a grammar format whose language class lies askew
+to the commonly known Chomsky hierarchy. Here is an example:
+```
+LX = {[a (b c)], [b (b)], [c(c)]}
+ST_S = {[{r1, r2} (b c)]}
+RP = {
+r1 : [(X) (b c)] -> [{r1, r2} (b X c)],
+r2 : [(b X c) (b)] -> [{r2, r3} (X c)],
+r3 : [(c X) (c)] -> [{r3} (X)] }
+ST_F = {[{r3} ε]}
+```
+* `LX` is a lexicon that maps word surfaces to their categories. In this 
+implementation one word surface can be specified several times with different
+categories.
+* `ST_S` contains a list of initial states. Each state consists of a set of 
+rules, the rule package, that contains the names of the rules that can be 
+applied. Also a state consists of a list of strings that form a category.
+* `RP` is the rule package that contains the rule definitions. Each rule has a
+name like `r1`. The lhs specifies the categories the current word and the next
+word must have in order to apply this rule. On the rhs the rule specifies a set
+of rules that can be applied next as well as the new category that shall 
+replace the ones from the lhs. In this implementation `X` is the only 
+variable allowed, only in the first category and it is hard-coded. The string
+that matches the `X` in the lhs is inserted at the respective position in the
+rhs.
+* `ST_F` specifies a list of final states. An empty category can be specified 
+with `ε` instead.
 
 #### PCFG
 
@@ -312,19 +344,19 @@ If the grammar is appropriate and the algorithm has the same complexity (e. g.
 the grammar is a CFG and the algorithm is CFG) the grammar is simply returned. 
 If the algorithm has a higher complexity than the grammar (e. g. the grammar is
 a CFG and the algorithm is for parsing TAGs), the grammar is converted to the 
-higher formalism if possible. This happens regardless of --please is set or 
+higher formalism if possible. This happens regardless of `--please` is set or 
 not. The idea is that automatic conversion happens if a conversion obviously 
 needs be made, which is the case as the grammar file has a file extension that 
 specifies its type as so does the algorithm. Other conversions are only made if
-the user explicitly sets the --please flag. If this is set and the grammar is 
+the user explicitly sets the `--please` flag. If this is set and the grammar is 
 not appropriate to be parsed with an algorithm of the same complexity, 
 conversion is performed. For instance the common CYK algorithm for CFG demands 
 a grammar in Chomsky Normal Form. If a grammar is provided that is not in CNF 
 and the --please flag is set, the grammar is converted to CNF. If a grammar has
 both not the same complexity and is not appropriate for an algorithm, in case 
-the --please flag is set all conversions are performed to make the grammar 
+the `--please` flag is set all conversions are performed to make the grammar 
 fitting for the algorithm. If a conversion is not possible, for instance if the
---please flag is not set or the grammar can't be converted to the complexity of
+`--please` flag is not set or the grammar can't be converted to the complexity of
 the algorithm, the process fails with a note to the user.
 
 #### Conversions in Detail
@@ -552,11 +584,11 @@ not change anymore.
 ### GrammarToDeductionRulesConverter
 
 If it is sure that the grammar is appropriate for the requested parsing 
-algorithm, the grammar is send to the GrammarToDeductionRulesConverter which 
+algorithm, the grammar is sent to the `GrammarToDeductionRulesConverter` which 
 takes care of calling the right function from the other converter classes. 
 There is one class for each grammar type that has a function for each 
 implemented algorithm to create a parsing scheme with the rules for that 
-algorithm depending on he parser. Each ParsingSchema object contains different 
+algorithm depending on he parser. Each `ParsingSchema` object contains different 
 deduction rules. Each deduction rule contains different items. An item is 
 syntactically a string array and semantically it represents a configuration of 
 the parsing process and the meaning of its entries highly depends on the 
@@ -566,7 +598,7 @@ grammar. A deduction rule consists a list of zero or more antecedence items
 which have to be found in order to use a rule, and a list of one or more 
 consequence items, which are added to the set of items that can be used if all 
 antecedence items were found. The parsing schema contains axioms, a list of 
-deduction rules, here represented as so called StaticDeductionRules, because 
+deduction rules, here represented as so called `StaticDeductionRules`, because 
 they don't change at runtime. Axioms have zero antecedence items and can be 
 applied if there are no items yet. Also a parsing schema contains a list of 
 rules, here of type DynamicDeductionRule. By definition they contain both 
@@ -579,7 +611,7 @@ schema. The aim is that each rule creates one kind of consequence items while
 staying close to the definitions. For instance for CFG CYK parsing there could 
 be one axiom that just contains every generateable item, which would work and 
 only need the creation of one rule, but this rule would be far from the 
-definition. The definition says that if there is a rule A -> a from the set of 
+definition. The definition says that if there is a rule `A -> a` from the set of 
 production rules and a terminal in the input string at position i is a, the 
 rule can be applied and one consequence item can be derived. Hence to stay 
 close to the definition one rule instance is created for every matching 
@@ -591,7 +623,7 @@ rule can generate different consequences from the same antecedence items. Every
 rule has a name that may gives details about what its exact purpose is. Every 
 rule has a string representation close to the formal definition where known 
 parts may are filled out. That means if for instance a formal definition asks 
-for any production rulle of form A -> a the string representation may contains 
+for any production rulle of form `A -> a` the string representation may contains 
 the real nonterminal and terminal instead if the deduction rule is only 
 responsible for that one production rule.
 
@@ -1052,6 +1084,29 @@ ___________________________________________A → A<sub>1</sub> ... A<sub>k</sub>
 instantiated for every production rule.
 
 Goal item: [S •, 0, n] where n = |w|
+
+##### LAG Deduction
+
+This implementation instantiates one deduction rule per rule defined in the 
+rule package. There is no official formalization of LAG parsing as deduction,
+however, it corresponds roughly to this:
+
+Axiom:<br/>
+__________ <br/>
+[cat1 ... catn, RP1]<br/>
+with with RP1 ∈ RP*. The categories are instanciated with a lookup in the 
+lexicon `LX` for each word surface form, replacing it with each corresponding
+category. One axiom is instantiated for each possibility of different category
+assignments. For example if one word surface has 2 options and another one has 
+3, it will result in 2 * 3 = 6 axioms. Also one axiom is instantiated for each 
+applying initial state.
+
+Rule Name:
+[cat1 cat2 cat*, RP1]<br/>
+__________________________ [cat1<sub>rule</sub> cat2] → [{RP2} cat3<sub>rule</sub>] ∈ RP, with RP1, RP2 ∈ RP*<br/>
+[cat3 cat*]<br/>
+Where `cat1<sub>rule</sub>` and `cat3<sub>rule</sub>` contain a variable X that 
+matches any excess strings.
 
 ##### PCFG A*
 
@@ -1577,7 +1632,7 @@ the end of lhs argument).
 
 ### Graphical output
 
-Currently the graphical output consists of two classes: The ParsingTraceTable 
+Currently the graphical output consists of two classes: `The ParsingTraceTable` 
 displays the same information that has been printed to the command line. It is 
 a table containing all chart items, backpointers and applied rules' names, but 
 contrary to the command line it can be resized and scrolled no matter the 
@@ -1739,6 +1794,8 @@ parser and calls to the respective convert methods here. In any case update the
 7. If possible extend items to keep track of the trees derived so far. 
 Deduction still works without them, but you will not see a derived tree at the 
 end.
+8. Update this documentation with all relevant changes. Present the algorithm,
+present the new formalism if you added one, add a reference etc.
 
 
 ## References
@@ -1779,6 +1836,19 @@ Kallmeyer, Laura: Parsing beyond context-free grammars. Heidelberg : Springer,
 Kallmeyer, Laura: Tree Adjoining Grammar Parsing (Parsing Beyond Context-Free 
 Grammars). Düsseldorf, Sommersemester 2016. URL [https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf](https://user.phil.hhu.de/~kallmeyer/ParsingBeyondCFG/tag-parsing.pdf) – last checked 2017-27-05 p. 11-19
 
+### Computation Graph
+
+Satta, Giorgio (2013): 
+Everything You Always Wanted to Know About Parsing. 
+Part II : PDA Tabulation. 
+ESSLLI 2013. 
+Heinrich-Heine Universität Düsseldorf. 
+Düsseldorf, 
+2013, 
+Online verfügbar unter http://www.dei.unipd.it/~satta/tutorial/esslli13/part_2.pdf, 
+zuletzt geprüft am 15.05.2020.
+Seite 10
+
 ### Converting a TAG to SRCG
 
 Pierre Boullier. On TAG and Multicomponent TAG Parsing. [Research Report] RR-3668, INRIA.
@@ -1796,6 +1866,15 @@ Pages 3-36,
 ISSN 0743-1066,
 https://doi.org/10.1016/0743-1066(95)00035-I.
 (http://www.sciencedirect.com/science/article/pii/074310669500035I)
+
+### Deduction for LAG
+
+Hausser, Roland (1992): 
+Complexity in left-associative grammar. 
+In: Theoretical Computer Science 106 (2), 
+S. 283–308. 
+Online verfügbar unter https://www.sciencedirect.com/science/article/pii/030439759290253C, 
+zuletzt geprüft am 13.04.2020.
 
 ### Earley for CFG
 
