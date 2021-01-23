@@ -27,8 +27,13 @@ public class LagRuleApplication extends AbstractDynamicDeductionRule {
     if (antecedences.size() != antNeeded) {
       return consequences;
     }
-    LagChartItem currentAntecendence = (LagChartItem) antecedences;
+    List<ChartItemInterface> currentAntecendences = antecedences;
+    LagChartItem currentAntecendence =
+        (LagChartItem) currentAntecendences.get(0);
     if (!ArrayUtils.contains(currentAntecendence.getRulePackage(), name)) {
+      return consequences;
+    }
+    if (currentAntecendence.getCategories().length < 2) {
       return consequences;
     }
     if (!ArrayUtils
@@ -55,13 +60,17 @@ public class LagRuleApplication extends AbstractDynamicDeductionRule {
         }
       }
     }
-    for (int i = 0;
-         i < collectX.size() && i < firstAntCat.length - xFoundAt; i++) {
-      if (!firstAntCat[firstAntCat.length - i]
-          .equals(firstRuleCat[firstRuleCat.length - i])) {
+    int collectXSize = collectX.size();
+    for (int i = 0; i < collectXSize && i < firstAntCat.length - xFoundAt
+        && i < firstRuleCat.length; i++) {
+      if (firstAntCat[firstAntCat.length - i - 1]
+          .equals(firstRuleCat[firstRuleCat.length - i - 1])) {
+        collectX.remove(collectX.size() - 1);
+      } else if ("X".equals(firstRuleCat[firstRuleCat.length - i - 1])) {
+        break;
+      } else {
         return consequences;
       }
-      collectX.remove(collectX.size() - 1);
     }
     String[] newItemCategoryHead = replaceX(rule.getState().getCategory(),
         collectX.toArray(new String[0]));
@@ -101,9 +110,10 @@ public class LagRuleApplication extends AbstractDynamicDeductionRule {
    */
   private String[][] getUpdatedCategories(String[] newItemCategoryHead,
       String[][] categories) {
-    String[][] updatedCategories = new String[categories.length + 1][];
+    String[][] updatedCategories = new String[categories.length - 1][];
     updatedCategories[0] = newItemCategoryHead;
-    System.arraycopy(categories, 0, updatedCategories, 1, categories.length);
+    System
+        .arraycopy(categories, 2, updatedCategories, 1, categories.length - 2);
     return updatedCategories;
   }
 }

@@ -3,6 +3,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.converter;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg.CcgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.lag.LagToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToAstarRulesConverter;
@@ -13,6 +14,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRul
 import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
+import com.github.samyadaleh.cltoolbox.common.lag.Lag;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 
@@ -180,6 +182,16 @@ public class GrammarToDeductionRulesConverter {
     validateInputSymbols(ccg, w);
     if ("ccg-deduction".equals(algorithm)) {
       return CcgToDeductionRulesConverter.ccgToDeductionRules(ccg, w);
+    }
+    throw new ParseException(
+        "I did not understand. Please check the spelling of your parsing algorithm.",
+        1);
+  }
+
+  public static ParsingSchema convertToSchema(Lag lag, String w,
+      String algorithm) throws ParseException {
+    if ("lag-deduction".equals(algorithm)) {
+      return LagToDeductionRulesConverter.lagToDeductionRules(lag, w);
     }
     throw new ParseException(
         "I did not understand. Please check the spelling of your parsing algorithm.",

@@ -1644,8 +1644,8 @@ How to add a new parsing algorithm to the Toolbox:
 For this you need to make up your mind about grammar format and internal data 
 structure. The data structure shall closely resemble the definition and use its
 vocabulary. Use the other grammar parsers as an example and check if you can 
-reuse code for them for instance the `TokenReader` that returns the raw grammar 
-defintion token-wise.
+reuse code for them for instance the `com.github.samyadaleh.cltoolbox.common.parser.TokenReader`
+that returns the raw grammar defintion token-wise.
     1. If you have a grammar formalism where elements are defined as Symbol = 
     {some definition} it is recommended to use the existing parsing structure.
     If not, you might at least reuse the `TokenReader`, that takes a reader and
@@ -1715,17 +1715,24 @@ defintion token-wise.
         `itemForm` provides, feel free to create a new implementation with the 
         data structure you need. Just convert them to a proper string 
         representation in `itemForm`. 
-2. In the respective `ToDeductionRulesConverter` create a method that takes 
+2. In the respective `*ToDeductionRulesConverter` create a method that takes 
 your grammar formalism and the input string as input and returns a 
 `ParsingSchema` object. Create `DynamicDeductionRule` objects and add them as 
 rules. Create `StaticDeductionRule` objects, give them a name and add them as 
-axioms. Add an Item as Goal.
-3. Add the new algorithm to `GrammarToDeductionRulesConverter` with a name it 
-should be callable in the command line interface.
-4. Add the algorithm with the same name to `GrammarToGrammarConverter`. If 
-there are restrictions on the grammar format check for them here and add a 
+axioms. Add at least one item as goal item.
+3. Add the new algorithm to `com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter`
+with a name it should be callable with from the command line interface.
+By convention the
+name of the algorithm is prefixed with the formalism to distinguish for instance
+between CYK for CFG and CYK for TAG. By convention the algorithm name is 
+suffixed by a name of a variety if applicable, to distinguish for instance 
+between the usual CYK and the CYK General algorithm.
+4. If any kind of check or conversion needs to be done add the algorithm with 
+the same name to `com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter`.
+If there are restrictions on the grammar format check for them here and add a 
 conversion strategy for the please-switch.
-5. In `Main` if you implemented a new formalism add a call to the grammar 
+5. In `com.github.samyadaleh.cltoolbox.cli.Main` if you implemented a new 
+formalism add a call to the grammar 
 parser and calls to the respective convert methods here. In any case update the
 `printHelp()` method to inform the user about the new option.
 6. In `MainTest` add a call to the new algorithm.
