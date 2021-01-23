@@ -17,6 +17,7 @@ public class Constants {
   public final static String DEDUCTION_RULE_CFG_SHIFTREDUCE_AXIOM = "axiom";
   public final static String DEDUCTION_RULE_CFG_TOPDOWN_AXIOM = "axiom";
   public final static String DEDUCTION_RULE_CFG_UNGER_AXIOM = "axiom";
+  public final static String DEDUCTION_RULE_LAG_DEDUCTION_AXIOM = "axiom";
   public final static String DEDUCTION_RULE_LCFRS_CYK_AXIOM = "scan";
   public final static String DEDUCTION_RULE_LCFRS_EARLEY_AXIOM = "initialize";
   public final static String DEDUCTION_RULE_PCFG_CYK_AXIOM = "scan";

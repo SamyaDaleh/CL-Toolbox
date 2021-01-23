@@ -9,6 +9,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
+import com.github.samyadaleh.cltoolbox.common.lag.Lag;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import com.github.samyadaleh.cltoolbox.common.parser.*;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
@@ -184,6 +185,8 @@ public class Main { // NO_UCD (test only)
       return parseSrcgFileAndConvertToSchema(grammarReader, w, algorithm);
     case "ccg":
       return parseCcgFileAndConvertToSchema(grammarReader, w, algorithm);
+    case "lag":
+      return parseLagFileAndConvertToSchema(grammarReader, w, algorithm);
     default:
       throw new IllegalArgumentException("Unknown formalism: " + formalism);
     }
@@ -194,6 +197,13 @@ public class Main { // NO_UCD (test only)
       throws IOException, ParseException {
     Ccg ccg = CcgParser.parseCcgReader(grammarReader);
     return GrammarToDeductionRulesConverter.convertToSchema(ccg, w, algorithm);
+  }
+
+  private static ParsingSchema parseLagFileAndConvertToSchema(
+      BufferedReader grammarReader, String w, String algorithm)
+      throws ParseException {
+    Lag lag = LagParser.parseLagReader(grammarReader);
+    return GrammarToDeductionRulesConverter.convertToSchema(lag, w, algorithm);
   }
 
   private static ParsingSchema parseSrcgFileAndConvertToSchema(
@@ -234,8 +244,6 @@ public class Main { // NO_UCD (test only)
     String[] algorithmSplit = algorithm.split("-");
     switch (algorithmSplit[0]) {
     case "cfg":
-      throw new IllegalArgumentException(
-          "I can't parse with a less expressive formalism.");
     case "pcfg":
       throw new IllegalArgumentException(
           "I can't parse with a less expressive formalism.");
@@ -372,6 +380,7 @@ public class Main { // NO_UCD (test only)
         + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
         + "\n   cfg-shiftreduce" + "\n   cfg-lr-k   (with k >=0)"
         + "\n   cfg-unger" + "\n   pcfg-astar" + "\n   pcfg-cyk"
+        + "\n   lag-deduction"
         + "\n   tag-cyk-extended" + "\n   tag-cyk-general" + "\n   tag-earley"
         + "\n   tag-earley-prefixvalid" + "\n   srcg-cyk-extended"
         + "\n   srcg-cyk-general" + "\n   srcg-earley");

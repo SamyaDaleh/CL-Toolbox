@@ -1,7 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.parser;
 
 /**
- * Stores a token along with the line it was found in.
+ * Stores a token along with the line number it was found in.
  */
 public class Token {
   private final String token;

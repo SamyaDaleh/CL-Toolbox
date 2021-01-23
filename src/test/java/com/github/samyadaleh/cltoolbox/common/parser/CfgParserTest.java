@@ -64,4 +64,12 @@ public class CfgParserTest {
             + "P = {N1 -> t0 t1}");
     CfgParser.parseCfgReader(reader);
   }
+
+  @Test public void testParseCfgAndDoStuff() throws ParseException {
+    StringReader reader = new StringReader(
+        "N = {N0, N1}\n" + "T = {t0, t1, t2}\n" + "S = N0\n"
+            + "P = {N0 -> ε, N1 -> N0 t1 N0 N0, N0 -> t1, N1 -> N0, N0 -> t0 N0 N1 N1}\n");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    assertEquals("", cfg.getCfgWithoutChainRules().toString());
+  }
 }

@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.ccg.CcgToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.*;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.lag.LagToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToAstarRulesConverter;
@@ -11,7 +12,9 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPre
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
+import com.github.samyadaleh.cltoolbox.common.lag.Lag;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import com.github.samyadaleh.cltoolbox.common.parser.LagParser;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.junit.Ignore;
@@ -724,6 +727,21 @@ public class DeductionTest {
     assertEquals(
         "(S (NP (Trip ))(S\\NP ([S\\NP]/NP ([S\\NP]/[S\\NP] (certainly ))([S\\NP]/NP (likes )))(NP (merengue ))))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testLag() throws ParseException {
+    String w = "a a a b b b c c c";
+    String lagGrammar = "G = <W, C, LX, CO, RP, ST_S, ST_F>\n"
+        + "LX = {[a (b c)], [b (b)], [c (c)]}\n"
+        + "ST_S = {[{r1, r2} (b c)]}\n" + "RP = {"
+        + "r1 : [(X) (b c)] -> [{r1, r2} (b X c)],\n"
+        + "r2 : [(b X c) (b)] -> [{r2, r3} (X c)],\n"
+        + "r3 : [(c X) (c)] -> [{r3} (X)]}\n" + "ST_F = {[{r3} ε]}\n";
+    StringReader reader = new StringReader(lagGrammar);
+    Lag lag = LagParser.parseLagReader(reader);
+    ParsingSchema schema = LagToDeductionRulesConverter.lagToDeductionRules(lag, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
   }
 
   @Test public void testLatexComputationGraphCfgTopdown() {
