@@ -41,6 +41,9 @@ public class Constants {
   public final static String DEDUCTION_RULE_CFG_LEFTCORNER_MOVE = "move";
   public final static String DEDUCTION_RULE_CFG_LEFTCORNER_REDUCE = "reduce";
   public final static String DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE = "remove";
+  public final static String DEDUCTION_RULE_CFG_LEFTCORNER_BOTTOMUP_LC = "LC(Nt)";
+  public final static String DEDUCTION_RULE_CFG_LEFTCORNER_BOTTOMUP_SCAN = "Scan";
+  public final static String DEDUCTION_RULE_CFG_LEFTCORNER_BOTTOMUP_COMPLETE = "Complete";
   public final static String DEDUCTION_RULE_CFG_SHIFTREDUCE_REDUCE = "reduce";
   public final static String DEDUCTION_RULE_CFG_SHIFTREDUCE_SHIFT = "shift";
   public final static String DEDUCTION_RULE_CFG_LRK_REDUCE = "reduce";

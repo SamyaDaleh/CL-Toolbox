@@ -356,6 +356,20 @@ public class DeductionTest {
     // assertEquals(8, deduction.getDerivedTrees().size());
   }
 
+  @Test public void testCfgLeftcornerBottomUp() throws ParseException {
+    String w = "a a b b";
+    ParsingSchema schema = CfgToLeftCornerBottomUpRulesConverter
+        .cfgToLeftCornerBottomUpRules(
+            Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(4, deduction.getMaxAgendaSize());
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+   /* assertEquals("(S (a )(S (a )(b ))(b ))",
+        deduction.getDerivedTrees().get(0).toString()); //*/
+  }
+
 
   @Test public void testCfgCyk() throws ParseException {
     String w = "a a b b";

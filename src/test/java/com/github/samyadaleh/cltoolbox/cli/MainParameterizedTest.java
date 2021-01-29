@@ -17,11 +17,11 @@ import java.util.Collection;
         new String[][] {{"cfg-neverheardofthis"}, {"cfg-topdown"},
             {"cfg-shiftreduce"}, {"cfg-lr-0"}, {"cfg-lr-1"}, {"cfg-earley"},
             {"cfg-earley-bottomup"}, {"cfg-earley-passive"}, {"cfg-leftcorner"},
-            {"cfg-leftcorner-chart"}, {"cfg-cyk"}, {"cfg-cyk-extended"},
-            {"cfg-cyk-general"}, {"cfg-unger"}, {"pcfg-astar"}, {"pcfg-cyk"},
-            {"tag-earley"}, {"tag-cyk-extended"}, {"tag-cyk-general"},
-            {"tag-earley-prefixvalid"}, {"srcg-cyk-extended"},
-            {"srcg-cyk-general"}, {"srcg-earley"}});
+            {"cfg-leftcorner-bottomup"}, {"cfg-leftcorner-chart"}, {"cfg-cyk"},
+            {"cfg-cyk-extended"}, {"cfg-cyk-general"}, {"cfg-unger"},
+            {"pcfg-astar"}, {"pcfg-cyk"}, {"tag-earley"}, {"tag-cyk-extended"},
+            {"tag-cyk-general"}, {"tag-earley-prefixvalid"},
+            {"srcg-cyk-extended"}, {"srcg-cyk-general"}, {"srcg-earley"}});
   }
 
   public MainParameterizedTest(String algorithm) {

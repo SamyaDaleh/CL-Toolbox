@@ -14,6 +14,7 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_LEFTCORNER_CHART_AXIOM_EPSILON;
 
 public class CfgToLeftCornerChartRulesConverter {
+
   /**
    * Converts a cfg to a parsing scheme for LeftCorner parsing, chart version.
    * Based on https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the

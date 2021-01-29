@@ -20,6 +20,7 @@ public class GrammarToGrammarConverter {
     case "cfg-earley-bottomup":
     case "cfg-earley-passive":
     case "cfg-leftcorner-chart":
+    case "cfg-leftcorner-bottomup":
     case "cfg-cyk-general":
       return cfg;
     case "cfg-leftcorner":

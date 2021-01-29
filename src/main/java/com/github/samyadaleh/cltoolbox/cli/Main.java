@@ -377,6 +377,7 @@ public class Main { // NO_UCD (test only)
         + "\n   cfg-cyk" + "\n   cfg-cyk-extended" + "\n   cfg-cyk-general"
         + "\n   cfg-earley" + "\n   cfg-earley-bottomup"
         + "\n   cfg-earley-passive" + "\n   cfg-leftcorner"
+        + "\n   cfg-leftcorner-bottomup"
         + "\n   cfg-leftcorner-chart" + "\n   cfg-topdown"
         + "\n   cfg-shiftreduce" + "\n   cfg-lr-k   (with k >=0)"
         + "\n   cfg-unger" + "\n   pcfg-astar" + "\n   pcfg-cyk"
