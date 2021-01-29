@@ -65,6 +65,7 @@ how they work.
 * `cfg-earley-bottomup`
 * `cfg-earley-passive`
 * `cfg-leftcorner`
+* `cfg-leftcorner-bottomup`
 * `cfg-leftcorner-chart`
 * `cfg-topdown`
 * `cfg-shiftreduce`
@@ -966,10 +967,39 @@ instantiated once.
 
 Goal item: [ε, ε, ε]
 
+##### CFG Bottom Up Left Corner
+
+This version of left corner, as the name suggests, works in a bottom-up 
+fashion.
+
+Epsilon:<br/>
+<br/>
+____________0 <=i <= n<br/>
+[A → •, j, j]<br/>
+instantiated for every epsilon production rule.
+
+LC(a):<br/>
+<br/>
+____________0 <=i < n<br/>
+[B → a •β, i, i+1]<br/>
+instantiated for every production rule where the left corner a is a terminal.
+
+LC(A):<br/>
+[A → α •, i, j]<br/>
+____________<br/>
+[B → A •β, i, i+1]<br/>
+instantiated for every production rule where the left corner A is a 
+nonterminal.
+
+Scan and Complete are the same rules as for Earley.
+
+Goal items: [S → α •, 0, n]<br/>
+for every rule where the lhs is the start symbol.
+
 ##### CFG Left Corner Chart
 
 This version of left corner works with any grammar and similar to the 
-previously mentioned version, but its items look different. There are two types
+vanilla version, but its items look different. There are two types
 of items: Passive items contain a symbol that has completely been seen while 
 active items contain a production rule where a dot indicates up to which entry 
 of the right hand side the rule has been seen. Both items also contain an index
@@ -1882,14 +1912,20 @@ S. 283–308.
 Online verfügbar unter https://www.sciencedirect.com/science/article/pii/030439759290253C, 
 zuletzt geprüft am 13.04.2020.
 
+### Left Corner Bottom-up for CFG
+
+Sikkel, Klaas: Parsing schemata : a framework for specification and analysis of 
+parsing algorithms. Berlin : Springer, 
+1997 (Texts in theo­re­ti­cal com­pu­ter sci­ence). – ISBN 978-3-540-61650-4 p. 80
+
 ### Earley for CFG
 
 Kallmeyer, Laura: Earley Parsing (Parsing). Düsseldorf, Wintersemester 16/17. 
 URL [https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/earley.pdf](https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/earley.pdf) – last checked 2017-05-27, p. 6-8
 
-### Earley Bottom-up
+### Earley Bottom-up for CFG
 
-Sikkel, Klaas:Parsing schemata : a framework for specification and analysis of 
+Sikkel, Klaas: Parsing schemata : a framework for specification and analysis of 
 parsing algorithms. Berlin : Springer, 
 1997 (Texts in theo­re­ti­cal com­pu­ter sci­ence). – ISBN 978-3-540-61650-4 p. 79
 
