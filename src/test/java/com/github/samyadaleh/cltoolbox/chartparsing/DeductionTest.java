@@ -20,6 +20,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
@@ -220,6 +221,22 @@ public class DeductionTest {
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     assertEquals("(N0 (ε ))", deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgLeftCornerMissingGoalTree() throws ParseException {
+    String w = "a b c b c b";
+    String grammar = "N = {S, A, B}\n" + "T = {a, b, c}\n" + "S = S\n"
+        + "P = {S -> a b S | c A, A -> b B, B -> c b B | ε}";
+    Cfg cfg = new Cfg(new BufferedReader(new StringReader(grammar)));
+    ParsingSchema schema = CfgToLeftCornerChartRulesConverter
+        .cfgToLeftCornerChartRules(cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(1, deduction.getDerivedTrees().size());
+    assertEquals("(S (a )(b )(S (c )(A (b )(B (c )(b )(B (ε ))))))",
+        deduction.getDerivedTrees().get(0).toString());
   }
 
   @Test public void testCfgEarleyBottomupMissingInitialize()

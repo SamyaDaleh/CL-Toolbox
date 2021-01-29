@@ -63,6 +63,13 @@ public class CfgLeftCornerChartRemove
         String.valueOf(l1 + l2));
     List<Tree> derivedTrees =
         ChartParsingUtils.generateDerivatedTrees(antecedences, itemForm1);
+    if (derivedTrees.size() == 0) {
+      if (antecedences.get(0).getTrees().size() == 0){
+        derivedTrees = antecedences.get(1).getTrees();
+      } else {
+        derivedTrees = antecedences.get(0).getTrees();
+      }
+    }
     consequence.setTrees(derivedTrees);
     logItemGeneration(consequence);
     consequences.add(consequence);
