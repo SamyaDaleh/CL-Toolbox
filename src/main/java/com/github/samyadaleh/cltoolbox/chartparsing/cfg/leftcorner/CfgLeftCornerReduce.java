@@ -36,7 +36,11 @@ public class CfgLeftCornerReduce extends AbstractDynamicDeductionRule {
             .getSubSequenceAsString(stackComplSplit, 1, itemForm[0].length());
         String newPred;
         if (rule.getRhs().length == 1) {
-          newPred = "$ " + itemForm[1];
+          if (itemForm[1].length() == 0){
+            newPred = "$";
+          } else {
+            newPred = "$ " + itemForm[1];
+          }
         } else {
           newPred = ArrayUtils
               .getSubSequenceAsString(rule.getRhs(), 1, rule.getRhs().length)
