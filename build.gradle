@@ -1,9 +1,13 @@
+import org.gradle.logging.ShowStacktrace
+
 plugins {
     id 'java'
     id 'jacoco'
     id 'de.jansauer.printcoverage' version '2.0.0'
     id 'maven-publish'
 }
+
+gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
 
 repositories {
     mavenCentral()

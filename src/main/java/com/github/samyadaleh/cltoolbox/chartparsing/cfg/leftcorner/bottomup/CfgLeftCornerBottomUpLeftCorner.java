@@ -41,4 +41,8 @@ public class CfgLeftCornerBottomUpLeftCorner
     consequences.add(consequence);
     return consequences;
   }
+
+  @Override public String toString() {
+    return "[" + lc + " -> α •,i,l]" + "\n______ \n" + "[" + newStack + ",i,l]";
+  }
 }
