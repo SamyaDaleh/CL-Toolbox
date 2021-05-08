@@ -5,6 +5,8 @@ plugins {
     id 'maven-publish'
 }
 
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
 repositories {
     mavenCentral()
 }
