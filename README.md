@@ -24,14 +24,22 @@ Parsing as Deduction:
 It prints out full parsing traces along with applied rules and antecedence items.
 Use it to generate examples, play around with grammars etc.
 
+## Without Installation
+
+If you just want to get parsing traces of the most common algorithms, please 
+visit http://samyadaleh.de/. You can insert grammar and input for all algorithms 
+listed there, afterwards click Help > Solve Task to get the full trace.
+
 ## Installation
 
-Download the standalone-jar from /releases and that's it. The jar already contains needed third-party libraries. You need Java 8 or higher installed for the jar to run, or else compile it for yourself.
-
-Or if you want to tinker with the code, for me it worked like this:
+If you want to tinker with the code, for me it worked like this:
 - use your favorite IDE to clone/checkout the project
-- add the dependencies to your classpath/build path, preferable with the build.gradle file
-- run the JUnit tests in test.src to verify that everything is working. You should see some success messages and parsing outputs.
+- add the dependencies to your classpath/build path, preferable with the 
+build.gradle file
+- run the JUnit tests in test.src to verify that everything is working. 
+You should see some success messages and parsing outputs.
+
+Logged-in GitHub users can download the latest jar from the Action tab.
 
 ### Dependencies
 
@@ -39,9 +47,12 @@ See build.gradle.
 
 ## Usage
 
-Run it in your IDE. Or download the jar from folder releases and run it from the command line. Run it without parameters to get a help about how to use it.
+Run it in your IDE.
 
-Call with java -Dfile.encoding="UTF-8" -jar ... to correctly display special characters. Or call CL-Toolbox.bat (Windows) or CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have to type in the encoding.
+If you downloaded or produced a jar, call with java -Dfile.encoding="UTF-8" -jar ... to 
+correctly display special characters. Or call CL-Toolbox.bat (Windows) or 
+CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have 
+to type in the encoding.
 
 Video series about background and demonstration :
 [English](https://www.youtube.com/playlist?list=PLlnJDVO5phqbKLKRvvQcrBK0VQjc6y7BH)
