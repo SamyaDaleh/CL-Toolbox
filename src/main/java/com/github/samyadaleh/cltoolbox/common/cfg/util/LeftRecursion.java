@@ -102,7 +102,10 @@ public class LeftRecursion {
     ArrayList<String> newNts = new ArrayList<>();
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-      cfg.addProductionRule(rule.toString());
+      if (!rule.getLhs().equals(rule.getRhs()[0])
+          || rule.getRhs().length != 1) {
+            cfg.addProductionRule(rule.toString());
+          }
     }
     for (int i = 0; i < cfgOld.getNonterminals().length; i++) {
       String nt = cfgOld.getNonterminals()[i];

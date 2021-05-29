@@ -516,6 +516,37 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg crazyLeftRecursionRemovalCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S1", "N2", "S", "N1"});
+    cfg.setTerminals(new String[] {"t0"});
+    try {
+      cfg.addProductionRule("S -> S");
+      cfg.addProductionRule("N1 -> S");
+      cfg.addProductionRule("N1 -> N1");
+      cfg.addProductionRule("N2 -> t0");
+      cfg.addProductionRule("S -> N2");
+      cfg.addProductionRule("N1 -> t0");
+      cfg.addProductionRule("S -> N1 S N1");
+      cfg.addProductionRule("S -> N1 S");
+      cfg.addProductionRule("S -> N1 N1");
+      cfg.addProductionRule("S -> N1");
+      cfg.addProductionRule("S1 -> S");
+      cfg.addProductionRule("S1 -> ε");
+      cfg.addProductionRule("S -> S N1");
+      cfg.addProductionRule("S -> N1 S");
+      cfg.addProductionRule("S -> S");
+      cfg.addProductionRule("S -> N1");
+      cfg.addProductionRule("S -> N1");
+      cfg.addProductionRule("S -> S");
+      cfg.addProductionRule("S -> S");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S1");
+    return cfg;
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});
