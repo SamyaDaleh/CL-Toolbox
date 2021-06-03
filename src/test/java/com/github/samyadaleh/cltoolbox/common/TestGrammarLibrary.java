@@ -547,6 +547,22 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg leftRecursionNotRemovedCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "N1"});
+    cfg.setTerminals(new String[] {"t0"});
+    try {
+      cfg.addProductionRule("S -> t0");
+      cfg.addProductionRule("N1 -> S");
+      cfg.addProductionRule("S -> N1");
+      cfg.addProductionRule("S -> S S");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Pcfg niceUglyCarPcfg() {
     Pcfg pcfg = new Pcfg();
     pcfg.setNonterminals(new String[] {"N", "A"});

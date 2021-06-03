@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Objects;
 
+import com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter;
 import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import org.junit.Ignore;
@@ -128,6 +129,18 @@ public class CfgTest {
     assertEquals("G = <N, T, S, P>\n" + "N = {S1, N2, S, N1, S2, N11}\n"
         + "T = {t0}\n" + "S = S1\n"
         + "P = {N2 -> t0, S -> N1 S, S -> N1, S1 -> S, S1 -> ε, S -> N1 S2, S -> N1 S2, S -> N1 S S2, S2 -> N1 S2, S -> N1 S2, S -> N1 N1 S2, S -> N1 S S2, S -> N1 S N1 S2, N1 -> N1 S2, N1 -> N1 S2, N1 -> N1 S S2, N11 -> N1 S2 N11, N11 -> S2 N11, N11 -> S S2 N11, N11 -> S2 N11, N11 -> S2 N11, N11 -> S N11, N1 -> t0 N11}\n",
+        cfgwlr.toString());
+  }
+
+  @Test
+  public void testLeftRecursionNotRemoved()
+      throws ParseException {
+    Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
+        TestGrammarLibrary.leftRecursionNotRemovedCfg(), "cfg-topdown", true);
+    assertFalse(cfgwlr.hasLeftRecursion());
+    assertEquals("G = <N, T, S, P>\n" + "N = {S, N1, S1}\n" + "T = {t0}\n"
+            + "S = S\n"
+            + "P = {N1 -> t0, N1 -> S S, S1 -> ε, S1 -> S S1, S -> t0 S1}\n",
         cfgwlr.toString());
   }
 

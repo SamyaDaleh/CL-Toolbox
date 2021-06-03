@@ -237,7 +237,8 @@ public class GrammarToGrammarConverter {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
             .getCfgWithoutNonGeneratingSymbols()
-            .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
+            .getCfgWithoutNonReachableSymbols().getCfgWithoutChainRules()
+            .getCfgWithoutLeftRecursion();
       } else {
         throw new ParseException(
             "CFG must not contain left recursion for TopDown parsing.", 1);
