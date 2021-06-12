@@ -201,7 +201,7 @@ public class GrammarToGrammarConverter {
       throws ParseException {
     if (cfg.hasEpsilonProductions() || cfg.hasLeftRecursion()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutLeftRecursion()
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutChainRules().getCfgWithoutLeftRecursion()
             .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols();
       } else {

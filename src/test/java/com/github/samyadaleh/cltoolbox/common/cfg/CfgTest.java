@@ -145,6 +145,16 @@ public class CfgTest {
   }
 
   @Test
+  public void testLeftRecursionEndlessRemovalLeftCorner()
+      throws ParseException {
+    Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
+        TestGrammarLibrary.leftRecursionEndlessRemovalCfg(), "cfg-leftcorner", true);
+    assertEquals("G = <N, T, S, P>\n" + "N = {S3}\n" + "T = {}\n" + "S = S3\n"
+            + "P = {S3 -> ε}\n",
+        cfgwlr.toString());
+  }
+
+  @Test
   public void testRemoveNotReachableSymbols() {
     Cfg after = Objects
         .requireNonNull(TestGrammarLibrary.nonReachableSymbolsCfg())
