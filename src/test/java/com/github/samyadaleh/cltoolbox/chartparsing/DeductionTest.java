@@ -300,7 +300,7 @@ public class DeductionTest {
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     Tree tree1 = new Tree("(S (ε )");
-    Tree tree2 = new Tree("(S (N1 (S (ε )))(S (N1 (ε ))))");
+    Tree tree2 = new Tree("(S (N1 (S (ε )))(N1 (S (ε ))))");
     assertTrue(deduction.getDerivedTrees().contains(tree1));
     assertTrue(deduction.getDerivedTrees().contains(tree2));
     assertEquals(2, deduction.getDerivedTrees().size());

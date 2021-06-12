@@ -51,4 +51,11 @@ public class TreeTest {
     Tree tree2 = new Tree("(S (N1 (S (ε )))(N1 (S (t0 ))))");
     assertFalse(tree2.allLeavesAreEpsilon());
   }
+
+  @Test public void testContains() throws ParseException {
+    Tree tree1 = new Tree("(S (N1 (S (ε )))(N1 (S (ε ))))");
+    Tree tree2 = new Tree("(N1 (S ))");
+    assertTrue(tree1.contains(tree2));
+    assertFalse(tree2.contains(tree1));
+  }
 }
