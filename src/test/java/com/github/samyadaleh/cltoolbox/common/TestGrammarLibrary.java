@@ -485,6 +485,21 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg emptyWordMoreComplicatedCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "N1"});
+    cfg.setTerminals(new String[] {});
+    try {
+      cfg.addProductionRule("S -> ε");
+      cfg.addProductionRule("N1 -> S");
+      cfg.addProductionRule("S -> N1 N1");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Cfg highlyRecursiveCfg() {
     Cfg cfg = new Cfg();
     cfg.setNonterminals(new String[] {"S"});

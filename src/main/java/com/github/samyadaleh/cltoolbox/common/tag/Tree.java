@@ -606,4 +606,32 @@ public class Tree {
   public int hashCode() {
     return this.toString().hashCode();
   }
+
+  /**
+   * Returns true if structure tree1 is a subtree of this tree, meaning there
+   * is a node constellation with the same labels.
+   */
+  public boolean contains(Tree tree1) {
+    // TODO implement
+    return false;
+  }
+
+  /**
+   * Returns true if all leaves are epsilon nodes
+   */
+  public boolean allLeavesAreEpsilon() {
+    return allLeavesAreEpsilon(root);
+  }
+
+  private boolean allLeavesAreEpsilon(Vertex node) {
+    if (!hasChildren(node)) {
+      return "".equals(node.getLabel());
+    } else  {
+      boolean allLeavesAreEpsilon = true;
+      for (Vertex child : this.getChildren(node)){
+        allLeavesAreEpsilon = allLeavesAreEpsilon && allLeavesAreEpsilon(child);
+      }
+      return allLeavesAreEpsilon;
+    }
+  }
 }
