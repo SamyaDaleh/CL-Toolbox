@@ -254,4 +254,12 @@ public class CfgTest {
     assertTrue(cfgLeftLinear.toString().contains("S -> q1 b"));
     assertTrue(cfgLeftLinear.toString().contains("S -> ε"));
   }
+
+  @Test public void testRemoveLoops() {
+    Cfg cfg = TestGrammarLibrary.loopRemovalCfg();
+    Cfg cfgNoLoops = cfg.getCfgWithoutLoops();
+    assertEquals("G = <N, T, S, P>\n" + "N = {S, N1}\n" + "T = {a, b}\n"
+        + "S = S1\n" + "P = {S -> a a N1, S -> b N1, N1 -> b N1, N1 -> a}\n",
+        cfgNoLoops.toString());
+  }
 }

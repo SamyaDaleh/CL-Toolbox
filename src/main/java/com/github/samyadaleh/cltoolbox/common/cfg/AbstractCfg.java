@@ -2,6 +2,9 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.common.AbstractNTSGrammar;
 
+/**
+ * Generalization of CFG and PCFG to  provide the string representation.
+ */
 public abstract class AbstractCfg extends AbstractNTSGrammar {
 
   @Override public String toString() {

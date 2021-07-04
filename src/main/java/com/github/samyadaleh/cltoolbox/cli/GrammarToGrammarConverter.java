@@ -56,7 +56,7 @@ public class GrammarToGrammarConverter {
               .getCfgWithoutNonGeneratingSymbols()
               .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
               .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
-              .getCfgWithoutChainRules());
+              .getCfgWithoutLoops());
         } else {
           throw new ParseException(
               "CFG must be in Chomsky Normal Form to convert it into a PCFG where "
@@ -187,7 +187,7 @@ public class GrammarToGrammarConverter {
             .getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
             .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
-            .getCfgWithoutChainRules();
+            .getCfgWithoutLoops();
       } else {
         throw new ParseException(
             "CFG must be in Chomsky Normal Form for CYK parsing.", 1);
@@ -201,7 +201,7 @@ public class GrammarToGrammarConverter {
       throws ParseException {
     if (cfg.hasEpsilonProductions() || cfg.hasLeftRecursion()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutChainRules()
+        return cfg.getCfgWithoutEmptyProductions().getCfgWithoutLoops()
             .getCfgWithoutLeftRecursion().getCfgWithoutEmptyProductions()
             .getCfgWithoutNonGeneratingSymbols()
             .getCfgWithoutNonReachableSymbols();
@@ -238,7 +238,7 @@ public class GrammarToGrammarConverter {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
             .getCfgWithoutNonGeneratingSymbols()
-            .getCfgWithoutNonReachableSymbols().getCfgWithoutChainRules()
+            .getCfgWithoutNonReachableSymbols().getCfgWithoutLoops()
             .getCfgWithoutLeftRecursion();
       } else {
         throw new ParseException(

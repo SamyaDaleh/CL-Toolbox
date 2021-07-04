@@ -328,4 +328,13 @@ public class Cfg extends AbstractCfg {
   public Cfg getCfgWithReversedProductionRules() {
     return ReverseProductionRules.getCfgWithReversedProductionRules(this);
   }
+
+  /**
+   * A loop is a structure like A -> B, B -> A or more chains. Returns a new
+   * cfg where nonterminals part of a loop were replaced by a single
+   * nonterminal.
+   */
+  public Cfg getCfgWithoutLoops() {
+    return Loops.getCfgWithoutLoops(this);
+  }
 }

@@ -290,6 +290,15 @@ public class DeductionTest {
     assertTrue(deduction.getDerivedTrees().contains(tree));
   }
 
+  @Ignore("Need to look into") public void testCfgEarleyPruneTrees() throws ParseException {
+    String w = "t0 t0";
+    ParsingSchema schema = CfgToEarleyRulesConverter
+        .cfgToEarleyRules(TestGrammarLibrary.pruneTreesCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(2, deduction.getDerivedTrees().size());
+  }
+
   @Test public void testCfgLeftcorner() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToLeftCornerRulesConverter.cfgToLeftCornerRules(

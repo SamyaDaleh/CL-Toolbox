@@ -485,6 +485,38 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg emptyWordMoreComplicatedCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "N1"});
+    cfg.setTerminals(new String[] {});
+    try {
+      cfg.addProductionRule("S -> ε");
+      cfg.addProductionRule("N1 -> S");
+      cfg.addProductionRule("S -> N1 N1");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
+  public static Cfg pruneTreesCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "N1"});
+    cfg.setTerminals(new String[] {"t0"});
+    try {
+      cfg.addProductionRule("S -> ε");
+      cfg.addProductionRule("N1 -> S");
+      cfg.addProductionRule("S -> t0 N1");
+      cfg.addProductionRule("N1 -> t0");
+      cfg.addProductionRule("S -> N1 S");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Cfg highlyRecursiveCfg() {
     Cfg cfg = new Cfg();
     cfg.setNonterminals(new String[] {"S"});
@@ -575,6 +607,26 @@ public class TestGrammarLibrary {
       cfg.addProductionRule("S -> N3");
       cfg.addProductionRule("S1 -> S");
       cfg.addProductionRule("S1 -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S1");
+    return cfg;
+  }
+
+  public static Cfg loopRemovalCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "A", "B", "C"});
+    cfg.setTerminals(new String[] {"a", "b"});
+    try {
+      cfg.addProductionRule("S -> a a B");
+      cfg.addProductionRule("S -> b A");
+      cfg.addProductionRule("A -> B");
+      cfg.addProductionRule("A -> C");
+      cfg.addProductionRule("B -> b B");
+      cfg.addProductionRule("B -> a");
+      cfg.addProductionRule("C -> B");
+      cfg.addProductionRule("B -> A");
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }
