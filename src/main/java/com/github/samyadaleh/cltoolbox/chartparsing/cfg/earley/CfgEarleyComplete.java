@@ -20,9 +20,12 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 public class CfgEarleyComplete
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
-  public CfgEarleyComplete() {
+  private String[] nonterminals;
+
+  public CfgEarleyComplete(String[] nonterminals) {
     this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
     this.antNeeded = 2;
+    this.nonterminals = nonterminals;
   }
 
   protected void calculateConsequences(String[] itemForm1, String[] itemForm2) {
@@ -59,7 +62,8 @@ public class CfgEarleyComplete
           if (antecedences.get(0).getItemForm() == itemForm1) {
             for (Tree tree1 : antecedences.get(0).getTrees()) {
               for (Tree tree2 : antecedences.get(1).getTrees()) {
-                if (tree2.contains(tree1) && tree2.allLeavesAreEpsilon()) {
+                if (tree2.contains(tree1) && (tree2.allLeavesAreEpsilon()
+                    || tree1.oneSubstitutionNodeRestEpsilon(nonterminals))) {
                   continue;
                 }
                 derivedTrees
@@ -69,7 +73,8 @@ public class CfgEarleyComplete
           } else {
             for (Tree tree2 : antecedences.get(0).getTrees()) {
               for (Tree tree1 : antecedences.get(1).getTrees()) {
-                if (tree2.contains(tree1) && tree2.allLeavesAreEpsilon()) {
+                if (tree2.contains(tree1) && (tree2.allLeavesAreEpsilon()
+                    || tree1.oneSubstitutionNodeRestEpsilon(nonterminals))) {
                   continue;
                 }
                 derivedTrees

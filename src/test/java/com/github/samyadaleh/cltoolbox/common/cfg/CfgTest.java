@@ -138,9 +138,8 @@ public class CfgTest {
     Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
         TestGrammarLibrary.leftRecursionNotRemovedCfg(), "cfg-topdown", true);
     assertFalse(cfgwlr.hasLeftRecursion());
-    assertEquals("G = <N, T, S, P>\n" + "N = {S, N1, S1}\n" + "T = {t0}\n"
-            + "S = S\n"
-            + "P = {N1 -> t0, N1 -> S S, S1 -> ε, S1 -> S S1, S -> t0 S1}\n",
+    assertEquals("G = <N, T, S, P>\n" + "N = {N2, N21}\n" + "T = {t0}\n"
+            + "S = N2\n" + "P = {N21 -> ε, N21 -> N2 N21, N2 -> t0 N21}\n",
         cfgwlr.toString());
   }
 
@@ -149,8 +148,8 @@ public class CfgTest {
       throws ParseException {
     Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
         TestGrammarLibrary.leftRecursionEndlessRemovalCfg(), "cfg-leftcorner", true);
-    assertEquals("G = <N, T, S, P>\n" + "N = {S3}\n" + "T = {}\n" + "S = S3\n"
-            + "P = {S3 -> ε}\n",
+    assertEquals("G = <N, T, S, P>\n" + "N = {S1}\n" + "T = {}\n" + "S = S1\n"
+            + "P = {S1 -> ε}\n",
         cfgwlr.toString());
   }
 

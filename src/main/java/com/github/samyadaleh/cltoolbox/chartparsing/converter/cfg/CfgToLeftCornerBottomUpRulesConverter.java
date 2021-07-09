@@ -49,7 +49,7 @@ public class CfgToLeftCornerBottomUpRulesConverter {
         }
       }
       schema.addRule(new CfgEarleyScan(wSplit));
-      schema.addRule(new CfgEarleyComplete());
+      schema.addRule(new CfgEarleyComplete(cfg.getNonterminals()));
       if (rule.getLhs().equals(cfg.getStartSymbol())) {
         if (rule.getRhs()[0].equals("")) {
           schema.addGoal(

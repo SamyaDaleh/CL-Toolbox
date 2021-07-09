@@ -34,7 +34,8 @@ public class CfgToEarleyRulesConverter {
     DynamicDeductionRuleInterface scan = new CfgEarleyScan(wSplit);
     schema.addRule(scan);
 
-    DynamicDeductionRuleInterface complete = new CfgEarleyComplete();
+    DynamicDeductionRuleInterface complete
+        = new CfgEarleyComplete(cfg.getNonterminals());
     schema.addRule(complete);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {

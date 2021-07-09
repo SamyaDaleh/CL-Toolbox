@@ -667,4 +667,43 @@ public class Tree {
       return allLeavesAreEpsilon;
     }
   }
+
+  /**
+   * Return true if the tree has one substitution node and all other leaves are
+   * epsilon.
+   */
+  public boolean oneSubstitutionNodeRestEpsilon(String[] nonterminals) {
+    List<String> types = getTypesOfLeaves(root, nonterminals);
+    int substitutionNodes = 0;
+    int terminals = 0;
+    for (String type: types) {
+      switch (type) {
+      case "nt":
+        substitutionNodes++;
+        break;
+      case "t":
+        terminals++;
+      }
+    }
+    return substitutionNodes == 1 && terminals == 0;
+  }
+
+  private List<String> getTypesOfLeaves(Vertex node, String[] nonterminals) {
+    List<String> types = new ArrayList<>();
+    if (!hasChildren(node)) {
+      String label = node.getLabel();
+      if ("".equals(label)) {
+        types.add("epsilon");
+      } else if (ArrayUtils.contains(nonterminals, label)) {
+        types.add("nt");
+      } else  {
+        types.add("t");
+      }
+    } else  {
+      for (Vertex child : this.getChildren(node)){
+        types.addAll(getTypesOfLeaves(child, nonterminals));
+      }
+    }
+    return types;
+  }
 }
