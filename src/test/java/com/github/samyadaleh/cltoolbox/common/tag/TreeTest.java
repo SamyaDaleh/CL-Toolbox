@@ -1,12 +1,12 @@
 package com.github.samyadaleh.cltoolbox.common.tag;
 
-import static org.junit.Assert.assertEquals;
-
 import java.text.ParseException;
 
 import org.junit.Test;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import static org.junit.Assert.*;
 
 public class TreeTest {
   @Test public void testTreeFunctions() throws ParseException {
@@ -43,5 +43,19 @@ public class TreeTest {
     assertEquals(
       "(S (Comp (dat<0> ))(VP (NP (Jan<1> ))(VP (NP (Piet<2> ))(VP (NP (de-kinderen<3> ))(V (zwemmen<6> )))(V (helpen<5> )))(V (zag<4> ))))",
       tree1.toString());
+  }
+
+  @Test public void testAllLeavesAreEpsilon() throws ParseException {
+    Tree tree1 = new Tree("(S (N1 (S (ε )))(N1 (S (ε ))))");
+    assertTrue(tree1.allLeavesAreEpsilon());
+    Tree tree2 = new Tree("(S (N1 (S (ε )))(N1 (S (t0 ))))");
+    assertFalse(tree2.allLeavesAreEpsilon());
+  }
+
+  @Test public void testContains() throws ParseException {
+    Tree tree1 = new Tree("(S (N1 (S (ε )))(N1 (S (ε ))))");
+    Tree tree2 = new Tree("(N1 (S ))");
+    assertTrue(tree1.contains(tree2));
+    assertFalse(tree2.contains(tree1));
   }
 }

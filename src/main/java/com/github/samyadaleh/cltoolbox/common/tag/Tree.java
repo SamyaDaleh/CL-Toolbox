@@ -606,4 +606,65 @@ public class Tree {
   public int hashCode() {
     return this.toString().hashCode();
   }
+
+  /**
+   * Returns true if structure tree1 is a subtree of this tree, meaning there
+   * is a node constellation with the same labels.
+   */
+  public boolean contains(Tree tree1) {
+    return contains(root, tree1);
+  }
+
+  private boolean contains(Vertex node, Tree tree1) {
+    boolean sameStructure =
+        sameStructure(this, node, tree1, tree1.getRoot());
+    if (sameStructure) {
+      return true;
+    }
+    boolean containsInChildren = false;
+    for (Vertex child : getChildren(node)) {
+      containsInChildren = containsInChildren || contains(child, tree1);
+    }
+    return containsInChildren;
+  }
+
+  private static boolean sameStructure(Tree tree1, Vertex node1, Tree tree2, Vertex node2) {
+    if (!node1.getLabel().equals(node2.getLabel())){
+      return false;
+    }
+    // or does this node just need to have more children than the root of tree1?
+    if (tree2.getChildren(node2).size() == 0) {
+      return true;
+    }
+    if (tree1.getChildren(node1).size() != tree2.getChildren(node2).size()) {
+      return false;
+    }
+    boolean sameStructure = true;
+    for (int i = 0; i < tree1.getChildren(node1).size(); i++) {
+      Vertex child1 = tree1.getChildren(node1).get(i);
+      Vertex child2 = tree2.getChildren(node2).get(i);
+      sameStructure =
+          sameStructure && sameStructure(tree1, child1, tree2, child2);
+    }
+    return sameStructure;
+  }
+
+  /**
+   * Returns true if all leaves are epsilon nodes
+   */
+  public boolean allLeavesAreEpsilon() {
+    return allLeavesAreEpsilon(root);
+  }
+
+  private boolean allLeavesAreEpsilon(Vertex node) {
+    if (!hasChildren(node)) {
+      return "".equals(node.getLabel());
+    } else  {
+      boolean allLeavesAreEpsilon = true;
+      for (Vertex child : this.getChildren(node)){
+        allLeavesAreEpsilon = allLeavesAreEpsilon && allLeavesAreEpsilon(child);
+      }
+      return allLeavesAreEpsilon;
+    }
+  }
 }

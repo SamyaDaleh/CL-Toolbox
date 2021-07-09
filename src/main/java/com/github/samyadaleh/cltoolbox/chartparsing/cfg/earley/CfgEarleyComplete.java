@@ -59,6 +59,9 @@ public class CfgEarleyComplete
           if (antecedences.get(0).getItemForm() == itemForm1) {
             for (Tree tree1 : antecedences.get(0).getTrees()) {
               for (Tree tree2 : antecedences.get(1).getTrees()) {
+                if (tree2.contains(tree1) && tree2.allLeavesAreEpsilon()) {
+                  continue;
+                }
                 derivedTrees
                     .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
               }
@@ -66,6 +69,9 @@ public class CfgEarleyComplete
           } else {
             for (Tree tree2 : antecedences.get(0).getTrees()) {
               for (Tree tree1 : antecedences.get(1).getTrees()) {
+                if (tree2.contains(tree1) && tree2.allLeavesAreEpsilon()) {
+                  continue;
+                }
                 derivedTrees
                     .add(TreeUtils.performLeftmostSubstitution(tree1, tree2));
               }
