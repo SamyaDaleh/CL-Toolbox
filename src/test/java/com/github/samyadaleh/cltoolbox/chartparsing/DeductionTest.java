@@ -312,8 +312,17 @@ public class DeductionTest {
         .cfgToEarleyRules(TestGrammarLibrary.pruneTreesCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertTrue(21 == deduction.getDerivedTrees().size()
-    || 22 == deduction.getDerivedTrees().size());
+    assertEquals(13, deduction.getDerivedTrees().size());
+  }
+
+  @Test public void testCfgEarleyPruneTrees2() throws ParseException {
+    String w = "t2 t1 t0";
+    ParsingSchema schema = CfgToEarleyRulesConverter
+        .cfgToEarleyRules(TestGrammarLibrary.earleyComplicatedCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertTrue(54 == deduction.getDerivedTrees().size()
+        || 62 == deduction.getDerivedTrees().size());
   }
 
   @Test public void testCfgLeftcorner() throws ParseException {

@@ -63,7 +63,8 @@ public class CfgEarleyComplete
             for (Tree tree1 : antecedences.get(0).getTrees()) {
               for (Tree tree2 : antecedences.get(1).getTrees()) {
                 if (tree2.contains(tree1) && (tree2.allLeavesAreEpsilon()
-                    || tree1.oneSubstitutionNodeRestEpsilon(nonterminals))) {
+                    || tree1.oneSubstitutionNodeRestEpsilon(nonterminals))
+                || TreeUtils.addsNothing(tree1, tree2, nonterminals)) {
                   continue;
                 }
                 derivedTrees
@@ -74,7 +75,8 @@ public class CfgEarleyComplete
             for (Tree tree2 : antecedences.get(0).getTrees()) {
               for (Tree tree1 : antecedences.get(1).getTrees()) {
                 if (tree2.contains(tree1) && (tree2.allLeavesAreEpsilon()
-                    || tree1.oneSubstitutionNodeRestEpsilon(nonterminals))) {
+                    || tree1.oneSubstitutionNodeRestEpsilon(nonterminals))
+                    || TreeUtils.addsNothing(tree1, tree2, nonterminals)) {
                   continue;
                 }
                 derivedTrees

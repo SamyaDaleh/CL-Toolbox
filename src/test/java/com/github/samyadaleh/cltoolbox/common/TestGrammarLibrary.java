@@ -531,6 +531,23 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg earleyComplicatedCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "N1"});
+    cfg.setTerminals(new String[] {"t0", "t1", "t2"});
+    try {
+      cfg.addProductionRule("S -> ε");
+      cfg.addProductionRule("S -> t1 t0");
+      cfg.addProductionRule("S -> t2");
+      cfg.addProductionRule("N1 -> S S");
+      cfg.addProductionRule("S -> N1 S");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Cfg leftCornerChartExceptionCfg() {
     Cfg cfg = new Cfg();
     cfg.setNonterminals(new String[] {"N0", "N1"});
