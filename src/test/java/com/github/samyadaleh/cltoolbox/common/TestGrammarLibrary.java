@@ -631,6 +631,23 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg ungerOOBCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S", "T"});
+    cfg.setTerminals(new String[] {"a", "b", "c", "d"});
+    try {
+      cfg.addProductionRule("S -> b S d");
+      cfg.addProductionRule("S -> a T");
+      cfg.addProductionRule("S -> a b");
+      cfg.addProductionRule("T -> c T");
+      cfg.addProductionRule("T -> b");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Cfg loopRemovalCfg() {
     Cfg cfg = new Cfg();
     cfg.setNonterminals(new String[] {"S", "A", "B", "C"});

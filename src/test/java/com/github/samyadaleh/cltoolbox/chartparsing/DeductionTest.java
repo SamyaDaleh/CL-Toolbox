@@ -315,6 +315,15 @@ public class DeductionTest {
     assertEquals(13, deduction.getDerivedTrees().size());
   }
 
+  @Test public void testUngerOutOfBounds() throws ParseException {
+    String w = "a b";
+    ParsingSchema schema = CfgToUngerRulesConverter
+        .cfgToUngerRules(TestGrammarLibrary.ungerOOBCfg(), w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(3, deduction.getDerivedTrees().size());
+  }
+
   @Test public void testCfgEarleyPruneTrees2() throws ParseException {
     String w = "t2 t1 t0";
     ParsingSchema schema = CfgToEarleyRulesConverter
