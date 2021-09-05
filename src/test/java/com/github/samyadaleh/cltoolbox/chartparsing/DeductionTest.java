@@ -312,7 +312,12 @@ public class DeductionTest {
         .cfgToEarleyRules(TestGrammarLibrary.pruneTreesCfg(), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
-    assertEquals(13, deduction.getDerivedTrees().size());
+    try {
+      assertEquals(13, deduction.getDerivedTrees().size());
+    } catch (Throwable e) {
+      System.out.println(e.getMessage());
+      throw e;
+    }
   }
 
   @Test public void testUngerOutOfBounds() throws ParseException {
