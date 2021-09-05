@@ -26,6 +26,8 @@ public class Tree {
   private final ArrayList<String> leafOrder = new ArrayList<>();
   private final ArrayList<String> leafGorns = new ArrayList<>();
 
+  private String stringRepresentation;
+
   /**
    * Takes a string in bracket format, tokenizes it and parses the actual tree
    * from it.
@@ -162,14 +164,20 @@ public class Tree {
   }
 
   @Override public String toString() {
-    if (this.root == null) {
-      return "()";
+    if (stringRepresentation != null) {
+      return stringRepresentation;
     }
-    return "(" + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
+    if (this.root == null) {
+      stringRepresentation = "()";
+      return stringRepresentation;
+    }
+    stringRepresentation = "("
+        + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
         + (this.root.equals(foot) ? "*" : "") + (
         isInOA(this.root.getGornAddress()) ? "_OA" : "") + (
         isInNA(this.root.getGornAddress()) ? "_NA" : "") + " "
         + toStringAllChildren(this.root) + ")";
+    return stringRepresentation;
   }
 
   /**
