@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -76,25 +77,32 @@ public class ChainRules {
     boolean changed = true;
     while (changed) {
       changed = false;
-      for (CfgProductionRule rule : cfg.getProductionRules()) {
-        if (rule.getRhs().length == 1
-          && cfg.nonterminalsContain(rule.getRhs()[0])) {
-          boolean found = false;
-          for (String[] unitPair : unitPairs) {
-            if (unitPair[0].equals(rule.getLhs())
-              && unitPair[1].equals(rule.getRhs()[0])) {
-              found = true;
-              break;
+
+      List<String[]> newUnitPairs = new ArrayList<>();
+      for (String[] unitPair : unitPairs) {  // nun soll [N2, N1] aus [N2, N0] und N0 -> N1 entstehen
+        for (CfgProductionRule rule : cfg.getProductionRules()) {
+          if (rule.getRhs().length == 1 && cfg
+              .nonterminalsContain(rule.getRhs()[0]) && unitPair[1]
+              .equals(rule.getLhs())) {
+            String[] newUnitPairCandidate =
+                new String[] {unitPair[0], rule.getRhs()[0]};
+            boolean found = false;
+            for (String[] existUnitPair : unitPairs) {
+              if (existUnitPair[0].equals(newUnitPairCandidate[0])
+                  && existUnitPair[1].equals(newUnitPairCandidate[1])) {
+                found = true;
+                break;
+              }
             }
-          }
-          if (!found) {
-            unitPairs.add(new String[] {rule.getLhs(), rule.getRhs()[0]});
-            changed = true;
+            if (!found) {
+              newUnitPairs.add(newUnitPairCandidate);
+              changed = true;
+            }
           }
         }
       }
+      unitPairs.addAll(newUnitPairs);
     }
     return unitPairs;
   }
-
 }

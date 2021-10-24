@@ -4,6 +4,9 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Objects;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
+import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.CfgToTopDownRulesConverter;
 import com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter;
 import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
@@ -217,6 +220,24 @@ public class CfgTest {
             + "B -> Y2 B', B -> b, U -> Y1 U Y1', U -> Y1 Y1', A' -> Y1 A', "
             + "A' -> a, B' -> Y2 B', B' -> b, Y1' -> a}\n",
         cfg.getCfgWithDoubledRules().toString());
+  }
+
+  @Test
+  public void testRemoveChainRules() throws ParseException {
+    StringReader reader = new StringReader(
+        "N = {N0, N1, N2}\n" + "T = {t0, t1}\n" + "S = N1\n"
+            + "P = {N1 -> ε, N1 -> t1, N1 -> t0 N2, N0 -> t1 N2 t1, N2 -> N0, N0 -> N1, N2 -> t0}");
+    Cfg cfg = CfgParser.parseCfgReader(reader);
+    Cfg cfgWithoutChainRules = cfg.getCfgWithoutChainRules();
+    assertEquals("G = <N, T, S, P>\n" + "N = {N0, N1, N2}\n" + "T = {t0, t1}\n"
+        + "S = N1\n"
+        + "P = {N1 -> ε, N1 -> t1, N1 -> t0 N2, N0 -> t1 N2 t1, N2 -> t0, N0 -> ε, N0 -> t1, N0 -> t0 N2, N2 -> t1 N2 t1, N2 -> ε, N2 -> t1, N2 -> t0 N2}\n", cfgWithoutChainRules.toString());
+
+    String w = "t0 t1";
+    ParsingSchema schema = CfgToTopDownRulesConverter
+        .cfgToTopDownRules(cfgWithoutChainRules, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
   }
 
   @Ignore
