@@ -485,6 +485,19 @@ public class TestGrammarLibrary {
     return cfg;
   }
 
+  public static Cfg epsilonNothingElseCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setNonterminals(new String[] {"S"});
+    cfg.setTerminals(new String[] {});
+    try {
+      cfg.addProductionRule("S -> ε");
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+    cfg.setStartSymbol("S");
+    return cfg;
+  }
+
   public static Cfg emptyWordMoreComplicatedCfg() {
     Cfg cfg = new Cfg();
     cfg.setNonterminals(new String[] {"S", "N1"});

@@ -30,6 +30,8 @@ public class CfgToCykRulesConverter {
       throw new ParseException("Grammar has to be in Chomsky Normal Form.", 1);
     }
     String[] wSplit = w.split(" ");
+    int wLength = wSplit[0].equals("") || wSplit[0].equals("ε")
+        ? 0 : wSplit.length;
     ParsingSchema schema = new ParsingSchema();
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {
@@ -41,7 +43,7 @@ public class CfgToCykRulesConverter {
       }
     }
     schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(), "0",
-        String.valueOf(wSplit.length)));
+        String.valueOf(wLength)));
     return schema;
   }
 
@@ -82,8 +84,11 @@ public class CfgToCykRulesConverter {
     for (int i = 0; i < wSplit.length; i++) {
       if (wSplit[i].equals(rule.getRhs()[0])) {
         StaticDeductionRule scan = new StaticDeductionRule();
+        String itemLength = wSplit[i].equals("") || wSplit[i].equals("ε")
+            ? "0" : "1";
         ChartItemInterface consequence =
-            new DeductionChartItem(rule.getLhs(), String.valueOf(i), "1");
+            new DeductionChartItem(rule.getLhs(), String.valueOf(i),
+                itemLength);
         List<Tree> derivedTrees = new ArrayList<>();
         derivedTrees.add(new Tree(rule));
         consequence.setTrees(derivedTrees);

@@ -423,7 +423,6 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString()); //*/
   }
 
-
   @Test public void testCfgCyk() throws ParseException {
     String w = "a a b b";
     ParsingSchema schema = CfgToCykRulesConverter
@@ -435,6 +434,20 @@ public class DeductionTest {
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     assertEquals("(S (A (a ))(X1 (S (A (a ))(B (b )))(B (b ))))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgEpsilon() throws ParseException {
+    String w = "";
+    ParsingSchema schema = CfgToCykRulesConverter
+        .cfgToCykRules(Objects.requireNonNull(TestGrammarLibrary.epsilonNothingElseCfg()),
+            w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    assertEquals(1, deduction.getChart().size());
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals("(S (ε ))",
         deduction.getDerivedTrees().get(0).toString());
   }
 
