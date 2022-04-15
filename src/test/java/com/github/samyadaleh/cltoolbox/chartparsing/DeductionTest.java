@@ -239,6 +239,16 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testConversion() throws ParseException {
+    String grammar = "G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b, c}\n"
+        + "S = S\n" + "P = {S -> a, S -> c b a S a a}\n";
+    Cfg cfg = new Cfg(new BufferedReader(new StringReader(grammar)));
+    String binarizedGrammar = "G = <N, T, S, P>\n" + "N = {S, X1, X2, X3, X4}\n"
+        + "T = {a, b, c}\n" + "S = S\n"
+        + "P = {S -> a, S -> c X1, X1 -> b X2, X2 -> a X3, X3 -> S X4, X4 -> a a}\n";
+    assertEquals(binarizedGrammar, cfg.getBinarizedCfg().toString());
+  }
+
   @Test public void testCfgEarleyBottomupMissingInitialize()
       throws ParseException {
     String w = "t0 t1";
