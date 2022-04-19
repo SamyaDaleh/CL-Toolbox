@@ -27,7 +27,7 @@ Use it to generate examples, play around with grammars etc.
 ## Without Installation
 
 If you just want to get parsing traces of the most common algorithms, please 
-visit http://samyadaleh.de/. You can insert grammar and input for all algorithms 
+visit http://cl-taskbox.de/. You can insert grammar and input for all algorithms 
 listed there, afterwards click Help > Solve Task to get the full trace.
 
 ## Installation
