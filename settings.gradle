@@ -1,0 +1,3 @@
+project.group = "com.github.samyadaleh.cltoolbox"
+project.name = "cl-toolbox"
+project.version = "0.0.1-SNAPSHOT"
