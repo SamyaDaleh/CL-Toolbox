@@ -20,7 +20,7 @@ public class GrammarParserUtilsTest {
 
   @Test public void testparseCfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
-        new BufferedReader(new FileReader(".\\src\\test\\resources\\grammars\\cfg\\anbn.cfg"));
+        new BufferedReader(new FileReader("./src/test/resources/grammars/cfg/anbn.cfg"));
     Cfg cfg = CfgParser.parseCfgReader(grammarReader);
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a, b}\n" + "S = S\n"
         + "P = {S -> a S b, S -> a b}\n", cfg.toString());
@@ -28,7 +28,7 @@ public class GrammarParserUtilsTest {
 
   @Test public void testparsePcfgFile() throws IOException, ParseException {
     BufferedReader grammarReader =
-        new BufferedReader(new FileReader(".\\src\\test\\resources\\grammars\\pcfg\\a0n.pcfg"));
+        new BufferedReader(new FileReader("./src/test/resources/grammars/pcfg/a0n.pcfg"));
     Pcfg pcfg = PcfgParser.parsePcfgReader(grammarReader);
     assertEquals(
         "G = <N, T, S, P>\n" + "N = {S, A, B}\n" + "T = {0, 1}\n" + "S = S\n"
@@ -38,7 +38,7 @@ public class GrammarParserUtilsTest {
 
   @Test public void testparseSrcgFile() throws IOException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
-        new FileReader(".\\src\\test\\resources\\grammars\\srcg\\anbmcndm.srcg"));
+        new FileReader("./src/test/resources/grammars/srcg/anbmcndm.srcg"));
     Srcg srcg = SrcgParser.parseSrcgReader(grammarReader);
     assertEquals(
         "G = <N, T, V, P, S>\n" + "N = {A, B, S}\n" + "T = {a, b, c, d}\n"
@@ -49,7 +49,7 @@ public class GrammarParserUtilsTest {
   }
 
   @Test public void testparseTagFile() throws IOException, ParseException {
-    Reader reader = new FileReader(".\\src\\test\\resources\\grammars\\tag\\anbncndn.tag");
+    Reader reader = new FileReader("./src/test/resources/grammars/tag/anbncndn.tag");
     Tag tag = TagParser.parseTagReader(reader);
     assertEquals("G = <N, T, I, A, S>\n" + "N = {S}\n" + "T = {a, b, c, d}\n"
             + "I = {α1 : (S_OA (ε ))}\n"
