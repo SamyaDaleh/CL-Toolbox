@@ -1,6 +1,8 @@
 package com.github.samyadaleh.cltoolbox.common;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -163,5 +165,38 @@ public class ArrayUtils {
       tokens.add(builder.toString());
     }
     return tokens;
+  }
+
+  /**
+   * Fake concat that returns a new array with the elements of the two arrays
+   * concated to each other
+   */
+  public static String[] concat(String[] array1, String[] array2) {
+    return Stream.concat(Arrays.stream(array1), Arrays.stream(array2))
+        .toArray(size -> (String[]) Array
+            .newInstance(array1.getClass().getComponentType(), size));
+  }
+
+  /**
+   * Returns true if the list contains an array where all elements are equal
+   * to strings.
+   */
+  public static boolean contains(List<String[]> arrayList, String[] array) {
+    for (String[] array1 : arrayList) {
+      if (array1.length != array.length) {
+        continue;
+      }
+      boolean equal = true;
+      for (int i = 0; i < array1.length; i++) {
+        if (array1[i] != array[i]) {
+          equal = false;
+          break;
+        }
+      }
+      if(equal) {
+        return true;
+      }
+    }
+    return false;
   }
 }

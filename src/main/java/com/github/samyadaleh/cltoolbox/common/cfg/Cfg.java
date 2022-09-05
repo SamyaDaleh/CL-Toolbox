@@ -129,16 +129,23 @@ public class Cfg extends AbstractCfg {
    */
   public boolean isInGreibachNormalForm() {
     for (CfgProductionRule rule : this.productionRules) {
-      if (rule.getRhs()[0].equals("")) {
+      if (!isInGreibachNormalForm(rule)) {
         return false;
       }
-      if (!terminalsContain(rule.getRhs()[0])) {
+    }
+    return true;
+  }
+
+  public boolean isInGreibachNormalForm(CfgProductionRule rule) {
+    if (rule.getRhs()[0].equals("")) {
+      return false;
+    }
+    if (!terminalsContain(rule.getRhs()[0])) {
+      return false;
+    }
+    for (int i = 1; i < rule.getRhs().length; i++) {
+      if (!nonterminalsContain(rule.getRhs()[i])) {
         return false;
-      }
-      for (int i = 1; i < rule.getRhs().length; i++) {
-        if (!nonterminalsContain(rule.getRhs()[i])) {
-          return false;
-        }
       }
     }
     return true;
@@ -336,5 +343,16 @@ public class Cfg extends AbstractCfg {
    */
   public Cfg getCfgWithoutLoops() {
     return Loops.getCfgWithoutLoops(this);
+  }
+
+  /**
+   * For every rule that is not in Greibach Normal Form the first nonterminal
+   * is expanded to all possible terminal strings.
+   * You have to remove left recursion first or else the process will not halt.
+   * Also you need to ensure that the rest of the production rules is alread
+   * conform. Better start with a grammar in Chomsky Normal form.
+   */
+  public Cfg getCfgWithProductionsInGnf() throws ParseException {
+    return ExpandGreibach.getCfgWithProductionsInGnf(this);
   }
 }
