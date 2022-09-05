@@ -18,34 +18,34 @@ public class GrammarLoader {
   public static Cfg readCfg(String fileName)
       throws FileNotFoundException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
-        new FileReader(".\\src\\test\\resources\\grammars\\cfg\\" + fileName));
+        new FileReader("./src/test/resources/grammars/cfg/" + fileName));
     return CfgParser.parseCfgReader(grammarReader);
   }
 
   public static Pcfg readPcfg(String fileName)
       throws FileNotFoundException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
-        new FileReader(".\\src\\test\\resources\\grammars\\pcfg\\" + fileName));
+        new FileReader("./src/test/resources/grammars/pcfg/" + fileName));
     return PcfgParser.parsePcfgReader(grammarReader);
   }
 
   public static Tag readTag(String fileName)
       throws FileNotFoundException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
-        new FileReader(".\\src\\test\\resources\\grammars\\tag\\" + fileName));
+        new FileReader("./src/test/resources/grammars/tag/" + fileName));
     return TagParser.parseTagReader(grammarReader);
   }
 
   public static Srcg readSrcg(String fileName)
       throws FileNotFoundException, ParseException {
     BufferedReader grammarReader = new BufferedReader(
-        new FileReader(".\\src\\test\\resources\\grammars\\srcg\\" + fileName));
+        new FileReader("./src/test/resources/grammars/srcg/" + fileName));
     return SrcgParser.parseSrcgReader(grammarReader);
   }
 
   public static Ccg readCcg(String fileName) throws IOException {
     BufferedReader grammarReader = new BufferedReader(
-        new FileReader(".\\src\\test\\resources\\grammars\\ccg\\" + fileName));
+        new FileReader("./src/test/resources/grammars/ccg/" + fileName));
     return CcgParser.parseCcgReader(grammarReader);
   }
 
