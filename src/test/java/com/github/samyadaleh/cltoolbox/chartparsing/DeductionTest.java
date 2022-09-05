@@ -10,19 +10,21 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
-import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
+import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
+import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
+import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lag.Lag;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
+import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import com.github.samyadaleh.cltoolbox.common.parser.LagParser;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
+import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.text.ParseException;
 import java.util.Objects;
 
@@ -30,11 +32,12 @@ import static org.junit.Assert.*;
 
 public class DeductionTest {
 
-  @Test public void testCfgTopdown() throws ParseException {
+  @Test public void testCfgTopdown()
+      throws ParseException, FileNotFoundException {
     String w = "a a b b";
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     ParsingSchema schema = CfgToTopDownRulesConverter
-        .cfgToTopDownRules(Objects.requireNonNull(TestGrammarLibrary.anBnCfg()),
-            w);
+        .cfgToTopDownRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(3, deduction.getMaxAgendaSize());
@@ -56,10 +59,12 @@ public class DeductionTest {
     assertTrue(deduction.getUsefulItem()[12]);
   }
 
-  @Test public void testCfgTopdownEpsilon() throws ParseException {
+  @Test public void testCfgTopdownEpsilon()
+      throws ParseException, FileNotFoundException {
     String w = "a a b b";
+    Cfg cfg = GrammarLoader.readCfg("anbnepsilon.cfg");
     ParsingSchema schema = CfgToTopDownRulesConverter.cfgToTopDownRules(
-        Objects.requireNonNull(TestGrammarLibrary.anBnEpsilonCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(2, deduction.getMaxAgendaSize());
@@ -69,10 +74,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgShiftreduce() throws ParseException {
+  @Test public void testCfgShiftreduce()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(
-        Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(2, deduction.getMaxAgendaSize());
@@ -82,10 +89,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Ignore("#258") public void testCfgShiftreduceRecursiveTrees() throws ParseException {
+  @Ignore("#258") public void testCfgShiftreduceRecursiveTrees()
+      throws ParseException, FileNotFoundException {
     String w = "a a a";
+    Cfg cfg = GrammarLoader.readCfg("highlyrecursive.cfg");
     ParsingSchema schema = CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(
-        Objects.requireNonNull(TestGrammarLibrary.highlyRecursiveCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -120,10 +129,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgEarley() throws ParseException {
+  @Test public void testCfgEarley() throws ParseException,
+      FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(TestGrammarLibrary.anBnCfg(), w);
+        .cfgToEarleyRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(3, deduction.getMaxAgendaSize());
@@ -133,10 +144,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgEarleyBottomup() throws ParseException {
+  @Test public void testCfgEarleyBottomup()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyBottomupRules(TestGrammarLibrary.anBnCfg(), w);
+        .cfgToEarleyBottomupRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(8, deduction.getMaxAgendaSize());
@@ -146,11 +159,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgEarleyBottomupEmpty() throws ParseException {
+  @Test public void testCfgEarleyBottomupEmpty()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("earleybottomupproblem.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyBottomupRules(TestGrammarLibrary.earleyBottomUpProblemCfg(),
-            w);
+        .cfgToEarleyBottomupRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -159,10 +173,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgEarleyPassive() throws ParseException {
+  @Test public void testCfgEarleyPassive()
+      throws ParseException, FileNotFoundException {
     String w = "t0 t1";
+    Cfg cfg = GrammarLoader.readCfg("earleypassive.cfg");
     ParsingSchema schema = CfgToEarleyPassiveRulesConverter
-        .cfgToEarleyPassiveRules(TestGrammarLibrary.earleyPassiveCfg(), w);
+        .cfgToEarleyPassiveRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(2, deduction.getMaxAgendaSize());
@@ -172,11 +188,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgEarleyPassiveEmptyWord() throws ParseException {
+  @Test public void testCfgEarleyPassiveEmptyWord()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordnothingelse.cfg");
     ParsingSchema schema = CfgToEarleyPassiveRulesConverter
-        .cfgToEarleyPassiveRules(TestGrammarLibrary.emptyWordNothingElseCfg(),
-            w);
+        .cfgToEarleyPassiveRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -186,10 +203,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftCornerChartGoalItems() throws ParseException {
+  @Test public void testCfgLeftCornerChartGoalItems()
+      throws ParseException, FileNotFoundException {
     String w = "t0 t1";
+    Cfg cfg = GrammarLoader.readCfg("earleypassive.cfg");
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter
-        .cfgToLeftCornerChartRules(TestGrammarLibrary.earleyPassiveCfg(), w);
+        .cfgToLeftCornerChartRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -198,10 +217,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftCornerChartEmptyWord() throws ParseException {
+  @Test public void testCfgLeftCornerChartEmptyWord()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordnothingelse.cfg");
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter
-        .cfgToLeftCornerChartRules(TestGrammarLibrary.emptyWordNothingElseCfg(), w);
+        .cfgToLeftCornerChartRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -210,11 +231,12 @@ public class DeductionTest {
     assertEquals("(S (ε ))", deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftCornerScan() throws ParseException {
+  @Test public void testCfgLeftCornerScan()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("leftcornerchartscan.cfg");
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter
-        .cfgToLeftCornerChartRules(TestGrammarLibrary.leftCornerChartScanCfg(),
-            w);
+        .cfgToLeftCornerChartRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(1, deduction.getMaxAgendaSize());
@@ -250,10 +272,11 @@ public class DeductionTest {
   }
 
   @Test public void testCfgEarleyBottomupMissingInitialize()
-      throws ParseException {
+      throws ParseException, FileNotFoundException {
     String w = "t0 t1";
+    Cfg cfg = GrammarLoader.readCfg("earleybottomupmissingaxioms.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter.cfgToEarleyBottomupRules(
-        TestGrammarLibrary.earleyBottomUpMissingAxiomsCfg(), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(5, deduction.getMaxAgendaSize());
@@ -264,11 +287,11 @@ public class DeductionTest {
   }
 
   @Test public void testCfgEarleyBottomupEmptyWord()
-      throws ParseException {
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordnothingelse.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyBottomupRules(TestGrammarLibrary.emptyWordNothingElseCfg(),
-            w);
+        .cfgToEarleyBottomupRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -290,10 +313,12 @@ public class DeductionTest {
     assertEquals(2, deduction.getMaxAgendaSize());
   }
 
-  @Test public void testCfgEarleyEpsilonNothingElse() throws ParseException {
+  @Test public void testCfgEarleyEpsilonNothingElse()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordnothingelse.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(TestGrammarLibrary.emptyWordNothingElseCfg(), w);
+        .cfgToEarleyRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     Tree tree1 = new Tree("(S (ε )");
@@ -303,10 +328,12 @@ public class DeductionTest {
     assertEquals(2, deduction.getDerivedTrees().size());
   }
 
-  @Test public void testCfgEarleyEpsilonMoreComplicated() throws ParseException {
+  @Test public void testCfgEarleyEpsilonMoreComplicated()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordmorecomplicated.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(TestGrammarLibrary.emptyWordMoreComplicatedCfg(), w);
+        .cfgToEarleyRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     Tree tree1 = new Tree("(S (ε )");
@@ -316,37 +343,45 @@ public class DeductionTest {
     assertEquals(2, deduction.getDerivedTrees().size());
   }
 
-  @Test public void testCfgEarleyPruneTrees() throws ParseException {
+  @Test public void testCfgEarleyPruneTrees()
+      throws ParseException, FileNotFoundException {
     String w = "t0 t0";
+    Cfg cfg = GrammarLoader.readCfg("prunetrees.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(TestGrammarLibrary.pruneTreesCfg(), w);
+        .cfgToEarleyRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
   }
 
-  @Test public void testUngerOutOfBounds() throws ParseException {
+  @Test public void testUngerOutOfBounds()
+      throws ParseException, FileNotFoundException {
     String w = "a b";
+    Cfg cfg = GrammarLoader.readCfg("ungeroob.cfg");
     ParsingSchema schema = CfgToUngerRulesConverter
-        .cfgToUngerRules(TestGrammarLibrary.ungerOOBCfg(), w);
+        .cfgToUngerRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(3, deduction.getDerivedTrees().size());
   }
 
-  @Test public void testCfgEarleyPruneTrees2() throws ParseException {
+  @Test public void testCfgEarleyPruneTrees2()
+      throws ParseException, FileNotFoundException {
     String w = "t2 t1 t0";
+    Cfg cfg = GrammarLoader.readCfg("earleycomplicated.cfg");
     ParsingSchema schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(TestGrammarLibrary.earleyComplicatedCfg(), w);
+        .cfgToEarleyRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     // amount varies with execution
     assertTrue(deduction.getDerivedTrees().size() > 0);
   }
 
-  @Test public void testCfgLeftcorner() throws ParseException {
+  @Test public void testCfgLeftcorner()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToLeftCornerRulesConverter.cfgToLeftCornerRules(
-        Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(4, deduction.getMaxAgendaSize());
@@ -356,10 +391,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftcornerBreak() throws ParseException {
+  @Test public void testCfgLeftcornerBreak()
+      throws ParseException, FileNotFoundException {
     String w = "a b c d e f g h i";
+    Cfg cfg = GrammarLoader.readCfg("leftcornerbreak.cfg");
     ParsingSchema schema = CfgToLeftCornerRulesConverter.cfgToLeftCornerRules(
-        Objects.requireNonNull(TestGrammarLibrary.leftCornerBreak()), w);
+       cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(1, deduction.getMaxAgendaSize());
@@ -370,10 +407,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftcornerChart() throws ParseException {
+  @Test public void testCfgLeftcornerChart()
+      throws ParseException, FileNotFoundException {
     String w = "a b c b a";
+    Cfg cfg = GrammarLoader.readCfg("wwr.cfg");
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter
-        .cfgToLeftCornerChartRules(TestGrammarLibrary.wwRCfg(), w);
+        .cfgToLeftCornerChartRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(11, deduction.getMaxAgendaSize());
@@ -383,10 +422,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftcornerChartBreak() throws ParseException {
+  @Test public void testCfgLeftcornerChartBreak()
+      throws ParseException, FileNotFoundException {
     String w = "a b c d e f g h i";
+    Cfg cfg = GrammarLoader.readCfg("leftcornerbreak.cfg");
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter
-        .cfgToLeftCornerChartRules(TestGrammarLibrary.leftCornerBreak(), w);
+        .cfgToLeftCornerChartRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(19, deduction.getMaxAgendaSize());
@@ -397,10 +438,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLeftcornerChartExceptionBreak() throws ParseException {
+  @Test public void testCfgLeftcornerChartExceptionBreak()
+      throws ParseException, FileNotFoundException {
     String w = "t0 t1";
+    Cfg cfg = GrammarLoader.readCfg("leftcornerchartexception.cfg");
     ParsingSchema schema = CfgToLeftCornerChartRulesConverter
-        .cfgToLeftCornerChartRules(TestGrammarLibrary.leftCornerChartExceptionCfg(), w);
+        .cfgToLeftCornerChartRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -409,11 +452,12 @@ public class DeductionTest {
     // assertEquals(8, deduction.getDerivedTrees().size());
   }
 
-  @Test public void testCfgLeftcornerBottomUp() throws ParseException {
+  @Test public void testCfgLeftcornerBottomUp()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToLeftCornerBottomUpRulesConverter
-        .cfgToLeftCornerBottomUpRules(
-            Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
+        .cfgToLeftCornerBottomUpRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(4, deduction.getMaxAgendaSize());
@@ -423,11 +467,11 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString()); //*/
   }
 
-  @Test public void testCfgCyk() throws ParseException {
+  @Test public void testCfgCyk() throws ParseException, FileNotFoundException {
     String w = "a a b b";
+    Cfg cfg = GrammarLoader.readCfg("anbncnf.cfg");
     ParsingSchema schema = CfgToCykRulesConverter
-        .cfgToCykRules(Objects.requireNonNull(TestGrammarLibrary.anbnCnfCfg()),
-            w);
+        .cfgToCykRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(4, deduction.getMaxAgendaSize());
@@ -437,11 +481,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgEpsilon() throws ParseException {
+  @Test public void testCfgEpsilon()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("epsilonnothingelse.cfg");
     ParsingSchema schema = CfgToCykRulesConverter
-        .cfgToCykRules(Objects.requireNonNull(TestGrammarLibrary.epsilonNothingElseCfg()),
-            w);
+        .cfgToCykRules(cfg,  w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(1, deduction.getChart().size());
@@ -451,10 +496,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgCykExtended() throws ParseException {
+  @Test public void testCfgCykExtended()
+      throws ParseException, FileNotFoundException {
     String w = "a a b b";
+    Cfg cfg = GrammarLoader.readCfg("anbnc2f.cfg");
     ParsingSchema schema = CfgToCykRulesConverter.cfgToCykExtendedRules(
-        Objects.requireNonNull(TestGrammarLibrary.anbnC2fCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(4, deduction.getMaxAgendaSize());
@@ -464,10 +511,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testEmptyInput() throws ParseException {
+  @Test public void testEmptyInput()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "";
     ParsingSchema schema = CfgToCykRulesConverter.cfgToCykGeneralRules(
-        Objects.requireNonNull(TestGrammarLibrary.anBnCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertFalse(deduction.doParse(schema, false));
     assertEquals(1, deduction.getMaxAgendaSize());
@@ -476,24 +525,27 @@ public class DeductionTest {
     assertEquals(1, deduction.getChart().size());
   }
 
-  @Test public void testTreeAmount() throws ParseException {
+  @Test public void testTreeAmount()
+      throws ParseException, FileNotFoundException {
     String w = "a a b a b b";
+    Cfg cfg = GrammarLoader.readCfg("difftreeamount.cfg");
     ParsingSchema schema = CfgToTopDownRulesConverter
-        .cfgToTopDownRules(TestGrammarLibrary.diffTreeAmountCfg(), w);
+        .cfgToTopDownRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(3, deduction.getDerivedTrees().size());
     schema = CfgToEarleyRulesConverter
-        .cfgToEarleyRules(TestGrammarLibrary.diffTreeAmountCfg(), w);
+        .cfgToEarleyRules(cfg, w);
     assertTrue(deduction.doParse(schema, false));
     assertEquals(8, deduction.getMaxAgendaSize());
     assertEquals(3, deduction.getDerivedTrees().size());
   }
 
-  @Test public void testTagCyk() throws ParseException {
+  @Test public void testTagCyk() throws ParseException, FileNotFoundException {
     String w2 = "a c b";
+    Tag tag = GrammarLoader.readTag("ancb.tag");
     ParsingSchema schema = TagToCykRulesConverter
-        .tagToCykExtendedRules(TestGrammarLibrary.anCBTag(), w2);
+        .tagToCykExtendedRules(tag, w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -502,10 +554,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testTagCykGeneral() throws ParseException {
+  @Test public void testTagCykGeneral()
+      throws ParseException, FileNotFoundException {
     String w2 = "a c b";
+    Tag tag = GrammarLoader.readTag("ancb.tag");
     ParsingSchema schema = TagToCykRulesConverter
-        .tagToCykGeneralRules(TestGrammarLibrary.anCBTag(), w2);
+        .tagToCykGeneralRules(tag, w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -514,10 +568,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testTagCykGeneralTooManyTrees() throws ParseException {
+  @Test public void testTagCykGeneralTooManyTrees()
+      throws ParseException, FileNotFoundException {
     String w2 = "t0 t1";
+    Tag tag = GrammarLoader.readTag("toomanytrees.tag");
     ParsingSchema schema = TagToCykRulesConverter
-        .tagToCykGeneralRules(TestGrammarLibrary.tooManyTreesTag(), w2);
+        .tagToCykGeneralRules(tag, w2);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -527,10 +583,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testTagEarley() throws ParseException {
+  @Test public void testTagEarley() throws ParseException,
+      FileNotFoundException {
     String w2 = "a c b";
+    Tag tag = GrammarLoader.readTag("ancb.tag");
     ParsingSchema schema = TagToEarleyRulesConverter
-        .tagToEarleyRules(TestGrammarLibrary.anCBTag(), w2);
+        .tagToEarleyRules(tag, w2);
     Deduction deduction = new Deduction();
     try {
       assertTrue(deduction.doParse(schema, false));
@@ -543,10 +601,12 @@ public class DeductionTest {
     }
   }
 
-  @Test public void testTagEarleyPrefixValid() throws ParseException {
+  @Test public void testTagEarleyPrefixValid()
+      throws ParseException, FileNotFoundException {
     String w2 = "a c b";
+    Tag tag = GrammarLoader.readTag("ancb.tag");
     ParsingSchema schema = TagToEarleyPrefixValidRulesConverter
-        .tagToEarleyPrefixValidRules(TestGrammarLibrary.anCBTag(), w2);
+        .tagToEarleyPrefixValidRules(tag, w2);
     Deduction deduction = new Deduction();
     try {
       assertTrue(deduction.doParse(schema, false));
@@ -559,11 +619,12 @@ public class DeductionTest {
     }
   }
 
-  @Test public void testTagEarleyPrefixValidNPE() throws ParseException {
+  @Test public void testTagEarleyPrefixValidNPE()
+      throws ParseException, FileNotFoundException {
     String w2 = "";
+    Tag tag = GrammarLoader.readTag("earleyprefixvalidnpe.tag");
     ParsingSchema schema = TagToEarleyPrefixValidRulesConverter
-        .tagToEarleyPrefixValidRules(
-            TestGrammarLibrary.EarleyPrefixValidNPETag(), w2);
+        .tagToEarleyPrefixValidRules(tag, w2);
     Deduction deduction = new Deduction();
     try {
       assertTrue(deduction.doParse(schema, false));
@@ -575,10 +636,12 @@ public class DeductionTest {
     }
   }
 
-  @Test public void testSrcgCykUnary() throws ParseException {
+  @Test public void testSrcgCykUnary()
+      throws ParseException, FileNotFoundException {
     String w3 = "a a b b";
+    Srcg srcg = GrammarLoader.readSrcg("anbn.srcg");
     ParsingSchema schema = LcfrsToCykRulesConverter
-        .srcgToCykExtendedRules(TestGrammarLibrary.anBnSrcg(), w3);
+        .srcgToCykExtendedRules(srcg, w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(4, deduction.getMaxAgendaSize());
@@ -588,10 +651,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testSrcgCykBinary() throws ParseException {
+  @Test public void testSrcgCykBinary()
+      throws ParseException, FileNotFoundException {
     String w = "a a b b a c b b a c";
+    Srcg srcg = GrammarLoader.readSrcg("longstring.srcg");
     ParsingSchema schema = LcfrsToCykRulesConverter
-        .srcgToCykExtendedRules(TestGrammarLibrary.longStringsSrcg(), w);
+        .srcgToCykExtendedRules(srcg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(13, deduction.getMaxAgendaSize());
@@ -602,18 +667,22 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testSrcgVectorMatchFail() throws ParseException {
+  @Test public void testSrcgVectorMatchFail()
+      throws ParseException, FileNotFoundException {
     String w = "t0 t1 t0 t1 t0 t1 t0";
+    Srcg srcg = GrammarLoader.readSrcg("vectormatchfail.srcg");
     ParsingSchema schema = LcfrsToCykRulesConverter
-        .srcgToCykExtendedRules(TestGrammarLibrary.vectorMatchFailSrcg(), w);
+        .srcgToCykExtendedRules(srcg, w);
     Deduction deduction = new Deduction();
     assertFalse(deduction.doParse(schema, false));
   }
 
-  @Test public void testSrcgCykGeneral() throws ParseException {
+  @Test public void testSrcgCykGeneral()
+      throws ParseException, FileNotFoundException {
     String w = "a a b b a c b b a c";
+    Srcg srcg = GrammarLoader.readSrcg("longstring.srcg");
     ParsingSchema schema = LcfrsToCykRulesConverter
-        .srcgToCykGeneralRules(TestGrammarLibrary.longStringsSrcg(), w);
+        .srcgToCykGeneralRules(srcg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(13, deduction.getMaxAgendaSize());
@@ -626,10 +695,12 @@ public class DeductionTest {
             .equals(deduction.getDerivedTrees().get(0).toString()));
   }
 
-  @Test public void testSrcgCykGeneral2() throws ParseException {
+  @Test public void testSrcgCykGeneral2()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = LcfrsToCykRulesConverter.srcgToCykGeneralRules(
-        new Srcg(Objects.requireNonNull(TestGrammarLibrary.anBnCfg())), w);
+        new Srcg(cfg), w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(1, deduction.getMaxAgendaSize());
@@ -655,10 +726,12 @@ public class DeductionTest {
     assertEquals("(S' (ε<0> ))", deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testSrcgEarley() throws ParseException {
+  @Test public void testSrcgEarley()
+      throws ParseException, FileNotFoundException {
     String w3 = "a a b b";
+    Srcg srcg = GrammarLoader.readSrcg("anbn.srcg");
     ParsingSchema schema = LcfrsToEarleyRulesConverter
-        .srcgToEarleyRules(TestGrammarLibrary.anBnSrcg(), w3);
+        .srcgToEarleyRules(srcg, w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -667,10 +740,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testSrcgEarleyGetSymAtFail() throws ParseException {
+  @Test public void testSrcgEarleyGetSymAtFail()
+      throws ParseException, FileNotFoundException {
     String w3 = "t0 t0 t0 t1";
+    Srcg srcg = GrammarLoader.readSrcg("earleygetsymatfail.srcg");
     ParsingSchema schema = LcfrsToEarleyRulesConverter
-        .srcgToEarleyRules(TestGrammarLibrary.earleyGetSymAtFailSrcg(), w3);
+        .srcgToEarleyRules(srcg, w3);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     String[][] data = deduction.getTraceTable();
@@ -681,10 +756,12 @@ public class DeductionTest {
   }
 
 
-  @Test public void testPcfgAstar() throws ParseException {
+  @Test public void testPcfgAstar() throws ParseException,
+      FileNotFoundException {
     String w = "red nice ugly car";
+    Pcfg pcfg = GrammarLoader.readPcfg("niceuglycar.pcfg");
     ParsingSchema schema = PcfgToAstarRulesConverter
-        .pcfgToAstarRules(TestGrammarLibrary.niceUglyCarPcfg(), w);
+        .pcfgToAstarRules(pcfg, w);
     Deduction deduction = new Deduction();
     deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
@@ -695,10 +772,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testPcfgAstarProbabilityDisplay() throws ParseException {
+  @Test public void testPcfgAstarProbabilityDisplay()
+      throws ParseException, FileNotFoundException {
     String w = "t0";
+    Pcfg pcfg = GrammarLoader.readPcfg("uglyprobabilities.pcfg");
     ParsingSchema schema = PcfgToAstarRulesConverter
-        .pcfgToAstarRules(TestGrammarLibrary.uglyProbabilitiesPcfg(), w);
+        .pcfgToAstarRules(pcfg, w);
     Deduction deduction = new Deduction();
     deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
@@ -710,15 +789,16 @@ public class DeductionTest {
       assertTrue(rule.equals("scan 0.09 : S1 -> t0") || rule
           .equals("scan 0.1 : N0 -> t0") || rule.equals("scan 1.0 : Y1 -> t0"));
       String item = deduction.getChart().get(i).toString();
-      assertTrue(item.equals("2.4 + 0.0 : [S1,0,1]") || item
+      assertTrue(item.equals("2.41 + 0.0 : [S1,0,1]") || item
           .equals("2.3 + ∞ : [N0,0,1]") || item.equals("0.0 + ∞ : [Y1,0,1]"));
     }
   }
 
-  @Test public void testPcfgCyk() throws ParseException {
+  @Test public void testPcfgCyk() throws ParseException, FileNotFoundException {
     String w = "red nice ugly car";
+    Pcfg pcfg = GrammarLoader.readPcfg("niceuglycar.pcfg");
     ParsingSchema schema = PcfgToCykRulesConverter
-        .pcfgToCykRules(TestGrammarLibrary.niceUglyCarPcfg(), w);
+        .pcfgToCykRules(pcfg, w);
     Deduction deduction = new Deduction();
     deduction.setReplace('l');
     assertTrue(deduction.doParse(schema, false));
@@ -729,11 +809,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgUnger() throws ParseException {
+  @Test public void testCfgUnger() throws ParseException,
+      FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToUngerRulesConverter
-        .cfgToUngerRules(Objects.requireNonNull(TestGrammarLibrary.anBnCfg()),
-            w);
+        .cfgToUngerRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(4, deduction.getMaxAgendaSize());
@@ -743,10 +824,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgUngerGoalTrees() throws ParseException {
+  @Test public void testCfgUngerGoalTrees()
+      throws ParseException, FileNotFoundException {
     String w = "t0 t1";
+    Cfg cfg = GrammarLoader.readCfg("ungerwronggoaltrees.cfg");
     ParsingSchema schema = CfgToUngerRulesConverter.cfgToUngerRules(
-        Objects.requireNonNull(TestGrammarLibrary.ungerWrongGoalTreesCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(2, deduction.getMaxAgendaSize());
@@ -757,10 +840,12 @@ public class DeductionTest {
     assertEquals(1, deduction.getDerivedTrees().size());
   }
 
-  @Test public void testCfgUngerComplete() throws ParseException {
+  @Test public void testCfgUngerComplete()
+      throws ParseException, FileNotFoundException {
     String w = "t1";
+    Cfg cfg = GrammarLoader.readCfg("ungercomplete.cfg");
     ParsingSchema schema = CfgToUngerRulesConverter.cfgToUngerRules(
-        Objects.requireNonNull(TestGrammarLibrary.ungerCompleteCfg()), w);
+        cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(2, deduction.getMaxAgendaSize());
@@ -771,10 +856,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgCykGeneral() throws ParseException {
+  @Test public void testCfgCykGeneral()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
     String w = "a a b b";
     ParsingSchema schema = CfgToCykRulesConverter
-        .cfgToCykGeneralRules(TestGrammarLibrary.anBnCfg(), w);
+        .cfgToCykGeneralRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(9, deduction.getMaxAgendaSize());
@@ -784,10 +871,12 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgCykGeneralEmptyWord() throws ParseException {
+  @Test public void testCfgCykGeneralEmptyWord()
+      throws ParseException, FileNotFoundException {
     String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptyword.cfg");
     ParsingSchema schema = CfgToCykRulesConverter
-        .cfgToCykGeneralRules(TestGrammarLibrary.emptyWordCfg(), w);
+        .cfgToCykGeneralRules(cfg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(2, deduction.getMaxAgendaSize());
@@ -797,17 +886,18 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Test public void testCfgLr() throws ParseException {
+  @Test public void testCfgLr() throws ParseException, FileNotFoundException {
     String w = "the apple";
+    Cfg cfg = GrammarLoader.readCfg("lr.cfg");
     ParsingSchema schema =
-        CfgToLrKRulesConverter.cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 0);
+        CfgToLrKRulesConverter.cfgToLrKRules(cfg, w, 0);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(1, deduction.getMaxAgendaSize());
     assertEquals("(NP (Det (the ))(N (apple )))",
         deduction.getDerivedTrees().get(0).toString());
     schema =
-        CfgToLrKRulesConverter.cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 1);
+        CfgToLrKRulesConverter.cfgToLrKRules(cfg, w, 1);
     assertTrue(deduction.doParse(schema, false));
     assertEquals(1, deduction.getMaxAgendaSize());
    /* schema = cfgToLrKRules(TestGrammarLibrary.lrCfg(), w, 2);
@@ -816,8 +906,9 @@ public class DeductionTest {
 
   @Test public void testCcg() throws IOException, ParseException {
     String w = "Trip certainly likes merengue";
+    Ccg ccg = GrammarLoader.readCcg("trip.ccg");
     ParsingSchema schema = CcgToDeductionRulesConverter
-        .ccgToDeductionRules(TestGrammarLibrary.dedCcg(), w);
+        .ccgToDeductionRules(ccg, w);
     Deduction deduction = new Deduction();
     assertTrue(deduction.doParse(schema, false));
     assertEquals(

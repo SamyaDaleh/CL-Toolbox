@@ -1,11 +1,12 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
-import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
+import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.List;
@@ -15,8 +16,9 @@ import static org.junit.Assert.assertEquals;
 
 public class CfgToLrKRulesConverterTest {
 
-  @Test public void testBasicMethods() {
-    Cfg cfg = TestGrammarLibrary.lrCfg();
+  @Test public void testBasicMethods()
+      throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("lr.cfg");
     String[] initialState = CfgToLrKRulesConverter.computeInitialState(cfg, 0);
     assertEquals("NP' -> •NP", initialState[0]);
     List<List<String[]>> states =

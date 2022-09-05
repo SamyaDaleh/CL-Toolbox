@@ -1,0 +1,5 @@
+G = <N, T, S, P>
+N = {N, A}
+T = {camping, car, nice, red, ugly, green, house, bike}
+S = N
+P = {0.1 : N -> N N, 0.1 : N -> red, 0.1 : N -> car, 0.2 : N -> camping, 0.3 : A -> nice, 0.2 : A -> red, 0.2 : N -> A N, 0.1 : N -> green, 0.1 : N -> bike, 0.1 : N -> house, 0.25 : A -> ugly, 0.25 : A -> green}

@@ -1,36 +1,36 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-import java.io.StringReader;
-import java.text.ParseException;
-import java.util.Objects;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.CfgToTopDownRulesConverter;
 import com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter;
+import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
 import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
+import java.io.FileNotFoundException;
+import java.io.StringReader;
+import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
 public class CfgTest {
 
   @Test
-  public void testBinarization() {
-    assertFalse(
-        Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).isBinarized());
-    Cfg cfgbin = Objects.requireNonNull(TestGrammarLibrary.longRhsCfg()).getBinarizedCfg();
+  public void testBinarization() throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("longrhs.cfg");
+    assertFalse(cfg.isBinarized());
+    Cfg cfgbin = cfg.getBinarizedCfg();
     assertTrue(cfgbin.isBinarized());
   }
 
   @Test
-  public void testRemoveEpsilon() {
-    assertTrue(Objects.requireNonNull(TestGrammarLibrary.epsCfg()).hasEpsilonProductions());
-    Cfg epsfree = Objects.requireNonNull(TestGrammarLibrary.epsCfg()).getCfgWithoutEmptyProductions();
+  public void testRemoveEpsilon() throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("eps.cfg");
+    assertTrue(cfg.hasEpsilonProductions());
+    Cfg epsfree = cfg.getCfgWithoutEmptyProductions();
     assertFalse(epsfree.hasEpsilonProductions());
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, A, B, C, S1}\n" + "T = {a, b}\n"
@@ -42,9 +42,10 @@ public class CfgTest {
   }
 
   @Test
-  public void testReplaceTerminals() {
-    Cfg treplaced = Objects.requireNonNull(TestGrammarLibrary.eftCfg())
-      .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
+  public void testReplaceTerminals()
+      throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("eft.cfg");
+    Cfg treplaced = cfg.getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
     assertEquals("G = <N, T, S, P>\n"
       + "N = {I, F, T, E, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8}\n"
       + "T = {a, b, 0, 1, (, ), *, +}\n" + "S = E\n"
@@ -55,8 +56,9 @@ public class CfgTest {
   }
 
   @Test
-  public void testToCnf() {
-    Cfg cfgcnf = Objects.requireNonNull(TestGrammarLibrary.eftCfg()).getCfgWithoutEmptyProductions()
+  public void testToCnf() throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("eft.cfg");
+    Cfg cfgcnf = cfg.getCfgWithoutEmptyProductions()
       .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols()
       .getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
       .getCfgWithoutChainRules();
@@ -69,18 +71,19 @@ public class CfgTest {
   }
 
   @Test
-  public void testToC2f() {
-    assertTrue(Objects.requireNonNull(TestGrammarLibrary.eftCfg()).getCfgWithoutEmptyProductions()
+  public void testToC2f() throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("eft.cfg");
+    assertTrue(cfg.getCfgWithoutEmptyProductions()
       .getCfgWithoutNonGeneratingSymbols().getCfgWithoutNonReachableSymbols()
       .getBinarizedCfg().getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
       .isInCanonicalTwoForm());
   }
 
   @Test
-  public void testRemoveDirectLeftRecursion() {
-    Cfg cfgwlr = Objects
-        .requireNonNull(TestGrammarLibrary.directLeftRecursionCfg())
-      .getCfgWithoutDirectLeftRecursion();
+  public void testRemoveDirectLeftRecursion()
+      throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("directleftrecursion.cfg");
+    Cfg cfgwlr = cfg.getCfgWithoutDirectLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
         + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
@@ -88,9 +91,10 @@ public class CfgTest {
   }
 
   @Test
-  public void testRemoveDirectLeftRecursion2() throws ParseException {
-    Cfg cfgwlr =
-      Objects.requireNonNull(TestGrammarLibrary.directLeftRecursionCfg()).getCfgWithoutLeftRecursion();
+  public void testRemoveDirectLeftRecursion2()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("directleftrecursion.cfg");
+    Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
         + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
@@ -98,9 +102,10 @@ public class CfgTest {
   }
 
   @Test
-  public void testRemoveIndirectLeftRecursion() throws ParseException {
-    Cfg cfgwlr = Objects
-        .requireNonNull(TestGrammarLibrary.indirectLeftRecursionCfg())
+  public void testRemoveIndirectLeftRecursion()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("indirectleftrecursion.cfg");
+    Cfg cfgwlr = cfg
       .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
       .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" +
@@ -113,19 +118,17 @@ public class CfgTest {
 
   @Test
   public void testRemoveLeftRecursionNoTermination()
-    throws ParseException {
-    Cfg cfgwlr = Objects
-        .requireNonNull(TestGrammarLibrary.leftRecursionNoTerminationCfg())
-      .getCfgWithoutLeftRecursion();
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("leftrecursionnotermination.cfg");
+    Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
     assertNull(cfgwlr);
   }
 
   @Test
   public void testCrazyLeftRecursionRemoval()
-      throws ParseException {
-    Cfg cfgwlr = Objects
-        .requireNonNull(TestGrammarLibrary.crazyLeftRecursionRemovalCfg())
-        .getCfgWithoutLeftRecursion();
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("crazyleftrecursionremoval.cfg");
+    Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" + "N = {S1, N2, S, N1, S2, N11}\n"
         + "T = {t0}\n" + "S = S1\n"
         + "P = {N2 -> t0, S -> N1 S, S -> N1, S1 -> S, S1 -> ε, S -> N1 S2, S -> N1 S2, S -> N1 S S2, S2 -> N1 S2, S -> N1 S2, S -> N1 N1 S2, S -> N1 S S2, S -> N1 S N1 S2, N1 -> N1 S2, N1 -> N1 S2, N1 -> N1 S S2, N11 -> N1 S2 N11, N11 -> S2 N11, N11 -> S S2 N11, N11 -> S2 N11, N11 -> S2 N11, N11 -> S N11, N1 -> t0 N11}\n",
@@ -134,9 +137,10 @@ public class CfgTest {
 
   @Test
   public void testLeftRecursionNotRemoved()
-      throws ParseException {
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("leftrecursionnotremoved.cfg");
     Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
-        TestGrammarLibrary.leftRecursionNotRemovedCfg(), "cfg-topdown", true);
+        cfg, "cfg-topdown", true);
     assertFalse(cfgwlr.hasLeftRecursion());
     assertEquals("G = <N, T, S, P>\n" + "N = {N2, N21}\n" + "T = {t0}\n"
             + "S = N2\n" + "P = {N21 -> ε, N21 -> N2 N21, N2 -> t0 N21}\n",
@@ -145,46 +149,75 @@ public class CfgTest {
 
   @Test
   public void testLeftRecursionEndlessRemovalLeftCorner()
-      throws ParseException {
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("leftrecursionendlessremoval.cfg");
     Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
-        TestGrammarLibrary.leftRecursionEndlessRemovalCfg(), "cfg-leftcorner", true);
+        cfg, "cfg-leftcorner", true);
     assertEquals("G = <N, T, S, P>\n" + "N = {S1}\n" + "T = {}\n" + "S = S1\n"
             + "P = {S1 -> ε}\n",
         cfgwlr.toString());
   }
 
+  private static Cfg nonReachableSymbolsCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a"});
+    cfg.setNonterminals(new String[] {"S", "G"});
+    cfg.setStartSymbol("S");
+    try {
+      cfg.addProductionRule("S -> a");
+      cfg.addProductionRule("G -> b");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   @Test
   public void testRemoveNotReachableSymbols() {
-    Cfg after = Objects
-        .requireNonNull(TestGrammarLibrary.nonReachableSymbolsCfg())
-      .getCfgWithoutNonReachableSymbols();
+    Cfg cfg = nonReachableSymbolsCfg();
+    Cfg after = cfg.getCfgWithoutNonReachableSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
   }
 
+  private static Cfg nonGeneratingSymbolsCfg() {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(new String[] {"a"});
+    cfg.setNonterminals(new String[] {"S", "G"});
+    cfg.setStartSymbol("S");
+    try {
+      cfg.addProductionRule("S -> a");
+      cfg.addProductionRule("S -> G");
+      cfg.addProductionRule("G -> G b");
+      return cfg;
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   @Test
-  public void testRemoveNonGeneratingSymbols() {
-    Cfg after = Objects
-        .requireNonNull(TestGrammarLibrary.nonGeneratingSymbolsCfg())
-      .getCfgWithoutNonGeneratingSymbols();
+  public void testRemoveNonGeneratingSymbols()
+      throws FileNotFoundException, ParseException {
+    Cfg cfg = nonGeneratingSymbolsCfg();
+    Cfg after = cfg.getCfgWithoutNonGeneratingSymbols();
     assertEquals("G = <N, T, S, P>\n" + "N = {S}\n" + "T = {a}\n" + "S = S\n"
       + "P = {S -> a}\n", after.toString());
 
-    assertNull(
-        Objects.requireNonNull(TestGrammarLibrary.noUsefulNonterminalCfg())
-      .getCfgWithoutNonGeneratingSymbols());
+    cfg = GrammarLoader.readCfg("nousefulnonterminal.cfg");
+    assertNull(cfg.getCfgWithoutNonGeneratingSymbols());
 
-    after = Objects
-        .requireNonNull(TestGrammarLibrary.nonGeneratingSymbolsEpsilonCfg())
-        .getCfgWithoutNonGeneratingSymbols();
+    cfg = GrammarLoader.readCfg("nongeneratingsymbolsepsilon.cfg");
+    after = cfg.getCfgWithoutNonGeneratingSymbols();
     assertEquals(
         "G = <N, T, S, P>\n" + "N = {A, B, S}\n" + "T = {a, b, c}\n" + "S = S\n"
             + "P = {S -> A B, A -> ε, B -> ε}\n", after.toString());
   }
 
   @Test
-  public void testCreateCfgFromPcfg() {
-    Cfg cfg = new Cfg(TestGrammarLibrary.banPcfg());
+  public void testCreateCfgFromPcfg()
+      throws FileNotFoundException, ParseException {
+    Pcfg pcfg = GrammarLoader.readPcfg("ban.pcfg");
+    Cfg cfg = new Cfg(pcfg);
     assertEquals("G = <N, T, S, P>\n" + "N = {S, A, B}\n" + "T = {a, b}\n"
       + "S = S\n" + "P = {S -> A B, A -> b, A -> a, B -> B B, B -> a}\n",
       cfg.toString());
@@ -272,10 +305,11 @@ public class CfgTest {
     assertTrue(cfgLeftLinear.toString().contains("S -> ε"));
   }
 
-  @Test public void testRemoveLoops() {
-    Cfg cfg = TestGrammarLibrary.loopRemovalCfg();
+  @Test public void testRemoveLoops()
+      throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("loopremoval.cfg");
     Cfg cfgNoLoops = cfg.getCfgWithoutLoops();
-    assertEquals("G = <N, T, S, P>\n" + "N = {S, N1}\n" + "T = {a, b}\n"
+    assertEquals("G = <N, T, S, P>\n" + "N = {S, S1, N1}\n" + "T = {a, b}\n"
         + "S = S1\n" + "P = {S -> a a N1, S -> b N1, N1 -> b N1, N1 -> a}\n",
         cfgNoLoops.toString());
   }

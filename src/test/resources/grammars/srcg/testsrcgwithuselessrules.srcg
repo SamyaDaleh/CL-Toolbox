@@ -1,0 +1,6 @@
+G = <N, T, V, P, S>
+N = {S, A, B, C}
+T = {a, b, c}
+V = {X, Y, Z, U, V, W}
+P = {S(X Y Z U V W) -> A(X,U), A(a X,a Y) -> A(X,Y), A(b X,b Y) -> B(X,Y), A(a,a) -> ε, C(c,c) -> ε}
+S = S

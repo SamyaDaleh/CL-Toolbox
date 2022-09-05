@@ -1,29 +1,31 @@
 package com.github.samyadaleh.cltoolbox.gui;
 
-import static com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary.anCBTag;
-import static org.junit.Assert.assertTrue;
-
-import java.text.ParseException;
-
-import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
+import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import org.junit.Ignore;
+
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+
+import static org.junit.Assert.assertTrue;
 
 public class ParsingTraceTableTest {
 
-  @Ignore public void testParsingTraceTable() throws ParseException {
+  @Ignore public void testParsingTraceTable()
+      throws ParseException, FileNotFoundException {
     String w2 = "a c b";
+    Tag tag = GrammarLoader.readTag("ancb.tag");
     ParsingSchema schema =
-        TagToEarleyRulesConverter.tagToEarleyRules(anCBTag(), w2);
+        TagToEarleyRulesConverter.tagToEarleyRules(tag, w2);
     Deduction deduction = new Deduction();
     deduction.doParse(schema, false);
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     new ParsingTraceTable(data,
-        new String[] {"Id", "Item", "Rules", "Backpointers"}, anCBTag());
+        new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
     assertTrue(true);
   }
 }

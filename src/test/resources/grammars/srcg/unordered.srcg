@@ -1,0 +1,6 @@
+G = <N, T, V, P, S>
+N = {S, A}
+T = {a, b}
+V = {X, Y}
+P = {S(X Y) -> A(X,Y), A(X,Y) -> A(Y,X), A(a X,b Y) -> A(X,Y), A(a,b) -> ε}
+S = S

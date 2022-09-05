@@ -1,40 +1,47 @@
 package com.github.samyadaleh.cltoolbox.common.lcfrs;
 
-import java.text.ParseException;
-import java.util.Objects;
-
-import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
-import org.junit.Test;
-
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
-import com.github.samyadaleh.cltoolbox.common.TestGrammarLibrary;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
+import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.util.Order;
+import com.github.samyadaleh.cltoolbox.common.tag.Tag;
+import org.junit.Test;
+
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.util.Objects;
 
 import static org.junit.Assert.*;
 
 public class SrcgTest {
 
-  @Test public void testOrder() {
-    assertFalse(TestGrammarLibrary.anbnUnorderedEpsSrcg().isOrdered());
+  @Test public void testOrder() throws FileNotFoundException, ParseException {
+    Srcg srcg = GrammarLoader.readSrcg("anbnunorderedeps.srcg");
+    assertFalse(srcg.isOrdered());
   }
 
-  @Test public void testEmptyProductions() {
-    assertTrue(
-        TestGrammarLibrary.anbnUnorderedEpsSrcg().hasEpsilonProductions());
+  @Test public void testEmptyProductions()
+      throws FileNotFoundException, ParseException {
+    Srcg srcg = GrammarLoader.readSrcg("anbnunorderedeps.srcg");
+    assertTrue(srcg.hasEpsilonProductions());
   }
 
-  @Test public void testCfgToSrcgConversion() throws ParseException {
-    Srcg srcg = new Srcg(Objects.requireNonNull(TestGrammarLibrary.epsCfg()));
+  @Test public void testCfgToSrcgConversion()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("eps.cfg");
+    Srcg srcg = new Srcg(cfg);
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C}\n" + "T = {a, b}\n"
         + "V = {X1, X2, X3}\n" + "P = {A(ε) -> ε, S(ε) -> ε, C(ε) -> ε, "
         + "S(b X1 a X2 b X3) -> A(X1) S(X2) C(X3), A(a) -> ε, "
         + "A(b X1) -> B(X1), B(b) -> ε}\n" + "S = S\n", srcg.toString());
   }
 
-  @Test public void testCfgToSrcgConversion2() throws ParseException {
-    Srcg srcg =
-        new Srcg(Objects.requireNonNull(TestGrammarLibrary.anbnCnfProbCfg()));
+  @Test public void testCfgToSrcgConversion2()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("anbncnfprob.cfg");
+    Srcg srcg = new Srcg(cfg);
     assertEquals(
         "G = <N, T, V, P, S>\n" + "N = {S, X1, Y1, Y2}\n" + "T = {a, b}\n"
             + "V = {X2, X3}\n"
@@ -43,9 +50,11 @@ public class SrcgTest {
             + "S = S\n", srcg.toString());
   }
 
-  @Test public void testSrcgOrdering() throws ParseException {
-    assertFalse(TestGrammarLibrary.unorderedSrcg().isOrdered());
-    Srcg srcgOrd = TestGrammarLibrary.unorderedSrcg().getOrderedSrcg();
+  @Test public void testSrcgOrdering()
+      throws ParseException, FileNotFoundException {
+    Srcg srcg = GrammarLoader.readSrcg("unordered.srcg");
+    assertFalse(srcg.isOrdered());
+    Srcg srcgOrd = srcg.getOrderedSrcg();
     assertTrue(srcgOrd.isOrdered());
     assertEquals(
         "G = <N, T, V, P, S>\n" + "N = {S^" + Order.ORDER_MARKING_LEFT + "1"
@@ -74,12 +83,11 @@ public class SrcgTest {
         srcgOrd.toString());
   }
 
-  @Test public void testSrcgRemoveEmptyProductions() throws ParseException {
-    assertTrue(
-        TestGrammarLibrary.withEmptyProductionsSrcg().hasEpsilonProductions());
-    Srcg srcgWithoutEmptyProductions =
-        TestGrammarLibrary.withEmptyProductionsSrcg()
-            .getSrcgWithoutEmptyProductions();
+  @Test public void testSrcgRemoveEmptyProductions()
+      throws ParseException, FileNotFoundException {
+    Srcg srcg = GrammarLoader.readSrcg("withemptyproductions.srcg");
+    assertTrue(srcg.hasEpsilonProductions());
+    Srcg srcgWithoutEmptyProductions = srcg.getSrcgWithoutEmptyProductions();
     assertFalse(srcgWithoutEmptyProductions.hasEpsilonProductions());
     assertEquals("G = <N, T, V, P, S>\n" + "N = {A^10, A^01, A^11, S^1, S'}\n"
         + "T = {a, b}\n" + "V = {X, Y}\n"
@@ -89,8 +97,9 @@ public class SrcgTest {
   }
 
   @Test public void testSrcgRemoveEmptyProductionsEmptyWord()
-      throws ParseException {
-    Srcg srcg = new Srcg(TestGrammarLibrary.emptyWordCfg());
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("emptyword.cfg");
+    Srcg srcg = new Srcg(cfg);
     assertTrue(srcg.hasEpsilonProductions());
     Srcg srcgWithoutEmptyProductions = srcg.getSrcgWithoutEmptyProductions();
     assertFalse(srcgWithoutEmptyProductions.hasEpsilonProductions());
@@ -100,10 +109,11 @@ public class SrcgTest {
         + "S = S'\n", srcgWithoutEmptyProductions.toString());
   }
 
-  @Test public void testSrcgBinarize() throws ParseException {
-    assertFalse(TestGrammarLibrary.testBinarizationSrcg().isBinarized());
-    Srcg binarizedSrcg =
-        TestGrammarLibrary.testBinarizationSrcg().getBinarizedSrcg();
+  @Test public void testSrcgBinarize()
+      throws ParseException, FileNotFoundException {
+    Srcg srcg = GrammarLoader.readSrcg("testbinarization.srcg");
+    assertFalse(srcg.isBinarized());
+    Srcg binarizedSrcg = srcg.getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
     assertEquals(
         "G = <N, T, V, P, S>\n" + "N = {S, A, B, C, A1}\n" + "T = {a, b, c}\n"
@@ -114,10 +124,11 @@ public class SrcgTest {
         binarizedSrcg.toString());
   }
 
-  @Test public void testSrcgOptimalBinarize() throws ParseException {
-    assertFalse(TestGrammarLibrary.testOptimalBinarizationSrcg().isBinarized());
-    Srcg binarizedSrcg =
-        TestGrammarLibrary.testOptimalBinarizationSrcg().getBinarizedSrcg();
+  @Test public void testSrcgOptimalBinarize()
+      throws ParseException, FileNotFoundException {
+    Srcg srcg = GrammarLoader.readSrcg("testoptimalbinarization.srcg");
+    assertFalse(srcg.isBinarized());
+    Srcg binarizedSrcg = srcg.getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C, D, D1}\n"
         + "T = {a, c, d}\n" + "V = {X, Y, Z, U}\n"
@@ -126,11 +137,11 @@ public class SrcgTest {
         + "S = S\n", binarizedSrcg.toString());
   }
 
-  @Test public void testSrcgOptimostBinarize() throws ParseException {
-    assertFalse(
-        TestGrammarLibrary.testOptimostBinarizationSrcg().isBinarized());
-    Srcg binarizedSrcg =
-        TestGrammarLibrary.testOptimostBinarizationSrcg().getBinarizedSrcg();
+  @Test public void testSrcgOptimostBinarize()
+      throws ParseException, FileNotFoundException {
+    Srcg srcg = GrammarLoader.readSrcg("testoptimostbinarization.srcg");
+    assertFalse(srcg.isBinarized());
+    Srcg binarizedSrcg = srcg.getBinarizedSrcg();
     assertTrue(binarizedSrcg.isBinarized());
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A, B, C, D, AB1, AB11}\n"
         + "T = {a, b, c, d}\n" + "V = {X, Y, V, U}\n"
@@ -140,8 +151,8 @@ public class SrcgTest {
   }
 
   @Test public void testRemoveEmptyProductionsForEarley()
-      throws ParseException {
-    Srcg srcg = TestGrammarLibrary.anbmcndmSrcg();
+      throws ParseException, FileNotFoundException {
+    Srcg srcg = GrammarLoader.readSrcg("anbmcndm.srcg");
     Srcg srcgEpsFree =
         Objects.requireNonNull(srcg).getSrcgWithoutEmptyProductions();
     ParsingSchema schema =
@@ -150,8 +161,9 @@ public class SrcgTest {
     assertTrue(deduction.doParse(schema, false));
   }
 
-  @Test public void testRemoveUselessRules() {
-    Srcg srcg = TestGrammarLibrary.testSrcgWUselessRules();
+  @Test public void testRemoveUselessRules()
+      throws FileNotFoundException, ParseException {
+    Srcg srcg = GrammarLoader.readSrcg("testsrcgwithuselessrules.srcg");
     Srcg srcg2 = srcg.getSrcgWithoutUselessRules();
     assertEquals("G = <N, T, V, P, S>\n" + "N = {S, A}\n" + "T = {a}\n"
         + "V = {X, Y, Z, U, V, W}\n"
@@ -159,8 +171,10 @@ public class SrcgTest {
         + "S = S\n", srcg2.toString());
   }
 
-  @Test public void testConvertTagToLcfrs() {
-    Srcg srcg = new Srcg(TestGrammarLibrary.convertToLcfrsTag());
+  @Test public void testConvertTagToLcfrs()
+      throws FileNotFoundException, ParseException {
+    Tag tag = GrammarLoader.readTag("converttolcfrs.tag");
+    Srcg srcg = new Srcg(tag);
     assertEquals(
         "G = <N, T, V, P, S>\n" + "N = {α, β, γ}\n" + "T = {a, b, c, d}\n"
             + "V = {X1, X2, X3}\n"
