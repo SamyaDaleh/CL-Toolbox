@@ -30,7 +30,7 @@ import java.util.Collection;
 
   @Test public void testCfgCalls() {
     try {
-      callWithGrammar(".\\resources\\grammars\\anbn.cfg", "a a b b");
+      callWithGrammar(".\\test\\resources\\grammars\\anbn.cfg", "a a b b");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -38,7 +38,7 @@ import java.util.Collection;
 
   @Test public void testPcfgCalls() {
     try {
-      callWithGrammar(".\\resources\\grammars\\a0n.pcfg", "1 0 0");
+      callWithGrammar(".\\test\\resources\\grammars\\a0n.pcfg", "1 0 0");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -46,7 +46,7 @@ import java.util.Collection;
 
   @Test public void testTagCalls() {
     try {
-      callWithGrammar(".\\resources\\grammars\\anbncndn.tag",
+      callWithGrammar(".\\test\\resources\\grammars\\anbncndn.tag",
           "a a b b c c d d");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
@@ -55,7 +55,7 @@ import java.util.Collection;
 
   @Test public void testSrcgCalls() {
     try {
-      callWithGrammar(".\\resources\\grammars\\anbmcndm.srcg", "a a b c c d");
+      callWithGrammar(".\\test\\resources\\grammars\\anbmcndm.srcg", "a a b c c d");
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
