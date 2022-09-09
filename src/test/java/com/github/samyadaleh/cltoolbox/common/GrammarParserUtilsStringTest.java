@@ -18,7 +18,6 @@ public class GrammarParserUtilsStringTest {
             + "P = {S -> a S b, S -> a b}\n";
     Reader reader = new StringReader(cfgString);
     Cfg cfg = CfgParser.parseCfgReader(reader);
-    assert cfg != null;
     assertEquals(cfgString, cfg.toString());
   }
 }

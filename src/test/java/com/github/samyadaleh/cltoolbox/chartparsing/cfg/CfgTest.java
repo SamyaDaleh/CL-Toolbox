@@ -7,8 +7,7 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.text.ParseException;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CfgTest {
 
@@ -23,6 +22,24 @@ public class CfgTest {
         .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
         .getCfgWithoutLoops();
     assertTrue(cfg.isInChomskyNormalForm());
+  }
+
+  @Test public void testConvertFromCnfToGnf() throws ParseException {
+    String grammar = "N = {S, A, B, X}\n" + "T = {a, b}\n" + "S = S\n"
+        + "P = {S -> A B, S -> A X, X -> S B, A -> a, B -> b}\n";
+    Cfg cfg = new Cfg(new BufferedReader(new StringReader(grammar)));
+    assertFalse(cfg.isInGreibachNormalForm());
+    // Step 2: Remove Left Recursion
+    cfg = cfg.getCfgWithoutLeftRecursion();
+    // Step 3: Convert every Production to GNF by expanding the first
+    // Nonterminal to all possible terminals.
+    cfg = cfg.getCfgWithProductionsInGnf();
+    assertTrue(cfg.isInGreibachNormalForm());
+    String goal = "G = <N, T, S, P>\n" + "N = {S, A, B, X}\n" + "T = {a, b}\n"
+        + "S = S\n"
+        + "P = {S -> a B, S -> a X, X -> a B B, X -> a X B, A -> a, B -> b}";
+    assertEquals(goal, cfg.toString());
+    System.out.println(cfg);
   }
 
   @Test public void testConvertToGnf() throws ParseException {

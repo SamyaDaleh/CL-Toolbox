@@ -38,7 +38,8 @@ public class ExpandGreibach {
       CfgProductionRule rule, Map<String, List<String[]>> expansions) {
     List<CfgProductionRule> expandedRules = new ArrayList<>();
     String lhs = rule.getLhs();
-    for(String[] expansion : expansions.get(lhs)) {
+    String lc = rule.getRhs()[0];
+    for(String[] expansion : expansions.get(lc)) {
       String[] newRhs = ArrayUtils.concat(expansion,
           ArrayUtils.getSequenceWithoutIAsArray(rule.getRhs(), 0));
       expandedRules.add(new CfgProductionRule(lhs, newRhs));
