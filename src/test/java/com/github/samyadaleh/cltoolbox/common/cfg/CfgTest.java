@@ -153,8 +153,8 @@ public class CfgTest {
     Cfg cfg = GrammarLoader.readCfg("leftrecursionendlessremoval.cfg");
     Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
         cfg, "cfg-leftcorner", true);
-    assertEquals("G = <N, T, S, P>\n" + "N = {S1}\n" + "T = {}\n" + "S = S1\n"
-            + "P = {S1 -> ε}\n",
+    assertEquals("G = <N, T, S, P>\n" + "N = {S3}\n" + "T = {}\n" + "S = S3\n"
+            + "P = {S3 -> ε}\n",
         cfgwlr.toString());
   }
 

@@ -6,6 +6,7 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Loops {
@@ -82,17 +83,26 @@ public class Loops {
   }
 
   private static List<String> getLoopMembers(Cfg cfg, String nt) {
+    return getLoopMembers(cfg, nt, nt, Collections.singletonList(nt));
+  }
+
+  private static List<String> getLoopMembers(
+      Cfg cfg, String ntStart, String ntLhs, List<String> loopCandidates) {
     List<String> loopMembers = new ArrayList<>();
-    loopMembers.add(nt);
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      for (CfgProductionRule rule : cfg.getProductionRules()) {
-        if (loopMembers.contains(rule.getLhs()) && rule.getRhs().length == 1
-            && !loopMembers.contains(rule.getRhs()[0])
-            && cfg.nonterminalsContain(rule.getRhs()[0])) {
-          loopMembers.add(rule.getRhs()[0]);
-          changed = true;
+    for (CfgProductionRule rule : cfg.getProductionRules()) {
+      String lc = rule.getRhs()[0];
+      if (rule.getRhs().length == 1 && rule.getLhs().equals(ntLhs) && cfg
+          .nonterminalsContain(lc) && !lc
+          .equals(ntLhs)) {
+        if (lc.equals(ntStart)) {
+          loopMembers.addAll(loopCandidates);
+        } else {
+          if (!loopCandidates.contains(lc)) {
+            List<String> newLoopCandidates = new ArrayList<>(loopCandidates);
+            newLoopCandidates.add(lc);
+            loopMembers.addAll(
+                getLoopMembers(cfg, ntStart, lc, newLoopCandidates));
+          }
         }
       }
     }

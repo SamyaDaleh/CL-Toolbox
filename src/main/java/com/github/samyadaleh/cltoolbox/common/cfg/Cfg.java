@@ -10,6 +10,9 @@ import java.io.BufferedReader;
 import java.text.ParseException;
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.cfg.util.EmptyProductions.isEmptyProductionRule;
+import static com.github.samyadaleh.cltoolbox.common.cfg.util.EmptyProductions.nonterminalOccursInAnyRhs;
+
 /**
  * Representation of a context-free grammar consisting of nonterminals,
  * terminals, production rules and a start symbol.
@@ -84,15 +87,8 @@ public class Cfg extends AbstractCfg {
    */
   public boolean isInCanonicalTwoForm() {
     for (CfgProductionRule rule : this.productionRules) {
-      if (rule.getLhs().equals(this.getStartSymbol()) && rule.getRhs()[0]
-          .equals("")) {
-        for (CfgProductionRule rule2 : this.productionRules) {
-          if (rule2.getRhs().length == 2 && (
-              rule2.getRhs()[0].equals(this.getStartSymbol()) || rule2
-                  .getRhs()[1].equals(this.getStartSymbol()))) {
-            return false;
-          }
-        }
+      if (isEmptyProductionRule(this, rule)) {
+        return false;
       } else if (
           rule.getRhs().length == 2 && (!nonterminalsContain(rule.getRhs()[0])
               || !nonterminalsContain(rule.getRhs()[1]))
@@ -138,7 +134,8 @@ public class Cfg extends AbstractCfg {
 
   public boolean isInGreibachNormalForm(CfgProductionRule rule) {
     if (rule.getRhs()[0].equals("")) {
-      return false;
+      return !rule.getLhs().equals(this.getStartSymbol())
+          || !nonterminalOccursInAnyRhs(this, this.getStartSymbol());
     }
     if (!terminalsContain(rule.getRhs()[0])) {
       return false;
@@ -354,5 +351,18 @@ public class Cfg extends AbstractCfg {
    */
   public Cfg getCfgWithProductionsInGnf() throws ParseException {
     return ExpandGreibach.getCfgWithProductionsInGnf(this);
+  }
+
+  public Cfg getCfgInChomskyNormalForm() {
+    return this.getCfgWithoutEmptyProductions()
+        .getCfgWithoutNonGeneratingSymbols()
+        .getCfgWithoutNonReachableSymbols().getCfgWithoutChainRules()
+        .getBinarizedCfg()
+        .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
+  }
+
+  public Cfg getCfgInGreibachNormalForm() throws ParseException {
+    return this.getCfgInChomskyNormalForm().getCfgWithoutLeftRecursion()
+        .getCfgWithoutEmptyProductions().getCfgWithProductionsInGnf();
   }
 }

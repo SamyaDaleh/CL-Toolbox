@@ -166,10 +166,7 @@ public class GrammarToGrammarConverter {
       throws ParseException {
     if (!cfg.isInCanonicalTwoForm()) {
       if (please) {
-        return cfg.getCfgWithoutEmptyProductions()
-            .getCfgWithoutNonGeneratingSymbols()
-            .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
-            .getCfgWithEitherOneTerminalOrNonterminalsOnRhs();
+        return cfg.getCfgInChomskyNormalForm();
       } else {
         throw new ParseException(
             "CFG must be in Canonical 2 Form for extended CYK parsing.", 1);

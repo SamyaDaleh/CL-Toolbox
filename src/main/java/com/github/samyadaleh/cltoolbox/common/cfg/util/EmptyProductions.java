@@ -16,20 +16,37 @@ public class EmptyProductions {
    */
   public static boolean hasEpsilonProductions(Cfg cfg) {
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      if (!rule.getRhs()[0].equals("")) {
-        continue;
-      }
-      if (rule.getLhs().equals(cfg.getStartSymbol())) {
-        for (CfgProductionRule rule2 : cfg.getProductionRules()) {
-          String[] rhs = rule2.getRhs();
-          for (String symbol : rhs) {
-            if (symbol.equals(cfg.getStartSymbol())) {
-              return true;
-            }
-          }
-        }
-      } else {
+      if (isEmptyProductionRule(cfg, rule)) {
         return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if this production rule has an empty rhs except of the lhs
+   * is the start symbol that occurs on no rhs.
+   */
+  public static boolean isEmptyProductionRule(
+      Cfg cfg, CfgProductionRule rule) {
+    if (!rule.getRhs()[0].equals("")) {
+      return false;
+    }
+    String nt = rule.getLhs();
+    if (nt.equals(cfg.getStartSymbol())) {
+      return nonterminalOccursInAnyRhs(cfg, nt);
+    } else {
+      return true;
+    }
+  }
+
+  public static boolean nonterminalOccursInAnyRhs(Cfg cfg, String nt) {
+    for (CfgProductionRule rule2 : cfg.getProductionRules()) {
+      String[] rhs = rule2.getRhs();
+      for (String symbol : rhs) {
+        if (symbol.equals(nt)) {
+          return true;
+        }
       }
     }
     return false;

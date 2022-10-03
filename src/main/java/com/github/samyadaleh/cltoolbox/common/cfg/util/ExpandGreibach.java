@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.samyadaleh.cltoolbox.common.cfg.util.EmptyProductions.nonterminalOccursInAnyRhs;
+
 public class ExpandGreibach {
   public static Cfg getCfgWithProductionsInGnf(Cfg cfgOld)
       throws ParseException {
@@ -20,10 +22,13 @@ public class ExpandGreibach {
     cfgNew.setStartSymbol(cfgOld.getStartSymbol());
     cfgNew.setTerminals(cfgOld.getTerminals());
     cfgNew.setNonterminals(cfgOld.getNonterminals());
-    Map<String, List<String[]>> expansions
-        = calculateNonterminalExpansions(cfgOld);
+    Map<String, List<String[]>> expansions =
+        calculateNonterminalExpansions(cfgOld);
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-      if (cfgOld.isInGreibachNormalForm(rule)) {
+      if (cfgOld.isInGreibachNormalForm(rule)
+          || (rule.getRhs()[0].equals("")
+            && cfgOld.getStartSymbol().equals(rule.getLhs())
+            && !nonterminalOccursInAnyRhs(cfgOld, rule.getLhs()))) {
         cfgNew.addProductionRule(rule.toString());
         continue;
       }
@@ -39,11 +44,11 @@ public class ExpandGreibach {
     List<CfgProductionRule> expandedRules = new ArrayList<>();
     String lhs = rule.getLhs();
     String lc = rule.getRhs()[0];
-    for(String[] expansion : expansions.get(lc)) {
-      String[] newRhs = ArrayUtils.concat(expansion,
-          ArrayUtils.getSequenceWithoutIAsArray(rule.getRhs(), 0));
-      expandedRules.add(new CfgProductionRule(lhs, newRhs));
-    }
+      for (String[] expansion : expansions.get(lc)) {
+        String[] newRhs = ArrayUtils.concat(expansion,
+            ArrayUtils.getSequenceWithoutIAsArray(rule.getRhs(), 0));
+        expandedRules.add(new CfgProductionRule(lhs, newRhs));
+      }
     return expandedRules;
   }
 
