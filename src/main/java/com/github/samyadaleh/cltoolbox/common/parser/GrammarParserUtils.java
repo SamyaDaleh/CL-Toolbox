@@ -15,10 +15,10 @@ public class GrammarParserUtils {
 
   static boolean printErrors(List<Exception> errors) {
     if (errors.size() > 0) {
-      log.error(
+      log.warn(
           "The following errors occurred while reading the grammar file:");
       for (Exception e : errors) {
-        log.error(e.getMessage(), e);
+        log.warn(e.getMessage());
       }
       return true;
     }
