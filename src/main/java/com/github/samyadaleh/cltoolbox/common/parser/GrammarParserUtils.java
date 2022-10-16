@@ -13,16 +13,14 @@ import java.util.*;
 public class GrammarParserUtils {
   private static final Logger log = LogManager.getLogger();
 
-  static boolean printErrors(List<Exception> errors) {
+  static void printErrors(List<Exception> errors) {
     if (errors.size() > 0) {
       log.warn(
           "The following errors occurred while reading the grammar file:");
       for (Exception e : errors) {
         log.warn(e.getMessage());
       }
-      return true;
     }
-    return false;
   }
 
   public static void addSymbolToCategory(List<String> category, Token token,

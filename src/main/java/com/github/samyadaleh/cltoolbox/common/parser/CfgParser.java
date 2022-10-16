@@ -23,8 +23,10 @@ public class CfgParser {
     BufferedReader in = new BufferedReader(reader);
     Cfg cfg = new Cfg(in);
     checkForGrammarProblems(cfg);
-    if (GrammarParserUtils.printErrors(errors))
+    if (!errors.isEmpty()) {
+      GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
+    }
     return cfg;
   }
 
