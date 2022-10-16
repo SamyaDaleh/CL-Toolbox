@@ -23,8 +23,10 @@ public class SrcgParser {
     BufferedReader in = new BufferedReader(reader);
     Srcg srcg = new Srcg(in);
     checkForGrammarProblems(srcg);
-    if (GrammarParserUtils.printErrors(errors))
+    if (!errors.isEmpty()) {
+      GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
+    }
     return srcg;
   }
 

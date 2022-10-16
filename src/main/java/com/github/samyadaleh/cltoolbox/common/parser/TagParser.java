@@ -24,8 +24,10 @@ public class TagParser {
     BufferedReader in = new BufferedReader(reader);
     Tag tag = new Tag(in);
     checkForGrammarProblems(tag);
-    if (GrammarParserUtils.printErrors(errors))
+    if (!errors.isEmpty()) {
+      GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
+    }
     return tag;
 
   }

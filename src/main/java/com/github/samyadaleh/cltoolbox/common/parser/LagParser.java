@@ -24,8 +24,10 @@ public class LagParser {
     BufferedReader in = new BufferedReader(reader);
     Lag lag = new Lag(in);
     //checkForGrammarProblems(lag);
-    if (GrammarParserUtils.printErrors(errors))
+    if (!errors.isEmpty()) {
+      GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
+    }
     return lag;
   }
 

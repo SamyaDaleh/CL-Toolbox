@@ -22,8 +22,10 @@ public class PcfgParser {
     BufferedReader in = new BufferedReader(reader);
     Pcfg pcfg = new Pcfg(in);
     checkForGrammarProblems(pcfg);
-    if (GrammarParserUtils.printErrors(errors))
+    if (!errors.isEmpty()) {
+      GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
+    }
     return pcfg;
   }
 
