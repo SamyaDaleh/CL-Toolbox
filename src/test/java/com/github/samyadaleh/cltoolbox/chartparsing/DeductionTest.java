@@ -10,6 +10,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRule
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
+import com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter;
 import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
 import com.github.samyadaleh.cltoolbox.common.ccg.Ccg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
@@ -479,6 +480,16 @@ public class DeductionTest {
     deduction.printTrace(data);
     assertEquals("(S (A (a ))(X1 (S (A (a ))(B (b )))(B (b ))))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgCnfConversionAndCyk() throws ParseException, FileNotFoundException {
+    String w = "t0 t1";
+    Cfg cfg = GrammarLoader.readCfg("notCnf.cfg");
+    cfg = GrammarToGrammarConverter.checkAndMayConvertToCfg(cfg, "cfg-cyk", true);
+    ParsingSchema schema = CfgToCykRulesConverter
+        .cfgToCykRules(cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
   }
 
   @Test public void testCfgEpsilon()

@@ -181,10 +181,11 @@ public class GrammarToGrammarConverter {
     if (!cfg.isInChomskyNormalForm()) {
       if (please) {
         return cfg.getCfgWithoutEmptyProductions()
+            .getCfgWithoutChainRules()
             .getCfgWithoutNonGeneratingSymbols()
-            .getCfgWithoutNonReachableSymbols().getBinarizedCfg()
+            .getCfgWithoutNonReachableSymbols()
             .getCfgWithEitherOneTerminalOrNonterminalsOnRhs()
-            .getCfgWithoutLoops();
+            .getBinarizedCfg();
       } else {
         throw new ParseException(
             "CFG must be in Chomsky Normal Form for CYK parsing.", 1);
