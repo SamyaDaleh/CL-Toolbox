@@ -271,7 +271,7 @@ address. The special characters for the overall TAG definition are: `-`, `>`,
 ##### Tree format
 
 The context free trees, when not represented as Tree object, can be parsed from
-and retrieved in bracket format as described by Mitchel (1994) Here is one 
+and retrieved in bracket format as described by Marcus (1994) Here is one 
 example:
 ```
 (T_NA (B (T a ε) ) (B_OA T*))
