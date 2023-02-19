@@ -13,17 +13,15 @@ import java.util.List;
 import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
 
 public class TagParser {
-  private static List<Exception> errors;
 
   /**
    * Parses a TAG from a text file and returns it as a Tag object.
    */
   public static Tag parseTagReader(Reader reader)
       throws ParseException {
-    errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Tag tag = new Tag(in);
-    checkForGrammarProblems(tag);
+    List<Exception> errors = checkForGrammarProblems(tag);
     if (!errors.isEmpty()) {
       GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
@@ -32,21 +30,22 @@ public class TagParser {
 
   }
 
-  private static void checkForGrammarProblems(Tag tag) {
+  private static List<Exception> checkForGrammarProblems(Tag tag) {
+    List<Exception> errors = new ArrayList<>();
     if (tag.getNonterminals() == null) {
       errors.add(new ParseException(
           "Nonterminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (tag.getTerminals() == null) {
       errors.add(new ParseException(
           "Terminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (tag.getTreeNames()== null) {
       errors.add(new ParseException(
           "No trees defined, check grammar format.", 0));
-      return;
+      return errors;
     }
     for (String nt : tag.getNonterminals()) {
       for (String t : tag.getTerminals()) {
@@ -56,8 +55,8 @@ public class TagParser {
         }
       }
     }
-    checkInitialTrees(tag);
-    checkAuxiliaryTrees(tag);
+    checkInitialTrees(tag, errors);
+    checkAuxiliaryTrees(tag, errors);
     if (tag.getNonterminals() == null) {
       errors.add(new ParseException("No nonterminals declared in grammar.", 0));
     }
@@ -75,15 +74,17 @@ public class TagParser {
       errors.add(new ParseException(
           "The start symbol is not one of the nonterminals.", 0));
     }
+    return errors;
   }
 
-  private static void checkAuxiliaryTrees(Tag tag) {
+  private static void checkAuxiliaryTrees(Tag tag, List<Exception> errors) {
     for (String treeName : tag.getAuxiliaryTreeNames()) {
-      checkTree(tag, treeName);
+      checkTree(tag, treeName, errors);
     }
   }
 
-  private static void checkTree(Tag tag, String treeName) {
+  private static void checkTree(
+      Tag tag, String treeName, List<Exception> errors) {
     Tree tree = tag.getTree(treeName);
     for (Vertex v : tree.getVertexes()) {
       if (!v.getLabel().equals("") && !contains(tag.getNonterminals(),
@@ -103,9 +104,10 @@ public class TagParser {
     }
   }
 
-  private static void checkInitialTrees(Tag tag) {
+  private static void checkInitialTrees(
+      Tag tag, List<Exception> errors) {
     for (String treeName : tag.getInitialTreeNames()) {
-      checkTree(tag, treeName);
+      checkTree(tag, treeName, errors);
     }
   }
 }

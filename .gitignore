@@ -8,3 +8,4 @@
 cltoolbox.log*
 /CL-Toolbox.iml
 /.gradle/
+/build/

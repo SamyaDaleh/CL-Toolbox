@@ -11,17 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PcfgParser {
-  private static List<Exception> errors;
 
   /**
    * Parses a PCFG from a file and returns it as Pcfg.
    */
   public static Pcfg parsePcfgReader(Reader reader)
       throws ParseException {
-    errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Pcfg pcfg = new Pcfg(in);
-    checkForGrammarProblems(pcfg);
+    List<Exception> errors = checkForGrammarProblems(pcfg);
     if (!errors.isEmpty()) {
       GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
@@ -29,21 +27,22 @@ public class PcfgParser {
     return pcfg;
   }
 
-  private static void checkForGrammarProblems(Pcfg pcfg) {
+  private static List<Exception> checkForGrammarProblems(Pcfg pcfg) {
+    List<Exception> errors = new ArrayList<>();
     if (pcfg.getNonterminals() == null) {
       errors.add(new ParseException(
           "Nonterminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (pcfg.getTerminals() == null) {
       errors.add(new ParseException(
           "Terminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (pcfg.getProductionRules() == null) {
       errors.add(new ParseException(
           "Production rules are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     for (String nt : pcfg.getNonterminals()) {
       for (String t : pcfg.getTerminals()) {
@@ -84,5 +83,6 @@ public class PcfgParser {
       errors.add(new ParseException(
           "The start symbol is not one of the nonterminals.", 0));
     }
+    return errors;
   }
 }

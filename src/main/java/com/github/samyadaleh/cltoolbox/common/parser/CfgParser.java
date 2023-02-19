@@ -12,17 +12,15 @@ import java.util.List;
 import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
 
 public class CfgParser {
-  private static List<Exception> errors;
 
   /**
    * Hand CFG reader to parse from, can come from string or multiline file.
    */
   public static Cfg parseCfgReader(Reader reader)
       throws ParseException {
-    errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Cfg cfg = new Cfg(in);
-    checkForGrammarProblems(cfg);
+    List<Exception> errors = checkForGrammarProblems(cfg);
     if (!errors.isEmpty()) {
       GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
@@ -30,21 +28,22 @@ public class CfgParser {
     return cfg;
   }
 
-  private static void checkForGrammarProblems(Cfg cfg) {
+  private static List<Exception> checkForGrammarProblems(Cfg cfg) {
+    List<Exception> errors = new ArrayList<>();
     if (cfg.getNonterminals() == null) {
       errors.add(new ParseException(
           "Nonterminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (cfg.getTerminals() == null) {
       errors.add(new ParseException(
           "Terminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (cfg.getProductionRules() == null) {
       errors.add(new ParseException(
           "Production rules are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     for (String nt : cfg.getNonterminals()) {
       for (String t : cfg.getTerminals()) {
@@ -97,5 +96,6 @@ public class CfgParser {
             "Grammar must not contain _ in any terminal.", 0));
       }
     }
+    return errors;
   }
 }

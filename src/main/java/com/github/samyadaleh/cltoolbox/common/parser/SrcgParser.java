@@ -12,17 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SrcgParser {
-  private static List<Exception> errors;
 
   /**
    * Parses a sRCG from a file and returns it as Srcg.
    */
   public static Srcg parseSrcgReader(Reader reader)
       throws ParseException {
-    errors = new ArrayList<>();
     BufferedReader in = new BufferedReader(reader);
     Srcg srcg = new Srcg(in);
-    checkForGrammarProblems(srcg);
+    List<Exception> errors = checkForGrammarProblems(srcg);
     if (!errors.isEmpty()) {
       GrammarParserUtils.printErrors(errors);
       throw (ParseException) errors.get(0);
@@ -30,26 +28,27 @@ public class SrcgParser {
     return srcg;
   }
 
-  private static void checkForGrammarProblems(Srcg srcg) {
+  private static List<Exception> checkForGrammarProblems(Srcg srcg) {
+    List<Exception> errors = new ArrayList<>();
     if (srcg.getNonterminals() == null) {
       errors.add(new ParseException(
           "Nonterminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (srcg.getTerminals() == null) {
       errors.add(new ParseException(
           "Terminals are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (srcg.getVariables() == null) {
       errors.add(new ParseException(
           "Variables are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     if (srcg.getClauses() == null) {
       errors.add(new ParseException(
           "Clauses are null, check grammar format.", 0));
-      return;
+      return errors;
     }
     for (String nt : srcg.getVariables()) {
       for (String t : srcg.getTerminals()) {
@@ -61,9 +60,9 @@ public class SrcgParser {
     }
     for (Clause clause : srcg.getClauses()) {
       Predicate lhsPred = clause.getLhs();
-      checkPredicateFormat(srcg, clause, lhsPred);
+      checkPredicateFormat(srcg, clause, lhsPred, errors);
       for (Predicate rhsPred : clause.getRhs()) {
-        checkPredicateFormat(srcg, clause, rhsPred);
+        checkPredicateFormat(srcg, clause, rhsPred, errors);
       }
     }
     if (srcg.getNonterminals() == null) {
@@ -79,10 +78,11 @@ public class SrcgParser {
       errors.add(new ParseException(
           "The start symbol is not one of the nonterminals.", 0));
     }
+    return errors;
   }
 
   private static void checkPredicateFormat(Srcg srcg, Clause clause,
-      Predicate pred) {
+      Predicate pred, List<Exception> errors) {
     if (!ArrayUtils.contains(srcg.getNonterminals(), pred.getNonterminal())) {
       errors.add(new ParseException(
           "Nonterminal " + pred.getNonterminal() + " in clause " + clause
