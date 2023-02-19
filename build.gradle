@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 compileTestJava.options.encoding = "UTF-8"
@@ -18,8 +18,8 @@ group = "com.github.samyadaleh.cltoolbox"
 version = "0.0.1-SNAPSHOT"
 
 dependencies {
-    implementation 'org.apache.logging.log4j:log4j-core:2.11.1'
-    testImplementation 'junit:junit:4.12'
+    implementation 'org.apache.logging.log4j:log4j-core:2.12.4'
+    testImplementation 'junit:junit:4.13.1'
 }
 
 jacocoTestReport {
