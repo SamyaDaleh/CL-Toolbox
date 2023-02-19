@@ -30,7 +30,6 @@ jacocoTestReport {
 }
 
 jar {
-    archiveBaseName 'CL-Toolbox.jar'
     from('src/main/java') {
         include 'log4j2.xml'
         into('WEB-INF/classes')
