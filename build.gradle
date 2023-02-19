@@ -21,14 +21,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        csv.enabled = false
-        html.enabled = true
-    }
-}
-
 publishing {
     repositories {
         maven {
