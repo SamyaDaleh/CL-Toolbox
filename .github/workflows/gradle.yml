@@ -20,7 +20,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: CL-Toolbox
-        path: build/libs/CL-Toolbox.jar
+        path: build/libs/cl-toolbox-0.0.1-SNAPSHOT.jar
 
   publish:
     runs-on: ubuntu-latest
