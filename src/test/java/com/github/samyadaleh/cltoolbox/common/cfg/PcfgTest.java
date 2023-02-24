@@ -1,15 +1,21 @@
 package com.github.samyadaleh.cltoolbox.common.cfg;
 
-import static org.junit.Assert.assertEquals;
-
-import java.text.ParseException;
-
+import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
 import org.junit.Test;
 
-import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
-import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class PcfgTest {
+
+  @Test public void testPcfgCNF() throws FileNotFoundException, ParseException {
+    Pcfg pcfg = GrammarLoader.readPcfg("testcnf.pcfg");
+    Cfg cfg = new Cfg(pcfg);
+    assertTrue(cfg.isInChomskyNormalForm());
+  }
   @Test public void testCreatePcfgFromCfg() throws ParseException {
     Cfg cfg = new Cfg();
     cfg.setTerminals(new String[] {"a", "b", "c", "d"});
