@@ -39,8 +39,13 @@ public class CfgToShiftReduceRulesConverter {
     axiom.addConsequence(new DeductionChartItem("", "0"));
     axiom.setName(DEDUCTION_RULE_CFG_SHIFTREDUCE_AXIOM);
     schema.addAxiom(axiom);
-    schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
-        String.valueOf(wSplit.length)));
+    if (w.equals("")) {
+      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
+          String.valueOf(0)));
+    } else {
+      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
+          String.valueOf(wSplit.length)));
+    }
     return schema;
   }
 }

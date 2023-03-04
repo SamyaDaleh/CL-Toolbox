@@ -130,6 +130,21 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testCfgShiftreduceMinimalEpsilon()
+      throws ParseException, FileNotFoundException {
+    String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordminimal.cfg");
+    ParsingSchema schema = CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(
+        cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals("(S (ε ))",
+        deduction.getDerivedTrees().get(0).toString());
+    assertEquals(2, data.length);
+  }
+
   @Test public void testCfgEarley() throws ParseException,
       FileNotFoundException {
     Cfg cfg = GrammarLoader.readCfg("anbn.cfg");
