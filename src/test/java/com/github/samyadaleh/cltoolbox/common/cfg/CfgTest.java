@@ -153,7 +153,7 @@ public class CfgTest {
     Cfg cfgwlr = cfg.getCfgWithoutDirectLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
-        + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
+        + "P = {S1 -> ε, S -> d, S -> d S1, S -> c, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
       cfgwlr.toString());
   }
 
@@ -164,7 +164,7 @@ public class CfgTest {
     Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
-        + "P = {S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
+        + "P = {S -> c, S -> d, S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
       cfgwlr.toString());
   }
 
@@ -179,7 +179,7 @@ public class CfgTest {
       "N = {S, A, A1}\n" +
       "T = {a, b}\n" +
       "S = S\n" +
-      "P = {S -> A a, S -> b, A1 -> ε, A -> b a A1, A1 -> a a A1}\n" +
+      "P = {S -> A a, S -> b, A -> b a, A1 -> ε, A -> b a A1, A1 -> a a A1}\n" +
       "", cfgwlr.toString());
   }
 
@@ -198,7 +198,7 @@ public class CfgTest {
     Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" + "N = {S1, N2, S, N1, S2, N11}\n"
         + "T = {t0}\n" + "S = S1\n"
-        + "P = {N2 -> t0, S -> N1 S, S -> N1, S1 -> S, S1 -> ε, S -> N1 S2, S -> N1 S2, S -> N1 S S2, S2 -> N1 S2, S -> N1 S2, S -> N1 N1 S2, S -> N1 S S2, S -> N1 S N1 S2, N1 -> N1 S2, N1 -> N1 S2, N1 -> N1 S S2, N11 -> N1 S2 N11, N11 -> S2 N11, N11 -> S S2 N11, N11 -> S2 N11, N11 -> S2 N11, N11 -> S N11, N1 -> t0 N11}\n",
+        + "P = {N2 -> t0, N1 -> t0, S -> N1 S N1, S -> N1 S, S -> N1 N1, S -> N1, S1 -> S, S1 -> ε, S -> N1 S, S -> N1, S -> N1, S -> t0, S2 -> ε, S -> t0 S2, S -> N1, S -> N1 S2, S -> N1, S -> N1 S2, S -> N1 S, S -> N1 S S2, S2 -> N1 S2, S -> N1 S N1 S2, N1 -> N1 S, N1 -> N1, N1 -> N1 S, N1 -> N1, N1 -> N1, N1 -> t0, N1 -> t0 S2, N1 -> N1, N1 -> N1 S2, N1 -> t0, N1 -> t0 N11, N11 -> S N11, N11 -> N1 N11, N11 -> S N11, N11 -> S N1 N11}\n",
         cfgwlr.toString());
   }
 
@@ -210,7 +210,7 @@ public class CfgTest {
         cfg, "cfg-topdown", true);
     assertFalse(cfgwlr.hasLeftRecursion());
     assertEquals("G = <N, T, S, P>\n" + "N = {N2, N21}\n" + "T = {t0}\n"
-            + "S = N2\n" + "P = {N21 -> ε, N21 -> N2 N21, N2 -> t0 N21}\n",
+            + "S = N2\n" + "P = {N2 -> t0, N21 -> ε, N21 -> N2 N21, N2 -> t0 N21}\n",
         cfgwlr.toString());
   }
 
