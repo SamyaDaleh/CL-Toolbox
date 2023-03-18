@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.Deduction;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeductionRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.CfgToTopDownRulesConverter;
 import com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter;
 import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
@@ -30,6 +31,18 @@ public class CfgTest {
     assertFalse(cfg.isInChomskyNormalForm());
     cfg = cfg.getCfgInChomskyNormalForm();
     assertTrue(cfg.isInChomskyNormalForm());
+  }
+
+  @Test public void testConvertToTd() throws ParseException {
+    String grammar = "N = {S, N1, N2}\n" + "T = {t0, t1}\n" + "S = S\n"
+        + "P = {S -> ε, S -> S, S -> S, N1 -> S, N2 -> N1, S -> N2, N1 -> t0, S -> N1 t0 t1 t0, S -> t1 S S}";
+    Cfg cfg = new Cfg(new BufferedReader(new StringReader(grammar)));
+    Cfg finalCfg = GrammarToGrammarConverter.checkAndMayConvertToCfg(cfg, "cfg-topdown", true);
+    ParsingSchema schema =
+        GrammarToDeductionRulesConverter.convertToSchema(finalCfg,
+            "t1 t0 t0 t1 t0", "cfg-topdown");
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
   }
 
   @Test public void testConvertFromCnfToGnf() throws ParseException {
