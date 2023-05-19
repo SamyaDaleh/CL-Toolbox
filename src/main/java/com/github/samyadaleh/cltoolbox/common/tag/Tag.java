@@ -202,9 +202,9 @@ public class Tag extends AbstractNTSGrammar {
     Tree tree = getTree(treeName);
     Tree auxTree = getAuxiliaryTree(auxTreeName);
     boolean labelCheck = auxTree != null && auxTree.getRoot().getLabel()
-        .equals(tree.getNodeByGornAdress(gornAddress).getLabel());
+        .equals(tree.getNodeByGornAddress(gornAddress).getLabel());
     boolean isLeaf =
-        tree.getChildren(tree.getNodeByGornAdress(gornAddress)).isEmpty();
+        tree.getChildren(tree.getNodeByGornAddress(gornAddress)).isEmpty();
     boolean nullAdjoin = tree.isInNA(gornAddress);
     return (labelCheck && !isLeaf && !nullAdjoin);
   }

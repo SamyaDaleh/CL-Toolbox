@@ -32,7 +32,7 @@ public class TagEarleyScanEps extends AbstractDynamicDeductionRule {
       String treeName = itemForm[0];
       String node = itemForm[1];
       if (itemForm[2].equals("la") && itemForm[7].equals("0") && tag
-          .getTree(treeName).getNodeByGornAdress(node).getLabel().equals("")) {
+          .getTree(treeName).getNodeByGornAddress(node).getLabel().equals("")) {
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, node, "ra", itemForm[3],
                 itemForm[4], itemForm[5], itemForm[6], "0");

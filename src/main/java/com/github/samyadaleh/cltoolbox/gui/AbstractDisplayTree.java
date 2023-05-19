@@ -195,18 +195,18 @@ abstract class AbstractDisplayTree {
       System.err.println(
         "Unexpected item length " + String.valueOf(dti.getItemForm().length));
     }
-    drawSubTree(dti, dti.getTree().getNodeByGornAdress(""), 60, 0,
+    drawSubTree(dti, dti.getTree().getNodeByGornAddress(""), 60, 0,
       dti.getWidth());
     int overallLeafLabelWidth = 2;
     for (String gorn : dti.getTree().getLeafGorns()) {
       overallLeafLabelWidth +=
-        dti.getTree().getNodeByGornAdress(gorn).getLabel().length() + 1;
+        dti.getTree().getNodeByGornAddress(gorn).getLabel().length() + 1;
     }
     int labelWidthUsed = 2;
     for (int i = 0; i < dti.getTree().getLeafOrder().size(); i++) {
       int index = dti.getTree().getLeafOrder().indexOf(String.valueOf(i));
       Vertex p = dti.getTree()
-        .getNodeByGornAdress(dti.getTree().getLeafGorns().get(index));
+        .getNodeByGornAddress(dti.getTree().getLeafGorns().get(index));
       int nodex = labelWidthUsed * dti.getWidth() / overallLeafLabelWidth;
       labelWidthUsed += p.getLabel().length() + 1;
       int height = dti.getHeight() - 50;

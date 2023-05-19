@@ -48,7 +48,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
       String adj = itemForm[7];
       String iniTreeRootLabel = tag.getTree(treeName).getRoot().getLabel();
       String substNodeLabel =
-          tag.getTree(outTreeName).getNodeByGornAdress(outNode).getLabel();
+          tag.getTree(outTreeName).getNodeByGornAddress(outNode).getLabel();
       if (tag.getInitialTree(treeName) != null && node.equals("") && f1
           .equals("-") && f2.equals("-") && adj.equals("0") && pos.equals("ra")
           && iniTreeRootLabel.equals(substNodeLabel)) {

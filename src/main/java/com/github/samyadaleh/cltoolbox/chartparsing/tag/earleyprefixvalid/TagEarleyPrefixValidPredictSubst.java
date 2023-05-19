@@ -30,7 +30,7 @@ public class TagEarleyPrefixValidPredictSubst
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String l = itemForm[7];
-      Vertex p = tag.getTree(treeName).getNodeByGornAdress(itemForm[1]);
+      Vertex p = tag.getTree(treeName).getNodeByGornAddress(itemForm[1]);
       if (itemForm[2].equals("la") && itemForm[8].equals("0") && itemForm[3]
           .equals("~") && itemForm[4].equals("~") && itemForm[5].equals("~")
           && itemForm[6].equals("~") && !l.equals("~") && tag

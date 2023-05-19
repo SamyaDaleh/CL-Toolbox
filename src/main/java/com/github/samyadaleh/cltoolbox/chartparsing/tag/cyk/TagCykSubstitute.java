@@ -37,7 +37,7 @@ public class TagCykSubstitute extends AbstractDynamicDeductionRule {
       String j = itemForm[5];
       if (tag.getInitialTree(treeName) != null && node.equals("⊤")
         && tag.getInitialTree(treeName).getRoot().getLabel()
-          .equals(tag.getTree(this.treeName).getNodeByGornAdress(nodeGorn)
+          .equals(tag.getTree(this.treeName).getNodeByGornAddress(nodeGorn)
             .getLabel())) {
         ChartItemInterface consequence = new DeductionChartItem(this.treeName,
           this.nodeGorn + "⊤", i, "-", "-", j);

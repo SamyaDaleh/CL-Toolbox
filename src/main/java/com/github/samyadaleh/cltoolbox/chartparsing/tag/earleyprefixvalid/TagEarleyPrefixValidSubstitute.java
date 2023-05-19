@@ -32,7 +32,7 @@ public class TagEarleyPrefixValidSubstitute
     String[] itemForm2Goal =
         new String[] {"?", "", "ra", itemForm1[7], itemForm1[7], "-", "-", "?",
             "0"};
-    Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
+    Vertex p = tag.getTree(treeName1).getNodeByGornAddress(node1);
     if (itemForm1[2].equals("la") && itemForm1[3].equals("~") && itemForm1[4]
         .equals("~") && itemForm1[5].equals("~") && itemForm1[6].equals("~")
         && !l1.equals("~") && itemForm1[8].equals("0")

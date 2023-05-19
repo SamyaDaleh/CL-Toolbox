@@ -35,9 +35,9 @@ public class TagCykMoveUnary extends AbstractDynamicDeductionRule {
       String j = itemForm[5];
       if (node.endsWith(".1⊤")) {
         String nodeSib = tag.getTree(treeName)
-          .getNodeByGornAdress(node.substring(0, node.length() - 1))
+          .getNodeByGornAddress(node.substring(0, node.length() - 1))
           .getGornAddressOfPotentialRightSibling();
-        if (tag.getTree(treeName).getNodeByGornAdress(nodeSib) == null) {
+        if (tag.getTree(treeName).getNodeByGornAddress(nodeSib) == null) {
           String parentNode = node.substring(0, node.length() - 3) + "⊥";
           ChartItemInterface consequence =
             new DeductionChartItem(treeName, parentNode, i, f1, f2, j);

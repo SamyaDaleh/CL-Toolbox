@@ -42,7 +42,7 @@ public class TagEarleyCompleteNode
     String j = itemForm2[4];
     String k = itemForm2[5];
     String l = itemForm2[6];
-    String label = tag.getTree(treeName1).getNodeByGornAdress(node1).getLabel();
+    String label = tag.getTree(treeName1).getNodeByGornAddress(node1).getLabel();
     if (treeName1.equals(treeName2) && node1.equals(node2) && tag
         .isInNonterminals(label)) {
       if (pos1.equals("la") && pos2.equals("rb") && i1.equals(i2) && adj1

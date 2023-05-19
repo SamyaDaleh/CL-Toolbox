@@ -28,7 +28,7 @@ public class TagEarleyPrefixValidScanTerm extends AbstractDynamicDeductionRule {
       String node = itemForm[1];
       int lInt = Integer.parseInt(itemForm[7]);
       if (lInt < wSplit.length && itemForm[2].equals("la") && itemForm[8]
-          .equals("0") && tag.getTree(treeName).getNodeByGornAdress(node)
+          .equals("0") && tag.getTree(treeName).getNodeByGornAddress(node)
           .getLabel().equals(wSplit[lInt])) {
         this.name = DEDUCTION_RULE_TAG_EARLEY_SCANTERM + " " + wSplit[lInt];
         ChartItemInterface consequence =

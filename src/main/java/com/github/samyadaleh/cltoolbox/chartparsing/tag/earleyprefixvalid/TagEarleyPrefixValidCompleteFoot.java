@@ -36,7 +36,7 @@ public class TagEarleyPrefixValidCompleteFoot
         new String[] {itemForm1[0], itemForm1[1], "la", "~", "~", "~", "~",
             itemForm2[3], "0"};
     if (tag.getAuxiliaryTree(treeName2) != null) {
-      Vertex pf = tag.getAuxiliaryTree(treeName2).getNodeByGornAdress(node2);
+      Vertex pf = tag.getAuxiliaryTree(treeName2).getNodeByGornAddress(node2);
       if (itemForm1[2].equals("rb") && itemForm1[3].equals("~") && itemForm1[5]
           .equals("~") && itemForm1[6].equals("~") && itemForm1[8].equals("0")
           && pf == tag.getAuxiliaryTree(treeName2).getFoot() && !itemForm2[4]

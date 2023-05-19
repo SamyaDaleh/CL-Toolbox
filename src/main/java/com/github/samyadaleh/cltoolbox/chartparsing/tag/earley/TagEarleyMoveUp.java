@@ -31,12 +31,12 @@ public class TagEarleyMoveUp extends AbstractDynamicDeductionRule {
       String[] itemForm = antecedences.get(0).getItemForm();
       String treeName = itemForm[0];
       String node = itemForm[1];
-      String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
+      String siblingGorn = tag.getTree(treeName).getNodeByGornAddress(node)
           .getGornAddressOfPotentialRightSibling();
       if (!node.equals("") && itemForm[2].equals("ra") && itemForm[7]
           .equals("0")
-          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
-        String parentGorn = tag.getTree(treeName).getNodeByGornAdress(node)
+          && tag.getTree(treeName).getNodeByGornAddress(siblingGorn) == null) {
+        String parentGorn = tag.getTree(treeName).getNodeByGornAddress(node)
             .getGornAddressOfParent();
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, parentGorn, "rb", itemForm[3],

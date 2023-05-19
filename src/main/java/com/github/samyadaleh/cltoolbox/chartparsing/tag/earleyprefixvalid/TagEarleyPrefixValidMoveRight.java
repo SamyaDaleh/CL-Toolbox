@@ -29,11 +29,11 @@ public class TagEarleyPrefixValidMoveRight
       String j = itemForm[5];
       String k = itemForm[6];
       String siblingGorn =
-          tag.getTree(treeName).getNodeByGornAdress(itemForm[1])
+          tag.getTree(treeName).getNodeByGornAddress(itemForm[1])
               .getGornAddressOfPotentialRightSibling();
       if (itemForm[2].equals("ra") && !iGamma.equals("~") && !i.equals("~")
           && !j.equals("~") && !k.equals("~") && itemForm[8].equals("0")
-          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) != null) {
+          && tag.getTree(treeName).getNodeByGornAddress(siblingGorn) != null) {
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, siblingGorn, "la", iGamma, i, j, k,
                 itemForm[7], "0");

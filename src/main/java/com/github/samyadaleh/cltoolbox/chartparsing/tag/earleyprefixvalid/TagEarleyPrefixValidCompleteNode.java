@@ -37,7 +37,7 @@ public class TagEarleyPrefixValidCompleteNode
     String[] itemForm2Goal =
         new String[] {itemForm1[0], itemForm1[1], "rb", "~", itemForm1[7], "?",
             "?", "?", "?"};
-    Vertex p = tag.getTree(treeName1).getNodeByGornAdress(node1);
+    Vertex p = tag.getTree(treeName1).getNodeByGornAddress(node1);
     if (itemForm1[2].equals("la") && !iGamma1.equals("~") && !i1.equals("~")
         && !j1.equals("~") && !k1.equals("~") && !itemForm1[7].equals("~")
         && itemForm1[8].equals("0") && !j2.equals("~") && !k2.equals("~") && !l2

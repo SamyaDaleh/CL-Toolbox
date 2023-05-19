@@ -33,7 +33,7 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
       }
       String parentGorn = nodeGorn.substring(0, nodeGorn.lastIndexOf('.'));
       Tree tree = tag.getTree(treeName);
-      if (tree.getChildren(tree.getNodeByGornAdress(parentGorn))
+      if (tree.getChildren(tree.getNodeByGornAddress(parentGorn))
         .size() != antNeeded) {
         return consequences;
       }

@@ -43,7 +43,7 @@ public class TagEarleyPredictSubst extends AbstractDynamicDeductionRule {
       String f2 = itemForm[5];
       String i2 = itemForm[6];
       String adj = itemForm[7];
-      Vertex p = tag.getTree(treeName).getNodeByGornAdress(node);
+      Vertex p = tag.getTree(treeName).getNodeByGornAddress(node);
       String substNodeLabel = p.getLabel();
       String iniTreeRootLabel =
         tag.getInitialTree(iniTreeName).getRoot().getLabel();

@@ -27,13 +27,13 @@ public class TagEarleyPrefixValidMoveUp extends AbstractDynamicDeductionRule {
       String i = itemForm[4];
       String j = itemForm[5];
       String k = itemForm[6];
-      String siblingGorn = tag.getTree(treeName).getNodeByGornAdress(node)
+      String siblingGorn = tag.getTree(treeName).getNodeByGornAddress(node)
           .getGornAddressOfPotentialRightSibling();
       if (!node.equals("") && itemForm[2].equals("ra") && !itemForm[3]
           .equals("~") && !i.equals("~") && !j.equals("~") && !k.equals("~")
           && itemForm[8].equals("0")
-          && tag.getTree(treeName).getNodeByGornAdress(siblingGorn) == null) {
-        String parentGorn = tag.getTree(treeName).getNodeByGornAdress(node)
+          && tag.getTree(treeName).getNodeByGornAddress(siblingGorn) == null) {
+        String parentGorn = tag.getTree(treeName).getNodeByGornAddress(node)
             .getGornAddressOfParent();
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, parentGorn, "rb", "~", i, j, k,

@@ -30,7 +30,7 @@ public class TagEarleyPrefixValidMoveDown extends AbstractDynamicDeductionRule {
       String k = itemForm[6];
       if (itemForm[2].equals("lb") && !iGamma.equals("~") && !i.equals("~")
           && !j.equals("~") && !k.equals("~") && itemForm[8].equals("0")
-          && tag.getTree(treeName).getNodeByGornAdress(node + ".1") != null) {
+          && tag.getTree(treeName).getNodeByGornAddress(node + ".1") != null) {
         ChartItemInterface consequence =
             new DeductionChartItem(treeName, node + ".1", "la", iGamma, i, j, k,
                 itemForm[7], "0");
