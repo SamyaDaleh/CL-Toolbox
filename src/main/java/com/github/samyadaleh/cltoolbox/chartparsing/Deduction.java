@@ -14,7 +14,7 @@ import java.util.*;
  * A deduction system that derives consequences from antecendence items and
  * tries to generate a goal item. Based on the slides from Laura Kallmeyer about
  * Parsing as Deduction
- * https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf
+ * <a href="https://user.phil.hhu.de/~kallmeyer/Parsing/deduction.pdf">Parsing as Deduction</a>
  */
 public class Deduction {
 
@@ -709,6 +709,16 @@ public class Deduction {
     }
   }
 
+  /**
+   Generates a top-down computation graph for the given data.
+   This method takes in a 2-dimensional array of data, a word length, and a
+   graph data map, and generates a top-down
+   computation graph based on the provided information. The computation graph
+   is represented using a nested map structure.
+   @param data the 2-dimensional array of data containing item forms and indices
+   @param wLength the word length used for graph calculation
+   @param graphData the map to store the generated computation graph data
+   */
   static void generateCfgTopDownComputationGraph(String[][] data,
       int wLength, Map<String, Map<String, StringBuilder>> graphData) {
     String graphMaxIndex = String.valueOf(wLength * 2 + 1);

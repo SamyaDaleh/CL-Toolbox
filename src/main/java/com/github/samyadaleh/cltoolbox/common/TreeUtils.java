@@ -165,14 +165,6 @@ public class TreeUtils {
 
   private static List<Tree> getSubstitutionSubtrees(Tree tree1, Tree tree2,
       Vertex node2, String[] nonterminals) {
-    // TODO return a list of subtrees from tree1 that correspond to the substitution nodes in tree2.
-    //  How does it work? I can locally tell if this part of the sub-structure is the same, but I won't know about the others
-    //  easy. If one of them returns false, dismiss the subtrees you collected
-    //  not easy. What if it returns subtrees, because it found them fitting in its branch, that doesn't mean my ones are correct.
-    //  Here is how it works. First I need to call the same with nodes instead of trees
-    // TODO if node 2 and root of tree1 have the same label, start from here
-    //  else call this method for every child node of node2.
-    //  no, you have to call it anyway cause you might be wrong
     List<Tree> subTrees =
         collectSubTrees(tree1, tree1.getRoot(), tree2, node2, nonterminals);
     if (subTrees.size() > 0) {

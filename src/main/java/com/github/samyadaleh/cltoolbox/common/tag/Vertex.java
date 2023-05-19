@@ -20,7 +20,7 @@ public class Vertex implements Cloneable {
     return this.gornAddress;
   }
 
-  void setGornaddress(String gornaddress) {
+  void setGornAddress(String gornaddress) {
     this.gornAddress = gornaddress;
   }
 
