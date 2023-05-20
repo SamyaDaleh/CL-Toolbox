@@ -7,6 +7,11 @@ plugins {
 repositories {
     mavenCentral()
 }
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.github.samyadaleh.cltoolbox.cli.Main'
+    }
+}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
