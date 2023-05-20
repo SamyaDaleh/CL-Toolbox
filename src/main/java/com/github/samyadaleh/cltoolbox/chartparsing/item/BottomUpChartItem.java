@@ -7,7 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Used for shift-reduce parsing. Handles several trees per stack symbol.
+ */
 public class BottomUpChartItem extends DeductionChartItem {
+
+  /** List of entries for every stack symbol. The key of Pair is
+   * the stack symbol which is the same as the tree root. The map key is the
+   * length of the trees in terminal symbols. Both values stored for convenience.
+   * */
   private List<Pair<String, Map<Integer, List<Tree>>>> stackState;
 
   public BottomUpChartItem(String... itemForm) {
