@@ -1,7 +1,9 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.BottomUpChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.Pair;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 import org.apache.logging.log4j.LogManager;
@@ -400,7 +402,7 @@ public class Deduction {
             appliedRule.get(oldId).add(rule.getName());
             deductedFrom.get(oldId).add(newItemsDeductedFrom);
           }
-          addNewTrees(chart.get(oldId).getTrees(), newItem.getTrees());
+            addNewTrees(chart.get(oldId), newItem);
           break;
         case 'h':
           Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
@@ -490,20 +492,53 @@ public class Deduction {
     }
   }
 
-  private void addNewTrees(List<Tree> treesOld, List<Tree> treesNew) {
-    for (Tree tree1 : treesNew) {
-      boolean found = false;
-      for (Tree tree2 : treesOld) {
-        if (tree1.equals(tree2)) {
-          found = true;
-          break;
+  private void addNewTrees(
+      ChartItemInterface oldItem, ChartItemInterface newItem) {
+    if (oldItem instanceof BottomUpChartItem) {
+      mergeTrees((BottomUpChartItem) oldItem, (BottomUpChartItem) newItem);
+    } else {
+      List<Tree> treesOld = oldItem.getTrees();
+      List<Tree> treesNew = newItem.getTrees();
+      for (Tree tree1 : treesNew) {
+        boolean found = false;
+        for (Tree tree2 : treesOld) {
+          if (tree1.equals(tree2)) {
+            found = true;
+            break;
+          }
         }
-      }
-      if (!found) {
-        treesOld.add(tree1);
+        if (!found) {
+          treesOld.add(tree1);
+        }
       }
     }
   }
+
+  private static void mergeTrees(BottomUpChartItem oldItem,
+      BottomUpChartItem newItem) {
+    List<Pair<String, Map<Integer, List<Tree>>>> oldStackState =
+        oldItem.getStackState();
+    List<Pair<String, Map<Integer, List<Tree>>>> newStackState =
+        newItem.getStackState();
+
+    for (int i = 0; i < oldStackState.size(); i++) {
+      Map<Integer, List<Tree>> oldTreeMap = oldStackState.get(i).getSecond();
+      Map<Integer, List<Tree>> newTreeMap = newStackState.get(i).getSecond();
+
+      for (Map.Entry<Integer, List<Tree>> newTreeEntry : newTreeMap.entrySet()) {
+        oldTreeMap.merge(newTreeEntry.getKey(), newTreeEntry.getValue(),
+            (oldTrees, newTrees) -> {
+              for (Tree newTree : newTrees) {
+                if (!oldTrees.contains(newTree)) {
+                  oldTrees.add(newTree);
+                }
+              }
+              return oldTrees;
+            });
+      }
+    }
+  }
+
 
   /**
    * Pretty-prints rows of the parsing process by filling up all columns up to a

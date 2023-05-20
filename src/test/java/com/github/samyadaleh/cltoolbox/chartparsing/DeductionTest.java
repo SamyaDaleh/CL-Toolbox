@@ -27,7 +27,6 @@ import org.junit.Test;
 
 import java.io.*;
 import java.text.ParseException;
-import java.util.Objects;
 
 import static org.junit.Assert.*;
 
@@ -90,7 +89,7 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
-  @Ignore("#258") public void testCfgShiftreduceRecursiveTrees()
+  @Test public void testCfgShiftreduceRecursiveTrees()
       throws ParseException, FileNotFoundException {
     String w = "a a a";
     Cfg cfg = GrammarLoader.readCfg("highlyrecursive.cfg");

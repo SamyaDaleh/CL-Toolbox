@@ -109,7 +109,7 @@ public class TreeUtils {
     try {
       return new Tree(derivedTreeString.substring(0,
           derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )"))
-          + tree.toString() + derivedTreeString.substring(
+          + tree + derivedTreeString.substring(
           derivedTreeString.indexOf("(" + tree.getRoot().getLabel() + " )")
               + tree.getRoot().getLabel().length() + 3));
     } catch (ParseException e) {
