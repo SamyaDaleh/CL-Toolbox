@@ -1,6 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.BottomUpChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -400,7 +401,7 @@ public class Deduction {
             appliedRule.get(oldId).add(rule.getName());
             deductedFrom.get(oldId).add(newItemsDeductedFrom);
           }
-          addNewTrees(chart.get(oldId).getTrees(), newItem.getTrees());
+            addNewTrees(chart.get(oldId), newItem);
           break;
         case 'h':
           Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
@@ -490,17 +491,30 @@ public class Deduction {
     }
   }
 
-  private void addNewTrees(List<Tree> treesOld, List<Tree> treesNew) {
-    for (Tree tree1 : treesNew) {
-      boolean found = false;
-      for (Tree tree2 : treesOld) {
-        if (tree1.equals(tree2)) {
-          found = true;
-          break;
+  private void addNewTrees(
+      ChartItemInterface oldItem, ChartItemInterface newItem) {
+    if (oldItem instanceof BottomUpChartItem) {
+      BottomUpChartItem oldBUItem = (BottomUpChartItem) oldItem;
+      BottomUpChartItem newBUItem = (BottomUpChartItem) newItem;
+      for (int i = 0; i < oldBUItem.getStackState().size(); i++) {
+        for (Tree newTree : newBUItem.getStackState().get(i).getSecond()) {
+          oldBUItem.getStackState().get(i).getSecond().add(newTree);
         }
       }
-      if (!found) {
-        treesOld.add(tree1);
+    } else {
+      List<Tree> treesOld = oldItem.getTrees();
+      List<Tree> treesNew = newItem.getTrees();
+      for (Tree tree1 : treesNew) {
+        boolean found = false;
+        for (Tree tree2 : treesOld) {
+          if (tree1.equals(tree2)) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          treesOld.add(tree1);
+        }
       }
     }
   }

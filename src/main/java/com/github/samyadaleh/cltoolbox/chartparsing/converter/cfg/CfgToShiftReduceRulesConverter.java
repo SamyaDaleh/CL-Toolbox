@@ -1,6 +1,6 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg;
 
-import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.BottomUpChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
@@ -36,14 +36,14 @@ public class CfgToShiftReduceRulesConverter {
     }
 
     StaticDeductionRule axiom = new StaticDeductionRule();
-    axiom.addConsequence(new DeductionChartItem("", "0"));
+    axiom.addConsequence(new BottomUpChartItem("", "0"));
     axiom.setName(DEDUCTION_RULE_CFG_SHIFTREDUCE_AXIOM);
     schema.addAxiom(axiom);
     if (w.equals("")) {
-      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
+      schema.addGoal(new BottomUpChartItem(cfg.getStartSymbol(),
           String.valueOf(0)));
     } else {
-      schema.addGoal(new DeductionChartItem(cfg.getStartSymbol(),
+      schema.addGoal(new BottomUpChartItem(cfg.getStartSymbol(),
           String.valueOf(wSplit.length)));
     }
     return schema;
