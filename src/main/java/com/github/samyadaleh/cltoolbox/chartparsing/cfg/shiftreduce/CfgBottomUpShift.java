@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.BottomUpChartItem;
@@ -39,8 +40,9 @@ public class CfgBottomUpShift extends AbstractDynamicDeductionRule {
           consequence = new BottomUpChartItem(stack + " " + wSplit[i],
               String.valueOf(i + 1));
         }
-        List<Pair<String, List<Tree>>> trees = new ArrayList<>(
-            ((BottomUpChartItem) antecedences.get(0)).getStackState());
+        List<Pair<String, Map<Integer, List<Tree>>>> trees =
+            new ArrayList<>(
+                ((BottomUpChartItem) antecedences.get(0)).getStackState());
         consequence.setStackState(trees);
         logItemGeneration(consequence);
         consequences.add(consequence);

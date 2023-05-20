@@ -1,9 +1,7 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.shiftreduce;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.BottomUpChartItem;
@@ -44,25 +42,32 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
         } else {
           consequence = new BottomUpChartItem(gamma + " " + rule.getLhs(), i);
         }
-        List<Pair<String, List<Tree>>> derivedTrees = new ArrayList<>(
-            ((BottomUpChartItem) antecedences.get(0)).getStackState());
+        List<Pair<String, Map<Integer, List<Tree>>>> derivedTrees =
+            new ArrayList<>(((BottomUpChartItem) antecedences.get(0)).getStackState());
         try {
           Tree derivedTreeBase = new Tree(rule);
           if (derivedTrees.size() == 0) {
             List<Tree> derivedTreeBaseList = new ArrayList<>();
             derivedTreeBaseList.add(derivedTreeBase);
-            derivedTrees.add(new Pair<>(rule.getLhs(), derivedTreeBaseList));
+            int length = rule.getRhs()[0].equals("") ? 0 : rule.getRhs().length;
+            Map<Integer, List<Tree>> derivedTreeBaseListMap = new LinkedHashMap<>();
+            derivedTreeBaseListMap.put(length, derivedTreeBaseList);
+            derivedTrees.add(new Pair<>(rule.getLhs(), derivedTreeBaseListMap));
           } else {
-            List<Pair<String, List<Tree>>> rhsTreesLists = new ArrayList<>();
+            List<Pair<String, Map<Integer, List<Tree>>>> rhsTreesLists = new ArrayList<>();
             List<String> rhsSymbols = Arrays.asList(rule.getRhs());
 
             int rhsIndex = 0;
-            for (Pair<String, List<Tree>> treePair : derivedTrees) {
+            int terminalsBetween = 0;
+            int requiredLength = 0;
+            for (Pair<String, Map<Integer, List<Tree>>> treePair : derivedTrees) {
               while (rhsIndex < rhsSymbols.size() && !treePair.getFirst().equals(rhsSymbols.get(rhsIndex))) {
                 rhsIndex++; // Skip over non-matching symbols
+                terminalsBetween++;
               }
               if (rhsIndex < rhsSymbols.size() && treePair.getFirst().equals(rhsSymbols.get(rhsIndex))) {
                 rhsTreesLists.add(treePair);
+                requiredLength += treePair.getSecond().entrySet().iterator().next().getKey();
                 rhsIndex++; // Move to the next symbol
               }
             }
@@ -70,7 +75,8 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
               derivedTrees.subList(0, rhsTreesLists.size()).clear();
             }
 
-            List<List<Tree>> treeCombinations = generateCombinations(rhsTreesLists);
+            List<List<Tree>> treeCombinations = generateCombinations(
+                rhsTreesLists, requiredLength).get(requiredLength);
 
             // Create a new tree for each combination and add it to the new stack state.
             List<Tree> newTrees = new ArrayList<>();
@@ -79,15 +85,23 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
               for (Tree tree : treeCombination) {
                 localTree = TreeUtils.performLeftmostSubstitution(localTree, tree);
               }
-              newTrees.add(localTree);
+              if (!newTrees.contains(localTree)) {
+                newTrees.add(localTree);
+              }
             }
             if (newTrees.size() > 0) {
-              derivedTrees.add(0, new Pair<>(rule.getLhs(), newTrees));
+              int length = terminalsBetween + requiredLength;
+              Map<Integer, List<Tree>> derivedTreeBaseListMap = new LinkedHashMap<>();
+              derivedTreeBaseListMap.put(length, newTrees);
+              derivedTrees.add(0, new Pair<>(rule.getLhs(), derivedTreeBaseListMap));
             }
             else {
               List<Tree> derivedTreeBaseList = new ArrayList<>();
               derivedTreeBaseList.add(derivedTreeBase);
-              derivedTrees.add(new Pair<>(rule.getLhs(), derivedTreeBaseList));
+              int length = rule.getRhs()[0].equals("") ? 0 : rule.getRhs().length;
+              Map<Integer, List<Tree>> derivedTreeBaseListMap = new LinkedHashMap<>();
+              derivedTreeBaseListMap.put(length, derivedTreeBaseList);
+              derivedTrees.add(new Pair<>(rule.getLhs(), derivedTreeBaseListMap));
             }
           }
           consequence.setStackState(derivedTrees);
@@ -101,28 +115,51 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     return consequences;
   }
 
-  public static List<List<Tree>> generateCombinations(List<Pair<String, List<Tree>>> pairs) {
-    List<List<Tree>> combinations = new ArrayList<>();
-    generateCombinationsHelper(pairs, combinations, 0, new ArrayList<>());
-    return combinations;
-  }
+  public Map<Integer, List<List<Tree>>> generateCombinations(List<Pair<String, Map<Integer, List<Tree>>>> rhsTreesLists, int requiredLength) {
+    Map<Integer, List<List<Tree>>> result = new HashMap<>();
 
-  private static void generateCombinationsHelper(
-      List<Pair<String, List<Tree>>> pairs, List<List<Tree>> combinations,
-      int depth, List<Tree> currentCombination) {
-    if (depth == pairs.size()) {
-      combinations.add(new ArrayList<>(currentCombination));
-      return;
+    // Base case: If the list is empty, there is only one combination: an empty list.
+    // But only add it if the required length is zero.
+    if (rhsTreesLists.isEmpty()) {
+      if (requiredLength == 0) {
+        result.put(0, Arrays.asList(new ArrayList<>()));
+      }
+      return result;
     }
 
-    for (int i = 0; i < pairs.get(depth).getSecond().size(); i++) {
-      currentCombination.add(pairs.get(depth).getSecond().get(i));
-      generateCombinationsHelper(pairs, combinations, depth + 1,
-          currentCombination);
-      currentCombination.remove(currentCombination.size() - 1);
-    }
-  }
+    Pair<String, Map<Integer, List<Tree>>> firstPair = rhsTreesLists.get(0);
+    List<Pair<String, Map<Integer, List<Tree>>>> restList = rhsTreesLists.subList(1, rhsTreesLists.size());
 
+    // Go through all the lengths that are not greater than the required length
+    for (Map.Entry<Integer, List<Tree>> entry : firstPair.getSecond().entrySet()) {
+      int length = entry.getKey();
+      if (length > requiredLength) {
+        continue;
+      }
+
+      List<Tree> trees = entry.getValue();
+      Map<Integer, List<List<Tree>>> subCombs = generateCombinations(restList, requiredLength - length);
+
+      for (Tree tree : trees) {
+        for (Map.Entry<Integer, List<List<Tree>>> subComb : subCombs.entrySet()) {
+          int subCombLength = subComb.getKey();
+          for (List<Tree> subCombList : subComb.getValue()) {
+            List<Tree> newComb = new ArrayList<>();
+            newComb.add(tree);
+            newComb.addAll(subCombList);
+            int newCombLength = length + subCombLength;
+
+            // Only add the new combination to the result if its total length equals the required length
+            if (newCombLength == requiredLength) {
+              result.computeIfAbsent(newCombLength, k -> new ArrayList<>()).add(newComb);
+            }
+          }
+        }
+      }
+    }
+
+    return result;
+  }
 
 
   @Override public String toString() {

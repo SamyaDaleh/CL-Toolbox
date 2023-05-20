@@ -4,10 +4,11 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BottomUpChartItem extends DeductionChartItem {
-  private List<Pair<String, List<Tree>>> stackState;
+  private List<Pair<String, Map<Integer, List<Tree>>>> stackState;
 
   public BottomUpChartItem(String... itemForm) {
     this.itemForm = itemForm;
@@ -17,7 +18,8 @@ public class BottomUpChartItem extends DeductionChartItem {
   @Override
   public List<Tree> getTrees() {
     return stackState.stream()
-        .flatMap(pair -> pair.getSecond().stream())
+        .flatMap(pair -> pair.getSecond().values().stream())
+        .flatMap(List::stream)
         .collect(Collectors.toList());
   }
 
@@ -28,11 +30,11 @@ public class BottomUpChartItem extends DeductionChartItem {
     throw new UnsupportedOperationException("Cannot set trees directly. Use the stackState.");
   }
 
-  public List<Pair<String, List<Tree>>> getStackState() {
+  public List<Pair<String, Map<Integer, List<Tree>>>> getStackState() {
     return stackState;
   }
 
-  public void setStackState(List<Pair<String, List<Tree>>> stackState) {
+  public void setStackState(List<Pair<String, Map<Integer, List<Tree>>>> stackState) {
     this.stackState = stackState;
   }
 }

@@ -497,8 +497,21 @@ public class Deduction {
       BottomUpChartItem oldBUItem = (BottomUpChartItem) oldItem;
       BottomUpChartItem newBUItem = (BottomUpChartItem) newItem;
       for (int i = 0; i < oldBUItem.getStackState().size(); i++) {
-        for (Tree newTree : newBUItem.getStackState().get(i).getSecond()) {
-          oldBUItem.getStackState().get(i).getSecond().add(newTree);
+        for (Map.Entry<Integer, List<Tree>> newTreeEntry
+            : newBUItem.getStackState().get(i).getSecond().entrySet()) {
+          if (oldBUItem.getStackState().get(i).getSecond()
+              .containsKey(newTreeEntry.getKey())) {
+            for (Tree treeCandidate : newTreeEntry.getValue()) {
+              if (!oldBUItem.getStackState().get(i).getSecond()
+                  .get(newTreeEntry.getKey()).contains(treeCandidate)) {
+                oldBUItem.getStackState().get(i).getSecond()
+                    .get(newTreeEntry.getKey()).add(treeCandidate);
+              }
+            }
+          } else {
+            oldBUItem.getStackState().get(i).getSecond()
+                .put(newTreeEntry.getKey(), newTreeEntry.getValue());
+          }
         }
       }
     } else {
