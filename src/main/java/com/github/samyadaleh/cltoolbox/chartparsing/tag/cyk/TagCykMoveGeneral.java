@@ -3,6 +3,7 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
@@ -57,12 +58,46 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
       ChartItemInterface consequence = new DeductionChartItem(treeName,
         parentGorn + "⊥", boundaries[firstEntry * 2], foot[0], foot[1],
         boundaries[lastEntry * 2 + 1]);
-      consequence.setTrees(antecedences.get(0).getTrees());
+      if (antecedences.size() == 1) {
+        consequence.setTrees(antecedences.get(0).getTrees());
+      } else {
+        List<Tree[]> treeCombinations = getAllTreeCombinations();
+        List<Tree> derivedTrees = new ArrayList<>();
+        for (Tree[] combination : treeCombinations) {
+          derivedTrees.add(TreeUtils.mergeTrees(combination));
+        }
+        consequence.setTrees(derivedTrees);
+      }
       logItemGeneration(consequence);
       consequences.add(consequence);
     }
     return consequences;
   }
+
+  public List<Tree[]> getAllTreeCombinations() {
+    List<Tree[]> combinations = new ArrayList<>();
+    getAllTreeCombinationsHelper(combinations, new ArrayList<>(),
+        antecedences, 0);
+    return combinations;
+  }
+
+  private void getAllTreeCombinationsHelper(
+      List<Tree[]> combinations, List<Tree> currentCombination,
+      List<ChartItemInterface> antecedences, int index) {
+    if (index == antecedences.size()) {
+      // We've selected a tree from each antecedent, so add the combination to the result list
+      combinations.add(currentCombination.toArray(new Tree[0]));
+    } else {
+      List<Tree> trees = antecedences.get(index).getTrees();
+      for (Tree tree : trees) {
+        List<Tree> newCombination = new ArrayList<>(currentCombination);
+        newCombination.add(tree);
+        getAllTreeCombinationsHelper(combinations, newCombination,
+            antecedences, index + 1);
+      }
+    }
+  }
+
 
   private boolean checkAllAntecedences(String treeName, String parentGorn,
       List<Integer> children, String[] boundaries, String[] foot) {
@@ -101,7 +136,7 @@ public class TagCykMoveGeneral extends AbstractDynamicDeductionRule {
     StringBuilder bars = new StringBuilder();
     for (i = 1; i <= antNeeded; i++) {
       repr.append("[ɣ,(p.").append(i).append(")⊤,i_").append(i).append(",f1")
-          .append(bars.toString()).append(",f2+bars.toString()+,i_")
+          .append(bars).append(",f2+bars.toString()+,i_")
           .append(i + 1).append("] ");
       bars.append("'");
     }

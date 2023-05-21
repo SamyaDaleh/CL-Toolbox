@@ -23,4 +23,11 @@ public class TreeUtilsTest {
     Tree treeMerged = TreeUtils.mergeTrees(tree1, tree2);
     assertEquals("(S (N1 (S (ε )))(N1 (S (ε ))))", treeMerged.toString());
   }
+
+  @Test public void testMergeTrees2() throws ParseException {
+    Tree tree1 = new Tree("(S (N1 (t0 )(S (ε )))(N1 ))");
+    Tree tree2 = new Tree("(S (N1 )(N1 (S (ε ))))");
+    Tree treeMerged = TreeUtils.mergeTrees(tree2, tree1);
+    assertEquals("(S (N1 (t0 )(S (ε )))(N1 (S (ε ))))", treeMerged.toString());
+  }
 }

@@ -234,34 +234,66 @@ public class TreeUtils {
     return newTree.toString();
   }
 
-  public static Tree mergeTrees(Tree tree1, Tree tree2) {
+  public static Tree mergeTrees(Tree... trees) {
+    String[] treeStrings = new String[trees.length];
+    for (int i = 0; i < trees.length; i++) {
+      treeStrings[i] = trees[i].toString();
+    }
     try {
-      return new Tree(mergeTrees(tree1.toString(), tree2.toString()));
+      return new Tree(mergeTrees(treeStrings));
     } catch (ParseException e) {
       // should never happen
       throw new RuntimeException(e);
     }
   }
 
-  public static String mergeTrees(String tree1, String tree2) {
+  public static String mergeTrees(String... trees) {
     StringBuilder merged = new StringBuilder();
-    int i = 0, j = 0;
+    int[] positions = new int[trees.length]; // All initially 0
 
-    while (i < tree1.length() && j < tree2.length()) {
-      if (tree1.charAt(i) == tree2.charAt(j)) {
-        // Same character, add it to the result and advance both pointers
-        merged.append(tree1.charAt(i));
-        i++;
-        j++;
-      } else if (tree1.charAt(i) == '(' && tree2.charAt(j) == ')') {
-        // Tree1 has a subtree where tree2 has none
-        i = copySubtree(tree1, merged, i);
-      } else if (tree1.charAt(i) == ')' && tree2.charAt(j) == '(') {
-        // Tree2 has a subtree where tree1 has none
-        j = copySubtree(tree2, merged, j);
+    while (true) {
+      // Check if we've reached the end of all trees, if so break
+      boolean allEndReached = true;
+      for (int i = 0; i < positions.length; i++) {
+        if (positions[i] < trees[i].length()) {
+          allEndReached = false;
+          break;
+        }
+      }
+
+      if (allEndReached) {
+        return merged.toString();
+      }
+
+      // Check for the start of a subtree in a tree where others don't have
+      int subtreeStartIndex = -1;
+      for (int i = 0; i < trees.length; i++) {
+        char ch = trees[i].charAt(positions[i]);
+        if (ch == '(') {
+          boolean othersHaveClosingBracket = false;
+          for (int j = 0; j < trees.length; j++) {
+            if (j != i && positions[j] < trees[j].length() && trees[j].charAt(positions[j]) == ')') {
+              othersHaveClosingBracket = true;
+              break;
+            }
+          }
+          if (othersHaveClosingBracket) {
+            subtreeStartIndex = i;
+            break;
+          }
+        }
+      }
+
+      if (subtreeStartIndex == -1) { // All chars are the same
+        merged.append(trees[0].charAt(positions[0]));
+        for (int i = 0; i < positions.length; i++) {
+          positions[i]++;
+        }
+      } else { // We have a unique char, so copy the subtree
+        positions[subtreeStartIndex] = copySubtree(trees[subtreeStartIndex],
+            merged, positions[subtreeStartIndex]);
       }
     }
-    return merged.toString();
   }
 
   private static int copySubtree(String tree1, StringBuilder merged, int i) {

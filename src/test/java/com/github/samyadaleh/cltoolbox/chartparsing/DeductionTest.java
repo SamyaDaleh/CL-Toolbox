@@ -611,6 +611,23 @@ public class DeductionTest {
         deduction.getDerivedTrees().get(0).toString());
   }
 
+  @Test public void testTagCykGeneralBrokenTrees()
+      throws ParseException, FileNotFoundException {
+    String w2 = "t0 t0";
+    Tag tag = GrammarLoader.readTag("brokentrees.tag");
+    ParsingSchema schema = TagToCykRulesConverter
+        .tagToCykGeneralRules(tag, w2);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    for (Tree tree : deduction.getDerivedTrees()) {
+      if (tree.toString().contains("(N1 )")) {
+        fail();
+      }
+    }
+  }
+
   @Test public void testTagCykGeneralTooManyTrees()
       throws ParseException, FileNotFoundException {
     String w2 = "t0 t1";
