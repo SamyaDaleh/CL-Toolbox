@@ -62,12 +62,16 @@ public class ArrayUtils {
       return false;
     }
     for (int i = 0; i < itemForm1.length; i++) {
-      if (!(itemForm1[i].equals("?") || itemForm2[i].equals("?") || itemForm1[i]
-          .equals(itemForm2[i]))) {
+      if (!elementsMatch(itemForm1[i],itemForm2[i])) {
         return false;
       }
     }
     return true;
+  }
+
+  private static boolean elementsMatch(String element1, String element2) {
+    return element1.equals("?") || element2.equals("?")
+        || element1.equals(element2);
   }
 
   /**
