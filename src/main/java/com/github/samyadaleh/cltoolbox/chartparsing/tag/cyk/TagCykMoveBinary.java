@@ -3,6 +3,11 @@ package com.github.samyadaleh.cltoolbox.chartparsing.tag.cyk;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.common.TreeUtils;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_MOVE_BINARY;
 
@@ -42,7 +47,14 @@ public class TagCykMoveBinary
         String f2New = (f2.equals("-")) ? f2b : f2;
         ChartItemInterface consequence =
           new DeductionChartItem(treeName1, parentNode, i, f1New, f2New, j);
-        consequence.setTrees(antecedences.get(0).getTrees());
+        List<Tree> derivedTrees = new ArrayList<>();
+        for (Tree tree1 : antecedences.get(0).getTrees()) {
+          for (Tree tree2 : antecedences.get(1).getTrees()) {
+            Tree mergedTree = TreeUtils.mergeTrees(tree1, tree2);
+            derivedTrees.add(mergedTree);
+          }
+        }
+        consequence.setTrees(derivedTrees);
         logItemGeneration(consequence);
         consequences.add(consequence);
       }

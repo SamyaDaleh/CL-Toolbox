@@ -17,15 +17,16 @@ import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.lag.Lag;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
-import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import com.github.samyadaleh.cltoolbox.common.parser.LagParser;
 import com.github.samyadaleh.cltoolbox.common.parser.SrcgParser;
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
 import java.text.ParseException;
 
 import static org.junit.Assert.*;
@@ -577,6 +578,23 @@ public class DeductionTest {
     deduction.printTrace(data);
     assertEquals("(S (T (a )(T (c )))(b ))",
         deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testTagCykBrokenTrees()
+      throws ParseException, FileNotFoundException {
+    String w2 = "t0 t0";
+    Tag tag = GrammarLoader.readTag("brokentrees.tag");
+    ParsingSchema schema = TagToCykRulesConverter
+        .tagToCykExtendedRules(tag, w2);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    for (Tree tree : deduction.getDerivedTrees()) {
+      if (tree.toString().contains("(N1 )")) {
+        fail();
+      }
+    }
   }
 
   @Test public void testTagCykGeneral()

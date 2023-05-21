@@ -233,4 +233,51 @@ public class TreeUtils {
     newTree.append(")");
     return newTree.toString();
   }
+
+  public static Tree mergeTrees(Tree tree1, Tree tree2) {
+    try {
+      return new Tree(mergeTrees(tree1.toString(), tree2.toString()));
+    } catch (ParseException e) {
+      // should never happen
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static String mergeTrees(String tree1, String tree2) {
+    StringBuilder merged = new StringBuilder();
+    int i = 0, j = 0;
+
+    while (i < tree1.length() && j < tree2.length()) {
+      if (tree1.charAt(i) == tree2.charAt(j)) {
+        // Same character, add it to the result and advance both pointers
+        merged.append(tree1.charAt(i));
+        i++;
+        j++;
+      } else if (tree1.charAt(i) == '(' && tree2.charAt(j) == ')') {
+        // Tree1 has a subtree where tree2 has none
+        i = copySubtree(tree1, merged, i);
+      } else if (tree1.charAt(i) == ')' && tree2.charAt(j) == '(') {
+        // Tree2 has a subtree where tree1 has none
+        j = copySubtree(tree2, merged, j);
+      }
+    }
+    return merged.toString();
+  }
+
+  private static int copySubtree(String tree1, StringBuilder merged, int i) {
+    int bracketCounter = 1;
+    merged.append(tree1.charAt(i));
+    i++;
+    while (bracketCounter != 0) {
+      if (tree1.charAt(i) == '(') {
+        bracketCounter++;
+      } else if (tree1.charAt(i) == ')') {
+        bracketCounter--;
+      }
+      merged.append(tree1.charAt(i));
+      i++;
+    }
+    return i;
+  }
+
 }
