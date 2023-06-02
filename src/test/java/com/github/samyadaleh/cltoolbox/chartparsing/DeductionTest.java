@@ -479,8 +479,21 @@ public class DeductionTest {
     assertEquals(4, deduction.getMaxAgendaSize());
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
-   /* assertEquals("(S (a )(S (a )(b ))(b ))",
-        deduction.getDerivedTrees().get(0).toString()); //*/
+    assertEquals("(S (a )(S (a )(b ))(b ))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testCfgLeftcornerBottomUpChallenging()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("highlyrecursive.cfg");
+    String w = "a a a";
+    ParsingSchema schema = CfgToLeftCornerBottomUpRulesConverter
+        .cfgToLeftCornerBottomUpRules(cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(2, deduction.getDerivedTrees().size());
   }
 
   @Test public void testCfgCyk() throws ParseException, FileNotFoundException {

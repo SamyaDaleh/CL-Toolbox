@@ -5,9 +5,15 @@ import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyScan;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.leftcorner.bottomup.CfgLeftCornerBottomUpLeftCorner;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
+import com.github.samyadaleh.cltoolbox.common.tag.Tree;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CfgToLeftCornerBottomUpRulesConverter {
 
@@ -15,7 +21,8 @@ public class CfgToLeftCornerBottomUpRulesConverter {
    * Converts a grammar to a parsing schema for bottom-up Left-Corner as
    * presented by Sikkel, see doc.md for reference.
    */
-  public static ParsingSchema cfgToLeftCornerBottomUpRules(Cfg cfg, String w) {
+  public static ParsingSchema cfgToLeftCornerBottomUpRules(Cfg cfg, String w)
+      throws ParseException {
     String[] wSplit = w.split(" ");
     int wLength = "".equals(w) ? 0 : wSplit.length;
     ParsingSchema schema = new ParsingSchema();
@@ -24,9 +31,13 @@ public class CfgToLeftCornerBottomUpRulesConverter {
         for (int i = 0; i <= wLength; i++) {
           StaticDeductionRule axiom = new StaticDeductionRule();
           axiom.setName("Epsilon");
-          axiom.addConsequence(
-              new DeductionChartItem(rule.getLhs() + " -> •", String.valueOf(i),
-                  String.valueOf(i)));
+          ChartItemInterface
+              consequence = new DeductionChartItem(rule.getLhs() + " -> •",
+              String.valueOf(i), String.valueOf(i));
+          List<Tree> trees = new ArrayList<>();
+          trees.add(new Tree(rule));
+          consequence.setTrees(trees);
+          axiom.addConsequence(consequence);
           schema.addAxiom(axiom);
         }
       } else {
@@ -37,10 +48,21 @@ public class CfgToLeftCornerBottomUpRulesConverter {
             if (wSplit[i].equals(lc)) {
               StaticDeductionRule axiom = new StaticDeductionRule();
               axiom.setName("LC(" + lc + ")");
-              axiom.addConsequence(new DeductionChartItem(
-                  rule.getLhs() + " -> " + lc + " •" + String
-                      .join(" ", rule.getRhs()).substring(restStart),
-                  String.valueOf(i), String.valueOf(i + 1)));
+              ChartItemInterface consequence;
+              if (restStart > rule.getRhs().length) {
+                consequence = new DeductionChartItem(rule.getLhs() + " -> "
+                    + lc + " •",
+                    String.valueOf(i), String.valueOf(i + 1));
+              } else {
+                consequence = new DeductionChartItem(rule.getLhs() + " -> "
+                    + lc + " •" + String.join(" ",
+                    rule.getRhs()).substring(restStart),
+                    String.valueOf(i), String.valueOf(i + 1));
+              }
+              List<Tree> trees = new ArrayList<>();
+              trees.add(new Tree(rule));
+              consequence.setTrees(trees);
+              axiom.addConsequence(consequence);
               schema.addAxiom(axiom);
             }
           }
