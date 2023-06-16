@@ -521,7 +521,7 @@ public class Deduction {
     List<Pair<String, Map<Integer, List<Tree>>>> newStackState =
         newItem.getStackState();
 
-    for (int i = 0; i < oldStackState.size(); i++) {
+    for (int i = 0; i < oldStackState.size() && i < newStackState.size(); i++) {
       Map<Integer, List<Tree>> oldTreeMap = oldStackState.get(i).getSecond();
       Map<Integer, List<Tree>> newTreeMap = newStackState.get(i).getSecond();
 

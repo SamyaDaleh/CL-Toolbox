@@ -145,6 +145,19 @@ public class DeductionTest {
     assertEquals(2, data.length);
   }
 
+  @Test public void testCfgShiftreduceIndexOOB()
+          throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("sr-ioob.cfg");
+    String w = "t0 t0";
+    ParsingSchema schema = CfgToShiftReduceRulesConverter.cfgToShiftReduceRules(
+            cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(16, deduction.getDerivedTrees().size());
+  }
+
   @Test public void testCfgEarley() throws ParseException,
       FileNotFoundException {
     Cfg cfg = GrammarLoader.readCfg("anbn.cfg");

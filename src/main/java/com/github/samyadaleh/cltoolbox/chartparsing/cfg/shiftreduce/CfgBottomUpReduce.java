@@ -89,27 +89,34 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     addTreesForLengthToDerivedTrees(derivedTrees, derivedTreeBaseList, length);
   }
 
+  /**
+   * requiredLength sums up the lengths of the subtrees that will be combined in the rhs
+   */
   private RhsTreesListAndRequiredLength getRhsTreesListAndRequiredLength(
       List<Pair<String, Map<Integer, List<Tree>>>> derivedTrees) {
     List<Pair<String, Map<Integer, List<Tree>>>> rhsTreesLists = new ArrayList<>();
     List<String> rhsSymbols = Arrays.asList(rule.getRhs());
 
-    int rhsIndex = 0;
+    int rhsIndex = rhsSymbols.size()-1;
     int terminalsBetween = 0;
     int requiredLength = 0;
     for (Pair<String, Map<Integer, List<Tree>>> treePair : derivedTrees) {
-      while (rhsIndex < rhsSymbols.size()
+      while (rhsIndex >= 0
           && !treePair.getFirst().equals(rhsSymbols.get(rhsIndex))) {
-        rhsIndex++; // Skip over non-matching symbols
+        rhsIndex--; // Skip over non-matching symbols
         terminalsBetween++;
       }
-      if (rhsIndex < rhsSymbols.size()
+      if (rhsIndex >= 0
           && treePair.getFirst().equals(rhsSymbols.get(rhsIndex))) {
         rhsTreesLists.add(treePair);
         requiredLength
             += treePair.getSecond().entrySet().iterator().next().getKey();
-        rhsIndex++; // Move to the next symbol
+        rhsIndex--; // Move to the next symbol
       }
+    }
+    while (rhsIndex >= 0) {
+      rhsIndex--; // Skip over non-matching symbols
+      terminalsBetween++;
     }
     return new RhsTreesListAndRequiredLength(
         rhsTreesLists, terminalsBetween, requiredLength);
@@ -162,7 +169,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     return consequence;
   }
 
-  public Map<Integer, List<List<Tree>>> generateCombinations(
+  private Map<Integer, List<List<Tree>>> generateCombinations(
       List<Pair<String, Map<Integer, List<Tree>>>> rhsTreesLists, int requiredLength) {
     Map<Integer, List<List<Tree>>> result = new HashMap<>();
 
@@ -214,7 +221,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
 
   @Override public String toString() {
     return "[Γ " + ArrayUtils.toString(rule.getRhs()) + ",i]" + "\n______"
-        + rule.toString() + "\n" + "[Γ " + rule.getLhs() + ",i]";
+        + rule + "\n" + "[Γ " + rule.getLhs() + ",i]";
   }
 
 }

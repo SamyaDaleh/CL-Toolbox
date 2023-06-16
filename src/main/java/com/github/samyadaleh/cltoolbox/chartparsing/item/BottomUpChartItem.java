@@ -15,6 +15,7 @@ public class BottomUpChartItem extends DeductionChartItem {
   /** List of entries for every stack symbol. The key of Pair is
    * the stack symbol which is the same as the tree root. The map key is the
    * length of the trees in terminal symbols. Both values stored for convenience.
+   * The top of the stack is at 0, and for shift-reduce the stack in the item has its top to the right.
    * */
   private List<Pair<String, Map<Integer, List<Tree>>>> stackState;
 
