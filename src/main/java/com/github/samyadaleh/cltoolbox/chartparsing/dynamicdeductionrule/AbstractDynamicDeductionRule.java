@@ -20,13 +20,12 @@ public abstract class AbstractDynamicDeductionRule
   protected int antNeeded;
 
   @Override public List<ChartItemInterface> getAntecedences() {
-    return this.antecedences;
+    return new ArrayList<>(this.antecedences);
   }
 
   @Override public void setAntecedences(List<ChartItemInterface> antecedences) {
-    this.antecedences = antecedences;
+    this.antecedences = new ArrayList<>(antecedences);
   }
-
   @Override public String getName() {
     return this.name;
   }

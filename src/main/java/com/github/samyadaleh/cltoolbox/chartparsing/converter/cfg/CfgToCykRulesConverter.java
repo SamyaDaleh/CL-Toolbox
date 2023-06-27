@@ -2,9 +2,9 @@ package com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg;
 
 import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykCompleteGeneral;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.CfgCykCompleteUnary;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgCykComplete;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.DynamicDeductionRuleInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
@@ -38,7 +38,7 @@ public class CfgToCykRulesConverter {
       if (rule.getRhs().length == 1) {
         addCykScanRules(wSplit, schema, rule);
       } else {
-        DynamicDeductionRuleInterface complete = new CfgCykComplete(rule);
+        DynamicDeductionRuleInterface complete = new PcfgCykComplete(rule);
         schema.addRule(complete);
       }
     }
@@ -70,7 +70,7 @@ public class CfgToCykRulesConverter {
           schema.addRule(complete);
         }
       } else {
-        DynamicDeductionRuleInterface complete = new CfgCykComplete(rule);
+        DynamicDeductionRuleInterface complete = new PcfgCykComplete(rule);
         schema.addRule(complete);
       }
     }

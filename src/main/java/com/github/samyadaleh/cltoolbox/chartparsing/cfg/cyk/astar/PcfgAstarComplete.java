@@ -22,7 +22,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
     super(pRule);
     this.n = n;
     this.outsides = outsides;
-    this.name = DEDUCTION_RULE_PCFG_CYK_COMPLETE + " " + pRule.toString();
+    this.name = DEDUCTION_RULE_PCFG_CYK_COMPLETE + " " + pRule;
   }
 
   @Override
@@ -39,7 +39,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
     if (!outsides.containsKey(outKey1)) {
       return;
     }
-    Double x1 = w1 - outsides
+    double x1 = w1 - outsides
         .get(SxCalc.getOutsideKey(nt1, i1Int, j1Int - i1Int, n - j1Int));
 
     String nt2 = itemForm2[0];
@@ -54,7 +54,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
     if (!outsides.containsKey(outkey2)) {
       return;
     }
-    Double x2 = w2 - outsides
+    double x2 = w2 - outsides
         .get(SxCalc.getOutsideKey(nt2, i2Int, j2Int - i2Int, n - j2Int));
 
     if (nt1.equals(pRule.getRhs()[0]) && nt2.equals(pRule.getRhs()[1])
@@ -66,7 +66,8 @@ public class PcfgAstarComplete extends PcfgCykComplete {
       }
       Double newOutP = outsides.get(outKey3);
       ProbabilisticChartItemInterface consequence =
-          new PcfgAstarItem(x1 + x2 + -Math.log(pRule.getP()), newOutP,
+          new PcfgAstarItem(x1 + x2
+              + -Math.log(((PcfgProductionRule) pRule).getP()), newOutP,
               pRule.getLhs(), i1Int, j2Int);
       addTreesToConsequence(i1, consequence);
       logItemGeneration(consequence);
@@ -78,7 +79,7 @@ public class PcfgAstarComplete extends PcfgCykComplete {
     return "x1 + out(" + pRule.getRhs()[0] + ", i, j - i, n - j) : [" + pRule
         .getRhs()[0] + ",i,j], x2 + out(" + pRule.getRhs()[1]
         + ", j, k - j, n - k) : [" + pRule.getRhs()[1] + ", j, k]"
-        + "\n______ \n" + "x1 + x2 + |log(" + pRule.getP()
+        + "\n______ \n" + "x1 + x2 + |log(" + ((PcfgProductionRule)pRule).getP()
         + ")| + out(" + pRule.getLhs() + ", i, k - i, n - k) : [" + pRule
         .getLhs() + ", i, k]";
   }
