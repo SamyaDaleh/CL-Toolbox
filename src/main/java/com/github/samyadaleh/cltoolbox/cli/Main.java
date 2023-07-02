@@ -72,9 +72,9 @@ public class Main { // NO_UCD (test only)
 
       logParsingSchema(schema);
       Deduction deduction = new Deduction();
-      if (algorithm.equals("pcfg-astar")) {
-        deduction.setReplace('l');
-      } else if (algorithm.equals("pcfg-cyk")) {
+      if ("pcfg-astar".equals(algorithm)
+          || "pcfg-cyk".equals(algorithm)
+          || "pcfg-leftcorner".equals(algorithm)) {
         deduction.setReplace('l');
       }
       log.info(deduction.doParse(schema, success));
@@ -124,7 +124,7 @@ public class Main { // NO_UCD (test only)
         call.append(arg);
       }
     }
-    log.info("Call: " + call.toString());
+    log.info("Call: " + call);
   }
 
   private static void logParsingSchema(ParsingSchema schema) {
@@ -134,11 +134,11 @@ public class Main { // NO_UCD (test only)
           .getGoals().size() + " goal generated.");
       log.debug("Axioms:");
       for (StaticDeductionRule axiom : schema.getAxioms()) {
-        log.debug(axiom.getName() + axiom.toString());
+        log.debug(axiom.getName() + axiom);
       }
       log.debug("Derivation Rules:");
       for (DynamicDeductionRuleInterface rule : schema.getRules()) {
-        log.debug(rule.getName() + "\n" + rule.toString());
+        log.debug(rule.getName() + "\n" + rule);
       }
       log.debug("Goal Items:");
       for (ChartItemInterface goal : schema.getGoals()) {

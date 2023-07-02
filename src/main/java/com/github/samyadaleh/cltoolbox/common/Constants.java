@@ -42,8 +42,6 @@ public class Constants {
   public final static String DEDUCTION_RULE_CFG_LEFTCORNER_REDUCE = "reduce";
   public final static String DEDUCTION_RULE_CFG_LEFTCORNER_REMOVE = "remove";
   public final static String DEDUCTION_RULE_CFG_LEFTCORNER_BOTTOMUP_LC = "LC(Nt)";
-  public final static String DEDUCTION_RULE_CFG_LEFTCORNER_BOTTOMUP_SCAN = "Scan";
-  public final static String DEDUCTION_RULE_CFG_LEFTCORNER_BOTTOMUP_COMPLETE = "Complete";
   public final static String DEDUCTION_RULE_CFG_SHIFTREDUCE_REDUCE = "reduce";
   public final static String DEDUCTION_RULE_CFG_SHIFTREDUCE_SHIFT = "shift";
   public final static String DEDUCTION_RULE_CFG_LRK_REDUCE = "reduce";
@@ -54,6 +52,10 @@ public class Constants {
   public final static String DEDUCTION_RULE_CFG_UNGER_PREDICT = "predict";
   public final static String DEDUCTION_RULE_CFG_UNGER_SCAN = "scan";
   public final static String DEDUCTION_RULE_PCFG_CYK_COMPLETE = "complete";
+  public final static String DEDUCTION_RULE_PCFG_LEFTCORNER_SCAN = "scan";
+  public final static String DEDUCTION_RULE_PCFG_LEFTCORNER_COMPLETE = "complete";
+  public final static String DEDUCTION_RULE_PCFG_LEFTCORNER_CONVERT = "convert";
+  public final static String DEDUCTION_RULE_PCFG_LEFTCORNER_PREDICT = "predict";
   public final static String DEDUCTION_RULE_LCFRS_CYK_COMPLETE_BINARY = "complete-binary";
   public final static String DEDUCTION_RULE_LCFRS_CYK_COMPLETE_GENERAL = "complete-general";
   public final static String DEDUCTION_RULE_LCFRS_CYK_COMPLETE_UNARY = "complete-unary";

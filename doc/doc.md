@@ -73,6 +73,8 @@ how they work.
 * `cfg-unger`
 * `lag-deduction`
 * `pcfg-astar`
+* `pcfg-cyk`
+* `pcfg-leftcorner`
 * `tag-cyk`
 * `tag-cyk-general`
 * `tag-earley`
@@ -1184,7 +1186,33 @@ ________________p : A → B C<br/>
 x<sub>1</sub> + x<sub>2</sub> + |log(p)| : [A, i, k]<br/>
 instantiated for every matching production rule.
 
-Goal item: [S, 0, n] with lowest weight.
+Goal item: [S, 0, n] with the lowest weight.
+
+##### PCFG Left-Corner
+
+This weighted version of Left-Corner reuses some existing deduction rules that
+were extended to handle weights. Left-Corner predict was newly implemented.
+Complete and Convert are reused from the CFG Earley Passive implementation.
+The goal is [S, 0, n] with the lowest weight.
+
+Scan:<br/>
+____________ w<sub>i</sub> = a<br/>
+0 : [a, i, i + 1]
+
+Left Corner Predict:<br/>
+x : [A, i, j]<br/>
+____________ B → A α ∈ P<br/>
+x : [B -> A •α] 
+
+Complete:<br/>
+x1 : [A -> α •B β, i, j], x2 : [B, j, k]<br/>
+___________________________<br/>
+x1 + x2 : [A -> α B •β, i, k]
+
+Convert:<br/>
+x : [B -> γ •, j, k]<br/>
+__________________ p : B -> γ<br/>
+x + |log(p)| : [B, j, k] 
 
 ##### TAG CYK
 
@@ -1954,6 +1982,12 @@ about parsing). Düsseldorf, August 2013, p. 32-33
 
 Kallmeyer, Laura: Left-Corner Parsing (Parsing). Düsseldorf, Wintersemester 
 16/17. URL [https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf](https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf) – last checked 2017-05-27, p. 6-8
+
+### Left Corner for PCFG
+
+Kallmeyer, Laura: Weighted Deductive Parsing (Parsing). Düsseldorf, Wintersemester
+17/18. URL [https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/weighted-deductive-parsing.pdf](https://user.phil-fak.uni-duesseldorf.de/~kallmeyer/Parsing/weighted-deductive-parsing.pdf
+) – last checked 2023-07-02, p. 15
 
 ### LR(k) for CFG
 

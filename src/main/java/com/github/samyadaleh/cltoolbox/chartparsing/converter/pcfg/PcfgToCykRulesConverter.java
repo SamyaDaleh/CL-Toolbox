@@ -41,7 +41,7 @@ public class PcfgToCykRulesConverter {
             continue;
           }
           StaticDeductionRule scan = new StaticDeductionRule();
-          Double rulep = -Math.log(pRule.getP());
+          double rulep = -Math.log(pRule.getP());
           ProbabilisticChartItemInterface consequence =
               new PcfgCykItem(rulep, pRule.getLhs(), i, i + 1);
           List<Tree> derivedTrees = new ArrayList<>();

@@ -1,8 +1,10 @@
 package com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive;
 
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.cyk.PcfgCykItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDecutionRuleTwoAntecedences;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
+import com.github.samyadaleh.cltoolbox.chartparsing.item.ProbabilisticChartItemInterface;
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.TreeUtils;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -14,11 +16,12 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 
 /**
  * Moves the dot over a nonterminal by using a passive item.
+ * Reused for weighted Left-Corner parsing.
  */
-public class CfgEarleyPassiveComplete
+public class PcfgEarleyPassiveComplete
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
-  public CfgEarleyPassiveComplete() {
+  public PcfgEarleyPassiveComplete() {
     this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
     this.antNeeded = 2;
   }
@@ -45,8 +48,18 @@ public class CfgEarleyPassiveComplete
                     .getSubSequenceAsString(stackSplit1, l + 1,
                         stackSplit1.length);
           }
-          ChartItemInterface consequence =
-              new DeductionChartItem(newStack, itemForm1[1], itemForm2[2]);
+          ChartItemInterface consequence;
+          if (antecedences.get(0) instanceof ProbabilisticChartItemInterface
+              && antecedences.get(1) instanceof ProbabilisticChartItemInterface) {
+            double p = ((ProbabilisticChartItemInterface) antecedences.get(0)).getProbability()
+                + ((ProbabilisticChartItemInterface) antecedences.get(1)).getProbability();
+            int i = Integer.parseInt(itemForm1[1]);
+            int k = Integer.parseInt(itemForm2[2]);
+            consequence = new PcfgCykItem(p, newStack, i, k);
+          } else {
+            consequence =
+                new DeductionChartItem(newStack, itemForm1[1], itemForm2[2]);
+          }
           List<Tree> derivedTrees = new ArrayList<>();
           if (antecedences.get(0).getItemForm() == itemForm1) {
             for (Tree tree1 : antecedences.get(0).getTrees()) {

@@ -24,7 +24,12 @@ public abstract class AbstractDynamicDeductionRule
   }
 
   @Override public void setAntecedences(List<ChartItemInterface> antecedences) {
-    this.antecedences = new ArrayList<>(antecedences);
+    if (antecedences.size() == antNeeded) {
+      this.antecedences = new ArrayList<>(antecedences);
+    } else {
+      log.warn("Antecedences needed: " + antNeeded + ", passed: "
+          + antecedences.size() + " in " + this.name);
+    }
   }
   @Override public String getName() {
     return this.name;

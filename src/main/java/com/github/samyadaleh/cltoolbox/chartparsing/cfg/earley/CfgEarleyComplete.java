@@ -20,7 +20,7 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 public class CfgEarleyComplete
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
-  private String[] nonterminals;
+  private final String[] nonterminals;
 
   public CfgEarleyComplete(String[] nonterminals) {
     this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
@@ -92,7 +92,6 @@ public class CfgEarleyComplete
       }
     }
   }
-
   @Override public String toString() {
     return "[A -> α •B β,i,j] [B -> ɣ •,j,k]" + "\n______\n"
         + "[A -> α B •β,i,k]";

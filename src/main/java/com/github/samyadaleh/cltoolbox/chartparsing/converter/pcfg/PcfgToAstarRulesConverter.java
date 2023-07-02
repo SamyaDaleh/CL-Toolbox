@@ -47,7 +47,7 @@ public class PcfgToAstarRulesConverter {
             continue;
           }
           StaticDeductionRule scan = new StaticDeductionRule();
-          Double rulew = -Math.log(pRule.getP());
+          double rulew = -Math.log(pRule.getP());
           Double outw = outsides.get(SxCalc
               .getOutsideKey(pRule.getLhs(), i, 1, wSplit.length - 1 - i));
           ProbabilisticChartItemInterface conequence =

@@ -7,6 +7,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRu
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToAstarRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToLeftCornerRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
@@ -892,6 +893,22 @@ public class DeductionTest {
     String[][] data = deduction.getTraceTable();
     deduction.printTrace(data);
     assertEquals("(N (A (red ))(N (A (nice ))(N (A (ugly ))(N (car )))))",
+        deduction.getDerivedTrees().get(0).toString());
+  }
+
+  @Test public void testPcfgLeftCorner()
+      throws ParseException, FileNotFoundException {
+    String w = "a a";
+    Pcfg pcfg = GrammarLoader.readPcfg("plc.pcfg");
+    ParsingSchema schema = PcfgToLeftCornerRulesConverter
+        .pcfgToLeftCornerRules(pcfg, w);
+    Deduction deduction = new Deduction();
+    deduction.setReplace('l');
+    assertTrue(deduction.doParse(schema, false));
+    String[][] data = deduction.getTraceTable();
+    deduction.printTrace(data);
+    assertEquals(1, deduction.getDerivedTrees().size());
+    assertEquals("(S (S (a ))(S (a )))",
         deduction.getDerivedTrees().get(0).toString());
   }
 

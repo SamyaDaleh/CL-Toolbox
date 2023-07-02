@@ -73,10 +73,10 @@ public class GrammarToGrammarConverter {
 
   public static Pcfg checkAndMayConvertToPcfg(Pcfg pcfg, String algorithm,
       boolean please) throws ParseException {
+    Cfg cfg = new Cfg(pcfg);
     switch (algorithm) {
     case "pcfg-astar":
     case "pcfg-cyk":
-      Cfg cfg = new Cfg(pcfg);
       if (!cfg.isInChomskyNormalForm()) {
         if (please) {
           throw new ParseException("PCFG can't be converted.", 1);
@@ -87,6 +87,15 @@ public class GrammarToGrammarConverter {
       } else {
         return pcfg;
       }
+      case "pcfg-leftcorner":
+        if(cfg.hasEpsilonProductions()) {
+          if (please) {
+            throw new ParseException("PCFG can't be converted.", 1);
+          } else {
+            throw new ParseException(
+                "PCFG must not contain epsilon production for Left-Corner.", 1);
+          }
+        }
     default:
       throw new IllegalArgumentException(
           "I did not understand. Please check the spelling of your parsing algorithm.");

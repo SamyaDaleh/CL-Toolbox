@@ -7,8 +7,8 @@ import com.github.samyadaleh.cltoolbox.chartparsing.ParsingSchema;
 import com.github.samyadaleh.cltoolbox.chartparsing.StaticDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyPredict;
 import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.CfgEarleyScan;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.CfgEarleyPassiveComplete;
-import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.CfgEarleyPassiveConvert;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.PcfgEarleyPassiveComplete;
+import com.github.samyadaleh.cltoolbox.chartparsing.cfg.earley.passive.PcfgEarleyPassiveConvert;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -32,10 +32,10 @@ public class CfgToEarleyPassiveRulesConverter {
     DynamicDeductionRuleInterface scan = new CfgEarleyScan(wSplit);
     schema.addRule(scan);
 
-    DynamicDeductionRuleInterface complete = new CfgEarleyPassiveComplete();
+    DynamicDeductionRuleInterface complete = new PcfgEarleyPassiveComplete();
     schema.addRule(complete);
 
-    DynamicDeductionRuleInterface convert = new CfgEarleyPassiveConvert();
+    DynamicDeductionRuleInterface convert = new PcfgEarleyPassiveConvert();
     schema.addRule(convert);
 
     for (CfgProductionRule rule : cfg.getProductionRules()) {

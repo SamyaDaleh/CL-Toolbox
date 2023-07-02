@@ -1,25 +1,11 @@
 # CL-Toolbox
 
 ## Overview
-A Parsing-as-Deduction system implemented in Java that parses everything and some related tools for educational purposes.
+A Parsing-as-Deduction system implemented in Java that parses everything and 
+some related tools for educational purposes.
 
-The implementation is based on the slides from Laura Kallmeyer. At the moment it contains:
-
-Parsing as Deduction:
-- CYK for CFG
-- Earley for CFG
-- Top Down for CFG
-- Shift Reduce for CFG
-- LR(k) for CFG
-- Left Corner for CFG
-- Unger for CFG
-- A* for PCFG
-- CYK for PCFG
-- CYK for TAG
-- Earley for TAG
-- CYK for sRCG
-- Earley for sRCG
-- Deduction for CCG
+Check the documentation in `/doc/doc.md` for the list of currently supported 
+algorithms and formalisms and all implementation details.
 
 It prints out full parsing traces along with applied rules and antecedence items.
 Use it to generate examples, play around with grammars etc.
@@ -36,7 +22,7 @@ If you want to tinker with the code, for me it worked like this:
 - use your favorite IDE to clone/checkout the project
 - add the dependencies to your classpath/build path, preferable with the 
 build.gradle file
-- run the JUnit tests in test.src to verify that everything is working. 
+- run the JUnit tests in src.test to verify that everything is working. 
 You should see some success messages and parsing outputs.
 
 Logged-in GitHub users can download the latest jar from the Action tab.

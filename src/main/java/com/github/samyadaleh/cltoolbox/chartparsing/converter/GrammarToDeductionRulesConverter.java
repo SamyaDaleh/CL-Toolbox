@@ -8,6 +8,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToCykRu
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.lcfrs.LcfrsToEarleyRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToAstarRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToCykRulesConverter;
+import com.github.samyadaleh.cltoolbox.chartparsing.converter.pcfg.PcfgToLeftCornerRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToCykRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyPrefixValidRulesConverter;
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.tag.TagToEarleyRulesConverter;
@@ -160,6 +161,8 @@ public class GrammarToDeductionRulesConverter {
       return PcfgToAstarRulesConverter.pcfgToAstarRules(pcfg, w);
     case "pcfg-cyk":
       return PcfgToCykRulesConverter.pcfgToCykRules(pcfg, w);
+    case "pcfg-leftcorner":
+      return PcfgToLeftCornerRulesConverter.pcfgToLeftCornerRules(pcfg, w);
     default:
       throw new ParseException(
           "I did not understand. Please check the spelling of your parsing algorithm.",
