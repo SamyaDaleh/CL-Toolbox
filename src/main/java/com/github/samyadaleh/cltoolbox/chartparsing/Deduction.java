@@ -56,8 +56,8 @@ public class Deduction {
    */
   private boolean[] goalItem;
   /**
-   * Specify if new items shall replace same existing items in the chart. If
-   * null, don't replace. If h, replace by items with higher value (like
+   * Specify if new items shall replace same existing items in the chart.
+   * If h, replace by items with higher value (like
    * probabilities). If l, replace by items with lower value (like weights). If
    * - don't replace and add new backpointers to the list, commonly used for
    * items without value.
@@ -303,7 +303,7 @@ public class Deduction {
         continue;
       }
       chart.add(item);
-      agenda.add(item);
+      addToAgenda(item);
       deductedFrom.add(new ArrayList<List<Integer>>() {
         {
           add(new ArrayList<>());
@@ -444,13 +444,32 @@ public class Deduction {
         }
       } else {
         chart.add(newItem);
-        agenda.add(newItem);
+        addToAgenda(newItem);
         appliedRule.add(new ArrayList<>());
         appliedRule.get(appliedRule.size() - 1).add(rule.getName());
         deductedFrom.add(new ArrayList<>());
         deductedFrom.get(deductedFrom.size() - 1).add(newItemsDeductedFrom);
       }
     }
+  }
+
+  private void addToAgenda(ChartItemInterface item) {
+    if (item instanceof ProbabilisticChartItemInterface) {
+      double p = ((ProbabilisticChartItemInterface) item).getProbability();
+      for (int i = 0; i < agenda.size(); i++) {
+        ProbabilisticChartItemInterface agendaItem = (ProbabilisticChartItemInterface) agenda.get(i);
+        double agendaP = agendaItem.getProbability();
+        if (replace == 'h' && p > agendaP) {
+          agenda.add(i, item);
+          return;
+        }
+        if (replace == 'l' && p < agendaP) {
+          agenda.add(i, item);
+          return;
+        }
+      }
+    }
+    agenda.add(item);
   }
 
   private void triggerTreeUpdate(int oldId,
