@@ -383,7 +383,7 @@ public class Deduction {
       newItemsDeductedFrom.add(chart.indexOf(itemToCheck));
     }
     Collections.sort(newItemsDeductedFrom);
-    if (triggerItems.containsAll(newItems)) {
+    if (new HashSet<>(triggerItems).containsAll(newItems)) {
       log.info("Stopped tree update, because all items triggered an update on "
           + "themselves.");
       return;
@@ -396,6 +396,8 @@ public class Deduction {
       if (chart.contains(newItem)) {
         int oldId = chart.indexOf(newItem);
         List<Tree> oldTrees = new LinkedList<>(chart.get(oldId).getTrees());
+        Double oldValue;
+        Double newValue;
         switch (replace) {
         case '-':
           if (!deductedFrom.get(oldId).contains(newItemsDeductedFrom)) {
@@ -405,9 +407,9 @@ public class Deduction {
             addNewTrees(chart.get(oldId), newItem);
           break;
         case 'h':
-          Double oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
+          oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
               .getProbability();
-          Double newValue =
+          newValue =
               ((ProbabilisticChartItemInterface) newItem).getProbability();
           if (newValue > oldValue) {
             chart.set(oldId, newItem);
