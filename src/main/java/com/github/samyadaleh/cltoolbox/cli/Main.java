@@ -104,10 +104,10 @@ public class Main { // NO_UCD (test only)
     }
     if (tag != null) {
       new ParsingTraceTable(data,
-          new String[] {"Id", "Item", "Rules", "Backpointers"}, tag);
+          new String[] {"Id", "Item", "Rules", "Backpointers", "Trees"}, tag);
     } else {
       new ParsingTraceTable(data,
-          new String[] {"Id", "Item", "Rules", "Backpointers"}, null);
+          new String[] {"Id", "Item", "Rules", "Backpointers", "Trees"}, null);
     }
     return false;
   }

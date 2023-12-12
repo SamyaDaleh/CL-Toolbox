@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A deduction system that derives consequences from antecendence items and
@@ -158,10 +159,12 @@ public class Deduction {
     int iMaxWidth = 0;
     int chartMaxWidth = 0;
     int appliedRuleMaxWidth = 0;
+    int appliedBPSMaxWidth = 0;
     for (String[] line : trace) {
       int iWidth = line[0].length();
       int chartWidth = line[1].length();
       int appliedRuleWidth = line[2].length();
+      int appliedBPSWidth = line[3].length();
       if (iWidth > iMaxWidth) {
         iMaxWidth = iWidth;
       }
@@ -171,10 +174,13 @@ public class Deduction {
       if (appliedRuleWidth > appliedRuleMaxWidth) {
         appliedRuleMaxWidth = appliedRuleWidth;
       }
+      if (appliedBPSWidth > appliedBPSMaxWidth) {
+        appliedBPSMaxWidth = appliedBPSWidth;
+      }
     }
     for (String[] line : trace) {
       prettyPrintLine(line, iMaxWidth + 3, chartMaxWidth + 3,
-          appliedRuleMaxWidth + 3);
+          appliedRuleMaxWidth + 3, appliedBPSMaxWidth + 3);
     }
   }
 
@@ -182,8 +188,8 @@ public class Deduction {
    * Prints the trace to the command line in a tex format.
    */
   public void printTraceLatex(String[][] trace) {
-    log.info("\\begin{tabular}{l l l l}");
-    log.info("Id & Item & Rules & BackPointers \\\\");
+    log.info("\\begin{tabular}{l l l l l}");
+    log.info("Id & Item & Rules & BackPointers & Trees \\\\");
     log.info("\\hline");
     for (String[] line : trace) {
       String id = line[0];
@@ -192,8 +198,9 @@ public class Deduction {
       String rules =
           line[2].replace("ε", "$\\epsilon$").replace("->", "$\\rightarrow$");
       String backPointers = line[3].replace("{", "\\{").replace("}", "\\}");
+      String trees = line[4].replace("ε", "$\\epsilon$");
       log.info(
-          id + " & " + item + " & " + rules + " & " + backPointers + " \\\\");
+          id + " & " + item + " & " + rules + " & " + backPointers + " & " + trees + " \\\\");
     }
     log.info("\\end{tabular}");
   }
@@ -211,14 +218,14 @@ public class Deduction {
         }
         String[] line =
             getLineData(i, chart.get(i).toString(), appliedRule.get(i),
-                deductedFrom.get(i));
+                deductedFrom.get(i), chart.get(i).getTrees());
         chartData.add(line);
       }
     } else {
       for (int i = 0; i < chart.size(); i++) {
         String[] line =
             getLineData(i, chart.get(i).toString(), appliedRule.get(i),
-                deductedFrom.get(i));
+                deductedFrom.get(i), chart.get(i).getTrees());
         chartData.add(line);
       }
     }
@@ -577,7 +584,7 @@ public class Deduction {
    * specific length with spaces..
    */
   private static void prettyPrintLine(String[] chartLine, int column1,
-      int column2, int column3) {
+      int column2, int column3, int column4) {
     StringBuilder line = new StringBuilder();
     line.append(chartLine[0]);
     for (int i1 = 0; i1 < column1 - chartLine[0].length(); i1++) {
@@ -593,7 +600,12 @@ public class Deduction {
     for (int i1 = 0; i1 < column3 - rulesRep.length(); i1++) {
       line.append(" ");
     }
-    line.append(chartLine[3]);
+    String bpsRep = chartLine[3];
+    line.append(rulesRep);
+    for (int i1 = 0; i1 < column4 - bpsRep.length(); i1++) {
+      line.append(" ");
+    }
+    line.append(chartLine[4]);
     log.info(line.toString());
   }
 
@@ -601,11 +613,13 @@ public class Deduction {
    * Returns the data as string array.
    */
   private static String[] getLineData(int i, String item, List<String> rules,
-      List<List<Integer>> backpointers) {
+      List<List<Integer>> backpointers, List<Tree> trees) {
     String rulesRep = rulesToString(rules);
     String backpointersRep = backpointersToString(backpointers);
+    String treeString = trees.stream().map(Tree::toString)
+        .collect(Collectors.joining(", "));
     return new String[] {String.valueOf(i + 1), item, rulesRep,
-        backpointersRep};
+        backpointersRep, treeString};
   }
 
   /**
