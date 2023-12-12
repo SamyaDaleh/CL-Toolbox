@@ -546,19 +546,30 @@ public class Deduction {
       Map<Integer, List<Tree>> oldTreeMap = oldStackState.get(i).getSecond();
       Map<Integer, List<Tree>> newTreeMap = newStackState.get(i).getSecond();
 
-      for (Map.Entry<Integer, List<Tree>> newTreeEntry : newTreeMap.entrySet()) {
-        oldTreeMap.merge(newTreeEntry.getKey(), newTreeEntry.getValue(),
-            (oldTrees, newTrees) -> {
-              for (Tree newTree : newTrees) {
-                if (!oldTrees.contains(newTree)) {
-                  oldTrees.add(newTree);
-                }
-              }
-              return oldTrees;
-            });
+      combineMaps(oldTreeMap, newTreeMap);
+    }
+  }
+
+  private static void combineMaps(
+      Map<Integer, List<Tree>> oldTreeMap,
+      Map<Integer, List<Tree>> newTreeMap) {
+    for (Map.Entry<Integer, List<Tree>> newTreeEntry
+        : newTreeMap.entrySet()) {
+      Integer key = newTreeEntry.getKey();
+      List<Tree> newTrees = newTreeEntry.getValue();
+      if (oldTreeMap.containsKey(key)) {
+        List<Tree> oldTrees = oldTreeMap.get(key);
+        for (Tree newTree : newTrees) {
+          if (!oldTrees.contains(newTree)) {
+            oldTrees.add(newTree);
+          }
+        }
+      } else {
+        oldTreeMap.put(key, newTrees);
       }
     }
   }
+
 
 
   /**

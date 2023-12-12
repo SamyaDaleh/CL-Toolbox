@@ -42,7 +42,8 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     }
     BottomUpChartItem consequence = createConsequence(i, gamma);
     List<Pair<String, Map<Integer, List<Tree>>>> derivedTrees =
-        new ArrayList<>(((BottomUpChartItem) antecedences.get(0)).getStackState());
+        duplicateStackState((
+            (BottomUpChartItem) antecedences.get(0)).getStackState());
     try {
       Tree derivedTreeBase = new Tree(rule);
       if (derivedTrees.size() == 0) {
@@ -80,6 +81,19 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     return consequences;
   }
 
+  private List<Pair<String, Map<Integer, List<Tree>>>> duplicateStackState(
+      List<Pair<String, Map<Integer, List<Tree>>>> stackState) {
+    List<Pair<String, Map<Integer, List<Tree>>>> duplicateStackState =
+        new ArrayList<>();
+    for (Pair<String, Map<Integer, List<Tree>>> pair : stackState) {
+      Map<Integer, List<Tree>> mapCopy = pair.getSecond();
+      Pair<String, Map<Integer, List<Tree>>> dupPair =
+          new Pair<>(pair.getFirst(), mapCopy);
+      duplicateStackState.add(dupPair);
+    }
+    return duplicateStackState;
+  }
+
   private void handleDerivedTreeBaseList(
       List<Pair<String, Map<Integer, List<Tree>>>> derivedTrees,
       Tree derivedTreeBase) {
@@ -97,7 +111,7 @@ public class CfgBottomUpReduce extends AbstractDynamicDeductionRule {
     List<Pair<String, Map<Integer, List<Tree>>>> rhsTreesLists = new ArrayList<>();
     List<String> rhsSymbols = Arrays.asList(rule.getRhs());
 
-    int rhsIndex = rhsSymbols.size()-1;
+    int rhsIndex = rhsSymbols.size() - 1;
     int terminalsBetween = 0;
     int requiredLength = 0;
     for (Pair<String, Map<Integer, List<Tree>>> treePair : derivedTrees) {
