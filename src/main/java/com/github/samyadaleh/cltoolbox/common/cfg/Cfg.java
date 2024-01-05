@@ -241,13 +241,11 @@ public class Cfg extends AbstractCfg {
   }
 
   /**
-   * Removes left recursion. S -> S is ignored. S -> S a | b are
-   * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
-   * and maybe chain rules. Remove empty productions first to make sure grammar
-   * does not contain indirect left recursion.
+   * Removes both direct and indirect left recursion. Epsilon productions and
+   * loops have to be removed first.
    */
   public Cfg getCfgWithoutLeftRecursion() throws ParseException {
-    return LeftRecursion.removeLeftRecursion(this);
+    return LeftRecursion.removeLeftRecursionPaull(this);
   }
 
   /**

@@ -93,9 +93,14 @@ public class LeftRecursion {
 
   /**
    * Removes any kind of left recursion including direct and indirect one,
-   * but epsilon productions have to be removed first.
+   * but epsilon productions and loops have to be removed first.
+   * S -> S is ignored. S -> S a | b are
+   * replaced by S -> b S1, S1 -> a S1 | ε Adds empty productions to the grammar
+   * and maybe chain rules. Remove empty productions first to make sure grammar
+   * does not contain indirect left recursion.
+   * Paull's algorithm, see Moore.
    */
-  public static Cfg removeLeftRecursion(Cfg cfgOld) throws ParseException {
+  public static Cfg removeLeftRecursionPaull(Cfg cfgOld) throws ParseException {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
@@ -134,6 +139,60 @@ public class LeftRecursion {
       }
       if (nonterminalIsLhsOfDirectLeftRecursion(cfg, nt)) {
         removeDirectLeftRecursion(cfg, newNts, nt);
+      }
+    }
+    cfg.setNonterminals(newNts.toArray(new String[0]));
+    return cfg;
+  }
+
+  /**
+   * Removes any kind of left recursion including direct and indirect one,
+   * but epsilon productions and loops have to be removed first.
+   * Example: S -> A a, S -> B b, A -> S a, B -> b
+   * 1. If the LC is terminal or a non-recursive terminal add A -> X A_X
+   * For S -> B b add S -> B S_B. For B -> b add B -> b B_b.
+   * 2. If LC is recursive and has more productions, add a new rule for each:
+   * For A add S_A -> a S_A. For S add A_S -> a A_S.
+   * 3. For any rule I guess.
+   * For S -> A a add S_A -> a. For S -> B b add S_B -> b.
+   * For A -> S a add A_S -> a. For B -> b add B_b -> ε
+   * 4. For non-recursive nonterminals. Copy B -> b to new grammar.
+   */
+  public static Cfg removeLeftRecursionMoore(Cfg cfgOld) throws ParseException {
+    Cfg cfg = new Cfg();
+    cfg.setTerminals(cfgOld.getTerminals());
+    cfg.setStartSymbol(cfgOld.getStartSymbol());
+    ArrayList<String> newNts = new ArrayList<>();
+    Collections.addAll(newNts, cfgOld.getNonterminals());
+    for (CfgProductionRule rule : cfgOld.getProductionRules()) {
+      String lhs = rule.getLhs();
+      String lc = rule.getRhs()[0];
+      if (nonterminalIsLhsOfLeftRecursion(cfgOld, lc)) {
+        // Rule 2
+        for (CfgProductionRule rule2 : cfgOld.getProductionRules()) {
+          if (rule2.getLhs().equals(lc)) {
+            String lc2 = rule2.getRhs()[0];
+            String rhs2Rest = ArrayUtils.getSubSequenceAsString(
+                rule2.getRhs(), 1, rule2.getRhs().length);
+            String newNt = lhs + "_" + lc2;
+            cfg.addProductionRule(newNt + " -> " + rhs2Rest);
+          }
+        }
+        // Rule 3
+        if (nonterminalIsLhsOfLeftRecursion(cfgOld, lhs)) {
+          String newNt = lhs + "_" + lc;
+          newNts.add(newNt);
+          String rhsRest = ArrayUtils.getSubSequenceAsString(
+              rule.getRhs(), 1, rule.getRhs().length);
+          cfg.addProductionRule(newNt + " -> " + rhsRest);
+        }
+      } else {
+        // Rule 1
+        String newNt = lhs + "_" + lc;
+        newNts.add(newNt);
+        cfg.addProductionRule(lhs + " -> " + lc + " " + newNt);
+        // Rule 4
+        cfg.addProductionRule(rule.toString());
       }
     }
     cfg.setNonterminals(newNts.toArray(new String[0]));
