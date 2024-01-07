@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LCFRS_CYK_AXIOM;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 
 public class LcfrsToCykRulesConverter {
 
@@ -34,7 +35,7 @@ public class LcfrsToCykRulesConverter {
         String[] arg = clause.getLhs().getArgumentByIndex(i + 1);
         for (int j = 0; j < arg.length; j++) {
           if (arg[j].length() == 0) {
-            treeString.append("ε");
+            treeString.append(EPSILON);
           } else {
             treeString.append(clause.getLhs().getSymAt(i + 1, j));
           }

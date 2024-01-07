@@ -5,6 +5,8 @@ import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFin
 
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Replaces the final states of an automaton with a single one.
  */
@@ -39,7 +41,7 @@ public class UnifyFinalStates {
           .put(entry.getKey(), Arrays.asList(entry.getValue()));
     }
     for (String formerFinalState : nfa.getFinalStates()) {
-      String[] key = new String[] {formerFinalState, "ε"};
+      String[] key = new String[] {formerFinalState, EPSILON};
       if (!newTransitionFunction.containsKey(key)) {
         newTransitionFunction.put(key, new ArrayList<>());
       }

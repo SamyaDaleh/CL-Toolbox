@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.tokenize;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 
 /**
  * A non-recursive representation of a context-free tree consisting of
@@ -98,7 +99,7 @@ public class Tree {
   private void handleChildNode(String[] tokens, List<Vertex> vertexPath,
       List<Integer> children, int i) {
     Vertex vertex;
-    if (tokens[i].equals("ε")) {
+    if (tokens[i].equals(EPSILON)) {
       vertex = new Vertex("");
     } else {
       vertex = new Vertex(tokens[i]);
@@ -123,7 +124,7 @@ public class Tree {
               + " instead.", 0);
     }
     Vertex vertex;
-    if ("ε".equals(tokens[i])) {
+    if (EPSILON.equals(tokens[i])) {
       vertex = new Vertex("");
     } else {
       vertex = new Vertex(tokens[i]);
@@ -150,7 +151,7 @@ public class Tree {
    */
   public Tree(CfgProductionRule rule) throws ParseException {
       this("(" + rule.getLhs() + " " + String.join(" ",
-          ("".equals(rule.getRhs()[0]) ? new String[] {"ε"} : rule.getRhs()))
+          ("".equals(rule.getRhs()[0]) ? new String[] {EPSILON} : rule.getRhs()))
           + ")");
   }
 
@@ -175,7 +176,7 @@ public class Tree {
       return stringRepresentation;
     }
     stringRepresentation = "("
-        + (this.root.getLabel().equals("") ? "ε" : this.root.getLabel())
+        + (this.root.getLabel().equals("") ? EPSILON : this.root.getLabel())
         + (this.root.equals(foot) ? "*" : "") + (
         isInOA(this.root.getGornAddress()) ? "_OA" : "") + (
         isInNA(this.root.getGornAddress()) ? "_NA" : "") + " "
@@ -193,7 +194,7 @@ public class Tree {
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
       representation.append("(")
-          .append(child.getLabel().equals("") ? "ε" : child.getLabel())
+          .append(child.getLabel().equals("") ? EPSILON : child.getLabel())
           .append(child.equals(foot) ? "*" : "")
           .append(isInOA(child.getGornAddress()) ? "_OA" : "")
           .append(isInNA(child.getGornAddress()) ? "_NA" : "");

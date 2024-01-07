@@ -2,6 +2,9 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import java.text.ParseException;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Representation of a context-free rule where the lhs is only allowed to
  * contain one symbol and the rule has a probability.
@@ -28,8 +31,8 @@ public class PcfgProductionRule extends CfgProductionRule {
    */
   PcfgProductionRule(String ruleString) throws ParseException {
     super(ruleString.split(":", 2)[1]);
-    if (ruleString.indexOf("->") < ruleString.indexOf(':')) {
-      throw new ParseException(": has to be left of -> in rule " + ruleString,
+    if (ruleString.indexOf(ARROW_RIGHT) < ruleString.indexOf(':')) {
+      throw new ParseException(": has to be left of " + ARROW_RIGHT + " in rule " + ruleString,
         0);
     }
     String[] ruleSplit = ruleString.split(":", 2);
@@ -43,9 +46,9 @@ public class PcfgProductionRule extends CfgProductionRule {
   @Override public String toString() {
     double roundedP = Math.round(p * 100.0) / 100.0;
     if (this.getRhs()[0].equals("")) {
-      return roundedP + " : " + this.getLhs() + " -> ε";
+      return roundedP + " : " + this.getLhs() + " " + ARROW_RIGHT + " " + EPSILON;
     } else {
-      return roundedP + " : " + this.getLhs() + " -> "
+      return roundedP + " : " + this.getLhs() + " " + ARROW_RIGHT + " "
           + String.join(" ", this.getRhs());
     }
   }

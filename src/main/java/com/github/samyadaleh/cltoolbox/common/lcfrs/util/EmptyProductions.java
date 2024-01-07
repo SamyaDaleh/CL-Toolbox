@@ -11,6 +11,8 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 public class EmptyProductions {
   private static final Logger log = LogManager.getLogger();
 
@@ -109,7 +111,7 @@ public class EmptyProductions {
           newNts.add(newS.toString());
         }
         if (candidate[1].equals("0")) {
-          newSrcg.addClause(newS + "(ε) -> ε");
+          newSrcg.addClause(newS + "(" + EPSILON + ") -> " + EPSILON);
         } else {
           createVariableIfNoneExists(newSrcg);
           newSrcg.addClause(

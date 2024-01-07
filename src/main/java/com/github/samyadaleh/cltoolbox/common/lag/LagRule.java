@@ -1,5 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.lag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+
 public class LagRule {
   private String[] cat1;
   private String[] cat2;
@@ -37,7 +39,7 @@ public class LagRule {
 
   @Override public String toString() {
     String repr = "[(" + String.join(" ", cat1) + ") (" + String.join(" ", cat2)
-        + ")] -> " + state;
+        + ")] " + ARROW_RIGHT + " " + state;
     return repr;
   }
 }

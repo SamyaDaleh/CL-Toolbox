@@ -2,6 +2,8 @@ package com.github.samyadaleh.cltoolbox.common.lag;
 
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 public class LagState {
 
   private String[] rulePackage;
@@ -32,7 +34,7 @@ public class LagState {
     StringBuilder repr = new StringBuilder();
     repr.append("[{").append(String.join(", ", rulePackage)).append("} ");
     if (category.length == 0) {
-      repr.append("ε");
+      repr.append(EPSILON);
     } else {
       repr.append("(").append(String.join(" ", category)).append(")");
     }

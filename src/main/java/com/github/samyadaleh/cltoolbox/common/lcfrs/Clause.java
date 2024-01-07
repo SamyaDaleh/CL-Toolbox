@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /** Representation of a clause of the form A(ɑ1,...,ɑ_dim(A)) ->
  * A1(X1,...,X_dim(A1)) ... */
 public class Clause {
@@ -28,7 +31,7 @@ public class Clause {
    * Does the split at "->" for you. 
    */
   public Clause(String clause) throws ParseException {
-    String[] clauseSplit = clause.split("->");
+    String[] clauseSplit = clause.split(ARROW_RIGHT);
     this.lhs = new Predicate(clauseSplit[0]);
     String rhs = clauseSplit[1];
     int start = 0;
@@ -43,9 +46,9 @@ public class Clause {
   @Override public String toString() {
     StringBuilder repr = new StringBuilder();
     repr.append(lhs.toString());
-    repr.append(" -> ");
+    repr.append(" ").append(ARROW_RIGHT).append(" ");
     if (rhs.isEmpty()) {
-      repr.append("ε");
+      repr.append(EPSILON);
     } else {
       for (int i = 0; i < rhs.size(); i++) {
         if (i > 0)
@@ -61,9 +64,9 @@ public class Clause {
   public String setDotAt(int i, int j) {
     StringBuilder repr = new StringBuilder();
     repr.append(lhs.setDotAt(i,j));
-    repr.append(" -> ");
+    repr.append(" ").append(ARROW_RIGHT).append(" ");
     if (rhs.isEmpty()) {
-      repr.append("ε");
+      repr.append(EPSILON);
     } else {
       for (int k = 0; k < rhs.size(); k++) {
         if (k > 0)

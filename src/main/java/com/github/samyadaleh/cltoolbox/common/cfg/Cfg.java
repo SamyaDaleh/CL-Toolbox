@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.text.ParseException;
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 import static com.github.samyadaleh.cltoolbox.common.cfg.util.EmptyProductions.isEmptyProductionRule;
 import static com.github.samyadaleh.cltoolbox.common.cfg.util.EmptyProductions.nonterminalOccursInAnyRhs;
 
@@ -52,7 +54,7 @@ public class Cfg extends AbstractCfg {
       for (String transitionState : entry.getValue()) {
         try {
           productionRules.add(new CfgProductionRule(
-              entry.getKey()[0] + " -> " + entry.getKey()[1] + " "
+              entry.getKey()[0] + " " + ARROW_RIGHT + " " + entry.getKey()[1] + " "
                   + transitionState));
         } catch (ParseException e) {
           throw new RuntimeException(e);
@@ -61,7 +63,7 @@ public class Cfg extends AbstractCfg {
     }
     for (String finalState : nfa.getFinalStates()) {
       try {
-        productionRules.add(new CfgProductionRule(finalState + " -> ε"));
+        productionRules.add(new CfgProductionRule(finalState + " " + ARROW_RIGHT + " " + EPSILON));
       } catch (ParseException e) {
         throw new RuntimeException(e);
       }

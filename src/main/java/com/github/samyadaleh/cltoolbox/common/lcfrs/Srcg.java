@@ -17,6 +17,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Representation of a sRCG - simple Range Concatenation Grammar.
  */
@@ -55,8 +57,8 @@ public class Srcg extends AbstractNTSGrammar {
             rhs.append(rhsSym).append("(").append(newVar).append(")");
           }
         } else {
-          rhs.append("ε");
-          lhs.append("ε");
+          rhs.append(EPSILON);
+          lhs.append(EPSILON);
         }
       }
       lhs.append(")");

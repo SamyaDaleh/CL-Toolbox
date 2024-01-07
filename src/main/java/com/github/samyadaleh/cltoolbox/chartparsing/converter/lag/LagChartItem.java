@@ -3,6 +3,8 @@ package com.github.samyadaleh.cltoolbox.chartparsing.converter.lag;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.AbstractChartItem;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Chart Item for Left associative grammar that uses the usual itemForm for
  * display, but stores its own data structures for further use.
@@ -31,7 +33,7 @@ public class LagChartItem extends AbstractChartItem
         categorieRepr.append(cat);
       }
       if (categorieRepr.charAt(categorieRepr.length()-1) == '(') {
-        categorieRepr.append("ε");
+        categorieRepr.append(EPSILON);
       }
       categorieRepr.append(")");
     }

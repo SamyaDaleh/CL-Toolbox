@@ -2,6 +2,9 @@ package com.github.samyadaleh.cltoolbox.common.cfg;
 
 import java.text.ParseException;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Representation of a CFG production rule where the lhs consists of one
  * nonterminal and the rhs can be any length.
@@ -14,7 +17,7 @@ public class CfgProductionRule {
   public CfgProductionRule(String[] rule) {
     this.lhs = rule[0];
     String[] ruleSplit = rule[1].split(" ");
-    if ((ruleSplit.length == 1 && ruleSplit[0].equals("ε"))) {
+    if ((ruleSplit.length == 1 && ruleSplit[0].equals(EPSILON))) {
       this.rhs = new String[] {""};
     } else {
       this.rhs = ruleSplit;
@@ -27,7 +30,7 @@ public class CfgProductionRule {
    */
   public CfgProductionRule(String lhs, String[] rhs) {
     this.lhs = lhs;
-    if (rhs.length == 1 && rhs[0].equals("ε")) {
+    if (rhs.length == 1 && rhs[0].equals(EPSILON)) {
       this.rhs = new String[] {""};
     } else {
       this.rhs = rhs;
@@ -38,12 +41,12 @@ public class CfgProductionRule {
    * Creates a rule from a String representation like S -> A B
    */
   public CfgProductionRule(String ruleString) throws ParseException {
-    if (!ruleString.contains("->")) {
-      throw new ParseException("Separator -> missing in rule " + ruleString, 0);
+    if (!ruleString.contains(ARROW_RIGHT)) {
+      throw new ParseException("Separator " + ARROW_RIGHT + " missing in rule " + ruleString, 0);
     }
-    String[] ruleSplit = ruleString.split("->", 2);
+    String[] ruleSplit = ruleString.split(ARROW_RIGHT, 2);
     this.lhs = ruleSplit[0].trim();
-    if (ruleSplit[1].trim().equals("") || ruleSplit[1].trim().equals("ε")) {
+    if (ruleSplit[1].trim().equals("") || ruleSplit[1].trim().equals(EPSILON)) {
       this.rhs = new String[] {""};
     } else {
       this.rhs = ruleSplit[1].trim().split(" ");
@@ -60,9 +63,9 @@ public class CfgProductionRule {
 
   @Override public String toString() {
     if (rhs.length == 0 || rhs[0].equals("")) {
-      return lhs + " -> ε";
+      return lhs + " " + ARROW_RIGHT + " " + EPSILON;
     } else {
-      return lhs + " -> " + String.join(" ", rhs);
+      return lhs + " " + ARROW_RIGHT + " " + String.join(" ", rhs);
     }
   }
 

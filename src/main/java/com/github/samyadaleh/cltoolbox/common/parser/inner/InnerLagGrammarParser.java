@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 public class InnerLagGrammarParser extends InnerGrammarParser {
   private Lag lag;
   private List<LagWord> lexicon = new ArrayList<>();
@@ -88,7 +90,7 @@ public class InnerLagGrammarParser extends InnerGrammarParser {
                 "Something seems to be wrong with the brackets.",
                 token.getLineNumber());
           }
-        } else if (category.size() == 4 && "ε".equals(tokenString)){
+        } else if (category.size() == 4 && EPSILON.equals(tokenString)){
           states.add(new LagState(rulePackage.toArray(new String[0]),
               wordCategory.toArray(new String[0])));
           rulePackage = new ArrayList<>();

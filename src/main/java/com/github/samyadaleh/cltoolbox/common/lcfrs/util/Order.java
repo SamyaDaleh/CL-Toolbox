@@ -8,6 +8,8 @@ import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 public class Order {
 
   public static final char ORDER_MARKING_LEFT = '[';
@@ -194,7 +196,7 @@ public class Order {
     newClause.append(predRep.substring(ibrack));
     newClause.append(" ->");
     if (clause.getRhs().isEmpty()) {
-      newClause.append('ε');
+      newClause.append(EPSILON);
     }
     for (Predicate rhsPred : clause.getRhs()) {
       newNt = new StringBuilder();

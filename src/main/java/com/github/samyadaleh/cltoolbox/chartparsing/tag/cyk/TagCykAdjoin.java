@@ -11,6 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_ADJOIN;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 
 /**
  * Adjoin an auxiliary tree into an appropriate node in any other tree.
@@ -64,7 +65,7 @@ public class TagCykAdjoin extends AbstractDynamicDecutionRuleTwoAntecedences {
         }
       }
       String node2Name =
-          (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : "ε";
+          (node2.length() > 1) ? node2.substring(0, node2.length() - 1) : EPSILON;
       this.name =
           DEDUCTION_RULE_TAG_ADJOIN + " " + treeName2 + "[" + node2Name + ","
               + treeName1 + "]";

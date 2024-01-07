@@ -4,6 +4,10 @@ package com.github.samyadaleh.cltoolbox.common;
  * Class holding constant strings used all around the toolbox.
  */
 public class Constants {
+  /* Symbols */
+  public static final String EPSILON = "ε";
+  public static final String ARROW_RIGHT = "->";
+
   /* Static rules*/
   public final static String DEDUCTION_RULE_CCG_DEDUCTION_AXIOM = "axiom";
   public final static String DEDUCTION_RULE_CFG_CYK_AXIOM = "scan";

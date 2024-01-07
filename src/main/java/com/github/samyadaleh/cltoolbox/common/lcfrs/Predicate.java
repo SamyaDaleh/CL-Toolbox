@@ -6,6 +6,8 @@ import java.util.Collections;
 
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /** Representation of a predicate of the form A(ɑ1,...,ɑ_dim(A)). */
 public class Predicate {
   private final String nonterminal;
@@ -33,13 +35,13 @@ public class Predicate {
     }
     this.nonterminal = predicate.substring(0, lBrack).trim();
     String rightOver = predicate.substring(lBrack + 1, rBrack).trim();
-    if (rightOver.length() == 0 || rightOver.equals("ε")) {
+    if (rightOver.length() == 0 || rightOver.equals(EPSILON)) {
       symbols = new String[][] {new String[] {""}};
     } else {
       String[] subgroups = rightOver.split(",");
       ArrayList<String[]> subgroupCol = new ArrayList<>();
       for (String subgroup : subgroups) {
-        if (subgroup.trim().equals("ε")) {
+        if (subgroup.trim().equals(EPSILON)) {
           subgroupCol.add(new String[] {""});
         } else {
           subgroupCol.add(subgroup.trim().split(" "));
@@ -57,7 +59,7 @@ public class Predicate {
       if (i > 0)
         repr.append(",");
       if (symbols[i].length == 1 && symbols[i][0].equals("")) {
-        repr.append("ε");
+        repr.append(EPSILON);
       } else {
         repr.append(
           ArrayUtils.getSubSequenceAsString(symbols[i], 0, symbols[i].length));

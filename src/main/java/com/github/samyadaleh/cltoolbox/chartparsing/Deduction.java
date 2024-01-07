@@ -13,6 +13,9 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * A deduction system that derives consequences from antecendence items and
  * tries to generate a goal item. Based on the slides from Laura Kallmeyer about
@@ -194,11 +197,11 @@ public class Deduction {
     for (String[] line : trace) {
       String id = line[0];
       String item = line[1].replace("$", "\\$").replace("•", "\\textbullet{}")
-          .replace("ε", "$\\epsilon$").replace("->", "$\\rightarrow$");
+          .replace(EPSILON, "$\\epsilon$").replace(ARROW_RIGHT, "$\\rightarrow$");
       String rules =
-          line[2].replace("ε", "$\\epsilon$").replace("->", "$\\rightarrow$");
+          line[2].replace(EPSILON, "$\\epsilon$").replace(ARROW_RIGHT, "$\\rightarrow$");
       String backPointers = line[3].replace("{", "\\{").replace("}", "\\}");
-      String trees = line[4].replace("ε", "$\\epsilon$");
+      String trees = line[4].replace(EPSILON, "$\\epsilon$");
       log.info(
           id + " & " + item + " & " + rules + " & " + backPointers + " & " + trees + " \\\\");
     }

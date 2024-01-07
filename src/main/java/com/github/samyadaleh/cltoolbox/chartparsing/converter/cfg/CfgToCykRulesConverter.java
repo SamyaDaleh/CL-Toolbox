@@ -16,8 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_AXIOM;
-import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CFG_CYK_AXIOM_EPSILON;
+import static com.github.samyadaleh.cltoolbox.common.Constants.*;
 
 public class CfgToCykRulesConverter {
 
@@ -30,7 +29,7 @@ public class CfgToCykRulesConverter {
       throw new ParseException("Grammar has to be in Chomsky Normal Form.", 1);
     }
     String[] wSplit = w.split(" ");
-    int wLength = wSplit[0].equals("") || wSplit[0].equals("ε")
+    int wLength = wSplit[0].equals("") || wSplit[0].equals(EPSILON)
         ? 0 : wSplit.length;
     ParsingSchema schema = new ParsingSchema();
 
@@ -84,7 +83,7 @@ public class CfgToCykRulesConverter {
     for (int i = 0; i < wSplit.length; i++) {
       if (wSplit[i].equals(rule.getRhs()[0])) {
         StaticDeductionRule scan = new StaticDeductionRule();
-        String itemLength = wSplit[i].equals("") || wSplit[i].equals("ε")
+        String itemLength = wSplit[i].equals("") || wSplit[i].equals(EPSILON)
             ? "0" : "1";
         ChartItemInterface consequence =
             new DeductionChartItem(rule.getLhs(), String.valueOf(i),

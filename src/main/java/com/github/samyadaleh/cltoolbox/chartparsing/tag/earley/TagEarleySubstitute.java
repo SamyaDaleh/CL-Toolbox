@@ -11,6 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_SUBSTITUTE;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 
 /**
  * If a potential initial tree is complete, substitute it if possible.
@@ -63,7 +64,7 @@ public class TagEarleySubstitute extends AbstractDynamicDeductionRule {
         }
         // imagine a tree with 1 node where you would substitute into the root
         // ...
-        String outNodeName = outNode.length() == 0 ? "ε" : outNode;
+        String outNodeName = outNode.length() == 0 ? EPSILON : outNode;
         this.name =
             "substitute " + outTreeName + "[" + outNodeName + "," + treeName
                 + "]";

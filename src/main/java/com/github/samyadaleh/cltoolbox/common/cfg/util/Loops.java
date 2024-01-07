@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+
 public class Loops {
 
   public static Cfg getCfgWithoutLoops(Cfg cfgOld) {
@@ -36,7 +38,7 @@ public class Loops {
           } else {
             replaceRule.append(currentRule.getLhs());
           }
-          replaceRule.append(" ->");
+          replaceRule.append(" ").append(ARROW_RIGHT);
           for (String rhsSym : currentRule.getRhs()) {
             replaceRule.append(" ");
             if (loopNts.contains(rhsSym)) {
@@ -46,7 +48,7 @@ public class Loops {
             }
           }
           try {
-            if (!replaceRule.toString().equals(replaceNt + " -> " + replaceNt)) {
+            if (!replaceRule.toString().equals(replaceNt + " " + ARROW_RIGHT + " " + replaceNt)) {
               workingProductionRules.set(j, new CfgProductionRule(replaceRule.toString()));
             } else {
               workingProductionRules.remove(j);

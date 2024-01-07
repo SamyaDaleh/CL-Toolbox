@@ -10,11 +10,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 public class TreeUtils {
 
   public static Tree getTreeOfSrcgClause(Clause clause, List<Integer> vector) {
     StringBuilder extractedRule = new StringBuilder();
-    extractedRule.append(clause.getLhs().getNonterminal()).append(" ->");
+    extractedRule.append(clause.getLhs().getNonterminal()).append(" ").append(ARROW_RIGHT);
     int terminalsInLhs = 0;
     for (String symbol : clause.getLhs().getSymbolsAsPlainArray()) {
       if (!TreeUtils.symbolIsVariable(clause, symbol)) {
@@ -55,7 +58,7 @@ public class TreeUtils {
     if (clause.getRhs().size() == 0) {
       try {
         return new Tree(new CfgProductionRule(
-            clause.getLhs().getNonterminal() + " -> " + ArrayUtils
+            clause.getLhs().getNonterminal() + " " + ARROW_RIGHT + " " + ArrayUtils
                 .getSubSequenceAsString(
                     clause.getLhs().getSymbolsAsPlainArray(), 0,
                     clause.getLhs().getSymbolsAsPlainArray().length)));
@@ -65,7 +68,7 @@ public class TreeUtils {
     }
     StringBuilder cfgRuleString =
         new StringBuilder(clause.getLhs().getNonterminal());
-    cfgRuleString.append(" ->");
+    cfgRuleString.append(" ").append(ARROW_RIGHT);
     for (Predicate rhsPred : clause.getRhs()) {
       cfgRuleString.append(" ").append(rhsPred.getNonterminal());
     }
@@ -222,7 +225,7 @@ public class TreeUtils {
   private static String collectSubtreeAsString(Tree tree2, Vertex node2) {
     StringBuilder newTree = new StringBuilder("(");
     if (node2.getLabel().equals("")) {
-      newTree.append("ε");
+      newTree.append(EPSILON);
     } else {
       newTree.append(node2.getLabel());
     }

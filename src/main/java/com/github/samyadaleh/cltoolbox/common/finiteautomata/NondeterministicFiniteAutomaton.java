@@ -8,6 +8,8 @@ import com.github.samyadaleh.cltoolbox.common.finiteautomata.util.UnifyFinalStat
 import java.text.ParseException;
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Representation of a nondeterministic finite automaton as defined by Hopcroft
  * 2011 p. 85.
@@ -48,8 +50,8 @@ public class NondeterministicFiniteAutomaton {
       for (CfgProductionRule rule : cfg.getProductionRules()) {
         String[] rhs = rule.getRhs();
         String lastState = rule.getLhs();
-        if (rhs.length == 0 || rhs.length == 1 && "ε".equals(rhs[0])) {
-          String[] key = new String[] {lastState, "ε"};
+        if (rhs.length == 0 || rhs.length == 1 && EPSILON.equals(rhs[0])) {
+          String[] key = new String[] {lastState, EPSILON};
           if (!newTransitionFunction.containsKey(key)) {
             newTransitionFunction.put(key, new ArrayList<>());
           }
@@ -59,7 +61,7 @@ public class NondeterministicFiniteAutomaton {
         for (int j = 0; j < rhs.length; j++) {
           String rhsSym = rhs[j];
           if (cfg.nonterminalsContain(rhsSym)) {
-            String[] key = new String[] {lastState, "ε"};
+            String[] key = new String[] {lastState, EPSILON};
             if (!newTransitionFunction.containsKey(key)) {
               newTransitionFunction.put(key, new ArrayList<>());
             }

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINED;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 
 public class TagEarleyPrefixValidPredictAdjoined
     extends AbstractDynamicDecutionRuleTwoAntecedences {
@@ -42,7 +43,7 @@ public class TagEarleyPrefixValidPredictAdjoined
             new DeductionChartItem(treeName2, node2, "lb", iGamma2, m, "-", "-",
                 m, "0");
         List<Tree> derivedTrees = generateDerivatedTrees(itemForm1);
-        String node2name = node2.length() == 0 ? "ε" : node2;
+        String node2name = node2.length() == 0 ? EPSILON : node2;
         this.name =
             DEDUCTION_RULE_TAG_EARLEY_PREFIXVALID_PREDICTADJOINED + " " + treeName2 + "["
                 + node2name + "," + treeName1 + "]";

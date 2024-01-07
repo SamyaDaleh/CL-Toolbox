@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import java.text.ParseException;
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+
 /**
  * Util methods to handle factoring.
  */
@@ -74,11 +76,11 @@ public class Factoring {
         String rhsRest = ArrayUtils
             .getSubSequenceAsString(rule.getRhs(), prefLength,
                 rule.getRhs().length);
-        productionRules.add(new CfgProductionRule(newNt + " -> " + rhsRest));
+        productionRules.add(new CfgProductionRule(newNt + " " + ARROW_RIGHT + " " + rhsRest));
       }
     }
     productionRules
-        .add(new CfgProductionRule(lhs + " -> " + longestPrefix + " " + newNt));
+        .add(new CfgProductionRule(lhs + " " + ARROW_RIGHT + " " + longestPrefix + " " + newNt));
   }
 
   private static String findLongestCommonPrefix(String lhs,

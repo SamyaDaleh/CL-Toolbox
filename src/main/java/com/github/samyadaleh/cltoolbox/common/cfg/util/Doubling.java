@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Takes care that different nonterminals are used as left-corner and in other
  * places, so no symbol appears in both positions.
@@ -32,7 +35,7 @@ public class Doubling {
 
     for (int i = 0; i < newRules.size(); i++) {
       CfgProductionRule rule = newRules.get(i);
-      if (rule.getRhs().length > 0 && !"ε".equals(rule.getRhs()[0])) {
+      if (rule.getRhs().length > 0 && !EPSILON.equals(rule.getRhs()[0])) {
         handleLcOccuringInOtherRules(newRules, newNonterminals, rule);
       }
     }
@@ -52,7 +55,7 @@ public class Doubling {
     //  if N occurs in any other production rule not as lc:
     for (int j = 0; j < newRules.size(); j++) {
       CfgProductionRule rule2 = newRules.get(j);
-      if (rule2.getRhs().length > 0 && !"ε".equals(rule2.getRhs()[0])) {
+      if (rule2.getRhs().length > 0 && !EPSILON.equals(rule2.getRhs()[0])) {
         for (int k = 1; k < rule2.getRhs().length; k++) {
           if (lc.equals(rule2.getRhs()[k])) {
             if (newNt == null) {
@@ -73,7 +76,7 @@ public class Doubling {
       CfgProductionRule rule3 = newRules.get(l);
       if (lc.equals(rule3.getLhs())) {
         newRules.add(new CfgProductionRule(
-            newNt + " -> " + rule3.toString().split("->")[1]));
+            newNt + " " + ARROW_RIGHT + " " + rule3.toString().split(ARROW_RIGHT)[1]));
       }
     }
   }

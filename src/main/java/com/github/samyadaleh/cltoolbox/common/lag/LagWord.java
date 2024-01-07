@@ -1,5 +1,7 @@
 package com.github.samyadaleh.cltoolbox.common.lag;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 public class LagWord {
   private String wordSurface;
   private String[] category;
@@ -29,7 +31,7 @@ public class LagWord {
     StringBuilder repr = new StringBuilder();
     repr.append("[").append(wordSurface).append(" ");
     if (category.length == 0) {
-      repr.append("ε");
+      repr.append(EPSILON);
     } else {
       repr.append("(").append(String.join(" ", category)).append(")");
     }

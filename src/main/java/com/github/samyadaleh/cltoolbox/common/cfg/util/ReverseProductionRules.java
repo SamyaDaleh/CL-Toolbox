@@ -5,6 +5,8 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
 import java.text.ParseException;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+
 /**
  * Util class that reverses the production rules.
  */
@@ -20,7 +22,7 @@ public class ReverseProductionRules {
     cfgNew.setStartSymbol(cfg.getStartSymbol());
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       try {
-        cfgNew.addProductionRule(rule.getLhs() + " -> " + reverseRhs(rule));
+        cfgNew.addProductionRule(rule.getLhs() + " " + ARROW_RIGHT + " " + reverseRhs(rule));
       } catch (ParseException e) {
         throw new RuntimeException(e);
       }
@@ -30,7 +32,7 @@ public class ReverseProductionRules {
 
   private static String reverseRhs(CfgProductionRule rule) {
     String ruleString = rule.toString();
-    String[] ruleSplit = ruleString.split(" -> ");
+    String[] ruleSplit = ruleString.split(" " + ARROW_RIGHT + " ");
     String rhsString = ruleSplit[1];
     StringBuilder reversedRhs = new StringBuilder();
     String[] rhsSplit = rhsString.split(" ");

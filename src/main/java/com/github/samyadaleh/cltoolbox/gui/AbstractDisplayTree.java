@@ -7,6 +7,8 @@ import com.github.samyadaleh.cltoolbox.common.tag.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 abstract class AbstractDisplayTree {
   private static final Logger log = LogManager.getLogger();
 
@@ -139,7 +141,7 @@ abstract class AbstractDisplayTree {
       int height, int nodeX, String label) {
     if (p.getGornAddress().equals(dti.getItemForm()[1])
       || (p.getGornAddress().equals("")
-        && dti.getItemForm()[1].equals("ε"))) {
+        && dti.getItemForm()[1].equals(EPSILON))) {
       drawTagEarleyDot(dti, height, nodeX, label);
     }
   }
@@ -149,7 +151,7 @@ abstract class AbstractDisplayTree {
     String gorn =
       dti.getItemForm()[1].substring(0, dti.getItemForm()[1].length() - 1);
     if (p.getGornAddress().equals(gorn)
-      || (p.getGornAddress().equals("") && gorn.equals("ε"))) {
+      || (p.getGornAddress().equals("") && gorn.equals(EPSILON))) {
       drawTagCykDot(dti, height, nodeX);
     }
   }

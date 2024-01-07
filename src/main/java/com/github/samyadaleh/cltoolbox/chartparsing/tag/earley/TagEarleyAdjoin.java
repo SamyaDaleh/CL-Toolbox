@@ -11,6 +11,7 @@ import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_TAG_EARLEY_ADJOIN;
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
 
 /**
  * Combines an auxiliary tree with another tree to get a new item in which has
@@ -67,7 +68,7 @@ public class TagEarleyAdjoin
           }
         }
         consequence.setTrees(derivedTrees);
-        String node2name = node2.length() == 0 ? "ε" : node2;
+        String node2name = node2.length() == 0 ? EPSILON : node2;
         this.name =
             DEDUCTION_RULE_TAG_EARLEY_ADJOIN + " " + treeName2 + "[" + node2name
                 + "," + treeName1 + "]";

@@ -9,7 +9,11 @@ import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
+
 public class LeftRecursion {
+
+  public static final String DELIMITER = "-";
 
   /**
    * Returns true if CFG has one rule with direct left recursion, of the form A
@@ -149,13 +153,13 @@ public class LeftRecursion {
    * Removes any kind of left recursion including direct and indirect one,
    * but epsilon productions and loops have to be removed first.
    * Example: S -> A a, S -> B b, A -> S a, B -> b
-   * 1. If the LC is terminal or a non-recursive terminal add A -> X A_X
-   * For S -> B b add S -> B S_B. For B -> b add B -> b B_b.
+   * 1. If the LC is terminal or a non-recursive terminal add A -> X A-X
+   * For S -> B b add S -> B S-B. For B -> b add B -> b B-b.
    * 2. If LC is recursive and has more productions, add a new rule for each:
-   * For A add S_A -> a S_A. For S add A_S -> a A_S.
+   * For A add S-A -> a S-A. For S add A-S -> a A-S.
    * 3. For any rule I guess.
-   * For S -> A a add S_A -> a. For S -> B b add S_B -> b.
-   * For A -> S a add A_S -> a. For B -> b add B_b -> ε
+   * For S -> A a add S-A -> a. For S -> B b add S-B -> b.
+   * For A -> S a add A-S -> a. For B -> b add B-b -> ε
    * 4. For non-recursive nonterminals. Copy B -> b to new grammar.
    */
   public static Cfg removeLeftRecursionMoore(Cfg cfgOld) throws ParseException {
@@ -174,23 +178,23 @@ public class LeftRecursion {
             String lc2 = rule2.getRhs()[0];
             String rhs2Rest = ArrayUtils.getSubSequenceAsString(
                 rule2.getRhs(), 1, rule2.getRhs().length);
-            String newNt = lhs + "_" + lc2;
-            cfg.addProductionRule(newNt + " -> " + rhs2Rest);
+            String newNt = lhs + DELIMITER + lc2;
+            cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhs2Rest);
           }
         }
         // Rule 3
         if (nonterminalIsLhsOfLeftRecursion(cfgOld, lhs)) {
-          String newNt = lhs + "_" + lc;
+          String newNt = lhs + DELIMITER + lc;
           newNts.add(newNt);
           String rhsRest = ArrayUtils.getSubSequenceAsString(
               rule.getRhs(), 1, rule.getRhs().length);
-          cfg.addProductionRule(newNt + " -> " + rhsRest);
+          cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhsRest);
         }
       } else {
         // Rule 1
-        String newNt = lhs + "_" + lc;
+        String newNt = lhs + DELIMITER + lc;
         newNts.add(newNt);
-        cfg.addProductionRule(lhs + " -> " + lc + " " + newNt);
+        cfg.addProductionRule(lhs + " " + ARROW_RIGHT + " " + lc + " " + newNt);
         // Rule 4
         cfg.addProductionRule(rule.toString());
       }
@@ -207,7 +211,7 @@ public class LeftRecursion {
     List<String> newRules = new ArrayList<>();
     for (CfgProductionRule rule2 : cfg.getProductionRules()) {
       if (rule2.getLhs().equals(nt2)) {
-        newRules.add(nt + " -> " + String.join(" ", rule2.getRhs())
+        newRules.add(nt + " "+ ARROW_RIGHT + " " + String.join(" ", rule2.getRhs())
           + " " + String.join(" ", bi));
       }
     }

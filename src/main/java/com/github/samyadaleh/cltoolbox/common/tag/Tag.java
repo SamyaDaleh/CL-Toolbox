@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.text.ParseException;
 import java.util.*;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Tree adjoining grammar that consists of terminals, nonterminals, a start
  * symbol, some initial trees and auxiliary trees.
@@ -33,7 +35,7 @@ public class Tag extends AbstractNTSGrammar {
     int i = 1;
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 0 || "".equals(rule.getRhs()[0])) {
-        String treeString = "(" + rule.getLhs() + " ε)";
+        String treeString = "(" + rule.getLhs() + " " + EPSILON + ")";
         this.addInitialTree("α" + i, treeString);
       } else {
         String treeString =

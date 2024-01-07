@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
+
 /**
  * Open collection of functions to work with arrays.
  */
@@ -85,7 +87,7 @@ public class ArrayUtils {
         representation.append(",");
       }
       if (element.equals("")) {
-        representation.append("ε");
+        representation.append(EPSILON);
       } else {
         representation.append(element);
       }
