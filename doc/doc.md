@@ -466,7 +466,7 @@ empty string as right hand side.
 ##### CFG Removal of Left Recursion
 
 The algorithm removes both direct and indirect left recursion. For direct 
-recursion it treats every rule where the first symbol on the right hand side is
+recursion, it treats every rule where the first symbol on the right hand side is
 the same as the one on the left hand side except if it is a unary production. 
 For each nonterminal that is the left hand side of a left recursive rule it 
 adds a new nonterminal appended to the rules without left recursion. For 
@@ -477,8 +477,29 @@ recursive rule a new like `S1 -> a S1` is added. The former left recursive
 rules are removed. If a nonterminal is associated with only left recursive 
 rules, an error message is printed and no conversion is performed.
 
-For removing indirect left recursion epsilon productions have to be removed 
-first. The algorithm assumes an order between the nonterminals. For each 
+For removing indirect left recursion, epsilon productions and loops have to be 
+removed first. The approach following Moore introduces new nonterminals and
+treats every rule according to these rules:
+1. If in a rule A -> X beta the A is left-recusive, but X is not or X is 
+a terminal, a new rule A -> X A:X is added to the grammar.
+2. If for a rule A -> B gamma there is a rule B -> X beta where both A and B
+are left-recursive, a new rule A:X -> beta A:B is added to the grammar.
+3. If for a rule A -> X beta the A is recursive, add A:X -> beta to the new 
+grammar. Note that the recursive property for X is not specified, thus a rule
+already treated by 1 or 2 also applies to rule 3.
+4. If in a rule A -> beta the A is not recursive, the rule is copied to the new grammar.
+
+Nonterminals from the original grammar are kept with new nonterminals added.
+
+Note that Moore uses an underscore in new nonterminal names but in this 
+implementation the underscore is a special meaning character that adds 
+subscripts to tree nodes and gives them special properties, therefore the 
+underscore is forbidden as letter in a grammar symbol. The colon has no special
+meaning for the grammar parser and is not overloaded with any special meaning.
+
+The previous implementation following Paull's algorithm still exists in the 
+code base but is not invoked via command line.
+The algorithm assumes an order between the nonterminals. For each 
 nonterminal, that is the lhs of a rule whose first rhs symbol is a previous 
 nonterminal, it is replaced by all rhs of rules with those nonterminal as lhs. 
 For example a grammar has the rules `S -> A a, S -> b, A -> S a` where the 

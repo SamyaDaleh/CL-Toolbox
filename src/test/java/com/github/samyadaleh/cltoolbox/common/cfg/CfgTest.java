@@ -6,6 +6,7 @@ import com.github.samyadaleh.cltoolbox.chartparsing.converter.GrammarToDeduction
 import com.github.samyadaleh.cltoolbox.chartparsing.converter.cfg.CfgToTopDownRulesConverter;
 import com.github.samyadaleh.cltoolbox.cli.GrammarToGrammarConverter;
 import com.github.samyadaleh.cltoolbox.common.GrammarLoader;
+import com.github.samyadaleh.cltoolbox.common.cfg.util.LeftRecursion;
 import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 import com.github.samyadaleh.cltoolbox.common.parser.CfgParser;
 import org.junit.Ignore;
@@ -158,10 +159,10 @@ public class CfgTest {
   }
 
   @Test
-  public void testRemoveDirectLeftRecursion2()
+  public void testRemoveDirectLeftRecursion2Paull()
       throws ParseException, FileNotFoundException {
     Cfg cfg = GrammarLoader.readCfg("directleftrecursion.cfg");
-    Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionPaull(cfg);
     assertEquals(
       "G = <N, T, S, P>\n" + "N = {S, S1}\n" + "T = {a, b, c, d}\n" + "S = S\n"
         + "P = {S -> c, S -> d, S1 -> ε, S -> d S1, S -> c S1, S1 -> b S1, S1 -> a S1}\n",
@@ -169,36 +170,80 @@ public class CfgTest {
   }
 
   @Test
-  public void testRemoveIndirectLeftRecursion()
+  public void testRemoveDirectLeftRecursion2Moore()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("directleftrecursion.cfg");
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionMoore(cfg);
+    assertEquals(
+        "G = <N, T, S, P>\n" +
+            "N = {S, S:S, S:c, S:d}\n" +
+            "T = {a, b, c, d}\n" +
+            "S = S\n" +
+            "P = {S:S -> ε, S:S -> a, S:S -> b, S:c -> ε, S:d -> ε, S -> c S:c, S -> d S:d}\n",
+        cfgwlr.toString());
+  }
+
+  @Test
+  public void testRemoveIndirectLeftRecursionPaull()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("indirectleftrecursion.cfg");
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionPaull(cfg
+        .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
+        .getCfgWithoutNonReachableSymbols());
+    assertEquals("G = <N, T, S, P>\n" +
+        "N = {S, A, A1}\n" +
+        "T = {a, b}\n" +
+        "S = S\n" +
+        "P = {S -> A a, S -> b, A -> b a, A1 -> ε, A -> b a A1, A1 -> a a A1}\n" +
+        "", cfgwlr.toString());
+  }
+
+  @Test
+  public void testRemoveIndirectLeftRecursionMoore()
       throws ParseException, FileNotFoundException {
     Cfg cfg = GrammarLoader.readCfg("indirectleftrecursion.cfg");
     Cfg cfgwlr = cfg
       .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
       .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" +
-      "N = {S, A, A1}\n" +
-      "T = {a, b}\n" +
-      "S = S\n" +
-      "P = {S -> A a, S -> b, A -> b a, A1 -> ε, A -> b a A1, A1 -> a a A1}\n" +
-      "", cfgwlr.toString());
+            "N = {S, A, S:S, S:A, A:A, A:b, A:S, S:b}\n" +
+            "T = {a, b}\n" +
+            "S = S\n" +
+            "P = {S:S -> a, S:A -> a, A:A -> a, A:b -> ε, A:S -> a, S -> b S:b, S:b -> ε}\n",
+        cfgwlr.toString());
   }
 
   @Test
-  public void testRemoveLeftRecursionNoTermination()
+  public void testRemoveLeftRecursionNoTerminationPaull()
       throws ParseException, FileNotFoundException {
     Cfg cfg = GrammarLoader.readCfg("leftrecursionnotermination.cfg");
-    Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionPaull(cfg);
     assertNull(cfgwlr);
   }
 
   @Test
-  public void testCrazyLeftRecursionRemoval()
+  public void testCrazyLeftRecursionRemovalPaull()
       throws ParseException, FileNotFoundException {
     Cfg cfg = GrammarLoader.readCfg("crazyleftrecursionremoval.cfg");
-    Cfg cfgwlr = cfg.getCfgWithoutLeftRecursion();
-    assertEquals("G = <N, T, S, P>\n" + "N = {S1, N2, S, N1, S2, N11}\n"
-        + "T = {t0}\n" + "S = S1\n"
-        + "P = {N2 -> t0, N1 -> t0, S -> N1 S N1, S -> N1 S, S -> N1 N1, S -> N1, S1 -> S, S1 -> ε, S -> N1 S, S -> N1, S -> N1, S -> t0, S2 -> ε, S -> t0 S2, S -> N1, S -> N1 S2, S -> N1, S -> N1 S2, S -> N1 S, S -> N1 S S2, S2 -> N1 S2, S -> N1 S N1 S2, N1 -> N1 S, N1 -> N1, N1 -> N1 S, N1 -> N1, N1 -> N1, N1 -> t0, N1 -> t0 S2, N1 -> N1, N1 -> N1 S2, N1 -> t0, N1 -> t0 N11, N11 -> S N11, N11 -> N1 N11, N11 -> S N11, N11 -> S N1 N11}\n",
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionPaull(cfg);
+    assertEquals("G = <N, T, S, P>\n" +
+            "N = {S1, N2, S, N1, S2, N11}\n" +
+            "T = {t0}\n" +
+            "S = S1\n" +
+            "P = {N2 -> t0, N1 -> t0, S -> N1 S N1, S -> N1 S, S -> N1 N1, S -> N1, S1 -> S, S1 -> ε, S -> t0, S2 -> ε, S -> t0 S2, S2 -> N1 S2, S -> N1 S2, S -> N1 N1 S2, S -> N1 S S2, S -> N1 S N1 S2, N1 -> t0, N1 -> t0 S2, N11 -> ε, N11 -> S N1 S2 N11, N11 -> S S2 N11, N11 -> N1 S2 N11, N11 -> S2 N11, N1 -> t0 S2 N11, N1 -> t0, N1 -> t0 N11, N11 -> N1 N11, N11 -> S N11, N11 -> S N1 N11}\n",
+        cfgwlr.toString());
+  }
+
+  @Test
+  public void testCrazyLeftRecursionRemovalMoore()
+      throws ParseException, FileNotFoundException {
+    Cfg cfg = GrammarLoader.readCfg("crazyleftrecursionremoval.cfg");
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionMoore(cfg);
+    assertEquals("G = <N, T, S, P>\n" +
+            "N = {S1, N2, S, N1, S:S, S:N2, S:N1, N1:S, N1:N2, N1:N1, N1:t0, S:t0}\n" +
+            "T = {t0}\n" +
+            "S = S1\n" +
+            "P = {S:S -> ε, S:N2 -> ε, S:N1 -> S N1, S:N1 -> S, S:N1 -> N1, S:N1 -> ε, S:S -> N1, N1:S -> ε, N1:N2 -> ε, N1:N1 -> S N1, N1:N1 -> S, N1:N1 -> N1, N1:N1 -> ε, N1:S -> N1, N1:t0 -> ε, N2 -> t0, S -> N2 S:N2, N1 -> t0 N1:t0, S:t0 -> ε, S1 -> S, S1 -> ε}\n",
         cfgwlr.toString());
   }
 
@@ -209,8 +254,11 @@ public class CfgTest {
     Cfg cfgwlr = GrammarToGrammarConverter.checkAndMayConvertToCfg(
         cfg, "cfg-topdown", true);
     assertFalse(cfgwlr.hasLeftRecursion());
-    assertEquals("G = <N, T, S, P>\n" + "N = {N2, N21}\n" + "T = {t0}\n"
-            + "S = N2\n" + "P = {N2 -> t0, N21 -> ε, N21 -> N2 N21, N2 -> t0 N21}\n",
+    assertEquals("G = <N, T, S, P>\n" +
+            "N = {N2, N2:t0, N2:N2}\n" +
+            "T = {t0}\n" +
+            "S = N2\n" +
+            "P = {N2 -> t0 N2:t0, N2:t0 -> ε, N2:N2 -> N2}\n",
         cfgwlr.toString());
   }
 

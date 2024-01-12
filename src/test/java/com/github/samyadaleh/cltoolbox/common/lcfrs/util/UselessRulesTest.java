@@ -21,7 +21,7 @@ public class UselessRulesTest {
     Srcg srcg = new Srcg(cfg).getSrcgWithoutUselessRules();
     assertEquals("G = <N, T, V, P, S>\n" + "N = {N2, N3}\n" + "T = {t0, t1}\n"
             + "V = {X1}\n" + "P = {N2(t0 X1 t1) -> N3(X1), N2(ε) -> ε, "
-            + "N3(t1) -> ε, N2(ε) -> ε, N3(ε) -> ε}\n" + "S = N2\n",
+            + "N3(t1) -> ε, N3(ε) -> ε}\n" + "S = N2\n",
         srcg.toString());
   }
 }

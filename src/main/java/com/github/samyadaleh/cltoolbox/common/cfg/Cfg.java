@@ -247,7 +247,7 @@ public class Cfg extends AbstractCfg {
    * loops have to be removed first.
    */
   public Cfg getCfgWithoutLeftRecursion() throws ParseException {
-    return LeftRecursion.removeLeftRecursionPaull(this);
+    return LeftRecursion.removeLeftRecursionMoore(this);
   }
 
   /**
@@ -263,7 +263,10 @@ public class Cfg extends AbstractCfg {
    * its set of rules.
    */
   public void addProductionRule(String rule) throws ParseException {
-    this.productionRules.add(new CfgProductionRule(rule));
+    CfgProductionRule newRule = new CfgProductionRule(rule);
+    if (!this.productionRules.contains(newRule)) {
+      this.productionRules.add(new CfgProductionRule(rule));
+    }
   }
 
   /**

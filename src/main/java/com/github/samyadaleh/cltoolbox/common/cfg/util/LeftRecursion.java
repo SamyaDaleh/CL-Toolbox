@@ -13,7 +13,7 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
 
 public class LeftRecursion {
 
-  public static final String DELIMITER = "-";
+  public static final String DELIMITER = ":";
 
   /**
    * Returns true if CFG has one rule with direct left recursion, of the form A
@@ -153,13 +153,13 @@ public class LeftRecursion {
    * Removes any kind of left recursion including direct and indirect one,
    * but epsilon productions and loops have to be removed first.
    * Example: S -> A a, S -> B b, A -> S a, B -> b
-   * 1. If the LC is terminal or a non-recursive terminal add A -> X A-X
-   * For S -> B b add S -> B S-B. For B -> b add B -> b B-b.
+   * 1. If the LC is terminal or a non-recursive terminal add A -> X A:X
+   * For S -> B b add S -> B S:B. For B -> b add B -> b B:b.
    * 2. If LC is recursive and has more productions, add a new rule for each:
-   * For A add S-A -> a S-A. For S add A-S -> a A-S.
+   * For A add S:A -> a S:A. For S add A:S -> a A:S.
    * 3. For any rule I guess.
-   * For S -> A a add S-A -> a. For S -> B b add S-B -> b.
-   * For A -> S a add A-S -> a. For B -> b add B-b -> ε
+   * For S -> A a add S:A -> a. For S -> B b add S:B -> b.
+   * For A -> S a add A:S -> a. For B -> b add B:b -> ε
    * 4. For non-recursive nonterminals. Copy B -> b to new grammar.
    */
   public static Cfg removeLeftRecursionMoore(Cfg cfgOld) throws ParseException {
@@ -170,31 +170,39 @@ public class LeftRecursion {
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       String lhs = rule.getLhs();
-      String lc = rule.getRhs()[0];
-      if (nonterminalIsLhsOfLeftRecursion(cfgOld, lc)) {
-        // Rule 2
-        for (CfgProductionRule rule2 : cfgOld.getProductionRules()) {
-          if (rule2.getLhs().equals(lc)) {
-            String lc2 = rule2.getRhs()[0];
-            String rhs2Rest = ArrayUtils.getSubSequenceAsString(
-                rule2.getRhs(), 1, rule2.getRhs().length);
-            String newNt = lhs + DELIMITER + lc2;
-            cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhs2Rest);
+      if (nonterminalIsLhsOfLeftRecursion(cfgOld, lhs)) {
+        String lc = rule.getRhs()[0];
+        if (nonterminalIsLhsOfLeftRecursion(cfgOld, lc)) {
+          // Rule 2
+          for (CfgProductionRule rule2 : cfgOld.getProductionRules()) {
+            if (rule2.getLhs().equals(lc)) {
+              String lc2 = rule2.getRhs()[0];
+              String rhs2Rest = ArrayUtils.getSubSequenceAsString(
+                  rule2.getRhs(), 1, rule2.getRhs().length);
+              String newNt = lhs + DELIMITER + lc2;
+              if (!newNts.contains(newNt)) {
+                newNts.add(newNt);
+              }
+              cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhs2Rest);
+            }
           }
+        } else {
+          // Rule 1
+          String newNt = lhs + DELIMITER + lc;
+          if (!newNts.contains(newNt)) {
+            newNts.add(newNt);
+          }
+          cfg.addProductionRule(lhs + " " + ARROW_RIGHT + " " + lc + " " + newNt);
         }
         // Rule 3
-        if (nonterminalIsLhsOfLeftRecursion(cfgOld, lhs)) {
-          String newNt = lhs + DELIMITER + lc;
-          newNts.add(newNt);
-          String rhsRest = ArrayUtils.getSubSequenceAsString(
-              rule.getRhs(), 1, rule.getRhs().length);
-          cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhsRest);
-        }
-      } else {
-        // Rule 1
         String newNt = lhs + DELIMITER + lc;
-        newNts.add(newNt);
-        cfg.addProductionRule(lhs + " " + ARROW_RIGHT + " " + lc + " " + newNt);
+        if (!newNts.contains(newNt)) {
+          newNts.add(newNt);
+        }
+        String rhsRest = ArrayUtils.getSubSequenceAsString(
+            rule.getRhs(), 1, rule.getRhs().length);
+        cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhsRest);
+      } else {
         // Rule 4
         cfg.addProductionRule(rule.toString());
       }
