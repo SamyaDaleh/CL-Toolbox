@@ -169,39 +169,33 @@ public class LeftRecursion {
     ArrayList<String> newNts = new ArrayList<>();
     Collections.addAll(newNts, cfgOld.getNonterminals());
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
-      String lhs = rule.getLhs();
-      if (nonterminalIsLhsOfLeftRecursion(cfgOld, lhs)) {
+      String A = rule.getLhs();
+      if (nonterminalIsLhsOfLeftRecursion(cfgOld, A)) {
         String lc = rule.getRhs()[0];
         if (nonterminalIsLhsOfLeftRecursion(cfgOld, lc)) {
           // Rule 2
           for (CfgProductionRule rule2 : cfgOld.getProductionRules()) {
             if (rule2.getLhs().equals(lc)) {
-              String lc2 = rule2.getRhs()[0];
-              String rhs2Rest = ArrayUtils.getSubSequenceAsString(
+              String X = rule2.getRhs()[0];
+              String beta = ArrayUtils.getSubSequenceAsString(
                   rule2.getRhs(), 1, rule2.getRhs().length);
-              String newNt = lhs + DELIMITER + lc2;
-              if (!newNts.contains(newNt)) {
-                newNts.add(newNt);
+              String AX = createNewNt(newNts, A, X);
+              String AB = createNewNt(newNts, A, lc);
+              if (!"".equals(beta) || !AX.equals(AB)) {
+                cfg.addProductionRule(AX + " " + ARROW_RIGHT + " " + beta + " " + AB);
               }
-              cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhs2Rest);
             }
           }
         } else {
           // Rule 1
-          String newNt = lhs + DELIMITER + lc;
-          if (!newNts.contains(newNt)) {
-            newNts.add(newNt);
-          }
-          cfg.addProductionRule(lhs + " " + ARROW_RIGHT + " " + lc + " " + newNt);
+          String AX = createNewNt(newNts, A, lc);
+          cfg.addProductionRule(A + " " + ARROW_RIGHT + " " + lc + " " + AX);
         }
         // Rule 3
-        String newNt = lhs + DELIMITER + lc;
-        if (!newNts.contains(newNt)) {
-          newNts.add(newNt);
-        }
+        String AX = createNewNt(newNts, A, lc);
         String rhsRest = ArrayUtils.getSubSequenceAsString(
             rule.getRhs(), 1, rule.getRhs().length);
-        cfg.addProductionRule(newNt + " " + ARROW_RIGHT + " " + rhsRest);
+        cfg.addProductionRule(AX + " " + ARROW_RIGHT + " " + rhsRest);
       } else {
         // Rule 4
         cfg.addProductionRule(rule.toString());
@@ -209,6 +203,14 @@ public class LeftRecursion {
     }
     cfg.setNonterminals(newNts.toArray(new String[0]));
     return cfg;
+  }
+
+  private static String createNewNt(ArrayList<String> newNts, String A, String lc) {
+    String AX = A + DELIMITER + lc;
+    if (!newNts.contains(AX)) {
+      newNts.add(AX);
+    }
+    return AX;
   }
 
   private static void removeIndirectLeftRecursion(Cfg cfg, String nt, int k,

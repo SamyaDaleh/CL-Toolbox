@@ -179,7 +179,21 @@ public class CfgTest {
             "N = {S, S:S, S:c, S:d}\n" +
             "T = {a, b, c, d}\n" +
             "S = S\n" +
-            "P = {S:S -> ε, S:S -> a, S:S -> b, S:c -> ε, S:d -> ε, S -> c S:c, S -> d S:d}\n",
+            "P = {S:S -> a S:S, S:S -> b S:S, S:c -> S:S, S:d -> S:S, S:S -> ε, S:S -> a, S:S -> b, S -> c S:c, S:c -> ε, S -> d S:d, S:d -> ε}\n",
+        cfgwlr.toString());
+  }
+
+  @Test
+  public void testRemoveDirectLeftRecursion3Moore()
+      throws FileNotFoundException, ParseException {
+    Cfg cfg = GrammarLoader.readCfg("e1.cfg");
+    Cfg cfgwlr = LeftRecursion.removeLeftRecursionMoore(cfg);
+    assertEquals(
+        "G = <N, T, S, P>\n" +
+            "N = {S, S:S, S:a}\n" +
+            "T = {a}\n" +
+            "S = S\n" +
+            "P = {S:S -> S S:S, S:a -> S:S, S:S -> S, S -> a S:a, S:a -> ε}\n",
         cfgwlr.toString());
   }
 
@@ -206,10 +220,10 @@ public class CfgTest {
       .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
       .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" +
-            "N = {S, A, S:S, S:A, A:A, A:b, A:S, S:b}\n" +
+            "N = {S, A, S:S, S:A, A:A, A:S, A:b, S:b}\n" +
             "T = {a, b}\n" +
             "S = S\n" +
-            "P = {S:S -> a, S:A -> a, A:A -> a, A:b -> ε, A:S -> a, S -> b S:b, S:b -> ε}\n",
+            "P = {S:S -> a S:A, S:A -> a, A:A -> a A:S, A:b -> A:S, A:S -> a, S -> b S:b, S:b -> ε}\n",
         cfgwlr.toString());
   }
 
@@ -243,7 +257,7 @@ public class CfgTest {
             "N = {S1, N2, S, N1, S:S, S:N2, S:N1, N1:S, N1:N2, N1:N1, N1:t0, S:t0}\n" +
             "T = {t0}\n" +
             "S = S1\n" +
-            "P = {S:S -> ε, S:N2 -> ε, S:N1 -> S N1, S:N1 -> S, S:N1 -> N1, S:N1 -> ε, S:S -> N1, N1:S -> ε, N1:N2 -> ε, N1:N1 -> S N1, N1:N1 -> S, N1:N1 -> N1, N1:N1 -> ε, N1:S -> N1, N1:t0 -> ε, N2 -> t0, S -> N2 S:N2, N1 -> t0 N1:t0, S:t0 -> ε, S1 -> S, S1 -> ε}\n",
+            "P = {S:N2 -> S:S, S:N1 -> S N1 S:S, S:N1 -> S S:S, S:N1 -> N1 S:S, S:N1 -> S:S, S:S -> N1 S:S, S:S -> ε, N1:N2 -> N1:S, N1:N1 -> S N1 N1:S, N1:N1 -> S N1:S, N1:N1 -> N1 N1:S, N1:N1 -> N1:S, N1:S -> N1 N1:S, N1:S -> ε, N1:S -> N1:N1, N1:t0 -> N1:N1, N1:N1 -> ε, N2 -> t0, S -> N2 S:N2, S:N2 -> ε, N1 -> t0 N1:t0, N1:t0 -> ε, S:S -> S:N1, S:t0 -> S:N1, S:N1 -> S N1, S:N1 -> S, S:N1 -> N1, S:N1 -> ε, S1 -> S, S1 -> ε, S:S -> N1}\n",
         cfgwlr.toString());
   }
 
@@ -258,7 +272,7 @@ public class CfgTest {
             "N = {N2, N2:t0, N2:N2}\n" +
             "T = {t0}\n" +
             "S = N2\n" +
-            "P = {N2 -> t0 N2:t0, N2:t0 -> ε, N2:N2 -> N2}\n",
+            "P = {N2 -> t0 N2:t0, N2:t0 -> ε, N2:t0 -> N2:N2, N2:N2 -> N2 N2:N2, N2:N2 -> N2}\n",
         cfgwlr.toString());
   }
 
