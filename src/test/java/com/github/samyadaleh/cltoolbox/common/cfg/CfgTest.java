@@ -220,10 +220,10 @@ public class CfgTest {
       .getCfgWithoutEmptyProductions().getCfgWithoutNonGeneratingSymbols()
       .getCfgWithoutNonReachableSymbols().getCfgWithoutLeftRecursion();
     assertEquals("G = <N, T, S, P>\n" +
-            "N = {S, A, S:S, S:A, A:A, A:S, A:b, S:b}\n" +
+            "N = {S, A, A1}\n" +
             "T = {a, b}\n" +
             "S = S\n" +
-            "P = {S:S -> a S:A, S:A -> a, A:A -> a A:S, A:b -> A:S, A:S -> a, S -> b S:b, S:b -> ε}\n",
+            "P = {S -> A a, S -> b, A -> b a, A1 -> ε, A -> b a A1, A1 -> a a A1}\n",
         cfgwlr.toString());
   }
 
@@ -269,10 +269,10 @@ public class CfgTest {
         cfg, "cfg-topdown", true);
     assertFalse(cfgwlr.hasLeftRecursion());
     assertEquals("G = <N, T, S, P>\n" +
-            "N = {N2, N2:t0, N2:N2}\n" +
+            "N = {N2, N21}\n" +
             "T = {t0}\n" +
             "S = N2\n" +
-            "P = {N2 -> t0 N2:t0, N2:t0 -> ε, N2:t0 -> N2:N2, N2:N2 -> N2 N2:N2, N2:N2 -> N2}\n",
+            "P = {N2 -> t0, N21 -> ε, N21 -> N2 N21, N2 -> t0 N21}\n",
         cfgwlr.toString());
   }
 

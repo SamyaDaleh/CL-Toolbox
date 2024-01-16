@@ -247,7 +247,7 @@ public class Cfg extends AbstractCfg {
    * loops have to be removed first.
    */
   public Cfg getCfgWithoutLeftRecursion() throws ParseException {
-    return LeftRecursion.removeLeftRecursionMoore(this);
+    return LeftRecursion.removeLeftRecursionPaull(this);
   }
 
   /**
