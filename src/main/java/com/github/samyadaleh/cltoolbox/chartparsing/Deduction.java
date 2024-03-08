@@ -94,6 +94,14 @@ public class Deduction {
    * Count how many overall tree updates were triggered.
    */
   private int treeUpdatesAllLevels = 0;
+  /**
+   * Max of how many item trees were added at once.
+   */
+  private int maxAddedTrees = 0;
+  /**
+   * Remembers all tree counts added in the current rule application.
+   */
+  private int currentAddedTrees = 0;
   private static final Logger log = LogManager.getLogger();
 
   /**
@@ -123,10 +131,15 @@ public class Deduction {
     maxAgendaSize = 0;
     treeUpdatesRoot = 0;
     treeUpdatesAllLevels = 0;
+    maxAddedTrees = 0;
     if (schema == null)
       return false;
     for (StaticDeductionRule rule : schema.getAxioms()) {
+      currentAddedTrees = 0;
       applyAxiomRule(rule);
+      if (currentAddedTrees > maxAddedTrees) {
+        maxAddedTrees = currentAddedTrees;
+      }
     }
     while (!agenda.isEmpty()) {
       if (agenda.size() > maxAgendaSize) {
@@ -139,7 +152,11 @@ public class Deduction {
       ChartItemInterface item = agenda.get(0);
       agenda.remove(0);
       for (DynamicDeductionRuleInterface rule : deductionRules) {
+        currentAddedTrees = 0;
         applyRule(rule, item, new ArrayList<>());
+        if (currentAddedTrees > maxAddedTrees) {
+          maxAddedTrees = currentAddedTrees;
+        }
       }
     }
     boolean goalfound = false;
@@ -539,13 +556,14 @@ public class Deduction {
           }
         }
         if (!found) {
+          currentAddedTrees++;
           treesOld.add(tree1);
         }
       }
     }
   }
 
-  private static void mergeTrees(BottomUpChartItem oldItem,
+  private void mergeTrees(BottomUpChartItem oldItem,
       BottomUpChartItem newItem) {
     List<Pair<String, Map<Integer, List<Tree>>>> oldStackState =
         oldItem.getStackState();
@@ -560,7 +578,7 @@ public class Deduction {
     }
   }
 
-  private static void combineMaps(
+  private void combineMaps(
       Map<Integer, List<Tree>> oldTreeMap,
       Map<Integer, List<Tree>> newTreeMap) {
     for (Map.Entry<Integer, List<Tree>> newTreeEntry
@@ -571,11 +589,13 @@ public class Deduction {
         List<Tree> oldTrees = oldTreeMap.get(key);
         for (Tree newTree : newTrees) {
           if (!oldTrees.contains(newTree)) {
+            currentAddedTrees++;
             oldTrees.add(newTree);
           }
         }
       } else {
         oldTreeMap.put(key, newTrees);
+        currentAddedTrees += newTreeMap.size();
       }
     }
   }
@@ -858,23 +878,16 @@ public class Deduction {
     return maxAgendaSize;
   }
 
-  public void setMaxAgendaSize(int maxAgendaSize) {
-    this.maxAgendaSize = maxAgendaSize;
-  }
-
   public int getTreeUpdatesRoot() {
     return treeUpdatesRoot;
-  }
-
-  public void setTreeUpdatesRoot(int treeUpdatesRoot) {
-    this.treeUpdatesRoot = treeUpdatesRoot;
   }
 
   public int getTreeUpdatesAllLevels() {
     return treeUpdatesAllLevels;
   }
 
-  public void setTreeUpdatesAllLevels(int treeUpdatesAllLevels) {
-    this.treeUpdatesAllLevels = treeUpdatesAllLevels;
+  public int getMaxAddedTrees() {
+    return maxAddedTrees;
   }
+
 }
