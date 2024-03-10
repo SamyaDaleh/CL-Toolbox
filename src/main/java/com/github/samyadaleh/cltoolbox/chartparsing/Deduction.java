@@ -323,13 +323,14 @@ public class Deduction {
    * Applies an axiom rule, that is a rule without antecedence items and adds
    * the consequence items to chart and agenda.
    */
-  @SuppressWarnings("serial") private void applyAxiomRule(
+  private void applyAxiomRule(
       StaticDeductionRule rule) {
     for (ChartItemInterface item : rule.consequences) {
       if (chart.contains(item)) {
         continue;
       }
       chart.add(item);
+      currentAddedTrees += item.getTrees().size();
       addToAgenda(item);
       deductedFrom.add(new ArrayList<List<Integer>>() {
         {
@@ -370,7 +371,7 @@ public class Deduction {
     rule.clearItems();
     rule.setAntecedences(antecedences);
     List<ChartItemInterface> newItems = rule.getConsequences();
-    if (newItems.size() > 0) {
+    if (!newItems.isEmpty()) {
       processNewItems(newItems, rule, triggerItems);
     }
   }
@@ -470,6 +471,7 @@ public class Deduction {
           triggerTreeUpdate(oldId, newTriggerItems);
         }
       } else {
+        currentAddedTrees += newItem.getTrees().size();
         chart.add(newItem);
         addToAgenda(newItem);
         appliedRule.add(new ArrayList<>());
@@ -650,7 +652,7 @@ public class Deduction {
    * form.
    */
   private static String rulesToString(List<String> rules) {
-    if (rules.size() == 0)
+    if (rules.isEmpty())
       return "";
     StringBuilder builder = new StringBuilder();
     for (String rule : rules) {
@@ -666,7 +668,7 @@ public class Deduction {
    * human friendly form.
    */
   private static String backpointersToString(List<List<Integer>> backpointers) {
-    if (backpointers.size() == 0)
+    if (backpointers.isEmpty())
       return "";
     StringBuilder builder = new StringBuilder();
     for (List<Integer> pointertuple : backpointers) {
