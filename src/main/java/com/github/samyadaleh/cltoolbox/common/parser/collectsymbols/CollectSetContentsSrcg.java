@@ -39,7 +39,7 @@ public class CollectSetContentsSrcg extends CollectSetContentsNTSP {
     if (category.get(0).equals("V")) {
       switch (tokenString) {
       case "}":
-        srcg.setVariables(symbols.toArray(new String[0]));
+        srcg.setVariables(symbols);
         this.category = new ArrayList<>();
         symbols = new ArrayList<>();
         break;

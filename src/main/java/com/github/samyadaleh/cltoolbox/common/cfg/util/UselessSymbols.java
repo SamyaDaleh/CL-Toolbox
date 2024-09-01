@@ -1,7 +1,6 @@
 package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -12,8 +11,7 @@ public class UselessSymbols {
    * before removing non-reachable symbols. */
   public static Cfg removeNonGeneratingSymbols(Cfg cfgOld) {
     Cfg cfg = new Cfg();
-    ArrayList<String> generating = new ArrayList<>();
-    Collections.addAll(generating, cfgOld.getTerminals());
+    ArrayList<String> generating = new ArrayList<>(cfgOld.getTerminals());
     getGeneratingSymbols(generating, cfgOld);
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
@@ -27,7 +25,7 @@ public class UselessSymbols {
       System.err.println("Input grammar has no generating symbols.");
       return null;
     }
-    cfg.setNonterminals(restNts.toArray(new String[0]));
+    cfg.setNonterminals(restNts);
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       boolean notGeneratingSeen = false;
       for (String symbol : rule.getRhs()) {
@@ -110,8 +108,8 @@ public class UselessSymbols {
         newTerms.add(t);
       }
     }
-    cfg.setNonterminals(newNts.toArray(new String[0]));
-    cfg.setTerminals(newTerms.toArray(new String[0]));
+    cfg.setNonterminals(newNts);
+    cfg.setTerminals(newTerms);
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       if (reachable.contains(rule.getLhs())) {
         cfg.getProductionRules().add(rule);
@@ -124,10 +122,9 @@ public class UselessSymbols {
    * Returns true if grammar has generating nonterminals.
    */
   public static boolean hasGeneratingSymbols(Cfg cfg) {
-    ArrayList<String> generating = new ArrayList<>();
-    Collections.addAll(generating, cfg.getTerminals());
+    ArrayList<String> generating = new ArrayList<>(cfg.getTerminals());
     getGeneratingSymbols(generating, cfg);
-    return cfg.getTerminals().length > 0
-      && generating.size() - cfg.getTerminals().length > 0;
+    return !cfg.getTerminals().isEmpty()
+      && generating.size() - cfg.getTerminals().size() > 0;
   }
 }

@@ -5,7 +5,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class Loops {
   public static Cfg getCfgWithoutLoops(Cfg cfgOld) {
     Cfg cfg = new Cfg();
     List<String> currentNonterminals =
-        new ArrayList<>(Arrays.asList(cfgOld.getNonterminals()));
+        new ArrayList<>(cfgOld.getNonterminals());
     cfg.setTerminals(cfgOld.getTerminals());
     List<CfgProductionRule> workingProductionRules = cfgOld.getProductionRules();
     cfg.setStartSymbol(cfgOld.getStartSymbol());
@@ -69,7 +68,7 @@ public class Loops {
     for (CfgProductionRule rule : workingProductionRules) {
       cfg.getProductionRules().add(rule);
     }
-    cfg.setNonterminals(currentNonterminals.toArray(new String[0]));
+    cfg.setNonterminals(currentNonterminals);
     return cfg;
   }
 

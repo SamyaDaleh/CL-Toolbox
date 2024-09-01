@@ -2,7 +2,6 @@ package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
@@ -44,8 +43,7 @@ public class LeftRecursion {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<>();
-    Collections.addAll(newNts, cfgOld.getNonterminals());
+    ArrayList<String> newNts = new ArrayList<>(cfgOld.getNonterminals());
     for (String nt : cfgOld.getNonterminals()) {
       if (!nonterminalIsLhsOfDirectLeftRecursion(cfgOld, nt)) {
         continue;
@@ -64,7 +62,7 @@ public class LeftRecursion {
       newNts.add(newNt);
       doRemoveDirectLeftRecursion(cfg, nt, newNt, cfgOld);
     }
-    cfg.setNonterminals(newNts.toArray(new String[0]));
+    cfg.setNonterminals(newNts);
     return cfg;
   }
 
@@ -108,16 +106,15 @@ public class LeftRecursion {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<>();
-    Collections.addAll(newNts, cfgOld.getNonterminals());
+    ArrayList<String> newNts = new ArrayList<>(cfgOld.getNonterminals());
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       if (!rule.getLhs().equals(rule.getRhs()[0])
           || rule.getRhs().length != 1) {
             cfg.addProductionRule(rule.toString());
           }
     }
-    for (int i = 0; i < cfgOld.getNonterminals().length; i++) {
-      String nt = cfgOld.getNonterminals()[i];
+    for (int i = 0; i < cfgOld.getNonterminals().size(); i++) {
+      String nt = cfgOld.getNonterminals().get(i);
       if (!nonterminalIsLhsOfLeftRecursion(cfgOld, nt)) {
         continue;
       } else if (!nonterminalIsLhsOfTermination(cfgOld, nt)) {
@@ -145,7 +142,7 @@ public class LeftRecursion {
         removeDirectLeftRecursion(cfg, newNts, nt);
       }
     }
-    cfg.setNonterminals(newNts.toArray(new String[0]));
+    cfg.setNonterminals(newNts);
     return cfg;
   }
 
@@ -166,8 +163,7 @@ public class LeftRecursion {
     Cfg cfg = new Cfg();
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
-    ArrayList<String> newNts = new ArrayList<>();
-    Collections.addAll(newNts, cfgOld.getNonterminals());
+    List<String> newNts = new ArrayList<>(cfgOld.getNonterminals());
     for (CfgProductionRule rule : cfgOld.getProductionRules()) {
       String A = rule.getLhs();
       if (nonterminalIsLhsOfLeftRecursion(cfgOld, A)) {
@@ -181,7 +177,7 @@ public class LeftRecursion {
                   rule2.getRhs(), 1, rule2.getRhs().length);
               String AX = createNewNt(newNts, A, X);
               String AB = createNewNt(newNts, A, lc);
-              if (!"".equals(beta) || !AX.equals(AB)) {
+              if (!beta.isEmpty() || !AX.equals(AB)) {
                 cfg.addProductionRule(AX + " " + ARROW_RIGHT + " " + beta + " " + AB);
               }
             }
@@ -201,11 +197,11 @@ public class LeftRecursion {
         cfg.addProductionRule(rule.toString());
       }
     }
-    cfg.setNonterminals(newNts.toArray(new String[0]));
+    cfg.setNonterminals(newNts);
     return cfg;
   }
 
-  private static String createNewNt(ArrayList<String> newNts, String A, String lc) {
+  private static String createNewNt(List<String> newNts, String A, String lc) {
     String AX = A + DELIMITER + lc;
     if (!newNts.contains(AX)) {
       newNts.add(AX);

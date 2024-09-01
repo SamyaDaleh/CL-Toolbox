@@ -182,7 +182,7 @@ public class CfgToLrKRulesConverter {
     for (int i = 0; i < states.size(); i++) {
       for (String nt : cfg.getNonterminals()) {
         List<String[]> gotoState = computeGotoStates(states.get(i), nt, cfg, k);
-        if (gotoState.size() == 0) {
+        if (gotoState.isEmpty()) {
           continue;
         }
         for (int j = 0; j < states.size(); j++) {
@@ -195,8 +195,9 @@ public class CfgToLrKRulesConverter {
     }
   }
 
-  private static void addReduceActionToParseTable(List<List<String[]>> states,
-      Cfg cfg, int k, Map<String, String> parseTable, int i) {
+  private static void addReduceActionToParseTable(
+          List<List<String[]>> states,
+          Cfg cfg, int k, Map<String, String> parseTable, int i) {
     for (String[] stateEntry : states.get(i)) {
       if (stateEntry[0].endsWith("•")) {
         for (int j = 0; j < cfg.getProductionRules().size(); j++) {
@@ -264,12 +265,8 @@ public class CfgToLrKRulesConverter {
     boolean changed = true;
     while (changed) {
       changed = false;
-      String[] nUT =
-          new String[cfg.getNonterminals().length + cfg.getTerminals().length];
-      System.arraycopy(cfg.getNonterminals(), 0, nUT, 0,
-          cfg.getNonterminals().length);
-      System.arraycopy(cfg.getTerminals(), 0, nUT, cfg.getNonterminals().length,
-          cfg.getTerminals().length);
+      List<String> nUT = new ArrayList<>(cfg.getNonterminals());
+      nUT.addAll(cfg.getTerminals());
       for (String x : nUT) {
         List<List<String[]>> statesCopy = new ArrayList<>(states);
         for (List<String[]> q : statesCopy) {
@@ -288,7 +285,7 @@ public class CfgToLrKRulesConverter {
    */
   private static boolean Union(List<List<String[]>> states,
       List<String[]> gotoStates) {
-    if (gotoStates.size() == 0) {
+    if (gotoStates.isEmpty()) {
       return false;
     }
     for (List<String[]> state : states) {
@@ -433,7 +430,7 @@ public class CfgToLrKRulesConverter {
     System.arraycopy(heritage, 0, ruleRestAndHeritage, ruleRest.length,
         heritage.length);
     firstSetExpansions.add(ruleRestAndHeritage);
-    while (firstSetExpansions.size() > 0) {
+    while (!firstSetExpansions.isEmpty()) {
       String[] underExamination = firstSetExpansions.get(0);
       firstSetExpansions.remove(0);
       boolean ntFound = false;
@@ -443,7 +440,7 @@ public class CfgToLrKRulesConverter {
           for (CfgProductionRule rule : cfg.getProductionRules()) {
             if (rule.getLhs().equals(underExamination[i])) {
               String[] newExpansion;
-              if (rule.getRhs()[0].equals("")) {
+              if (rule.getRhs()[0].isEmpty()) {
                 newExpansion =
                     ArrayUtils.getSequenceWithoutIAsArray(underExamination, i);
               } else {

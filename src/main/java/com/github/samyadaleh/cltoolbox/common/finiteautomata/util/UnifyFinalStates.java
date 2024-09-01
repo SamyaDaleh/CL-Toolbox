@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.common.finiteautomata.util;
 
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.finiteautomata.NondeterministicFiniteAutomaton;
 
 import java.util.*;
@@ -26,14 +25,14 @@ public class UnifyFinalStates {
     nfaNew.setInitialState(nfa.getInitialState());
     int i = 0;
     String newFinalState = "q" + i;
-    while (ArrayUtils.contains(nfa.getStates(), newFinalState)) {
+    while (nfa.getStates().contains(newFinalState)) {
       i++;
       newFinalState = "q" + i;
     }
     nfaNew.setFinalStates(new String[] {newFinalState});
-    List<String> newStates = Arrays.asList(nfa.getStates());
+    List<String> newStates = new ArrayList<>(nfa.getStates());
     newStates.add(newFinalState);
-    nfaNew.setStates(newStates.toArray(new String[0]));
+    nfaNew.setStates(newStates);
     Map<String[], List<String>> newTransitionFunction = new HashMap<>();
     for (Map.Entry<String[], String[]> entry : nfa.getTransitionFunction()
         .entrySet()) {

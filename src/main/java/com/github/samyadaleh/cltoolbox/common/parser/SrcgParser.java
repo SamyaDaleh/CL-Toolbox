@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.common.parser;
 
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
@@ -83,15 +82,14 @@ public class SrcgParser {
 
   private static void checkPredicateFormat(Srcg srcg, Clause clause,
       Predicate pred, List<Exception> errors) {
-    if (!ArrayUtils.contains(srcg.getNonterminals(), pred.getNonterminal())) {
+    if (!srcg.getNonterminals().contains(pred.getNonterminal())) {
       errors.add(new ParseException(
           "Nonterminal " + pred.getNonterminal() + " in clause " + clause
               .toString() + " not declared as nonterminal.", 0));
     }
     for (String symbol : pred.getSymbolsAsPlainArray()) {
-      if (!symbol.equals("") && !ArrayUtils
-          .contains(srcg.getTerminals(), symbol) && !ArrayUtils
-          .contains(srcg.getVariables(), symbol)) {
+      if (!symbol.isEmpty() && !srcg.getTerminals().contains(symbol)
+              && !srcg.getVariables().contains(symbol)) {
         errors.add(new ParseException(
             "Symbol " + symbol + " in clause " + clause.toString()
                 + " is neither declared terminal nor variable.", 0));

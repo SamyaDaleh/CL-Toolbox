@@ -2,11 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.lcfrs.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
@@ -34,10 +30,8 @@ public class Binarization {
     newSrcg.setStartSymbol(oldSrcg.getStartSymbol());
     newSrcg.setTerminals(oldSrcg.getTerminals());
     newSrcg.setVariables(oldSrcg.getVariables());
-    ArrayList<String> newNonterminals = new ArrayList<>();
-    Collections.addAll(newNonterminals, oldSrcg.getNonterminals());
-    newSrcg.setNonterminals(
-        newNonterminals.toArray(new String[0]));
+    ArrayList<String> newNonterminals = new ArrayList<>(oldSrcg.getNonterminals());
+    newSrcg.setNonterminals(newNonterminals);
     for (Clause clause : oldSrcg.getClauses()) {
       if (clause.getRhs().size() <= 2) {
         newSrcg.addClause(clause);
@@ -45,7 +39,7 @@ public class Binarization {
         ArrayList<Clause> r = new ArrayList<>();
         List<Clause> clausesToBeFurtherReduced = new ArrayList<>();
         clausesToBeFurtherReduced.add(clause);
-        while (clausesToBeFurtherReduced.size() > 0) {
+        while (!clausesToBeFurtherReduced.isEmpty()) {
           if (clausesToBeFurtherReduced.get(0).getRhs().size() <= 2) {
             r.add(clausesToBeFurtherReduced.get(0));
             clausesToBeFurtherReduced.remove(0);
@@ -61,8 +55,7 @@ public class Binarization {
           String newNt =
             getNewNonterminal(newSrcg, nonterminaltoDeriveFrom.toString());
           newNonterminals.add(newNt);
-          newSrcg.setNonterminals(
-              newNonterminals.toArray(new String[0]));
+          newSrcg.setNonterminals(newNonterminals);
           Clause clauseCandidate =
             getReducedClause(clausesToBeFurtherReduced.get(0), k, newNt,
                 clausesToBeFurtherReduced.get(0).getLhs(), oldSrcg);
@@ -105,8 +98,9 @@ public class Binarization {
     return newNt;
   }
 
-  private static Integer[] getBestCharacteristicStringPos(String[] variables,
-    Clause clause) {
+  private static Integer[] getBestCharacteristicStringPos(
+          List<String> variables,
+          Clause clause) {
     Integer[] posBest = new Integer[] {0};
     int bestArityAndVars = Integer.MAX_VALUE;
     for (int i = 0; i < clause.getRhs().size(); i++) {
@@ -138,13 +132,13 @@ public class Binarization {
     return posBest;
   }
 
-  private static int getArityOfCharacteristicString(String[] variables,
+  private static int getArityOfCharacteristicString(
+          List<String> variables,
     String characteristicString) {
     int arity = 0;
     boolean prevVar = false;
-    Set<String> variablesSet = new HashSet<>(Arrays.asList(variables));
     for (String token : characteristicString.split(" ")) {
-      if (variablesSet.contains(token)) {
+      if (variables.contains(token)) {
         if (!prevVar) {
           prevVar = true;
           arity++;

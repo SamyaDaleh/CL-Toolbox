@@ -23,12 +23,12 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_LC
 public class SrcgEarleySuspend
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
-  private final String[] variables;
+  private final List<String> variables;
 
   /**
    * Remember variables to check if symbols are one of them.
    */
-  public SrcgEarleySuspend(String[] variables) {
+  public SrcgEarleySuspend(List<String> variables) {
     this.variables = variables;
     this.name = DEDUCTION_RULE_LCFRS_EARLEY_SUSPEND;
     this.antNeeded = 2;

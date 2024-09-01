@@ -1,7 +1,6 @@
 package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
@@ -29,7 +28,7 @@ public class EmptyProductions {
    */
   public static boolean isEmptyProductionRule(
       Cfg cfg, CfgProductionRule rule) {
-    if (!rule.getRhs()[0].equals("")) {
+    if (!rule.getRhs()[0].isEmpty()) {
       return false;
     }
     String nt = rule.getLhs();
@@ -62,8 +61,7 @@ public class EmptyProductions {
     cfg.setTerminals(cfgOld.getTerminals());
     cfg.setStartSymbol(cfgOld.getStartSymbol());
 
-    ArrayList<String> newNt = new ArrayList<>();
-    Collections.addAll(newNt, cfgOld.getNonterminals());
+    ArrayList<String> newNt = new ArrayList<>(cfgOld.getNonterminals());
     cfg.getProductionRules().addAll(cfgOld.getProductionRules());
     List<String> eliminateable = getEliminateable(cfgOld);
     doEliminateEmptyProductions(cfg, newNt, eliminateable, cfgOld);
@@ -73,7 +71,7 @@ public class EmptyProductions {
       }
     }
 
-    cfg.setNonterminals(newNt.toArray(new String[0]));
+    cfg.setNonterminals(newNt);
     return cfg;
   }
 

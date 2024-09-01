@@ -2,7 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.tag.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.tag.Tag;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -26,8 +26,8 @@ public class Binarization {
     Tag newTag = new Tag();
     newTag.setStartSymbol(oldTag.getStartSymbol());
     newTag.setTerminals(oldTag.getTerminals());
-    ArrayList<String> newNonterminals =
-        new ArrayList<>(Arrays.asList(oldTag.getNonterminals()));
+    List<String> newNonterminals =
+        new ArrayList<>(oldTag.getNonterminals());
     for (String treeName : oldTag.getInitialTreeNames()) {
       Tree tree = oldTag.getInitialTree(treeName);
       if (tree.isBinarized()) {
@@ -62,8 +62,7 @@ public class Binarization {
           tree.getBinarizedTree(newNonterminals).toString());
       }
     }
-    newTag.setNonterminals(
-      newNonterminals.toArray(new String[0]));
+    newTag.setNonterminals(new ArrayList<>());
     return newTag;
   }
 }

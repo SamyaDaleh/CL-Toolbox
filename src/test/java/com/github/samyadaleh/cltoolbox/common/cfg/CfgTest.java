@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.text.ParseException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -289,8 +290,8 @@ public class CfgTest {
 
   private static Cfg nonReachableSymbolsCfg() {
     Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a"});
-    cfg.setNonterminals(new String[] {"S", "G"});
+    cfg.setTerminals(Arrays.asList("a"));
+    cfg.setNonterminals(Arrays.asList("S", "G"));
     cfg.setStartSymbol("S");
     try {
       cfg.addProductionRule("S -> a");
@@ -311,8 +312,8 @@ public class CfgTest {
 
   private static Cfg nonGeneratingSymbolsCfg() {
     Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a"});
-    cfg.setNonterminals(new String[] {"S", "G"});
+    cfg.setTerminals(Arrays.asList("a"));
+    cfg.setNonterminals(Arrays.asList("S", "G"));
     cfg.setStartSymbol("S");
     try {
       cfg.addProductionRule("S -> a");

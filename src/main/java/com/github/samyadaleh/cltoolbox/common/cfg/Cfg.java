@@ -135,7 +135,7 @@ public class Cfg extends AbstractCfg {
   }
 
   public boolean isInGreibachNormalForm(CfgProductionRule rule) {
-    if (rule.getRhs()[0].equals("")) {
+    if (rule.getRhs()[0].isEmpty()) {
       return !rule.getLhs().equals(this.getStartSymbol())
           || !nonterminalOccursInAnyRhs(this, this.getStartSymbol());
     }
@@ -297,11 +297,11 @@ public class Cfg extends AbstractCfg {
       log.debug("Should never happen", e);
     }
     Set<String> setTerminals =
-        new LinkedHashSet<>(Arrays.asList(this.getTerminals()));
-    cfg.setTerminals(setTerminals.toArray(new String[0]));
+        new LinkedHashSet<>(this.getTerminals());
+    cfg.setTerminals(new ArrayList<>(setTerminals));
     Set<String> setNonterminals =
-        new LinkedHashSet<>(Arrays.asList(this.getNonterminals()));
-    cfg.setNonterminals(setNonterminals.toArray(new String[0]));
+        new LinkedHashSet<>(this.getNonterminals());
+    cfg.setNonterminals(new ArrayList<>(setNonterminals));
     return cfg;
   }
 

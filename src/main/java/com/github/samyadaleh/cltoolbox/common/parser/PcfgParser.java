@@ -1,6 +1,5 @@
 package com.github.samyadaleh.cltoolbox.common.parser;
 
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Pcfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.PcfgProductionRule;
 
@@ -53,15 +52,16 @@ public class PcfgParser {
       }
     }
     for (PcfgProductionRule rule : pcfg.getProductionRules()) {
-      if (!ArrayUtils.contains(pcfg.getNonterminals(), rule.getLhs())) {
+      if (!pcfg.getNonterminals().contains(rule.getLhs())) {
         errors.add(new ParseException(
-            "LHS " + rule.getLhs() + " in rule " + rule.toString()
+            "LHS " + rule.getLhs() + " in rule " + rule
                 + " not declared as nonterminal.", 0));
       }
       for (String rhsSym : rule.getRhs()) {
-        if (!ArrayUtils.contains(pcfg.getTerminals(), rhsSym) && !ArrayUtils
-            .contains(pcfg.getNonterminals(), rhsSym) && !rhsSym.equals("")) {
-          errors.add(new ParseException(rhsSym + " in rule " + rule.toString()
+        if (!pcfg.getTerminals().contains(rhsSym)
+                && !pcfg.getNonterminals().contains(rhsSym)
+                && !rhsSym.isEmpty()) {
+          errors.add(new ParseException(rhsSym + " in rule " + rule
               + " is neither declared as terminal nor as nonterminal.", 0));
         }
       }

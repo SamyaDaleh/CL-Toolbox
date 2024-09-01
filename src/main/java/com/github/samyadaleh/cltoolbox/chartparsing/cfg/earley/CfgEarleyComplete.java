@@ -20,9 +20,9 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
 public class CfgEarleyComplete
     extends AbstractDynamicDecutionRuleTwoAntecedences {
 
-  private final String[] nonterminals;
+  private final List<String> nonterminals;
 
-  public CfgEarleyComplete(String[] nonterminals) {
+  public CfgEarleyComplete(List<String> nonterminals) {
     this.name = DEDUCTION_RULE_CFG_EARLEY_COMPLETE;
     this.antNeeded = 2;
     this.nonterminals = nonterminals;

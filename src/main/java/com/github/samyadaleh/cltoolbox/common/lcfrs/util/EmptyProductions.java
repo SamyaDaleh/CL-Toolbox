@@ -2,6 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.lcfrs.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class EmptyProductions {
   public static boolean hasEpsilonProductions(Srcg srcg) {
     for (Clause clause : srcg.getClauses()) {
       for (String[] argument : clause.getLhs().getSymbols()) {
-        if (!argument[0].equals("")) {
+        if (!argument[0].isEmpty()) {
           continue;
         }
         if (clause.getLhs().getNonterminal().equals(srcg.getStartSymbol())) {
@@ -83,7 +84,7 @@ public class EmptyProductions {
         newSrcg.addClause(newClause);
       }
     }
-    newSrcg.setNonterminals(newNts.toArray(new String[0]));
+    newSrcg.setNonterminals(newNts);
     return newSrcg;
   }
 
@@ -115,8 +116,8 @@ public class EmptyProductions {
         } else {
           createVariableIfNoneExists(newSrcg);
           newSrcg.addClause(
-              newS + "(" + newSrcg.getVariables()[0] + ") -> " + oldSrcg
-                  .getStartSymbol() + "^1" + "(" + newSrcg.getVariables()[0]
+              newS + "(" + newSrcg.getVariables().get(0) + ") -> " + oldSrcg
+                  .getStartSymbol() + "^1" + "(" + newSrcg.getVariables().get(0)
                   + ")");
         }
       }
@@ -124,14 +125,14 @@ public class EmptyProductions {
   }
 
   private static void createVariableIfNoneExists(Srcg newSrcg) {
-    if (newSrcg.getVariables().length == 0) {
+    if (newSrcg.getVariables().isEmpty()) {
       int i = 1;
       String newV = "Z" + i;
       while (newSrcg.terminalsContain(newV)) {
         i++;
         newV = "Z" + i;
       }
-      newSrcg.setVariables(new String[] {newV});
+      newSrcg.setVariables(new ArrayList<>(Arrays.asList(newV)));
     }
   }
 
@@ -224,7 +225,7 @@ public class EmptyProductions {
   private static String getJotaForPredicate(Predicate oldLhs) {
     StringBuilder jotaLhs = new StringBuilder();
     for (int i = 0; i < oldLhs.getDim(); i++) {
-      if (oldLhs.getArgumentByIndex(i + 1)[0].equals("")) {
+      if (oldLhs.getArgumentByIndex(i + 1)[0].isEmpty()) {
         jotaLhs.append('0');
       } else {
         jotaLhs.append('1');
@@ -240,7 +241,6 @@ public class EmptyProductions {
    * 3, C has 0. Returns 6 lists considering all combinations which contain an
    * empty placeholder for C.
    */
-  @SuppressWarnings({"serial"})
   private static List<List<String[]>> getCombinationsForRhs(
       List<String[]> epsilonCandidates, Clause clause) {
     List<List<String[]>> combinations = new ArrayList<>();
@@ -302,7 +302,7 @@ public class EmptyProductions {
     while (changed) {
       changed = false;
       for (Clause clause : srcg.getClauses()) {
-        if (clause.getRhs().size() == 0) {
+        if (clause.getRhs().isEmpty()) {
           continue;
         }
         for (int i = 0; i < epsilonCandidates.size(); i++) {
@@ -362,7 +362,7 @@ public class EmptyProductions {
     }
     StringBuilder jota = new StringBuilder();
     for (String aLhsVector : lhsVector) {
-      if (aLhsVector.equals("")) {
+      if (aLhsVector.isEmpty()) {
         jota.append('0');
       } else {
         jota.append('1');

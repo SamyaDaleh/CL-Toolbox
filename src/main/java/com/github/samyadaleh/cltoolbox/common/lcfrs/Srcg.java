@@ -23,7 +23,7 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
  * Representation of a sRCG - simple Range Concatenation Grammar.
  */
 public class Srcg extends AbstractNTSGrammar {
-  private String[] variables;
+  private List<String> variables;
   private final List<Clause> clauses = new ArrayList<>();
 
   /**
@@ -40,7 +40,7 @@ public class Srcg extends AbstractNTSGrammar {
       int i = 0;
       lhs.append(rule.getLhs()).append("(");
       for (String rhsSym : rule.getRhs()) {
-        if (rhsSym.length() > 0) {
+        if (!rhsSym.isEmpty()) {
           if (cfg.terminalsContain(rhsSym)) {
             lhs.append(" ").append(rhsSym);
           } else {
@@ -64,14 +64,14 @@ public class Srcg extends AbstractNTSGrammar {
       lhs.append(")");
       this.addClause(lhs.toString(), rhs.toString());
     }
-    this.variables = newVariables.toArray(new String[0]);
+    this.variables = newVariables;
   }
 
   /**
    * Converts a TAG to a sRCG. With auxiliary trees dimension will be 2, else 1.
    */
   public Srcg(Tag tag) {
-    this.setNonterminals(tag.getTreeNames().toArray(new String[0]));
+    this.setNonterminals(new ArrayList<>(tag.getTreeNames()));
     this.setTerminals(tag.getTerminals());
     List<String> newVariables = new ArrayList<>();
     addStartSymbolAndMayGenerateStartClauses(tag, newVariables);
@@ -131,14 +131,14 @@ public class Srcg extends AbstractNTSGrammar {
         }
       }
     }
-    this.setVariables(newVariables.toArray(new String[0]));
+    this.setVariables(newVariables);
   }
 
   private int handleSecondHalfOfAdjunctionNode(Tag tag,
       List<String> newVariables, List<StringBuilder> clauseStrings,
       List<StringBuilder> rhsStrings, int i, List<Vertex> adjunctionVertexStack,
       List<List<StringBuilder>> adjunctionPredicateStack, Vertex v, Tree tree) {
-    if (adjunctionVertexStack.size() > 0 && (v == null || !v.getGornAddress()
+    if (!adjunctionVertexStack.isEmpty() && (v == null || !v.getGornAddress()
         .startsWith(adjunctionVertexStack.get(adjunctionVertexStack.size() - 1)
             .getGornAddress()) || !tree.getVertexes().contains(v))) {
       String var = null;
@@ -230,7 +230,7 @@ public class Srcg extends AbstractNTSGrammar {
     new InnerSrcgGrammarParser(this, in).invoke();
   }
 
-  public void setVariables(String[] variables) {
+  public void setVariables(List<String> variables) {
     this.variables = variables;
   }
 
@@ -276,7 +276,7 @@ public class Srcg extends AbstractNTSGrammar {
     return this.clauses;
   }
 
-  public String[] getVariables() {
+  public List<String> getVariables() {
     return this.variables;
   }
 
@@ -391,7 +391,7 @@ public class Srcg extends AbstractNTSGrammar {
             }
           }
         }
-        if (newClauseStrings.size() > 0) {
+        if (!newClauseStrings.isEmpty()) {
           clauseStrings = newClauseStrings;
           rhsStrings = newRhsStrings;
         }

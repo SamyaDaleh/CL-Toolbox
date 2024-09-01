@@ -10,8 +10,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
-
 public class TagParser {
 
   /**
@@ -87,15 +85,16 @@ public class TagParser {
       Tag tag, String treeName, List<Exception> errors) {
     Tree tree = tag.getTree(treeName);
     for (Vertex v : tree.getVertexes()) {
-      if (!v.getLabel().equals("") && !contains(tag.getNonterminals(),
-          v.getLabel()) && !contains(tag.getTerminals(), v.getLabel())) {
+      if (!v.getLabel().isEmpty()
+              && !tag.getNonterminals().contains(v.getLabel())
+              && !tag.getTerminals().contains(v.getLabel())) {
         errors.add(new ParseException(
             "Label of vertex " + v.getLabel() + " of tree " + treeName
                 + " is neither declared nonterminal nor terminal "
                 + "and is not epsilon.", 0));
       }
       if (tree.getNodeByGornAddress(v.getGornAddress() + ".1") != null
-          && contains(tag.getTerminals(), v.getLabel())) {
+          && tag.getTerminals().contains(v.getLabel())) {
         errors.add(new ParseException(
             "Node with gorn address " + v.getGornAddress() + " in tree "
                 + treeName

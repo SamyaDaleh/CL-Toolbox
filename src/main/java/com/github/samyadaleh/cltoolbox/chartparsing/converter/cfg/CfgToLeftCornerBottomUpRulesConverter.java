@@ -24,7 +24,7 @@ public class CfgToLeftCornerBottomUpRulesConverter {
   public static ParsingSchema cfgToLeftCornerBottomUpRules(Cfg cfg, String w)
       throws ParseException {
     String[] wSplit = w.split(" ");
-    int wLength = "".equals(w) ? 0 : wSplit.length;
+    int wLength = w.isEmpty() ? 0 : wSplit.length;
     ParsingSchema schema = new ParsingSchema();
     for (CfgProductionRule rule : cfg.getProductionRules()) {
       if (rule.getRhs().length == 0) {
@@ -73,7 +73,7 @@ public class CfgToLeftCornerBottomUpRulesConverter {
       schema.addRule(new CfgEarleyScan(wSplit));
       schema.addRule(new CfgEarleyComplete(cfg.getNonterminals()));
       if (rule.getLhs().equals(cfg.getStartSymbol())) {
-        if (rule.getRhs()[0].equals("")) {
+        if (rule.getRhs()[0].isEmpty()) {
           schema.addGoal(
               new DeductionChartItem(cfg.getStartSymbol() + " -> •", "0",
                   String.valueOf(wLength)));

@@ -55,7 +55,7 @@ public class TreeUtils {
   }
 
   public static Tree getTreeOfSrcgClause(Clause clause) {
-    if (clause.getRhs().size() == 0) {
+    if (clause.getRhs().isEmpty()) {
       try {
         return new Tree(new CfgProductionRule(
             clause.getLhs().getNonterminal() + " " + ARROW_RIGHT + " " + ArrayUtils
@@ -146,8 +146,10 @@ public class TreeUtils {
    * - the subtrees in tree2 das correspond to the substitution nodes from
    * tree1 starting from the second one contain only epsilon leaves.
    */
-  public static boolean addsNothing(Tree tree1, Tree tree2,
-      String[] nonterminals) {
+  public static boolean addsNothing(
+          Tree tree1,
+          Tree tree2,
+          List<String> nonterminals) {
     List<Tree> substitutionTrees =
         getSubstitutionSubtrees(tree1, tree2, nonterminals);
     if (substitutionTrees.size() < 2) {
@@ -161,22 +163,24 @@ public class TreeUtils {
     return true;
   }
 
-  private static List<Tree> getSubstitutionSubtrees(Tree tree1, Tree tree2,
-      String[] nonterminals) {
+  private static List<Tree> getSubstitutionSubtrees(
+          Tree tree1,
+          Tree tree2,
+          List<String> nonterminals) {
     return getSubstitutionSubtrees(tree1, tree2, tree2.getRoot(), nonterminals);
   }
 
   private static List<Tree> getSubstitutionSubtrees(Tree tree1, Tree tree2,
-      Vertex node2, String[] nonterminals) {
+      Vertex node2, List<String> nonterminals) {
     List<Tree> subTrees =
         collectSubTrees(tree1, tree1.getRoot(), tree2, node2, nonterminals);
-    if (subTrees.size() > 0) {
+    if (!subTrees.isEmpty()) {
       return subTrees;
     }
     for (Vertex child2 : tree2.getChildren(node2)) {
       subTrees =
           collectSubTrees(tree1, tree1.getRoot(), tree2, child2, nonterminals);
-      if (subTrees.size() > 0) {
+      if (!subTrees.isEmpty()) {
         return subTrees;
       }
     }
@@ -184,7 +188,7 @@ public class TreeUtils {
   }
 
   private static List<Tree> collectSubTrees(Tree tree1, Vertex node1,
-      Tree tree2, Vertex node2, String[] nonterminals) {
+      Tree tree2, Vertex node2, List<String> nonterminals) {
     List<Tree> subtrees = new ArrayList<>();
     // if they have different labels, return nothing.
     if (!node1.getLabel().equals(node2.getLabel())) {
@@ -192,14 +196,14 @@ public class TreeUtils {
     }
     // if they have different amounts of children but node1 has more than 0
     // child (no substitution node) return nothing.
-    if (tree1.getChildren(node1).size() > 0
+    if (!tree1.getChildren(node1).isEmpty()
         && tree1.getChildren(node1).size() != tree2.getChildren(node2).size()) {
       return subtrees;
     }
     // if vortex1 is a substitution node with the same label of node2, collext
     // subtree in tree2 starting from here and return it.
-    if (tree1.getChildren(node1).size() == 0 && ArrayUtils
-        .contains(nonterminals, node1.getLabel())) {
+    if (tree1.getChildren(node1).isEmpty()
+            && nonterminals.contains(node1.getLabel())) {
       try {
         subtrees.add(new Tree(collectSubtreeAsString(tree2, node2)));
       } catch (ParseException e) {
@@ -210,7 +214,7 @@ public class TreeUtils {
     // if they have the same amount of childen more than 0, call this
     // recursively for every chiid and collect all subtrees.
     if (tree1.getChildren(node1).size() == tree2.getChildren(node2).size()
-        && tree1.getChildren(node1).size() > 0) {
+        && !tree1.getChildren(node1).isEmpty()) {
 
       for (int i = 0; i < tree1.getChildren(node1).size(); i++) {
         Vertex child1 = tree1.getChildren(node1).get(i);
@@ -224,7 +228,7 @@ public class TreeUtils {
 
   private static String collectSubtreeAsString(Tree tree2, Vertex node2) {
     StringBuilder newTree = new StringBuilder("(");
-    if (node2.getLabel().equals("")) {
+    if (node2.getLabel().isEmpty()) {
       newTree.append(EPSILON);
     } else {
       newTree.append(node2.getLabel());

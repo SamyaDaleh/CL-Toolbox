@@ -41,7 +41,7 @@ public abstract class CollectSetContentsNTS {
     case "N":
       switch (tokenString) {
       case "}":
-        acfg.setNonterminals(symbols.toArray(new String[0]));
+        acfg.setNonterminals(new ArrayList<>(symbols));
         category = new ArrayList<>();
         symbols = new ArrayList<>();
         break;
@@ -54,7 +54,7 @@ public abstract class CollectSetContentsNTS {
     case "T":
       switch (tokenString) {
       case "}":
-        acfg.setTerminals(symbols.toArray(new String[0]));
+        acfg.setTerminals(new ArrayList<>(symbols));
         category = new ArrayList<>();
         symbols = new ArrayList<>();
         break;

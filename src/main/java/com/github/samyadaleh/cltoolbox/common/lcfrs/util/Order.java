@@ -2,7 +2,7 @@ package com.github.samyadaleh.cltoolbox.common.lcfrs.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
@@ -83,7 +83,7 @@ public class Order {
     for (Clause clause : oldSrcg.getClauses()) {
       newSrcg.addClause(getClauseWithPositionVectors(clause, newNonterminals));
     }
-    newSrcg.setNonterminals(newNonterminals.toArray(new String[0]));
+    newSrcg.setNonterminals(newNonterminals);
     boolean change = true;
     while (change) {
       change = false;
@@ -119,10 +119,9 @@ public class Order {
           if (newSrcg.nonterminalsContain(newNt.toString())) {
             continue;
           }
-          ArrayList<String> newNts = new ArrayList<>();
-          Collections.addAll(newNts, newSrcg.getNonterminals());
+          List<String> newNts = new ArrayList<>(newSrcg.getNonterminals());
           newNts.add(newNtString);
-          newSrcg.setNonterminals(newNts.toArray(new String[0]));
+          newSrcg.setNonterminals(newNts);
           replaceUnorderedPredicateInAllLhs(newSrcg, oldNt, orderVector,
               newNtString);
         }

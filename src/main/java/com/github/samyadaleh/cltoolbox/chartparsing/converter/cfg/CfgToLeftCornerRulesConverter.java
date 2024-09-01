@@ -18,7 +18,7 @@ public class CfgToLeftCornerRulesConverter {
 
   /**
    * Converts a cfg to a parsing scheme for LeftCorner parsing. Based on
-   * https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf at the moment
+   * <a href="https://user.phil.hhu.de/~kallmeyer/Parsing/left-corner.pdf">Left Corner Deduction</a> at the moment
    * to be used.
    */
   public static ParsingSchema cfgToLeftCornerRules(Cfg cfg, String w)

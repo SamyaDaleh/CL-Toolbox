@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -18,8 +19,8 @@ public class PcfgTest {
   }
   @Test public void testCreatePcfgFromCfg() throws ParseException {
     Cfg cfg = new Cfg();
-    cfg.setTerminals(new String[] {"a", "b", "c", "d"});
-    cfg.setNonterminals(new String[] {"S"});
+    cfg.setTerminals(Arrays.asList("a", "b", "c", "d"));
+    cfg.setNonterminals(Arrays.asList("S"));
     cfg.addProductionRule("S -> S");
     cfg.addProductionRule("S -> S a");
     cfg.addProductionRule("S -> S b");

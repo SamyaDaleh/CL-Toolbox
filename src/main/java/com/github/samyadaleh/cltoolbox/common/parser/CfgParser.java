@@ -9,8 +9,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.samyadaleh.cltoolbox.common.ArrayUtils.contains;
-
 public class CfgParser {
 
   /**
@@ -54,15 +52,16 @@ public class CfgParser {
       }
     }
     for (CfgProductionRule rule : cfg.getProductionRules()) {
-      if (!contains(cfg.getNonterminals(), rule.getLhs())) {
+      if (!cfg.getNonterminals().contains(rule.getLhs())) {
         errors.add(new ParseException(
-            "LHS " + rule.getLhs() + " in rule " + rule.toString()
+            "LHS " + rule.getLhs() + " in rule " + rule
                 + " not declared as nonterminal.", 0));
       }
       for (String rhsSym : rule.getRhs()) {
-        if (!contains(cfg.getTerminals(), rhsSym) && !contains(
-            cfg.getNonterminals(), rhsSym) && !rhsSym.equals("")) {
-          errors.add(new ParseException(rhsSym + " in rule " + rule.toString()
+        if (!cfg.getTerminals().contains(rhsSym)
+                && !cfg.getNonterminals().contains(rhsSym)
+                && !rhsSym.isEmpty()) {
+          errors.add(new ParseException(rhsSym + " in rule " + rule
               + " is neither declared as terminal nor as nonterminal.", 0));
         }
       }

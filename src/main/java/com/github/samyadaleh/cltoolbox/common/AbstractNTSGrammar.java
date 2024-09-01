@@ -1,15 +1,17 @@
 package com.github.samyadaleh.cltoolbox.common;
 
-public class AbstractNTSGrammar {
-  private String[] nonterminals;
-  private String startSymbol;
-  private String[] terminals;
+import java.util.List;
 
-  public String[] getNonterminals() {
+public class AbstractNTSGrammar {
+  private List<String> nonterminals;
+  private String startSymbol;
+  private List<String> terminals;
+
+  public List<String> getNonterminals() {
     return nonterminals;
   }
 
-  public void setNonterminals(String[] nonterminals) {
+  public void setNonterminals(List<String> nonterminals) {
     this.nonterminals = nonterminals;
   }
 
@@ -21,11 +23,11 @@ public class AbstractNTSGrammar {
     this.startSymbol = startSymbol;
   }
 
-  public String[] getTerminals() {
+  public List<String> getTerminals() {
     return terminals;
   }
 
-  public void setTerminals(String[] terminals) {
+  public void setTerminals(List<String> terminals) {
     this.terminals = terminals;
   }
 

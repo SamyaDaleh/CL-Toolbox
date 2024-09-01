@@ -29,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -112,8 +113,8 @@ public class DeductionTest {
     String w = "t0 t1";
     Cfg cfg = new Cfg();
     cfg.setStartSymbol("N0");
-    cfg.setTerminals(new String[] {"t0", "t1", "t2"});
-    cfg.setNonterminals(new String[] {"N0"});
+    cfg.setTerminals(Arrays.asList("t0", "t1", "t2"));
+    cfg.setNonterminals(Arrays.asList("N0"));
     try {
       cfg.addProductionRule("N0 -> ε");
       cfg.addProductionRule("N0 -> t0 t1");
@@ -332,8 +333,8 @@ public class DeductionTest {
   @Test public void testCfgEarleyEpsilon() throws ParseException {
     String w = "t0 t1";
     Cfg cfg = new Cfg();
-    cfg.setNonterminals(new String[] {"N0"});
-    cfg.setTerminals(new String[] {"t0", "t1"});
+    cfg.setNonterminals(Arrays.asList("N0"));
+    cfg.setTerminals(Arrays.asList("t0", "t1"));
     cfg.setStartSymbol("N0");
     cfg.addProductionRule("N0 -> N0 N0");
     cfg.addProductionRule("N0 -> ε");

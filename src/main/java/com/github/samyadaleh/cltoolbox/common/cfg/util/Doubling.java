@@ -6,7 +6,6 @@ import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.github.samyadaleh.cltoolbox.common.Constants.ARROW_RIGHT;
@@ -31,7 +30,7 @@ public class Doubling {
     List<CfgProductionRule> newRules =
         new ArrayList<>(cfg.getProductionRules());
     List<String> newNonterminals =
-        new ArrayList<>(Arrays.asList(cfg.getNonterminals()));
+        new ArrayList<>(cfg.getNonterminals());
 
     for (int i = 0; i < newRules.size(); i++) {
       CfgProductionRule rule = newRules.get(i);
@@ -43,7 +42,7 @@ public class Doubling {
     for (CfgProductionRule rule : newRules) {
       cfgNew.addProductionRule(rule.toString());
     }
-    cfgNew.setNonterminals(newNonterminals.toArray(new String[0]));
+    cfgNew.setNonterminals(newNonterminals);
     return cfgNew;
   }
 

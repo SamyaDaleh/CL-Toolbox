@@ -3,7 +3,6 @@ package com.github.samyadaleh.cltoolbox.common.lcfrs.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Clause;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Predicate;
 import com.github.samyadaleh.cltoolbox.common.lcfrs.Srcg;
@@ -19,7 +18,7 @@ public class UselessRules {
     List<String> terminatingSymbols = new ArrayList<>();
     for (Clause clause : srcg.getClauses()) {
       String nt = clause.getLhs().getNonterminal();
-      if (clause.getRhs().size() == 0 && !terminatingSymbols.contains(nt)) {
+      if (clause.getRhs().isEmpty() && !terminatingSymbols.contains(nt)) {
         terminatingSymbols.add(nt);
       }
     }
@@ -132,7 +131,7 @@ public class UselessRules {
           continue;
         }
         if (!usedVariables.contains(symbol)) {
-          if (ArrayUtils.contains(srcg.getVariables(), symbol)) {
+          if (srcg.getVariables().contains(symbol)) {
             usedVariables.add(symbol);
           } else {
             if (!usedTerminals.contains(symbol)) {
@@ -148,12 +147,9 @@ public class UselessRules {
         nonterminals.add(nt);
       }
     }
-    String[] ntArray = nonterminals.toArray(new String[0]);
-    newSrcg.setNonterminals(ntArray);
-    String[] varArray = usedVariables.toArray(new String[0]);
-    newSrcg.setVariables(varArray);
-    String[] terArray = usedTerminals.toArray(new String[0]);
-    newSrcg.setTerminals(terArray);
+    newSrcg.setNonterminals(nonterminals);
+    newSrcg.setVariables(usedVariables);
+    newSrcg.setTerminals(usedTerminals);
     return newSrcg;
   }
 

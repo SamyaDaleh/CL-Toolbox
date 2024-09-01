@@ -30,21 +30,21 @@ public class Factoring {
           new ArrayList<>(newProductionRulesSet);
       cfgNew.setTerminals(cfgOld.getTerminals());
       List<String> newNonterminals =
-          new ArrayList<>(Arrays.asList(cfgOld.getNonterminals()));
+          new ArrayList<>(cfgOld.getNonterminals());
       for (String lhs : cfgOld.getNonterminals()) {
         boolean changed = true;
         while (changed) {
           changed = false;
           String longestPrefix =
               findLongestCommonPrefix(lhs, newProductionRules);
-          if (longestPrefix.length() > 0) {
+          if (!longestPrefix.isEmpty()) {
             changed = true;
             replacePrefix(lhs, newProductionRules, newNonterminals,
                 longestPrefix);
           }
         }
       }
-      cfgNew.setNonterminals(newNonterminals.toArray(new String[0]));
+      cfgNew.setNonterminals(newNonterminals);
       for (CfgProductionRule rule : newProductionRules) {
         cfgNew.addProductionRule(rule.toString());
       }

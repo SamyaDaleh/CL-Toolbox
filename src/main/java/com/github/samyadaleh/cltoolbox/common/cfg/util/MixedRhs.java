@@ -1,7 +1,6 @@
 package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
@@ -38,10 +37,9 @@ public class MixedRhs {
     cfg.setStartSymbol(cfgOld.getStartSymbol());
     cfg.setTerminals(cfgOld.getTerminals());
     ArrayList<String[]> newTRules = new ArrayList<>();
-    ArrayList<String> newNt = new ArrayList<>();
-    Collections.addAll(newNt, cfgOld.getNonterminals());
+    ArrayList<String> newNt = new ArrayList<>(cfgOld.getNonterminals());
     doReplaceTerminals(cfg, newTRules, newNt, cfgOld);
-    cfg.setNonterminals(newNt.toArray(new String[0]));
+    cfg.setNonterminals(newNt);
     return cfg;
   }
 

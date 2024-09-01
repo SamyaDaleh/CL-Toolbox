@@ -15,9 +15,9 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.DEDUCTION_RULE_CF
  */
 public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
 
-  private final String[] nonterminals;
+  private final List<String> nonterminals;
 
-  public CfgLeftCornerMove(String[] nonterminals) {
+  public CfgLeftCornerMove(List<String> nonterminals) {
     this.nonterminals = nonterminals;
     this.name = DEDUCTION_RULE_CFG_LEFTCORNER_MOVE;
     this.antNeeded = 1;
@@ -36,7 +36,7 @@ public class CfgLeftCornerMove extends AbstractDynamicDeductionRule {
         for (String nt : nonterminals) {
           if (stackLhsSplit[0].equals(nt)) {
             String newCompl;
-            if (stackCompl.length() == 0) {
+            if (stackCompl.isEmpty()) {
               newCompl = nt;
             } else {
               newCompl = nt + " " + stackCompl;

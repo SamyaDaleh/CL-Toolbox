@@ -1,7 +1,6 @@
 package com.github.samyadaleh.cltoolbox.common.cfg.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
@@ -14,11 +13,10 @@ public class Binarization {
     Cfg newCfg = new Cfg();
     newCfg.setTerminals(cfg.getTerminals());
     newCfg.setStartSymbol(cfg.getStartSymbol());
-    ArrayList<String> newNt = new ArrayList<>();
-    Collections.addAll(newNt, cfg.getNonterminals());
+    ArrayList<String> newNt = new ArrayList<>(cfg.getNonterminals());
     ArrayList<String[]> newP = new ArrayList<>();
     doBinarize(newNt, newP, cfg);
-    newCfg.setNonterminals(newNt.toArray(new String[0]));
+    newCfg.setNonterminals(newNt);
     for (String[] newRule : newP) {
       newCfg.getProductionRules()
         .add(new CfgProductionRule(newRule[0], newRule[1].split(" ")));

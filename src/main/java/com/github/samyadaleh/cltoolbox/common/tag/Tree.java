@@ -49,7 +49,7 @@ public class Tree {
         break;
       }
       case ")":
-        if (vertexPath.size() == 0) {
+        if (vertexPath.isEmpty()) {
           throw new ParseException(
               "Closing bracket encountered when no nodes in tree were found.",
               0);
@@ -176,7 +176,7 @@ public class Tree {
       return stringRepresentation;
     }
     stringRepresentation = "("
-        + (this.root.getLabel().equals("") ? EPSILON : this.root.getLabel())
+        + (this.root.getLabel().isEmpty() ? EPSILON : this.root.getLabel())
         + (this.root.equals(foot) ? "*" : "") + (
         isInOA(this.root.getGornAddress()) ? "_OA" : "") + (
         isInNA(this.root.getGornAddress()) ? "_NA" : "") + " "
@@ -194,7 +194,7 @@ public class Tree {
     List<Vertex> children = getChildren(node);
     for (Vertex child : children) {
       representation.append("(")
-          .append(child.getLabel().equals("") ? EPSILON : child.getLabel())
+          .append(child.getLabel().isEmpty() ? EPSILON : child.getLabel())
           .append(child.equals(foot) ? "*" : "")
           .append(isInOA(child.getGornAddress()) ? "_OA" : "")
           .append(isInNA(child.getGornAddress()) ? "_NA" : "");
@@ -408,8 +408,7 @@ public class Tree {
   }
 
   private void markRootOrFootNode(Tree newTree) {
-    if (newTree.vertexes.get(newTree.vertexes.size() - 1).getGornAddress()
-        .equals("")) {
+    if (newTree.vertexes.get(newTree.vertexes.size() - 1).getGornAddress().isEmpty()) {
       newTree.root = newTree.vertexes.get(newTree.vertexes.size() - 1);
     } else if (newTree.vertexes.get(newTree.vertexes.size() - 1)
         .equals(this.foot)) {
@@ -498,14 +497,14 @@ public class Tree {
    * creating new nodes it creates labels not in the list and adds them to the
    * list.
    */
-  public Tree getBinarizedTree(ArrayList<String> newNonterminals) {
+  public Tree getBinarizedTree(List<String> newNonterminals) {
     Tree newTree = this;
     boolean changed;
     do {
       changed = false;
       for (Vertex p : newTree.getVertexes()) {
         String gornAddress = p.getGornAddress();
-        if (gornAddress.length() > 0
+        if (!gornAddress.isEmpty()
             && gornAddress.charAt(gornAddress.length() - 1) == '3') {
           int i = 1;
           String newNonterminal = "X" + i;
@@ -589,7 +588,7 @@ public class Tree {
   public boolean isBinarized() {
     for (Vertex p : this.getVertexes()) {
       String gornAddress = p.getGornAddress();
-      if (gornAddress.length() > 0
+      if (!gornAddress.isEmpty()
           && gornAddress.charAt(gornAddress.length() - 1) == '3') {
         return false;
       }
@@ -640,7 +639,7 @@ public class Tree {
       return false;
     }
     // or does this node just need to have more children than the root of tree1?
-    if (tree2.getChildren(node2).size() == 0) {
+    if (tree2.getChildren(node2).isEmpty()) {
       return true;
     }
     if (tree1.getChildren(node1).size() != tree2.getChildren(node2).size()) {
@@ -679,7 +678,7 @@ public class Tree {
    * Return true if the tree has one substitution node and all other leaves are
    * epsilon.
    */
-  public boolean oneSubstitutionNodeRestEpsilon(String[] nonterminals) {
+  public boolean oneSubstitutionNodeRestEpsilon(List<String> nonterminals) {
     List<String> types = getTypesOfLeaves(root, nonterminals);
     int substitutionNodes = 0;
     int terminals = 0;
@@ -695,13 +694,13 @@ public class Tree {
     return substitutionNodes == 1 && terminals == 0;
   }
 
-  private List<String> getTypesOfLeaves(Vertex node, String[] nonterminals) {
+  private List<String> getTypesOfLeaves(Vertex node, List<String> nonterminals) {
     List<String> types = new ArrayList<>();
     if (!hasChildren(node)) {
       String label = node.getLabel();
       if ("".equals(label)) {
         types.add("epsilon");
-      } else if (ArrayUtils.contains(nonterminals, label)) {
+      } else if (nonterminals.contains(label)) {
         types.add("nt");
       } else  {
         types.add("t");

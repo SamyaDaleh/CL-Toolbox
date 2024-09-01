@@ -4,7 +4,6 @@ import com.github.samyadaleh.cltoolbox.chartparsing.cfg.CfgDeductionUtils;
 import com.github.samyadaleh.cltoolbox.chartparsing.dynamicdeductionrule.AbstractDynamicDeductionRule;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.ChartItemInterface;
 import com.github.samyadaleh.cltoolbox.chartparsing.item.DeductionChartItem;
-import com.github.samyadaleh.cltoolbox.common.ArrayUtils;
 import com.github.samyadaleh.cltoolbox.common.cfg.Cfg;
 import com.github.samyadaleh.cltoolbox.common.cfg.CfgProductionRule;
 import com.github.samyadaleh.cltoolbox.common.tag.Tree;
@@ -40,7 +39,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
       if (itemForm[0].substring(1).equals(rule.getLhs())) {
         List<Tree> derivedTrees = antecedences.get(0).getTrees();
         List<Tree> derivedTreesNew = new ArrayList<>();
-        if (derivedTrees.size() == 0) {
+        if (derivedTrees.isEmpty()) {
           try {
             derivedTreesNew.add(new Tree(rule));
           } catch (ParseException e) {
@@ -59,8 +58,7 @@ public class CfgUngerPredict extends AbstractDynamicDeductionRule {
               logItemGeneration(consequence);
               consequences.add(consequence);
             }
-          } else if (ArrayUtils
-              .contains(cfg.getTerminals(), rule.getRhs()[0])) {
+          } else if (cfg.getTerminals().contains(rule.getRhs()[0])) {
             if (fromInt + 1 == toInt) {
               ChartItemInterface consequence =
                   new DeductionChartItem("•" + rule.getRhs()[0], from, to);

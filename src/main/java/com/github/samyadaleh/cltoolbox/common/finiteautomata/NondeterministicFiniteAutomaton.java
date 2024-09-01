@@ -16,8 +16,8 @@ import static com.github.samyadaleh.cltoolbox.common.Constants.EPSILON;
  */
 public class NondeterministicFiniteAutomaton {
 
-  private String[] states;
-  private String[] terminals;
+  private List<String> states;
+  private List<String> terminals;
   private String initialState;
   private String[] finalStates;
   private Map<String[], String[]> transitionFunction;
@@ -36,8 +36,7 @@ public class NondeterministicFiniteAutomaton {
       Map<String[], List<String>> newTransitionFunction = new HashMap<>();
       terminals = cfg.getTerminals();
       initialState = cfg.getStartSymbol();
-      List<String> newStates =
-          new ArrayList<>(Arrays.asList(cfg.getNonterminals()));
+      List<String> newStates = cfg.getNonterminals();
       int i = 0;
       String newFinalState = "q" + i;
       while (cfg.terminalsContain(newFinalState) || cfg
@@ -89,7 +88,7 @@ public class NondeterministicFiniteAutomaton {
           }
         }
       }
-      states = newStates.toArray(new String[0]);
+      states = newStates;
       transitionFunction = new HashMap<>();
       for (Map.Entry<String[], List<String>> entry : newTransitionFunction
           .entrySet()) {
@@ -116,11 +115,11 @@ public class NondeterministicFiniteAutomaton {
     return transitionFunction.get(new String[] {state, terminal});
   }
 
-  public String[] getStates() {
+  public List<String> getStates() {
     return states;
   }
 
-  public String[] getTerminals() {
+  public List<String> getTerminals() {
     return terminals;
   }
 
@@ -136,11 +135,11 @@ public class NondeterministicFiniteAutomaton {
     return transitionFunction;
   }
 
-  public void setStates(String[] states) {
+  public void setStates(List<String> states) {
     this.states = states;
   }
 
-  public void setTerminals(String[] terminals) {
+  public void setTerminals(List<String> terminals) {
     this.terminals = terminals;
   }
 
