@@ -81,7 +81,7 @@ public class Deduction {
    * Rules might get reapplied if trees of subsequent items change. Make it
    * global, so I don't have to pass them 10 steps down.
    */
-  private Set<DynamicDeductionRuleInterface> deductionRules;
+  private List<DynamicDeductionRuleInterface> deductionRules;
   /**
    * The highest amount of items the agenda contains at one point.
    */

@@ -12,8 +12,8 @@ import java.util.Set;
  * Consists of a set of deduction rules and goal items that have to be derived
  * with help of the rules. */
 public class ParsingSchema {
-  private final Set<StaticDeductionRule> axioms = new HashSet<>();
-  private final Set<DynamicDeductionRuleInterface> rules = new HashSet<>();
+  private final List<StaticDeductionRule> axioms = new ArrayList<>();
+  private final List<DynamicDeductionRuleInterface> rules = new ArrayList<>();
   private final List<ChartItemInterface> goal = new ArrayList<>();
   
   public void addAxiom(StaticDeductionRule rule) {
@@ -28,11 +28,11 @@ public class ParsingSchema {
     this.goal.add(item);
   }
 
-  public Set<DynamicDeductionRuleInterface> getRules() {
+  public List<DynamicDeductionRuleInterface> getRules() {
     return this.rules;
   }
 
-  public Set<StaticDeductionRule> getAxioms() {
+  public List<StaticDeductionRule> getAxioms() {
     return this.axioms;
   }
 
