@@ -18,7 +18,7 @@ jobs:
     - name: Build with Gradle
       run: gradle build
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: CL-Toolbox
         path: build/libs/cl-toolbox-0.0.1-SNAPSHOT.jar
