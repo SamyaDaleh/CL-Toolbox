@@ -33,12 +33,9 @@ See build.gradle.
 
 ## Usage
 
-Run it in your IDE.
+Run it in your IDE with <grammar> <input> <algorithm> passed to main.
 
-If you downloaded or produced a jar, call with java -Dfile.encoding="UTF-8" -jar ... to 
-correctly display special characters. Or call CL-Toolbox.bat (Windows) or 
-CL-Toolbox.sh (Linux). They work with the same parameters, but you don't have 
-to type in the encoding.
+Or call `gradle installDist` and one of the examples from below.
 
 Video series about background and demonstration :
 [English](https://www.youtube.com/playlist?list=PLlnJDVO5phqbKLKRvvQcrBK0VQjc6y7BH)
@@ -46,7 +43,7 @@ Video series about background and demonstration :
 
 Examples:
 
-java -jar CL-Toolbox.jar anbn.cfg "a a b b" cfg-topdown
+./build/install/cl-toolbox/bin/cl-toolbox.bat ./src/test/resources/grammars/cfg/anbn.cfg "a a b b" cfg-topdown
 
 true
 <table border="0">
@@ -73,7 +70,9 @@ S = S
 P = {S -> a S b, S -> a b}
 ```
 
-CL-Toolbox.bat ancb.tag "a c b" tag-cyk --success
+./build/install/cl-toolbox/bin/cl-toolbox.bat ./src/test/resources/grammars/tag/ancb.tag "a c b" tag-cyk --success
+
+(Windows: May call `chcp 65001` if special characters are not displayed correctly.)
 
 true
 <table border="0">
@@ -104,5 +103,5 @@ A = {β : (T a T*)}
 - prints full traces or only successful traces
 - automatically transforms grammars into more expressive formalisms
 - can convert grammars to fit the algorithm
-- displays derivated trees for all algorithms
+- displays derived trees for all algorithms
 - for TAG displays item trees on mouseover
