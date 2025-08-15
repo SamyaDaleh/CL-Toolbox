@@ -8,15 +8,25 @@ plugins {
 repositories {
     mavenCentral()
 }
+
 jar {
     manifest {
         attributes 'Main-Class': 'com.github.samyadaleh.cltoolbox.cli.Main'
     }
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+        vendor = JvmVendorSpec.ADOPTIUM
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.release = 8
 }
+
 compileTestJava.options.encoding = "UTF-8"
 
 group = "com.github.samyadaleh.cltoolbox"
