@@ -359,6 +359,21 @@ public class DeductionTest {
     assertEquals(2, deduction.getDerivedTrees().size());
   }
 
+  @Test public void testCfgCykGeneralEpsilonNothingElseTreeCount()
+      throws ParseException, FileNotFoundException {
+    String w = "";
+    Cfg cfg = GrammarLoader.readCfg("emptywordnothingelse.cfg");
+    ParsingSchema schema = CfgToCykRulesConverter
+        .cfgToCykGeneralRules(cfg, w);
+    Deduction deduction = new Deduction();
+    assertTrue(deduction.doParse(schema, false));
+    Tree tree1 = new Tree("(S (ε )");
+    Tree tree2 = new Tree("(S (S (ε ))(S (ε )))");
+    assertTrue(deduction.getDerivedTrees().contains(tree1));
+    assertTrue(deduction.getDerivedTrees().contains(tree2));
+    assertEquals(2, deduction.getDerivedTrees().size());
+  }
+
   @Test public void testCfgEarleyEpsilonMoreComplicated()
       throws ParseException, FileNotFoundException {
     String w = "";

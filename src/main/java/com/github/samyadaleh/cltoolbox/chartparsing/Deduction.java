@@ -431,8 +431,13 @@ public class Deduction {
           if (!deductedFrom.get(oldId).contains(newItemsDeductedFrom)) {
             appliedRule.get(oldId).add(rule.getName());
             deductedFrom.get(oldId).add(newItemsDeductedFrom);
-          }
             addNewTrees(chart.get(oldId), newItem);
+          } else if (!triggerItems.isEmpty()
+              || !sameRuleAlreadyApplied(oldId, rule.getName(),
+              newItemsDeductedFrom)
+              || chart.get(oldId).getTrees().isEmpty()) {
+            addNewTrees(chart.get(oldId), newItem);
+          }
           break;
         case 'h':
           oldValue = ((ProbabilisticChartItemInterface) chart.get(oldId))
@@ -519,6 +524,25 @@ public class Deduction {
         }
       }
     }
+  }
+
+  /**
+   * Returns true if the same rule name was already applied with the same
+   * antecedent indices for the given chart item. Used to prevent cyclic tree
+   * inflation when the same rule fires on the same antecedents from different
+   * agenda triggers.
+   */
+  private boolean sameRuleAlreadyApplied(int itemId, String ruleName,
+      List<Integer> antecedentIndices) {
+    List<List<Integer>> itemDeductedFrom = deductedFrom.get(itemId);
+    List<String> itemAppliedRules = appliedRule.get(itemId);
+    for (int i = 0; i < itemDeductedFrom.size(); i++) {
+      if (itemDeductedFrom.get(i).equals(antecedentIndices)
+          && itemAppliedRules.get(i).equals(ruleName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
